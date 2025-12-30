@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c4d857e14a72e6f47b634f856998cd58
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Tutorials/Scenes/2. DynamicCulling Instanced
+    Objects/Cube.prefab
+  uploadId: 825946

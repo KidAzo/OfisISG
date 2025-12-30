@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c7d593c5004bf814c8b1dc0a6d75330d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 319098
+  packageName: Super Level Optimizer 2
+  packageVersion: 1.0.10
+  assetPath: Assets/SuperLevelOptimizer 2/Core/Shared/Helpers/RendererHelper.cs
+  uploadId: 831734

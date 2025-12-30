@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 80680039568c6f647918ed51e95cf498
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Tutorials/Scenes/3. DynamicCulling Custom
+    Targets/Scene.unity
+  uploadId: 825946

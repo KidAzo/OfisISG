@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a10496c7306128640b649fc552e3df86
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 319098
+  packageName: Super Level Optimizer 2
+  packageVersion: 1.0.10
+  assetPath: Assets/SuperLevelOptimizer 2/Core/MaterialsCombine/3.MaterialsCombiner/Data/MaterialCombineResult.cs
+  uploadId: 831734

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 33d902e93c0c8904ea4a64c776b26c68
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Core/Runtime/StaticCulling/StaticCullingSource/Strategies/CustomStaticCullingSourceStrategy.cs
+  uploadId: 825946

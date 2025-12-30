@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a0a5cb9d8925b7a4ca83c7a9fa9a5b85
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 319098
+  packageName: Super Level Optimizer 2
+  packageVersion: 1.0.10
+  assetPath: Assets/SuperLevelOptimizer 2/Third-Party/FPSHangar/_Source/VolumetricLight/VolumetricLight.shader
+  uploadId: 831734

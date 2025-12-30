@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 93def767f317d9144b45ea1189a033d6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Core/Runtime/Utils/DC_ControllerAssignHelper.cs
+  uploadId: 825946

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5d05c063cef4c4144992b2165dd39a1f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Core/Runtime/StaticCulling/CullingTargets/LightCullingTarget.cs
+  uploadId: 825946

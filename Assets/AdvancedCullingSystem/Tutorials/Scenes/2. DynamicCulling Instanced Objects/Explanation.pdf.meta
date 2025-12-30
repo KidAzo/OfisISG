@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d8797bf93d0320d41b4585b90cf4b226
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Tutorials/Scenes/2. DynamicCulling Instanced
+    Objects/Explanation.pdf
+  uploadId: 825946

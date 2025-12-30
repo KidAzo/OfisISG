@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: aad810373c1c3204891707446c5d0261
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 319098
+  packageName: Super Level Optimizer 2
+  packageVersion: 1.0.10
+  assetPath: Assets/SuperLevelOptimizer 2/Core/MaterialsCombine/2.TexturesPacking/Interface/ITexturePacker.cs
+  uploadId: 831734

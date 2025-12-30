@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 033771dcfd6cfd54db639aaf1d4aceb8
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Core/Runtime/Common/Helpers/LODGroupHelper.cs
+  uploadId: 825946

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 06fb0c6aef267b746bcbe0df7ff6e101
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 319098
+  packageName: Super Level Optimizer 2
+  packageVersion: 1.0.10
+  assetPath: Assets/SuperLevelOptimizer 2/Core/MeshesCombine/5.LODCombineGroup/LODCombineGroup.cs
+  uploadId: 831734

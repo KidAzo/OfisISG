@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 41a7a4bc3717e104e88de234e65c7474
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Core/Runtime/StaticCulling/StaticCullingCamera/StaticCullingCamera.cs
+  uploadId: 825946

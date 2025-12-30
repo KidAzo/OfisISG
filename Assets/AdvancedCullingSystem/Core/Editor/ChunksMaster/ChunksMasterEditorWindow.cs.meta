@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5c5f53a306032da499a0eb85fd58bc87
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Core/Editor/ChunksMaster/ChunksMasterEditorWindow.cs
+  uploadId: 825946

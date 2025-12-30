@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 129d3827fc1c9da4fb9550c045601b1f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Core/Runtime/StaticCulling/CullingTargets/MeshRendererCullingTarget.cs
+  uploadId: 825946

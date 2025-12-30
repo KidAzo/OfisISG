@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: b5697362ad944f641af385d674d672ae
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 319098
+  packageName: Super Level Optimizer 2
+  packageVersion: 1.0.10
+  assetPath: Assets/SuperLevelOptimizer 2/Core/MeshesCombine/1.MeshCombiner/Interface/ISkinnedMeshCombiner.cs
+  uploadId: 831734

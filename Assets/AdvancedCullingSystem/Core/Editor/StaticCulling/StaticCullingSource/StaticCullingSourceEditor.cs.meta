@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 7689ed30a5a99fd4b933dca6aab59357
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Core/Editor/StaticCulling/StaticCullingSource/StaticCullingSourceEditor.cs
+  uploadId: 825946

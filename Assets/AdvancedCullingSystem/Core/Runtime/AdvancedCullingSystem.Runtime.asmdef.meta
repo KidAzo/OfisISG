@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 37151e2099022af42afa90e2ee1b768a
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Core/Runtime/AdvancedCullingSystem.Runtime.asmdef
+  uploadId: 825946

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: d55b9ac5a6de2254585de34a57c13b69
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Tutorials/Scripts/DisabledTargetGizmo.cs
+  uploadId: 825946

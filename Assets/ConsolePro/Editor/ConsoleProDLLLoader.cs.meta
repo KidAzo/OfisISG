@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 70dca8e94db54e729bcbd93c2229dd37
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 11889
+  packageName: Editor Console Pro
+  packageVersion: 3.980
+  assetPath: Assets/ConsolePro/Editor/ConsoleProDLLLoader.cs
+  uploadId: 837254

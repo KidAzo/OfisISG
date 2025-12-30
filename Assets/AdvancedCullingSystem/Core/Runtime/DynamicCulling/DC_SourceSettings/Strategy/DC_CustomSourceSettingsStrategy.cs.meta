@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: fd53295f71451f64cb28328a3eb56403
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Core/Runtime/DynamicCulling/DC_SourceSettings/Strategy/DC_CustomSourceSettingsStrategy.cs
+  uploadId: 825946

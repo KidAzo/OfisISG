@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c1d8b3668c6fcc14da14a6cb7ea77ef4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 272830
+  packageName: Advanced Culling System 2 - Complete Optimization Solution
+  packageVersion: 1.4.3
+  assetPath: Assets/AdvancedCullingSystem/Core/Runtime/DynamicCulling/DC_CullingTarget/LODGroup/DC_LODGroupTargetBase.cs
+  uploadId: 825946

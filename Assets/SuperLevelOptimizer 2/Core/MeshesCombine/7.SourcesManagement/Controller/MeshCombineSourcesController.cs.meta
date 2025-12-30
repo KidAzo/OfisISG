@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 066607d518c5bd94e90d272aeb709330
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 319098
+  packageName: Super Level Optimizer 2
+  packageVersion: 1.0.10
+  assetPath: Assets/SuperLevelOptimizer 2/Core/MeshesCombine/7.SourcesManagement/Controller/MeshCombineSourcesController.cs
+  uploadId: 831734

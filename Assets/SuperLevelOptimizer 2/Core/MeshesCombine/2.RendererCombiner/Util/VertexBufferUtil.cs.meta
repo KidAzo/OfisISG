@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5d5b441ee712b9245a6f0e82b0dcc90a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 319098
+  packageName: Super Level Optimizer 2
+  packageVersion: 1.0.10
+  assetPath: Assets/SuperLevelOptimizer 2/Core/MeshesCombine/2.RendererCombiner/Util/VertexBufferUtil.cs
+  uploadId: 831734
