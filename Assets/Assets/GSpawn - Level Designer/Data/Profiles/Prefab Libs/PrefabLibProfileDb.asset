@@ -20,7 +20,7 @@ MonoBehaviour:
     _guidString: 00000000-0000-0000-0000-000000000000
   hasSelectRange: 0
   scrollOffset: {x: 0, y: 0}
-  vertScrollHighValue: 0
+  vertScrollHighValue: 4617
   vertScrollLowValue: 0
 --- !u!114 &-3667651366096280279
 MonoBehaviour:
@@ -39,9 +39,9 @@ MonoBehaviour:
   collapsedItems:
     _serializedList: []
   selectRangeBeginId:
-    _guidString: 00000000-0000-0000-0000-000000000000
+    _guidString: 4138502c-aabb-46e8-8805-ae5eafeaa4bd
   selectRangeEndId:
-    _guidString: 00000000-0000-0000-0000-000000000000
+    _guidString: 70b4aaa8-277e-412a-a278-c28c746562fd
   hasSelectRange: 0
   scrollOffset: {x: 0, y: 0}
   vertScrollHighValue: 0
