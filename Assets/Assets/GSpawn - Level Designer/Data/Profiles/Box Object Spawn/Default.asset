@@ -31,7 +31,7 @@ MonoBehaviour:
   _minRandomHeight: 1
   _maxRandomHeight: 5
   _heightPatternWrapMode: 1
-  _heightPattern: {fileID: 0}
+  _heightPattern: {fileID: 731290854231248390, guid: 4fdf4b6d35fc8d3409968ebb88fa0ed2, type: 2}
   _constrainSizeToHeightPattern: 0
   _fillMode: 0
   _borderWidth: 1

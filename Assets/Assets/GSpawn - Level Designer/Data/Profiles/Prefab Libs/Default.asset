@@ -1,5 +1,1966 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9017872205204856120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: LargeLoungeR
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 9b3e414b-115b-4c75-8238-65e16343fa95
+  _prefabAsset: {fileID: 3499183159973685274, guid: a93c663eb379ad34b9262096b391e009, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3499183159973685274, guid: a93c663eb379ad34b9262096b391e009, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.757964, y: 0.73813343, z: 0.6040665}
+  _uiSelected: 0
+--- !u!114 &-9016431912548744295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: PinkPillow
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: a67ed01c-c5e4-4b01-af19-85ba8696ebbc
+  _prefabAsset: {fileID: 5577512359800093678, guid: 1a71450b9470cff4fa0fe9d9d352a0f4, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5577512359800093678, guid: 1a71450b9470cff4fa0fe9d9d352a0f4, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.60456973, y: 0.12848854, z: 0.1284885}
+  _uiSelected: 0
+--- !u!114 &-8852030825308478534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BlueSofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 9111b350-53e1-4ae1-83d7-fe36b5b903f6
+  _prefabAsset: {fileID: 6839501112772335898, guid: ae56e0f33dbbf8d44866020ff703685b, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 6839501112772335898, guid: ae56e0f33dbbf8d44866020ff703685b, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.1435645, y: 0.36288628, z: 0.5611067}
+  _uiSelected: 0
+--- !u!114 &-8804006094214810221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Shelf
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 0fa1b4ba-2715-47ca-a2a6-cfae8847c518
+  _parentLib: {fileID: 187574945186314536}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: Shelf
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab\Furniture\Shelf
+    _reveresedPath: Shelf/Furniture/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: -8626725883310547145}
+  - {fileID: -314562712345636330}
+  - {fileID: 520215624558287243}
+  - {fileID: 1983907759502500891}
+  - {fileID: 1482382409954849416}
+  _uiSelected: 0
+  _uiPinned: 0
+--- !u!114 &-8626725883310547145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: LeftCube
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 0c00cc08-6c90-4073-b839-b9c4c1bbe479
+  _prefabAsset: {fileID: 6220022511752917640, guid: f4667c0fbcfb40b4bb8b87b24d61d3ae, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 6220022511752917640, guid: f4667c0fbcfb40b4bb8b87b24d61d3ae, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.29999924, y: 0.30000007, z: 0.3}
+  _uiSelected: 0
+--- !u!114 &-8011444142957005340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CarpetYellow
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: c5ae99ba-010e-497e-bb09-b190127150b1
+  _prefabAsset: {fileID: 3913599975539060723, guid: 9ec4d9a524c56aa48a783ad67c303918, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3913599975539060723, guid: 9ec4d9a524c56aa48a783ad67c303918, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.4145534, y: 0.041903377, z: 1.1251812}
+  _uiSelected: 0
+--- !u!114 &-7948161537352160277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: LargeLoungeY
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: d1b7f1cf-f804-40f1-bd28-c17ad94cd034
+  _prefabAsset: {fileID: 671461269429974964, guid: aede5b392e7bda843aa3133efc0e2567, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 671461269429974964, guid: aede5b392e7bda843aa3133efc0e2567, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.757964, y: 0.73813343, z: 0.6040665}
+  _uiSelected: 0
+--- !u!114 &-7761692073910900181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: TVTable
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: f6904afe-7f9c-467e-83b7-2c29f6d5cc66
+  _prefabAsset: {fileID: 7055846664129407408, guid: 0bbe30aee40165e45ae7030e09f078fe, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7055846664129407408, guid: 0bbe30aee40165e45ae7030e09f078fe, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 3.0062432, y: 0.34368896, z: 0.31258595}
+  _uiSelected: 0
+--- !u!114 &-7480897402036749463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: LargeLoungeBr
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 80f23b6c-cbc8-45e8-9984-629f679ba177
+  _prefabAsset: {fileID: 933896990325296527, guid: 9f23e91f79382e442890b4fef981f2ce, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 933896990325296527, guid: 9f23e91f79382e442890b4fef981f2ce, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.757964, y: 0.73813343, z: 0.6040665}
+  _uiSelected: 0
+--- !u!114 &-7392984870720415937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: lounge_chair_Brown
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: bd45c25e-120f-4099-8b15-b107c1449c36
+  _prefabAsset: {fileID: 7636762725801571997, guid: f3f5109dc95888c4694163e4a61fc5d5, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7636762725801571997, guid: f3f5109dc95888c4694163e4a61fc5d5, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.6928271, y: 0.8086111, z: 0.5376612}
+  _uiSelected: 0
+--- !u!114 &-7133209193962463328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: office_table_Gray
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 7b2494b5-ae4c-4ddb-ac39-22800c70bfd7
+  _prefabAsset: {fileID: 966577795430823837, guid: be17fa724b2c08d4e8172584b0d848aa, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 966577795430823837, guid: be17fa724b2c08d4e8172584b0d848aa, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.5847473, y: 1.1862568, z: 1.2714272}
+  _uiSelected: 0
+--- !u!114 &-6905242484475023771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 4MCW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: ad95fbf0-cfc1-4431-8ed0-63e7d52e0989
+  _prefabAsset: {fileID: 2626373337327545509, guid: 55d1d73ac33b7704cba99549bedf53d6, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 2626373337327545509, guid: 55d1d73ac33b7704cba99549bedf53d6, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 4, y: 3, z: 0.2000003}
+  _uiSelected: 0
+--- !u!114 &-6742371839048082649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Icosphere.003
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 07808242-bf38-4ee5-8401-5a504336eb13
+  _prefabAsset: {fileID: 5302778367514668391, guid: bd608f36628e2d0469b3d610b484b1f3, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5302778367514668391, guid: bd608f36628e2d0469b3d610b484b1f3, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25041986, y: 0.047142647, z: 0.30000007}
+  _uiSelected: 0
+--- !u!114 &-6395074338606098981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: GroundW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 38949dc1-b3f5-4867-8844-c1e4fb0ad4b6
+  _prefabAsset: {fileID: 4160844224398083859, guid: 2b4db4d20719bd149ad443290f5b360b, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4160844224398083859, guid: 2b4db4d20719bd149ad443290f5b360b, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 4, y: 0, z: 4}
+  _uiSelected: 0
+--- !u!114 &-6234448111577904315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: DoorW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: a144e57d-ee3e-4d90-8e74-4b48d0492877
+  _prefabAsset: {fileID: 497411027228589838, guid: 399daafc1ae5297429642313348bb1f4, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 497411027228589838, guid: 399daafc1ae5297429642313348bb1f4, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 3, z: 0.2000003}
+  _uiSelected: 0
+--- !u!114 &-6198476943998385407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: HeightChairt
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: bb827a19-95c7-45d3-a622-d9e0d7a686d8
+  _prefabAsset: {fileID: 8806867679618073312, guid: e26ccf1209ad6cd459d0c4ab14fdeabb, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 8806867679618073312, guid: e26ccf1209ad6cd459d0c4ab14fdeabb, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.5652783, y: 1.1255759, z: 0.5376128}
+  _uiSelected: 0
+--- !u!114 &-6182425949329986481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Sofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 7f9eee2d-9c01-4859-b2ae-e229f2c49109
+  _parentLib: {fileID: 187574945186314536}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: Sofa
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab\Furniture\Sofa
+    _reveresedPath: Sofa/Furniture/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: -1126377780223217009}
+  - {fileID: -8852030825308478534}
+  - {fileID: 3658753230841525722}
+  - {fileID: 6872561654217898251}
+  - {fileID: -2432849280153937757}
+  - {fileID: -800950424307500870}
+  - {fileID: 562183921674895414}
+  - {fileID: -2871863494484770510}
+  - {fileID: 3023136713239731124}
+  - {fileID: 8708874486660353972}
+  - {fileID: 3339862965463342690}
+  - {fileID: 7734043490363057544}
+  - {fileID: -394488927103780766}
+  - {fileID: 5546731201776857489}
+  - {fileID: -5950947013431762544}
+  - {fileID: -9016431912548744295}
+  - {fileID: -797529981642958827}
+  - {fileID: 8530526714648672780}
+  - {fileID: 631706914684507880}
+  _uiSelected: 0
+  _uiPinned: 0
+--- !u!114 &-6105039565584822973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: office_chair_2
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: e9211a66-1fd5-41a9-a120-462eb541870b
+  _prefabAsset: {fileID: 3012350810090638906, guid: 5bb5720c2d9cfdf42b7d4cb4d86bb194, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3012350810090638906, guid: 5bb5720c2d9cfdf42b7d4cb4d86bb194, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.6549387, y: 1.158469, z: 0.6889164}
+  _uiSelected: 0
+--- !u!114 &-6090209430751246071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: kitchen_chair_B
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 4d8c32c7-70d0-4034-ae26-654a80d1bf6b
+  _prefabAsset: {fileID: 6219453764850599021, guid: d676d2f8fe4d05243942a1685c6b73f4, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 6219453764850599021, guid: d676d2f8fe4d05243942a1685c6b73f4, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.67744875, y: 0.85730785, z: 0.58216566}
+  _uiSelected: 0
+--- !u!114 &-6056849051536303001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: MonitorArm
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 02652a16-85ae-444f-806c-6a2eb5ee5869
+  _prefabAsset: {fileID: 2947693953084255435, guid: be3ace3d373466f4888b4b9ec7f2d17d, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 2947693953084255435, guid: be3ace3d373466f4888b4b9ec7f2d17d, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.848524, y: 0.5382242, z: 0.2982962}
+  _uiSelected: 0
+--- !u!114 &-5950947013431762544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: LightPinkSofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 7a552314-cf3a-4e4c-9d09-2833e8ede456
+  _prefabAsset: {fileID: 2829445037782185116, guid: e883200f67fd14946ad2327acc747760, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 2829445037782185116, guid: e883200f67fd14946ad2327acc747760, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.512442, y: 0.80114496, z: 0.6263596}
+  _uiSelected: 0
+--- !u!114 &-5941706543218345987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BigDoorSG
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 5e73e6e0-1d06-487f-9561-dd9712c4cccc
+  _prefabAsset: {fileID: 2649635494249179688, guid: 1ce20bf5b5f09084383462b9c707341d, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 2649635494249179688, guid: 1ce20bf5b5f09084383462b9c707341d, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.59955466, y: 2.0012987, z: 0.124915816}
+  _uiSelected: 0
+--- !u!114 &-5775819163327591263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BigShelf
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: e8246b7d-e4e6-4ee2-92d0-ea383a82cecb
+  _prefabAsset: {fileID: 7820473829401192888, guid: 29275916a3a2b5e49a7edc5b2fa0e575, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7820473829401192888, guid: 29275916a3a2b5e49a7edc5b2fa0e575, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2.1664648, y: 0.87384033, z: 0.5404316}
+  _uiSelected: 0
+--- !u!114 &-5237753328223158113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: lounge_chair_Y
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: c8572ac1-e597-40fa-a323-43435b3d5b46
+  _prefabAsset: {fileID: 6798469001497703632, guid: 5e5e9cd9426eb464c8e172e7d85139e4, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 6798469001497703632, guid: 5e5e9cd9426eb464c8e172e7d85139e4, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.6928271, y: 0.8086111, z: 0.5376612}
+  _uiSelected: 0
+--- !u!114 &-4653897328659208741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Ground
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 4a673c94-a5d1-4028-9148-6d87524f652f
+  _parentLib: {fileID: 4541359072061464271}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: Ground
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab\Ground
+    _reveresedPath: Ground/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: -4010000534208189477}
+  - {fileID: -8011444142957005340}
+  - {fileID: 4960122336342108389}
+  - {fileID: 546612893802258953}
+  - {fileID: -6395074338606098981}
+  - {fileID: -2786899358111607239}
+  _uiSelected: 1
+  _uiPinned: 0
+--- !u!114 &-4402777469534214066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: DoubleDoorL
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 39a54028-a82b-45a3-8c17-0fdcc8346b6e
+  _prefabAsset: {fileID: 4754997306327450944, guid: b8d409e890fd060478630d0058a90b8a, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4754997306327450944, guid: b8d409e890fd060478630d0058a90b8a, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.0003738, y: 2.0012987, z: 0.18489048}
+  _uiSelected: 0
+--- !u!114 &-4161064628391293068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: office_chair_Main
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 35aabb2e-50f3-43c6-a524-e056942fa65c
+  _prefabAsset: {fileID: 3936821863748932315, guid: fc52cdb8a5700ce46bbe504b13d7d01f, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3936821863748932315, guid: fc52cdb8a5700ce46bbe504b13d7d01f, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.6362109, y: 1.063932, z: 0.6939989}
+  _uiSelected: 0
+--- !u!114 &-4010000534208189477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CarpetGreen
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: ce802093-838a-4e26-ae8d-f70a622a5aba
+  _prefabAsset: {fileID: 1966275145863657525, guid: 0b66d4ce0da606c4a8b48d08e9ec4995, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 1966275145863657525, guid: 0b66d4ce0da606c4a8b48d08e9ec4995, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.4145534, y: 0.041903377, z: 1.1251812}
+  _uiSelected: 0
+--- !u!114 &-3975333206909411244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: kitchen_chairN_G
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: f18a89cf-d83d-41d3-ac9f-c0049b20c005
+  _prefabAsset: {fileID: 93331887186409301, guid: 07e96fe000507464c8d32b2d16f94a19, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 93331887186409301, guid: 07e96fe000507464c8d32b2d16f94a19, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.5458715, y: 0.82732034, z: 0.53382695}
+  _uiSelected: 0
+--- !u!114 &-3820373424338285191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 1x1WW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: fe2ca496-fd2b-4a85-8218-fd2e24d2c697
+  _prefabAsset: {fileID: 5412099155760355463, guid: faf34a6c55bd4a844a01918e4dd4bcab, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5412099155760355463, guid: faf34a6c55bd4a844a01918e4dd4bcab, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1, y: 0.99870133, z: 0.20000008}
+  _uiSelected: 0
+--- !u!114 &-3644946029613064814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: office_table_B
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: b22b0ee2-7158-43ae-a7e3-7ecbc8b7af82
+  _prefabAsset: {fileID: 7977093732723841697, guid: 8774dd5708ae1d3468b216ed9043cdfc, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7977093732723841697, guid: 8774dd5708ae1d3468b216ed9043cdfc, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.5847473, y: 1.1862568, z: 1.2714272}
+  _uiSelected: 0
+--- !u!114 &-3448803647886669573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: NormalT
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 10839ce3-4079-4352-9ad3-899b7717deb8
+  _prefabAsset: {fileID: 3122472605475904022, guid: fb9f45a3ad8906f4cb102046428bd217, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3122472605475904022, guid: fb9f45a3ad8906f4cb102046428bd217, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.43076095, y: 0.37174886, z: 0.43076098}
+  _uiSelected: 0
+--- !u!114 &-3332146433993298437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Icosphere.002
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: bd28f990-f01f-4e6b-af60-27b824f00afd
+  _prefabAsset: {fileID: 1756322439921212623, guid: eda4674a833d74847ac5ac49caef107b, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 1756322439921212623, guid: eda4674a833d74847ac5ac49caef107b, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25041977, y: 0.047142647, z: 0.30000007}
+  _uiSelected: 0
+--- !u!114 &-3316625455693127777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: kitchen_chairN_024.004
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 287703a3-2ce5-4cf3-9561-b48fe56ac6be
+  _prefabAsset: {fileID: 3241568913555989705, guid: 1a29afeceebc7354cb5d30785805f6a7, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3241568913555989705, guid: 1a29afeceebc7354cb5d30785805f6a7, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.54587173, y: 0.82732034, z: 0.53382695}
+  _uiSelected: 0
+--- !u!114 &-3314234932967508451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: StoneM
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 88c87314-5107-49ae-b4ed-328fa3f35b8a
+  _prefabAsset: {fileID: 3324560259232609948, guid: d878523e0d7850a4aa71a3eda6314848, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3324560259232609948, guid: d878523e0d7850a4aa71a3eda6314848, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.49941507, y: 0.050262906, z: 0.3}
+  _uiSelected: 0
+--- !u!114 &-3186525017509499942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 4MWW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 0f01509e-ea21-4c68-bab2-5936c6a35aa3
+  _prefabAsset: {fileID: 5618057961912624367, guid: 3762b352ee7dbfa448580b6c6430ad1d, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5618057961912624367, guid: 3762b352ee7dbfa448580b6c6430ad1d, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 4, y: 3, z: 0.2000003}
+  _uiSelected: 0
+--- !u!114 &-2871863494484770510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CubeBlue
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: d3aa3a6b-2115-45c5-8eab-a31cc47242be
+  _prefabAsset: {fileID: 3334721944454495450, guid: bab3e65382c7c0f4da3d087199ff4df2, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3334721944454495450, guid: bab3e65382c7c0f4da3d087199ff4df2, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25662, y: 0.25662, z: 0.25662}
+  _uiSelected: 0
+--- !u!114 &-2786899358111607239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: GroundWS
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: d4b8308d-49c5-4082-9f44-b00bfcae295e
+  _prefabAsset: {fileID: 3510657287171001181, guid: 8912c95389642c4418318b18906e07c7, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3510657287171001181, guid: 8912c95389642c4418318b18906e07c7, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 4, y: 0, z: 4}
+  _uiSelected: 0
+--- !u!114 &-2754044498067265036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: FoodTable
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: c3663ad8-346a-40eb-bfad-45676ef2171d
+  _prefabAsset: {fileID: 5997291888424638588, guid: 9ed0f64b497d03344b9daf0f9cfa3f79, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5997291888424638588, guid: 9ed0f64b497d03344b9daf0f9cfa3f79, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.8897867, y: 0.7408807, z: 0.99339306}
+  _uiSelected: 0
+--- !u!114 &-2501515755358550403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Door
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 34aa194c-cc50-42f9-9692-0874755cbeee
+  _parentLib: {fileID: 4541359072061464271}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: Door
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab\Door
+    _reveresedPath: Door/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: 4969995473372814751}
+  - {fileID: -5941706543218345987}
+  - {fileID: 5434230410312889867}
+  - {fileID: -4402777469534214066}
+  - {fileID: -267356846767775275}
+  _uiSelected: 0
+  _uiPinned: 0
+--- !u!114 &-2432849280153937757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Cube.007
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 303d2552-7f60-4c93-b5cb-606faa4de5e4
+  _prefabAsset: {fileID: 5451749122676001585, guid: 353d937a6110480498f7d0b5345c20ff, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5451749122676001585, guid: 353d937a6110480498f7d0b5345c20ff, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25662, y: 0.25662, z: 0.25662}
+  _uiSelected: 0
+--- !u!114 &-2389829212932122858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Table
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 604111f0-6d0b-46f5-88fd-57a077d15570
+  _parentLib: {fileID: 187574945186314536}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: Table
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab\Furniture\Table
+    _reveresedPath: Table/Furniture/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: -5775819163327591263}
+  - {fileID: -216695909995373081}
+  - {fileID: -2754044498067265036}
+  - {fileID: 5891260626054669597}
+  - {fileID: 1828687916595632314}
+  - {fileID: 5394715220263919246}
+  - {fileID: -3644946029613064814}
+  - {fileID: 6600702196072579859}
+  - {fileID: -7133209193962463328}
+  - {fileID: 8867273104560273793}
+  - {fileID: -230574655923316887}
+  - {fileID: -210368292486151535}
+  - {fileID: 2249909368646075174}
+  - {fileID: -7761692073910900181}
+  _uiSelected: 0
+  _uiPinned: 0
+--- !u!114 &-2011696087792808131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: kitchen_chair_Bl
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 6293dbc9-a222-4b67-9638-3f1a253eeb7f
+  _prefabAsset: {fileID: 760832942648523121, guid: 86ac6f194373db64e960347c6cc89dd6, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 760832942648523121, guid: 86ac6f194373db64e960347c6cc89dd6, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.67744875, y: 0.85730785, z: 0.58216566}
+  _uiSelected: 0
+--- !u!114 &-1823625894541881485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Door
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 0dc50b79-fdcd-45e0-8043-bd48a50083b3
+  _prefabAsset: {fileID: 4931064766881415385, guid: eb2305eef893b1446ba70f25ac51a678, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4931064766881415385, guid: eb2305eef893b1446ba70f25ac51a678, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 3, z: 0.2000003}
+  _uiSelected: 0
+--- !u!114 &-1719555131096894600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CylinderColone
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 36f2e883-5f5f-41d7-b4a8-2750347fb968
+  _prefabAsset: {fileID: 9176403236119292949, guid: dcaecde922dec4b488f1c21e11eeafb2, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 9176403236119292949, guid: dcaecde922dec4b488f1c21e11eeafb2, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 0.5, y: 1, z: 0.5}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 8, z: 2}
+  _uiSelected: 1
+--- !u!114 &-1344900113129128522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Glass
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 35f98967-bf29-42a0-9047-2a5a1149f037
+  _prefabAsset: {fileID: 1091418541634635800, guid: 3c8818d8b9f13004680f060f3fef0f8a, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 1091418541634635800, guid: 3c8818d8b9f13004680f060f3fef0f8a, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2.0017223, y: 3, z: 0.19957185}
+  _uiSelected: 0
+--- !u!114 &-1126377780223217009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BlueBack
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 4d845fbe-9352-46b9-b4f0-2618219ecdea
+  _prefabAsset: {fileID: 3770411766866485263, guid: 75cc6de98703e1a46a7c09bc1bd14a7f, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3770411766866485263, guid: 75cc6de98703e1a46a7c09bc1bd14a7f, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.9336932, y: 0.66529477, z: 0.11012334}
+  _uiSelected: 0
+--- !u!114 &-1026456329610048530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 1X2CW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 8346eb0d-b771-46d2-9a90-83beee06fce0
+  _prefabAsset: {fileID: 6375242078666304829, guid: 43fe1c3b4b8d5c84bbe09db7b6709cf4, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 6375242078666304829, guid: 43fe1c3b4b8d5c84bbe09db7b6709cf4, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 0.99870133, z: 0.20000008}
+  _uiSelected: 0
+--- !u!114 &-800950424307500870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Cube.015
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 0d3ac6a7-4a85-42b7-b02d-0df2ab95b4eb
+  _prefabAsset: {fileID: 7358560023684074936, guid: 6a18d81e5942e21458a18ced405bc5e4, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7358560023684074936, guid: 6a18d81e5942e21458a18ced405bc5e4, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.933693, y: 0.36288628, z: 0.5611067}
+  _uiSelected: 0
+--- !u!114 &-797529981642958827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: PinkSofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: b5ab2fd0-7812-48e9-bccc-35bb4df37dfe
+  _prefabAsset: {fileID: 3743328603041844202, guid: 654af4ddb4a61a6499e043959b559765, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3743328603041844202, guid: 654af4ddb4a61a6499e043959b559765, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.5111484, y: 0.80114496, z: 0.6263596}
+  _uiSelected: 0
+--- !u!114 &-575570380016653429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 2MWCW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: d8583451-63d6-4dce-ba62-9e2d4b753874
+  _prefabAsset: {fileID: 4562949281012161695, guid: 1a403b4682c770e4b9a9ccf7a20b86d1, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4562949281012161695, guid: 1a403b4682c770e4b9a9ccf7a20b86d1, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 3, z: 2}
+  _uiSelected: 0
+--- !u!114 &-501976006772615989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: kitchen_chairN_B
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 22d7ab68-33bd-4070-aa0b-5d61a307b6e0
+  _prefabAsset: {fileID: 414979197931657672, guid: c3761f3353745f14c8860a0126f05c3a, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 414979197931657672, guid: c3761f3353745f14c8860a0126f05c3a, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.54587173, y: 0.82732034, z: 0.53382695}
+  _uiSelected: 0
+--- !u!114 &-394488927103780766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: GreenSofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 127d14e6-f700-47e6-99d2-1242ece8c513
+  _prefabAsset: {fileID: 5081502008338119181, guid: 670795f9bd3beed4bbe22a18120beef0, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5081502008338119181, guid: 670795f9bd3beed4bbe22a18120beef0, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.1435645, y: 0.36288628, z: 0.5611067}
+  _uiSelected: 0
+--- !u!114 &-359854464040684214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 2MCW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: c631cffb-0179-427c-9d78-bca05e3d43cb
+  _prefabAsset: {fileID: 7837855865635638835, guid: c7f64fa1131947d45b511ff0a7928c88, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7837855865635638835, guid: c7f64fa1131947d45b511ff0a7928c88, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 3, z: 0.2000003}
+  _uiSelected: 0
+--- !u!114 &-314562712345636330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: LeftCubeMid
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 51ff2cd0-020c-4f71-9272-24315023509e
+  _prefabAsset: {fileID: 4839405946080505921, guid: f311f8b49ee023a42800035c2b5cd99b, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4839405946080505921, guid: f311f8b49ee023a42800035c2b5cd99b, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.3, y: 0.26736793, z: 0.018966645}
+  _uiSelected: 0
+--- !u!114 &-312715233352425818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Colonec
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: cc1c167c-8cf9-4565-b11d-50e1085577e2
+  _prefabAsset: {fileID: 3800474616393071321, guid: 9a027736973773542aaffaaf83980839, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3800474616393071321, guid: 9a027736973773542aaffaaf83980839, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1, y: 8, z: 1}
+  _uiSelected: 0
+--- !u!114 &-267356846767775275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: DoubleDoorR
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: b98e26b6-0e1d-461f-9359-5bbb0e4d1af2
+  _prefabAsset: {fileID: 1914678569305033308, guid: 4e94c4f3e3ca1004c99d85e7c9b0ba65, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 1914678569305033308, guid: 4e94c4f3e3ca1004c99d85e7c9b0ba65, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.0003741, y: 2.0012987, z: 0.12491582}
+  _uiSelected: 0
+--- !u!114 &-230574655923316887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: office_table_Y
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 8ae06804-7534-4e9f-abc8-e476c5f35f74
+  _prefabAsset: {fileID: 3479568945545053972, guid: 7ea93238f4abd6f42b5374989e1b3157, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3479568945545053972, guid: 7ea93238f4abd6f42b5374989e1b3157, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.5847473, y: 1.1862568, z: 1.2714272}
+  _uiSelected: 0
+--- !u!114 &-216695909995373081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CloseShelf
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 09691709-4f3f-4acf-b253-e92678fe35f5
+  _prefabAsset: {fileID: 1491641074206962657, guid: 2f0eb011829ee954da32e790d434bcc2, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 1491641074206962657, guid: 2f0eb011829ee954da32e790d434bcc2, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 0.42402074, z: 0.36842778}
+  _uiSelected: 0
+--- !u!114 &-210368292486151535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: OpenShelf
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: ceeb67e6-e5f4-439f-a474-9db04d57db10
+  _prefabAsset: {fileID: 3767054679633970500, guid: cf1d1e54e22b28a4e82fc191fed77812, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3767054679633970500, guid: cf1d1e54e22b28a4e82fc191fed77812, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 0.42402074, z: 0.36842778}
+  _uiSelected: 0
+--- !u!114 &-208068388223569152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: kitchen_chairN_BL
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 6280a65e-598d-4059-a3c9-14fa332f06be
+  _prefabAsset: {fileID: 3628045146800239114, guid: 77f97a0b08c971243b1a0853e56fd839, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3628045146800239114, guid: 77f97a0b08c971243b1a0853e56fd839, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.5458716, y: 0.82732034, z: 0.53382695}
+  _uiSelected: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13,4 +1974,1535 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: 
   _profileName: Default
-  _libs: []
+  _libs:
+  - {fileID: 4541359072061464271}
+  - {fileID: -2501515755358550403}
+  - {fileID: 187574945186314536}
+  - {fileID: 5138963655468178757}
+  - {fileID: -8804006094214810221}
+  - {fileID: -6182425949329986481}
+  - {fileID: -2389829212932122858}
+  - {fileID: 4709618405699926224}
+  - {fileID: -4653897328659208741}
+  - {fileID: 1383716793668228338}
+--- !u!114 &186262595426048788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: kitchen_chair_BW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 19c89e79-c7c2-4b1d-ad47-e00134883a3c
+  _prefabAsset: {fileID: 6924426884211749948, guid: 0d2cacb5615668640ac48421f37db9ee, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 6924426884211749948, guid: 0d2cacb5615668640ac48421f37db9ee, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.67744875, y: 0.85730785, z: 0.58216566}
+  _uiSelected: 0
+--- !u!114 &187574945186314536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Furniture
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 4765addc-b181-462f-bb72-b56d03d6c170
+  _parentLib: {fileID: 4541359072061464271}
+  _directChildren:
+  - {fileID: 5138963655468178757}
+  - {fileID: -8804006094214810221}
+  - {fileID: -6182425949329986481}
+  - {fileID: -2389829212932122858}
+  _prefabsVisibleInManager: 1
+  _libName: Furniture
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab\Furniture
+    _reveresedPath: Furniture/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: -3332146433993298437}
+  - {fileID: -6742371839048082649}
+  - {fileID: 591090813591568607}
+  - {fileID: -6056849051536303001}
+  - {fileID: -3448803647886669573}
+  - {fileID: -3314234932967508451}
+  _uiSelected: 0
+  _uiPinned: 0
+--- !u!114 &474770917482491287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 1x4CW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: ac466cdb-f9c2-4c63-9026-199451749a6f
+  _prefabAsset: {fileID: 8967086540748045128, guid: d2c83a121f9c6604086ede6cdca543fd, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 8967086540748045128, guid: d2c83a121f9c6604086ede6cdca543fd, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 4, y: 0.99870133, z: 0.20000008}
+  _uiSelected: 0
+--- !u!114 &481657584009190490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: kitchen_chair_G
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: acd45bec-8cc5-4a9d-a0f8-34ee472d22c2
+  _prefabAsset: {fileID: 8662114492532052920, guid: d1799373e7fa47a4d973c2bf992309ca, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 8662114492532052920, guid: d1799373e7fa47a4d973c2bf992309ca, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.67744875, y: 0.85730785, z: 0.58216566}
+  _uiSelected: 0
+--- !u!114 &520215624558287243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: MainCube
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 96eeca38-c5ea-4e40-aed9-37c7b784c5bb
+  _prefabAsset: {fileID: 7370858046719516329, guid: 76cc9109a44b7aa449c17c60522a1ce1, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7370858046719516329, guid: 76cc9109a44b7aa449c17c60522a1ce1, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.3, y: 0.30000004, z: 0.3}
+  _uiSelected: 0
+--- !u!114 &546612893802258953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: GroundCaS
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 2527c749-45e1-4ef2-9b0c-c3c8356b248e
+  _prefabAsset: {fileID: 7651165513392578438, guid: 483c63388864b3944a6922786d7f5b8d, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7651165513392578438, guid: 483c63388864b3944a6922786d7f5b8d, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 0, z: 2}
+  _uiSelected: 0
+--- !u!114 &562183921674895414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CubeBlack
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 23295f3e-8a02-48d4-b98b-33e26d9a7cb2
+  _prefabAsset: {fileID: 368500281353220385, guid: e6872daccc1e4184b8e2e6fe50af6b82, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 368500281353220385, guid: e6872daccc1e4184b8e2e6fe50af6b82, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25662, y: 0.25662, z: 0.25662}
+  _uiSelected: 0
+--- !u!114 &591090813591568607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: lobi
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 09cca791-46d1-4528-b549-98eb829d8539
+  _prefabAsset: {fileID: 5852366173902234970, guid: 15b6316208e4002479fbb28fcea43f14, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5852366173902234970, guid: 15b6316208e4002479fbb28fcea43f14, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 4, y: 0.81725186, z: 0.7294572}
+  _uiSelected: 1
+--- !u!114 &631706914684507880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: YellowSofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 97d6c6bc-d11b-47f1-9d1f-e39add173da4
+  _prefabAsset: {fileID: 4623016414229880081, guid: 1978782a8fab8a3499318df893a0558b, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4623016414229880081, guid: 1978782a8fab8a3499318df893a0558b, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.4945389, y: 0.36288628, z: 1.209522}
+  _uiSelected: 0
+--- !u!114 &750423865638480736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 4MCCW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: b83c807e-a879-4143-bfcc-f19f71db01d6
+  _prefabAsset: {fileID: 5767270025826447055, guid: ad0d5a903565f89409c82a935d4a9d92, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5767270025826447055, guid: ad0d5a903565f89409c82a935d4a9d92, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 4, y: 3, z: 4}
+  _uiSelected: 0
+--- !u!114 &1383716793668228338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Wall
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 2c5c01d9-c8ee-489f-9a08-265690016b6a
+  _parentLib: {fileID: 0}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: Wall
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab/Wall
+    _reveresedPath: Wall/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: -3820373424338285191}
+  - {fileID: -1026456329610048530}
+  - {fileID: 5573026488137865117}
+  - {fileID: 474770917482491287}
+  - {fileID: 9147665618568117013}
+  - {fileID: 1694187207165312295}
+  - {fileID: -359854464040684214}
+  - {fileID: -575570380016653429}
+  - {fileID: 7308022311316389148}
+  - {fileID: 750423865638480736}
+  - {fileID: -6905242484475023771}
+  - {fileID: 6244282933052980859}
+  - {fileID: -3186525017509499942}
+  - {fileID: 9160443621830901007}
+  - {fileID: -312715233352425818}
+  - {fileID: -1719555131096894600}
+  - {fileID: -1823625894541881485}
+  - {fileID: -6234448111577904315}
+  _uiSelected: 0
+  _uiPinned: 0
+--- !u!114 &1482382409954849416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: MultipleRaf
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 5462c828-8b9c-4ab0-afd0-c3dd47f34e70
+  _prefabAsset: {fileID: 7011277537971729652, guid: 7c6ad927a10dc6d4893fd85879812ce1, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7011277537971729652, guid: 7c6ad927a10dc6d4893fd85879812ce1, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0.0707, y: -0.0014, z: -0.076}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.30106086, y: 0.87076795, z: 0.60000014}
+  _uiSelected: 0
+--- !u!114 &1694187207165312295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 2MCCW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: cb7ab13a-67f3-4995-a800-54c53dcb0a8b
+  _prefabAsset: {fileID: 6642483482737902629, guid: 355f66973c8934f4681c76f7c32f8f02, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 6642483482737902629, guid: 355f66973c8934f4681c76f7c32f8f02, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 3, z: 2}
+  _uiSelected: 0
+--- !u!114 &1828687916595632314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: MiniTableBig
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 86bbaa9a-28b6-4501-8d46-b1a01a50fe83
+  _prefabAsset: {fileID: 140035560890355639, guid: a3b829e4c0d2646459f09f60db1ab989, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 140035560890355639, guid: a3b829e4c0d2646459f09f60db1ab989, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.5708327, y: 0.28950372, z: 0.5708327}
+  _uiSelected: 0
+--- !u!114 &1983907759502500891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: MainCubeMid
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 447be66e-97df-49a7-ba96-0dce7e5e0d4c
+  _prefabAsset: {fileID: 4783099840023129041, guid: 86fa27dfaca7abd46b809575de0db959, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4783099840023129041, guid: 86fa27dfaca7abd46b809575de0db959, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.3, y: 0.26736793, z: 0.3}
+  _uiSelected: 0
+--- !u!114 &2249909368646075174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Stone1
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: f1d45aeb-cb6b-4044-a5e9-c8edfcc19159
+  _prefabAsset: {fileID: 8082346866194079765, guid: d8cc8289861731949b562a04b0f800e4, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 8082346866194079765, guid: d8cc8289861731949b562a04b0f800e4, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 5.4769826, y: 0.787686, z: 0.99339306}
+  _uiSelected: 0
+--- !u!114 &2638263095052026259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: RestoChair
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 21f908be-08f1-4f2c-a9bf-d6f3b06f4a38
+  _prefabAsset: {fileID: 4146214499556078479, guid: 0cd38cf744adc7a44b8115f39fdd36d1, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4146214499556078479, guid: 0cd38cf744adc7a44b8115f39fdd36d1, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.7730641, y: 0.8283935, z: 0.71777654}
+  _uiSelected: 0
+--- !u!114 &3023136713239731124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CubeRed
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 39127c44-461a-4be3-a146-3cd130b2dead
+  _prefabAsset: {fileID: 7321240236292028585, guid: 1e7e6f129f74a694184a0cdc13a8bfa5, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7321240236292028585, guid: 1e7e6f129f74a694184a0cdc13a8bfa5, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25662, y: 0.25662, z: 0.25662}
+  _uiSelected: 0
+--- !u!114 &3339862965463342690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: GraySofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 76b72345-b309-4ebc-b15f-4b067935a714
+  _prefabAsset: {fileID: 2631447584907177011, guid: c28bea7e3c5a5ec42a9efbc2d1716272, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 2631447584907177011, guid: c28bea7e3c5a5ec42a9efbc2d1716272, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.1435645, y: 0.36288628, z: 0.5611067}
+  _uiSelected: 0
+--- !u!114 &3658753230841525722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CirclePinkSofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: f91aad3f-d6f3-4048-944e-4fda13d6ebeb
+  _prefabAsset: {fileID: 8561128126879289690, guid: 0794ae7370c563e44939604b662c6d0f, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 8561128126879289690, guid: 0794ae7370c563e44939604b662c6d0f, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.48139322, y: 0.31216446, z: 0.48139322}
+  _uiSelected: 0
+--- !u!114 &4541359072061464271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Prefab
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: f86cfbc6-99ac-4213-a6b7-ec88d73986c8
+  _parentLib: {fileID: 0}
+  _directChildren:
+  - {fileID: -2501515755358550403}
+  - {fileID: 187574945186314536}
+  - {fileID: 4709618405699926224}
+  - {fileID: -4653897328659208741}
+  _prefabsVisibleInManager: 1
+  _libName: Prefab
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab
+    _reveresedPath: Prefab/BKAsset/AssetSection/Assets
+  _prefabs: []
+  _uiSelected: 0
+  _uiPinned: 0
+--- !u!114 &4654388809298995327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: DoorGlass
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: c25ceb6e-3743-4fbb-8af7-d943e9cd703d
+  _prefabAsset: {fileID: 3567375036662842630, guid: 573d241eed80f624fa3c69d25bf2fa1b, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3567375036662842630, guid: 573d241eed80f624fa3c69d25bf2fa1b, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.0003741, y: 2.0012987, z: 0.18489048}
+  _uiSelected: 0
+--- !u!114 &4709618405699926224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Glass
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: dc6764fd-f35a-4485-9dc3-cbff4c0e00e4
+  _parentLib: {fileID: 4541359072061464271}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: Glass
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab\Glass
+    _reveresedPath: Glass/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: 7996370110741002097}
+  - {fileID: 9219723809177060970}
+  - {fileID: 4654388809298995327}
+  - {fileID: -1344900113129128522}
+  _uiSelected: 0
+  _uiPinned: 0
+--- !u!114 &4960122336342108389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: GroundC
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: eaea0a3c-9002-4608-b360-c2866565b37c
+  _prefabAsset: {fileID: 6239035251461737222, guid: 2d1397aa4b15c0640b6c0ff7b6162a60, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 6239035251461737222, guid: 2d1397aa4b15c0640b6c0ff7b6162a60, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 4, y: 0, z: 4}
+  _uiSelected: 1
+--- !u!114 &4969995473372814751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BigDoorBG
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 98522491-8b52-4e68-9566-0584758d36d9
+  _prefabAsset: {fileID: 994442714425066650, guid: feda302479b81244eba2c04ebe23c527, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 994442714425066650, guid: feda302479b81244eba2c04ebe23c527, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.400374, y: 2.0012987, z: 0.18489048}
+  _uiSelected: 0
+--- !u!114 &5138963655468178757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Chair
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 5a94f738-ab28-4497-af83-6c45faa5e361
+  _parentLib: {fileID: 187574945186314536}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: Chair
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab\Furniture\Chair
+    _reveresedPath: Chair/Furniture/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: -6198476943998385407}
+  - {fileID: -3316625455693127777}
+  - {fileID: -501976006772615989}
+  - {fileID: -208068388223569152}
+  - {fileID: -3975333206909411244}
+  - {fileID: 8994827016548655921}
+  - {fileID: -6090209430751246071}
+  - {fileID: -2011696087792808131}
+  - {fileID: 186262595426048788}
+  - {fileID: 481657584009190490}
+  - {fileID: 5518726782068722173}
+  - {fileID: 5177293645693510779}
+  - {fileID: -7480897402036749463}
+  - {fileID: -9017872205204856120}
+  - {fileID: -7948161537352160277}
+  - {fileID: 7856751857529249614}
+  - {fileID: -7392984870720415937}
+  - {fileID: -5237753328223158113}
+  - {fileID: -6105039565584822973}
+  - {fileID: -4161064628391293068}
+  - {fileID: 2638263095052026259}
+  _uiSelected: 0
+  _uiPinned: 0
+--- !u!114 &5177293645693510779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: LargeLoungeB
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 6c96dbce-9a3f-4e96-89df-74c4a570637d
+  _prefabAsset: {fileID: 286488983865076847, guid: 7a03f9fab8a0dd2409caa17a2050b14d, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 286488983865076847, guid: 7a03f9fab8a0dd2409caa17a2050b14d, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.757964, y: 0.73813343, z: 0.6040665}
+  _uiSelected: 0
+--- !u!114 &5394715220263919246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: MiniTableMin
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 04e624da-209c-40fe-8433-b03a7111b020
+  _prefabAsset: {fileID: 5376423057078404703, guid: 6303004ec697cd9409f6fc9987e91f32, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5376423057078404703, guid: 6303004ec697cd9409f6fc9987e91f32, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.43076095, y: 0.369282, z: 0.43076098}
+  _uiSelected: 0
+--- !u!114 &5434230410312889867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: ColorDoor
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: acaad1f9-13dc-47a6-b15b-1dd500d79ff4
+  _prefabAsset: {fileID: 5522322100313508150, guid: 4c1bb4a4a810aa845b6d54ea54abbd68, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5522322100313508150, guid: 4c1bb4a4a810aa845b6d54ea54abbd68, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.0003741, y: 2.0012987, z: 0.18489048}
+  _uiSelected: 0
+--- !u!114 &5518726782068722173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: kitchen_chair_Or
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 2fbc3548-84d1-4f66-8b24-29cac9817fba
+  _prefabAsset: {fileID: 5966148848841959181, guid: 8baf4a5bcf50f0443bab7ceb35754667, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5966148848841959181, guid: 8baf4a5bcf50f0443bab7ceb35754667, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.67744875, y: 0.85730785, z: 0.58216566}
+  _uiSelected: 0
+--- !u!114 &5546731201776857489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: LightBlueSofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 8650c26a-c255-4f8a-8fdf-9c43069a837b
+  _prefabAsset: {fileID: 3623170599209041127, guid: b59a5c5dcea14bd49983f08220e84797, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3623170599209041127, guid: b59a5c5dcea14bd49983f08220e84797, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.933693, y: 0.36288628, z: 0.5611067}
+  _uiSelected: 0
+--- !u!114 &5573026488137865117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 1x2WW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 0e8e0f24-3ce3-4054-ab2c-9ebbbd361723
+  _prefabAsset: {fileID: 7062924021030804490, guid: 9efae7431f11d484ba352b19bbeba64d, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7062924021030804490, guid: 9efae7431f11d484ba352b19bbeba64d, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 0.99870133, z: 0.20000008}
+  _uiSelected: 0
+--- !u!114 &5891260626054669597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: MidSizeFT
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 48f395d5-3f87-40b7-a5f4-02e11b82bb50
+  _prefabAsset: {fileID: 3031956207394929111, guid: ac9a6234a0c3ccd4eab624489f04f97e, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3031956207394929111, guid: ac9a6234a0c3ccd4eab624489f04f97e, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 3.6006012, y: 0.79077405, z: 0.99339306}
+  _uiSelected: 0
+--- !u!114 &6244282933052980859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 4MWCW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 4ff58eed-56a5-4790-8aa9-ad6affbf93f1
+  _prefabAsset: {fileID: 3651273087536576994, guid: ff3da6e4f461f2b45a49f58e33336e02, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3651273087536576994, guid: ff3da6e4f461f2b45a49f58e33336e02, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 4, y: 3, z: 4}
+  _uiSelected: 0
+--- !u!114 &6600702196072579859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: office_table_G
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: aff03bf1-6ccb-4bd8-aaae-f792b583e372
+  _prefabAsset: {fileID: 7317188085576518982, guid: 30d06ee1997e6a4428f308781e820c1a, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7317188085576518982, guid: 30d06ee1997e6a4428f308781e820c1a, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.5847473, y: 1.1862568, z: 1.2714272}
+  _uiSelected: 0
+--- !u!114 &6872561654217898251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CircleYellowSofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 6345dcd2-6ce2-44da-8148-2c09f437559d
+  _prefabAsset: {fileID: 1481316330478106736, guid: 0e129c43aacfd4f44860c77f951217fd, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 1481316330478106736, guid: 0e129c43aacfd4f44860c77f951217fd, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.48139322, y: 0.31216446, z: 0.48139322}
+  _uiSelected: 0
+--- !u!114 &7308022311316389148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 2MWW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 9d05dc37-9539-4b44-8e86-cdf8854c7159
+  _prefabAsset: {fileID: 4964991683336161766, guid: 56cc79b7368a1e541973c5e2c618fee9, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4964991683336161766, guid: 56cc79b7368a1e541973c5e2c618fee9, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2, y: 3, z: 0.2000003}
+  _uiSelected: 0
+--- !u!114 &7734043490363057544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: GreenBSofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: a8cc3071-56ba-4612-b3d9-b2d331b4bac1
+  _prefabAsset: {fileID: 6636963500809116783, guid: 1697f721bee6db048bb8266e2cd40ab3, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 6636963500809116783, guid: 1697f721bee6db048bb8266e2cd40ab3, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1.3888412, y: 0.36288628, z: 0.5611067}
+  _uiSelected: 0
+--- !u!114 &7856751857529249614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: lounge_chair_B
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: f175721d-bf2f-4c49-b058-f1c632096df5
+  _prefabAsset: {fileID: 8719480392960790346, guid: 26bd2ff0497451c44ad0878b3145e86c, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 8719480392960790346, guid: 26bd2ff0497451c44ad0878b3145e86c, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.6928271, y: 0.8086111, z: 0.5376612}
+  _uiSelected: 0
+--- !u!114 &7996370110741002097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BigGlass
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: f1a9370a-0441-4250-8f9f-0e37e9d98a26
+  _prefabAsset: {fileID: 2040548795038399570, guid: da47b0a0b79c3964585a85923797be96, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 2040548795038399570, guid: da47b0a0b79c3964585a85923797be96, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: -13, y: 0, z: 7}
+    _rotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+    _scale: {x: 1.0000002, y: 1, z: 1.0000002}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 4.0034447, y: 3, z: 0.19957185}
+  _uiSelected: 1
+--- !u!114 &8530526714648672780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Sofa
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 640af0d6-4086-4c9f-8859-a288599a4e73
+  _prefabAsset: {fileID: 6327310510166379747, guid: d4e03d3b02fcadb4593181398011c6d0, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 6327310510166379747, guid: d4e03d3b02fcadb4593181398011c6d0, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2.4186718, y: 0.6575765, z: 0.83871174}
+  _uiSelected: 0
+--- !u!114 &8708874486660353972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CubeWood
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 7ede325e-6ebf-4579-8361-359dfb3fbd64
+  _prefabAsset: {fileID: 8167065665849256236, guid: 1149a9df4723e364ab027c3e2644c8fd, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 8167065665849256236, guid: 1149a9df4723e364ab027c3e2644c8fd, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25662, y: 0.25662, z: 0.25662}
+  _uiSelected: 0
+--- !u!114 &8867273104560273793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: office_table_N
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 99851b34-1565-4f89-94db-926eeba293fa
+  _prefabAsset: {fileID: 4474174135323661239, guid: 59bf30dc9e5695e4087419da21fc59d9, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4474174135323661239, guid: 59bf30dc9e5695e4087419da21fc59d9, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 2.7021034, y: 0.7272649, z: 0.99339306}
+  _uiSelected: 0
+--- !u!114 &8994827016548655921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: kitchen_chairN_O
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 3d57936b-dec9-4995-8cf6-a656ce6d58b1
+  _prefabAsset: {fileID: 384879935528930512, guid: ac3e3a5976b7f954d91ca219408eee1c, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 384879935528930512, guid: ac3e3a5976b7f954d91ca219408eee1c, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.5458716, y: 0.82732034, z: 0.53382695}
+  _uiSelected: 0
+--- !u!114 &9147665618568117013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 1x4WW
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 1867aa46-cfff-4ae8-ac24-20d916e1ee72
+  _prefabAsset: {fileID: 1809104030754420265, guid: a34c2ca4b42ef2e43a1421315fc5c5e7, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 1809104030754420265, guid: a34c2ca4b42ef2e43a1421315fc5c5e7, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 4, y: 0.99870133, z: 0.20000008}
+  _uiSelected: 0
+--- !u!114 &9160443621830901007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: COLONE
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: c6d3c88c-d2b6-4e22-b427-75ba07a9d09a
+  _prefabAsset: {fileID: 5791665053190840861, guid: d02503a5006f27a419de8a4131332cad, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5791665053190840861, guid: d02503a5006f27a419de8a4131332cad, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 1, y: 0.99870133, z: 0.20000008}
+  _uiSelected: 0
+--- !u!114 &9219723809177060970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CornerGlass
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: a378d025-f653-4a00-9d07-bed6e47afe50
+  _prefabAsset: {fileID: 6690897143774422400, guid: 5813939f78f4223479077446f67dbacc, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 6690897143774422400, guid: 5813939f78f4223479077446f67dbacc, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 3.2012944, y: 3, z: 4.0034447}
+  _uiSelected: 0

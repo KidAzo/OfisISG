@@ -56,7 +56,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 006a9aabcc6ca2b44865422778ef88c7, type: 3}
   m_Name: ModularWallPrefabProfileDb
   m_EditorClassIdentifier: 
-  _profiles: []
+  _profiles:
+  - {fileID: 11400000, guid: cfe70bdfc78bbdd428947b40570444ce, type: 2}
   _activeProfile: {fileID: 0}
 --- !u!114 &6412437638943907961
 MonoBehaviour:

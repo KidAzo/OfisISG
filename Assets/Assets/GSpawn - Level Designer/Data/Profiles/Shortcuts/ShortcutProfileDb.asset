@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: ShortcutProfileDbUI_CategoryViewState
   m_EditorClassIdentifier: 
   selectedItems:
-    _serializedList: []
+    _serializedList:
+    - _guidString: abe9b1e5-83fc-46cc-8d36-3d89157ef0eb
   selectRangeBeginId:
-    _guidString: 00000000-0000-0000-0000-000000000000
+    _guidString: abe9b1e5-83fc-46cc-8d36-3d89157ef0eb
   selectRangeEndId:
-    _guidString: 00000000-0000-0000-0000-000000000000
+    _guidString: abe9b1e5-83fc-46cc-8d36-3d89157ef0eb
   hasSelectRange: 0
   scrollOffset: {x: 0, y: 0}
   vertScrollHighValue: 0
