@@ -22,7 +22,7 @@ MonoBehaviour:
   _horizontalPadding: 0
   _verticalPadding: 0
   _volumelessObjectSize: 1
-  _avoidOverlaps: 1
+  _avoidOverlaps: 0
   _maxSize: 50
   _heightMode: 0
   _defaultHeight: 1

@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _snapSingleTargetToCursor: 1
   _gridSnapClimb: 0
-  _snapRadius: 0.7
+  _snapRadius: 0.1
   _surfaceTypes: -1
   _destinationLayers: -1

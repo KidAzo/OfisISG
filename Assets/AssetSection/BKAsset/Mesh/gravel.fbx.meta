@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a9431aa36f66b084da9424dc24d802c2
+guid: d6623277b06c0564783d6cb43ccf103e
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,8 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Black marble
-    second: {fileID: 2100000, guid: 2b0c94f39a6a8304194110c9e7f3eaa6, type: 2}
+      name: Gravel
+    second: {fileID: 2100000, guid: 45a51f2ac7f9fcf44b147282fb70b78f, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

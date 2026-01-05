@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a9431aa36f66b084da9424dc24d802c2
+guid: 99c54777eb43ccd4aa9dc67e8e612234
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,13 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Black marble
-    second: {fileID: 2100000, guid: 2b0c94f39a6a8304194110c9e7f3eaa6, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: ImphenziaPixPal
-    second: {fileID: 2100000, guid: 91b482afdd77d0d4f8e5321f9fe183a0, type: 2}
+      name: RestoGround
+    second: {fileID: 2100000, guid: 1b07330e12918144cbc6e5c58cbcf257, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -55,7 +50,7 @@ ModelImporter:
     importLights: 1
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
-    swapUVChannels: 1
+    swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
