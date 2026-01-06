@@ -15,7 +15,9 @@ MonoBehaviour:
   _prefabViewState: {fileID: -8523911575125300597, guid: ff8ffa59d5206854e88354c33ce51cf0, type: 2}
   _prefabPreviewScale: 1
   _prefabFilters: -1
-  _targetLibs: []
+  _targetLibs:
+  - {fileID: 8013718912035457590, guid: 3efb3b5755f564847a730bbffa19c602, type: 2}
   _targetLibSet:
-    _serializedList: []
-  _numPrefabs: 0
+    _serializedList:
+    - {fileID: 8013718912035457590, guid: 3efb3b5755f564847a730bbffa19c602, type: 2}
+  _numPrefabs: 21
