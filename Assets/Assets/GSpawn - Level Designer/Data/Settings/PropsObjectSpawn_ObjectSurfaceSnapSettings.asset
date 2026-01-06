@@ -18,6 +18,6 @@ MonoBehaviour:
   _alignmentAxis: 1
   _invertAlignmentAxis: 0
   _implicitOffsetFromSurface: 0.01
-  _embedInSurface: 1
+  _embedInSurface: 0
   _surfaceTypes: -1
   _surfaceLayers: -1
