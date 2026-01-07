@@ -1119,7 +1119,7 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 4, y: 3, z: 4}
-  _uiSelected: 0
+  _uiSelected: 1
 --- !u!114 &-8239550609775670477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3387,7 +3387,7 @@ MonoBehaviour:
   - {fileID: 3833233090440345666}
   - {fileID: -248781370227862067}
   - {fileID: -4287284292357706528}
-  _uiSelected: 1
+  _uiSelected: 0
   _uiPinned: 0
 --- !u!114 &-5911565442449553175
 MonoBehaviour:
@@ -8338,7 +8338,7 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 1.0003738, y: 2.0012987, z: 0.18489048}
-  _uiSelected: 0
+  _uiSelected: 1
 --- !u!114 &-307381429823671860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10288,7 +10288,7 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.5573562, y: 0.99599403, z: 0.5618922}
-  _uiSelected: 0
+  _uiSelected: 1
 --- !u!114 &2012792530060095672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12931,7 +12931,7 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 4, y: 3, z: 0.2000003}
-  _uiSelected: 1
+  _uiSelected: 0
 --- !u!114 &4516406115025046409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15595,7 +15595,7 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 1.0003741, y: 2.0012987, z: 0.12491582}
-  _uiSelected: 1
+  _uiSelected: 0
 --- !u!114 &6964101440744650729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17569,7 +17569,7 @@ MonoBehaviour:
   - {fileID: 3417740461056178892}
   - {fileID: 4838369953980714015}
   - {fileID: 6266829059349181357}
-  _uiSelected: 0
+  _uiSelected: 1
   _uiPinned: 0
 --- !u!114 &9056526505330434831
 MonoBehaviour:

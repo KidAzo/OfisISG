@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 169f979ea264e2a4d99cbb7a0ee02afc
+guid: f9eac7194e057ba42abf8f269b830123
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,23 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Glass
+    second: {fileID: 2100000, guid: 80b54580290b5f2408cfe8f148f3c26c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: ImphenziaPixPal
     second: {fileID: 2100000, guid: 91b482afdd77d0d4f8e5321f9fe183a0, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Scratched concrete
-    second: {fileID: 2100000, guid: 81ab6ef3a07b7d5408f20e885db86a6c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: WoodDuvar
-    second: {fileID: 2100000, guid: 9d608a2e8e695fc4e962d74e04393c16, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Wooden parquetsZemin
-    second: {fileID: 2100000, guid: db70a6f56fd4ca347b89b19b2c15bb07, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -65,7 +55,7 @@ ModelImporter:
     importLights: 1
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
-    swapUVChannels: 1
+    swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
