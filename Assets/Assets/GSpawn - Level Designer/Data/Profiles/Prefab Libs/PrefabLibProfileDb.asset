@@ -13,15 +13,14 @@ MonoBehaviour:
   m_Name: PluginPrefabManagerUI_PrefabViewState
   m_EditorClassIdentifier: 
   selectedItems:
-    _serializedList:
-    - _guidString: a153fd46-db2b-4230-b2d8-da7baffd77de
+    _serializedList: []
   selectRangeBeginId:
-    _guidString: a153fd46-db2b-4230-b2d8-da7baffd77de
+    _guidString: 5734008a-56f2-4b6d-a0c7-cc16498048f0
   selectRangeEndId:
-    _guidString: a153fd46-db2b-4230-b2d8-da7baffd77de
-  hasSelectRange: 1
-  scrollOffset: {x: 0, y: 1299}
-  vertScrollHighValue: 1881
+    _guidString: 5734008a-56f2-4b6d-a0c7-cc16498048f0
+  hasSelectRange: 0
+  scrollOffset: {x: 0, y: 3265}
+  vertScrollHighValue: 5695
   vertScrollLowValue: 0
 --- !u!114 &-3667651366096280279
 MonoBehaviour:
@@ -37,20 +36,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedItems:
     _serializedList:
-    - _guidString: ae3835f6-719a-4ed4-960b-c39818282061
+    - _guidString: 0ba3f72a-1173-4fe0-a319-3f2c2a1f3fa2
   collapsedItems:
     _serializedList:
     - _guidString: f86cfbc6-99ac-4213-a6b7-ec88d73986c8
     - _guidString: e87e3aad-ba24-45a9-8301-1f58e2f78f6f
     - _guidString: 5869804e-6968-42c0-8f88-af5723ed1586
     - _guidString: 07be4acd-ab16-4837-8fe0-acbaaf98548e
+    - _guidString: 51bdf6c5-ab86-4dea-bfbd-6dc2b1c31586
   selectRangeBeginId:
-    _guidString: ae3835f6-719a-4ed4-960b-c39818282061
+    _guidString: 0c39e26f-4cf1-4ba6-828b-898f030d8a3b
   selectRangeEndId:
-    _guidString: ae3835f6-719a-4ed4-960b-c39818282061
+    _guidString: 0c39e26f-4cf1-4ba6-828b-898f030d8a3b
   hasSelectRange: 1
   scrollOffset: {x: 0, y: 0}
-  vertScrollHighValue: 56
+  vertScrollHighValue: 99
   vertScrollLowValue: 0
 --- !u!114 &11400000
 MonoBehaviour:

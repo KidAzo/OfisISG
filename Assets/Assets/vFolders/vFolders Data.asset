@@ -47,7 +47,7 @@ MonoBehaviour:
       isIconRecursive: 0
       isColorRecursive: 0
     - iconNameOrGuid: 
-      colorIndex: 5
+      colorIndex: 3
       isIconRecursive: 0
       isColorRecursive: 0
   bookmarks:
