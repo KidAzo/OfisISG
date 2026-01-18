@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BoxObjectSpawn_ObjectModularSnapSettings
   m_EditorClassIdentifier: 
   _snapSingleTargetToCursor: 1
-  _gridSnapClimb: 0
+  _gridSnapClimb: 1
   _snapRadius: 0.7
   _surfaceTypes: -1
   _destinationLayers: -1
