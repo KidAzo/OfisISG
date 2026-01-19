@@ -48,7 +48,10 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    extraUserProperties: []
+    extraUserProperties:
+    - '#BAKERY{"meshName":["IYDR.001","FolderBig","FolderMid","BookDoor.003","BookDoor.007","BookDoor.008","RafBig","GlassR","IYD.002","PlasticR","IYDRR","IYDRR.001","PaperR","IYDL.001","ACIL
+      CIKIS","FolderSingle","BookDoor","ElectricBoxR","IYD.001","BookDoor.006","MetalR","BookDoor.005","BookDoor.002","BookDoor.009","ACIL
+      CIKIS.001","ElectricBoxL","IYDR","ElectricBox","IYD","BookDoor.001","Sedye","BookDoor.004","IYDL"],"padding":[108,134,174,238,238,238,33,92,46,92,72,72,92,108,62,256,233,165,46,233,92,233,238,238,80,165,103,77,46,238,50,233,103],"unwrapper":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}'
     clipAnimations: []
     isReadable: 0
   meshes:

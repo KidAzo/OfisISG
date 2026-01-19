@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 67692e3b542f60f4fbf068f99b65a68b
+guid: c44952c7d8d011846968a0385d1502e1
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,13 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Glass
-    second: {fileID: 2100000, guid: 80b54580290b5f2408cfe8f148f3c26c, type: 2}
+      name: ImphenziaPixPal
+    second: {fileID: 2100000, guid: 91b482afdd77d0d4f8e5321f9fe183a0, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: ImphenziaPixPal
-    second: {fileID: 2100000, guid: 91b482afdd77d0d4f8e5321f9fe183a0, type: 2}
+      name: LightEmission
+    second: {fileID: 2100000, guid: 5b0d27e263d6f0842876392f56bb4f1c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -38,8 +38,7 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    extraUserProperties:
-    - '#BAKERY{"meshName":["DoubleDoorL.001","DoubleDoorR.001"],"padding":[59,61],"unwrapper":[0,0]}'
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 0
   meshes:
@@ -57,7 +56,7 @@ ModelImporter:
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1

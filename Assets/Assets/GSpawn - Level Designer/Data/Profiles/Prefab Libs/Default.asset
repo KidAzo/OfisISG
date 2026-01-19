@@ -960,6 +960,36 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 1.9571877, y: 0.7256721, z: 0.6272855}
   _uiSelected: 0
+--- !u!114 &-8532923631419692840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Lamp
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: b7574c92-d421-48c6-8019-a79108c95615
+  _parentLib: {fileID: 0}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: Lamp
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab/Lamp
+    _reveresedPath: Lamp/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: 768171091193284089}
+  - {fileID: 5968216288826281933}
+  - {fileID: 6677891150285608514}
+  - {fileID: 6803461546896509152}
+  - {fileID: 2922217474517502033}
+  - {fileID: 2063950624375623603}
+  _uiSelected: 1
+  _uiPinned: 0
 --- !u!114 &-8529623514432357030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3071,6 +3101,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.07905721, y: 0.12803033, z: 0.0913111}
   _uiSelected: 0
+--- !u!114 &-7118488139487252238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BigRec
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: aeebb296-35be-451e-98b2-a86761aee0ae
+  _prefabAsset: {fileID: 1748222602910410854, guid: 454462c6b884b13498c8ec3cc77e3931, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 1748222602910410854, guid: 454462c6b884b13498c8ec3cc77e3931, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.14988093, y: 0.31540313, z: 3}
+  _uiSelected: 0
 --- !u!114 &-7098209647835011845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4469,7 +4531,7 @@ MonoBehaviour:
   - {fileID: -3455680458795181270}
   - {fileID: 3483624888513238085}
   - {fileID: -7837863761205974046}
-  _uiSelected: 1
+  _uiSelected: 0
   _uiPinned: 0
 --- !u!114 &-6278548550299361707
 MonoBehaviour:
@@ -7481,6 +7543,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.34734857, y: 0.39025578, z: 0.0179346}
   _uiSelected: 0
+--- !u!114 &-3860627269202333132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BatSquareLight
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 7530428b-16be-4990-a281-cdc44393ff4c
+  _prefabAsset: {fileID: 7793898143919246235, guid: 8dc9c52e6fb3d80499e1ced8b1290fa2, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7793898143919246235, guid: 8dc9c52e6fb3d80499e1ced8b1290fa2, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 8.301, y: 2.035461, z: -10.747522}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.3, y: 0.16746093, z: 0.3}
+  _uiSelected: 0
 --- !u!114 &-3837149682478383074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8281,6 +8375,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.55367684, y: 0.6220751, z: 0.039466556}
   _uiSelected: 0
+--- !u!114 &-3219565759512569446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BatSquareLight
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 2a309f6e-2cf8-491c-9856-71fc4822cbe9
+  _prefabAsset: {fileID: 7793898143919246235, guid: 8dc9c52e6fb3d80499e1ced8b1290fa2, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7793898143919246235, guid: 8dc9c52e6fb3d80499e1ced8b1290fa2, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 8.301, y: 2.035461, z: -10.747522}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.3, y: 0.16746093, z: 0.3}
+  _uiSelected: 0
 --- !u!114 &-3214881629438646530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8728,6 +8854,38 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.87343264, y: 0.83568794, z: 0.045568854}
+  _uiSelected: 0
+--- !u!114 &-2943626324856396174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CircleMiniL
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 103a9080-ec5a-4488-9ecb-4089dc052a33
+  _prefabAsset: {fileID: 351939749730466405, guid: 845b0a79673684949b4ab5c221e1d283, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 351939749730466405, guid: 845b0a79673684949b4ab5c221e1d283, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.08319473, y: 0.14999999, z: 0.08319473}
   _uiSelected: 0
 --- !u!114 &-2828503588723678401
 MonoBehaviour:
@@ -11261,6 +11419,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 1.1710484, y: 1.0693134, z: 0.8504432}
   _uiSelected: 0
+--- !u!114 &-794431257604410835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: MetalPart
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: a3066d41-f6ce-41ae-a6b5-90331760974b
+  _prefabAsset: {fileID: 8252464081974621068, guid: d2a642d2aeeb38c45b79740142b4f0b4, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 8252464081974621068, guid: d2a642d2aeeb38c45b79740142b4f0b4, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.05003367, y: 0.05003367, z: 1}
+  _uiSelected: 0
 --- !u!114 &-790172342916719961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12061,6 +12251,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.082245946, y: 0.1331944, z: 0.0949941}
   _uiSelected: 0
+--- !u!114 &-213233738555625836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CircleLight
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: d412df83-da95-4eff-b6ae-42f2d9b13d74
+  _prefabAsset: {fileID: 4638980840351771730, guid: 6e0a45b22a663b248a036d7c1fa6a3ef, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4638980840351771730, guid: 6e0a45b22a663b248a036d7c1fa6a3ef, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.6, y: 0.34946084, z: 0.6}
+  _uiSelected: 0
 --- !u!114 &-205615566747686643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12451,6 +12673,8 @@ MonoBehaviour:
   - {fileID: 11702387752740586}
   - {fileID: 8214045591313454857}
   - {fileID: -7057017806671337109}
+  - {fileID: 374829042297485416}
+  - {fileID: -8532923631419692840}
 --- !u!114 &11702387752740586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12468,6 +12692,7 @@ MonoBehaviour:
   _parentLib: {fileID: 0}
   _directChildren:
   - {fileID: 8214045591313454857}
+  - {fileID: 374829042297485416}
   _prefabsVisibleInManager: 1
   _libName: picture
   _folderPath:
@@ -12602,6 +12827,12 @@ MonoBehaviour:
   - {fileID: -2195763097787600779}
   - {fileID: -57973785446785845}
   - {fileID: 5551776223638183543}
+  - {fileID: -3860627269202333132}
+  - {fileID: -7118488139487252238}
+  - {fileID: 432356756617326780}
+  - {fileID: -2943626324856396174}
+  - {fileID: -794431257604410835}
+  - {fileID: 534462807044118101}
   _uiSelected: 0
   _uiPinned: 0
 --- !u!114 &52665466410639639
@@ -13020,6 +13251,36 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.47949225, y: 0.7427354, z: 0.022165619}
   _uiSelected: 0
+--- !u!114 &374829042297485416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: Lamp
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 46f27511-d4c8-4923-82ef-96e5b8a4ca0a
+  _parentLib: {fileID: 11702387752740586}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: Lamp
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab/Lamp
+    _reveresedPath: Lamp/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: -3219565759512569446}
+  - {fileID: 5749351200513199360}
+  - {fileID: -213233738555625836}
+  - {fileID: 8120750151905555042}
+  - {fileID: 9053780565178449126}
+  - {fileID: 3139241869089963447}
+  _uiSelected: 0
+  _uiPinned: 0
 --- !u!114 &412125669610298869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13115,6 +13376,70 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.77890694, y: 0.57722634, z: 0.025920562}
+  _uiSelected: 0
+--- !u!114 &432356756617326780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CircleLight
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 03090f3f-ad97-41d8-8db3-4ac88105d3ec
+  _prefabAsset: {fileID: 4638980840351771730, guid: 6e0a45b22a663b248a036d7c1fa6a3ef, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4638980840351771730, guid: 6e0a45b22a663b248a036d7c1fa6a3ef, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.6, y: 0.34946084, z: 0.6}
+  _uiSelected: 0
+--- !u!114 &534462807044118101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: SmallRec
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 2459778f-5853-4590-afab-7155695d3fb2
+  _prefabAsset: {fileID: 897270327892946460, guid: 46cb992a289e1564ab0a7ff86bd0b1b6, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 897270327892946460, guid: 46cb992a289e1564ab0a7ff86bd0b1b6, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.14988093, y: 0.31540313, z: 1.5}
   _uiSelected: 0
 --- !u!114 &576470931098657579
 MonoBehaviour:
@@ -13244,6 +13569,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.99977016, y: 1.7983003, z: 0.62672985}
   _uiSelected: 0
+--- !u!114 &768171091193284089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BatSquareLight
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: ae3af953-8bd2-40e1-9859-93728b0169c4
+  _prefabAsset: {fileID: 7793898143919246235, guid: 8dc9c52e6fb3d80499e1ced8b1290fa2, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7793898143919246235, guid: 8dc9c52e6fb3d80499e1ced8b1290fa2, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: -21.137213, y: 3.0442274, z: -1.0234926}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1.75, y: 1.75, z: 1.75}
+  _modularSnapVerticalStep: 3
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.3, y: 0.16746093, z: 0.3}
+  _uiSelected: 1
 --- !u!114 &781972021314716659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15193,6 +15550,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.6586791, y: 1.6595684, z: 0.6595373}
   _uiSelected: 0
+--- !u!114 &2063950624375623603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: SmallRec
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: cb64abaa-41b4-4d61-9971-33c3c1e7a248
+  _prefabAsset: {fileID: 897270327892946460, guid: 46cb992a289e1564ab0a7ff86bd0b1b6, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 897270327892946460, guid: 46cb992a289e1564ab0a7ff86bd0b1b6, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.14988093, y: 0.31540313, z: 1.5}
+  _uiSelected: 0
 --- !u!114 &2070083356322260681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16232,6 +16621,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.87867665, y: 0.7616081, z: 0.83852905}
   _uiSelected: 0
+--- !u!114 &2922217474517502033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: MetalPart
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: d80146d2-636c-4580-84af-a52c32b6a375
+  _prefabAsset: {fileID: 8252464081974621068, guid: d2a642d2aeeb38c45b79740142b4f0b4, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 8252464081974621068, guid: d2a642d2aeeb38c45b79740142b4f0b4, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.05003367, y: 0.05003367, z: 1}
+  _uiSelected: 0
 --- !u!114 &2936762426136460795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16583,6 +17004,38 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.6490193, y: 0.8433389, z: 0.7732184}
+  _uiSelected: 0
+--- !u!114 &3139241869089963447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: SmallRec
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: d1eea7bc-2fdd-48dc-aee0-dcde5f140c2f
+  _prefabAsset: {fileID: 897270327892946460, guid: 46cb992a289e1564ab0a7ff86bd0b1b6, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 897270327892946460, guid: 46cb992a289e1564ab0a7ff86bd0b1b6, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.14988093, y: 0.31540313, z: 1.5}
   _uiSelected: 0
 --- !u!114 &3148275252697748016
 MonoBehaviour:
@@ -20485,6 +20938,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.2851633, y: 0.09568702, z: 0.29150504}
   _uiSelected: 0
+--- !u!114 &5749351200513199360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BigRec
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 9f8a446c-ea24-44e1-9253-adb1cf4ddc5a
+  _prefabAsset: {fileID: 1748222602910410854, guid: 454462c6b884b13498c8ec3cc77e3931, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 1748222602910410854, guid: 454462c6b884b13498c8ec3cc77e3931, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.14988093, y: 0.31540313, z: 3}
+  _uiSelected: 0
 --- !u!114 &5783860408425369355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20772,6 +21257,38 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.4162769, y: 0.42350674, z: 0.025898537}
+  _uiSelected: 0
+--- !u!114 &5968216288826281933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: BigRec
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 9d135cf5-011e-43a5-aa38-0bc085a1b965
+  _prefabAsset: {fileID: 1748222602910410854, guid: 454462c6b884b13498c8ec3cc77e3931, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 1748222602910410854, guid: 454462c6b884b13498c8ec3cc77e3931, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: -11.647733, y: 0.65647924, z: 6.0478325}
+    _rotation: {x: -0, y: 0.73135376, z: -0, w: 0.6819983}
+    _scale: {x: 1.0000001, y: 1, z: 1.0000001}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.14988093, y: 0.31540313, z: 3}
   _uiSelected: 0
 --- !u!114 &5976073124907066579
 MonoBehaviour:
@@ -21637,6 +22154,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.7081566, y: 0.4948772, z: 0.19552612}
   _uiSelected: 0
+--- !u!114 &6677891150285608514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CircleLight
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: c79e2ae9-935d-4fe0-ac23-e35fcf319dde
+  _prefabAsset: {fileID: 4638980840351771730, guid: 6e0a45b22a663b248a036d7c1fa6a3ef, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 4638980840351771730, guid: 6e0a45b22a663b248a036d7c1fa6a3ef, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 3
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.6, y: 0.34946084, z: 0.6}
+  _uiSelected: 0
 --- !u!114 &6696746837237757671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21807,6 +22356,38 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 4, y: 0.100372, z: 4}
+  _uiSelected: 0
+--- !u!114 &6803461546896509152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CircleMiniL
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 9a4cb84f-2404-4a4f-abd4-62a1559eb778
+  _prefabAsset: {fileID: 351939749730466405, guid: 845b0a79673684949b4ab5c221e1d283, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 351939749730466405, guid: 845b0a79673684949b4ab5c221e1d283, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: -26, y: 0, z: -11}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 3
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.08319473, y: 0.14999999, z: 0.08319473}
   _uiSelected: 0
 --- !u!114 &6811549285252136599
 MonoBehaviour:
@@ -23491,6 +24072,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 3.066898, y: 1.0605762, z: 1.461411}
   _uiSelected: 0
+--- !u!114 &8120750151905555042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: CircleMiniL
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 0c9d2896-2d32-4497-b86a-52ecc2ff22f2
+  _prefabAsset: {fileID: 351939749730466405, guid: 845b0a79673684949b4ab5c221e1d283, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 351939749730466405, guid: 845b0a79673684949b4ab5c221e1d283, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.08319473, y: 0.14999999, z: 0.08319473}
+  _uiSelected: 0
 --- !u!114 &8129172350248251328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24895,6 +25508,38 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.55367935, y: 0.62207514, z: 0.039463036}
+  _uiSelected: 0
+--- !u!114 &9053780565178449126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: MetalPart
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: b17b0eec-547b-4583-8660-d63644ecd4d9
+  _prefabAsset: {fileID: 8252464081974621068, guid: d2a642d2aeeb38c45b79740142b4f0b4, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 8252464081974621068, guid: d2a642d2aeeb38c45b79740142b4f0b4, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.05003367, y: 0.05003367, z: 1}
   _uiSelected: 0
 --- !u!114 &9056526505330434831
 MonoBehaviour:

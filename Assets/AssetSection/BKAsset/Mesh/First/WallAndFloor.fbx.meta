@@ -48,7 +48,8 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    extraUserProperties: []
+    extraUserProperties:
+    - '#BAKERY{"meshName":["GroundWS","DoorW","2MCW","4MCW","4MWW","GroundW","Colonec","4MCCW","2MWW","4MWCW","Door","1x2WW","2MCCW","CylinderColone"],"padding":[72,44,40,36,29,36,24,20,53,20,44,63,28,21],"unwrapper":[0,0,0,0,0,0,0,0,0,0,0,0,0,0]}'
     clipAnimations: []
     isReadable: 0
   meshes:

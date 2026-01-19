@@ -33,7 +33,8 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    extraUserProperties: []
+    extraUserProperties:
+    - '#BAKERY{"meshName":["RestoGroundB","RestoGroundS"],"padding":[36,72],"unwrapper":[0,0]}'
     clipAnimations: []
     isReadable: 0
   meshes:
