@@ -107,6 +107,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: flower_036 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 9030532133659817618, guid: 38b172f529a72e948a3cc21492634ac4, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -128,6 +132,10 @@ PrefabInstance:
     - target: {fileID: 5953651367733364225, guid: 42a61933d23287f4f82fb5b670c5506d, type: 3}
       propertyPath: m_Name
       value: electronics_040 (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5953651367733364225, guid: 42a61933d23287f4f82fb5b670c5506d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6472885204950473915, guid: 42a61933d23287f4f82fb5b670c5506d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -191,6 +199,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: prop_037 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4918340026058007407, guid: 153e3d963b63bbf48800c81649384220, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5695545674648893909, guid: 153e3d963b63bbf48800c81649384220, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.5998688
@@ -252,6 +264,10 @@ PrefabInstance:
     - target: {fileID: 2455989201397733788, guid: 2694dd893b4ff0f43be0417a2b9f163a, type: 3}
       propertyPath: m_Name
       value: electronics_031 (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2455989201397733788, guid: 2694dd893b4ff0f43be0417a2b9f163a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2981028386776908582, guid: 2694dd893b4ff0f43be0417a2b9f163a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -315,6 +331,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MonitorArm (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 2947693953084255435, guid: be3ace3d373466f4888b4b9ec7f2d17d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 126
+      objectReference: {fileID: 0}
     - target: {fileID: 9119244816733897157, guid: be3ace3d373466f4888b4b9ec7f2d17d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.00786972
@@ -376,6 +396,10 @@ PrefabInstance:
     - target: {fileID: 3936821863748932315, guid: fc52cdb8a5700ce46bbe504b13d7d01f, type: 3}
       propertyPath: m_Name
       value: office_chair_Main (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936821863748932315, guid: fc52cdb8a5700ce46bbe504b13d7d01f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 126
       objectReference: {fileID: 0}
     - target: {fileID: 6990461244418782929, guid: fc52cdb8a5700ce46bbe504b13d7d01f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -439,6 +463,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MonitorArm (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 2947693953084255435, guid: be3ace3d373466f4888b4b9ec7f2d17d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 126
+      objectReference: {fileID: 0}
     - target: {fileID: 9119244816733897157, guid: be3ace3d373466f4888b4b9ec7f2d17d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.00786972
@@ -500,6 +528,10 @@ PrefabInstance:
     - target: {fileID: 5953651367733364225, guid: 42a61933d23287f4f82fb5b670c5506d, type: 3}
       propertyPath: m_Name
       value: electronics_040 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5953651367733364225, guid: 42a61933d23287f4f82fb5b670c5506d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6472885204950473915, guid: 42a61933d23287f4f82fb5b670c5506d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -603,6 +635,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: prop_090 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6409283421617028815, guid: b5f074cbf4e475543900a1eef882338d, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -624,6 +660,10 @@ PrefabInstance:
     - target: {fileID: 2455989201397733788, guid: 2694dd893b4ff0f43be0417a2b9f163a, type: 3}
       propertyPath: m_Name
       value: electronics_031 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2455989201397733788, guid: 2694dd893b4ff0f43be0417a2b9f163a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2981028386776908582, guid: 2694dd893b4ff0f43be0417a2b9f163a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -727,6 +767,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: office_table_G
       objectReference: {fileID: 0}
+    - target: {fileID: 7317188085576518982, guid: 30d06ee1997e6a4428f308781e820c1a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 126
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -748,6 +792,10 @@ PrefabInstance:
     - target: {fileID: 3936821863748932315, guid: fc52cdb8a5700ce46bbe504b13d7d01f, type: 3}
       propertyPath: m_Name
       value: office_chair_Main (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936821863748932315, guid: fc52cdb8a5700ce46bbe504b13d7d01f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 126
       objectReference: {fileID: 0}
     - target: {fileID: 6990461244418782929, guid: fc52cdb8a5700ce46bbe504b13d7d01f, type: 3}
       propertyPath: m_LocalPosition.x
