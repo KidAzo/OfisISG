@@ -19,7 +19,7 @@ MonoBehaviour:
   _cornerMode: 0
   _cornerGapSize: 1
   _objectSkipChance: 0
-  _horizontalPadding: 3
+  _horizontalPadding: 1
   _verticalPadding: 0
   _volumelessObjectSize: 1
   _avoidOverlaps: 0

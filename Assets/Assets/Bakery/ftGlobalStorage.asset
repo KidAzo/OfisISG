@@ -28,7 +28,8 @@ MonoBehaviour:
   - Assets/AssetSection/BKAsset/Mesh/First/door3m.fbx
   - Assets/AssetSection/BKAsset/Mesh/First/WallMoss.fbx
   - Assets/AssetSection/BKAsset/Mesh/First/lobi.fbx
-  modifiedAssetPaddingHash: d6a958ff7e4e57d57f21819e45447b5a43e8fd74ecc12491ed6a7abcc2fc00665f5d04e5930b74321b3a80333f09ecc087430bca19b707053ec5d890
+  - Assets/AssetSection/BKAsset/Mesh/First/Cafeteria.fbx
+  modifiedAssetPaddingHash: d6a958ff3a3d5ece7f21819e45447b5a43e8fd74ecc12491ed6a7abcc2fc00665f5d04e5930b74321b3a80333f09ecc087430bca19b707053ec5d890b05c02fe
   modifiedMeshList: []
   modifiedMeshPaddingList: 
   modifiedAssets:
@@ -426,7 +427,7 @@ MonoBehaviour:
     - 1x2WW
     - 2MCCW
     - CylinderColone
-    padding: 480000002c00000028000000240000001d00000024000000180000001400000035000000140000002c0000003f0000001c00000015000000
+    padding: 480000002c000000280000001d0000001d00000024000000180000001400000035000000140000002c0000003f0000001c00000015000000
     unwrapper: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   - meshName:
     - LeftCube
@@ -573,6 +574,12 @@ MonoBehaviour:
     - Lobi.001
     padding: 22000000
     unwrapper: 00000000
+  - meshName:
+    - Plane
+    - CafeteriaTop
+    - CafeteriaBottom
+    padding: 1a0000000b00000015000000
+    unwrapper: 000000000000000000000000
   assetList:
   - Assets/Bakery/examples/content/sponza/bush.FBX
   - Assets/Bakery/examples/content/floor_lamp.FBX
@@ -4466,5 +4473,5 @@ MonoBehaviour:
   renderSettingsRTPVExposure: 1
   renderSettingsRemoveDuplicateLightmaps: 0
   tagOverrides: []
-  modifiedMeshPaddingArray: 22000000
-  modifiedMeshUnwrapperArray: 00000000
+  modifiedMeshPaddingArray: 1a0000000b00000015000000
+  modifiedMeshUnwrapperArray: 000000000000000000000000

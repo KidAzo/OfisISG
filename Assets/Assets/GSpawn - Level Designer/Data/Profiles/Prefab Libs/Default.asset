@@ -13593,9 +13593,9 @@ MonoBehaviour:
     _serializedKeys: []
     _serializedValues: []
   _spawnGuideTransformTRS:
-    _position: {x: -21.137213, y: 3.0442274, z: -1.0234926}
+    _position: {x: -8.913965, y: 2.99, z: 7.5941477}
     _rotation: {x: 0, y: 0, z: 0, w: 1}
-    _scale: {x: 1.75, y: 1.75, z: 1.75}
+    _scale: {x: 2.6599998, y: 2.6599998, z: 2.6599998}
   _modularSnapVerticalStep: 3
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
@@ -16645,10 +16645,10 @@ MonoBehaviour:
     _serializedKeys: []
     _serializedValues: []
   _spawnGuideTransformTRS:
-    _position: {x: 0, y: 0, z: 0}
-    _rotation: {x: 0, y: 0, z: 0, w: 1}
-    _scale: {x: 1, y: 1, z: 1}
-  _modularSnapVerticalStep: 0
+    _position: {x: -5, y: 6, z: -5}
+    _rotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+    _scale: {x: 1.0000002, y: 1, z: 1.0000002}
+  _modularSnapVerticalStep: 7
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.05003367, y: 0.05003367, z: 1}
@@ -21282,10 +21282,10 @@ MonoBehaviour:
     _serializedKeys: []
     _serializedValues: []
   _spawnGuideTransformTRS:
-    _position: {x: -11.647733, y: 0.65647924, z: 6.0478325}
-    _rotation: {x: -0, y: 0.73135376, z: -0, w: 0.6819983}
-    _scale: {x: 1.0000001, y: 1, z: 1.0000001}
-  _modularSnapVerticalStep: 0
+    _position: {x: -39, y: 1, z: -10}
+    _rotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+    _scale: {x: 1.0000002, y: 1, z: 1.0000002}
+  _modularSnapVerticalStep: 1
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.14988093, y: 0.31540313, z: 3}
@@ -22384,7 +22384,7 @@ MonoBehaviour:
     _position: {x: -26, y: 0, z: -11}
     _rotation: {x: 0, y: 0, z: 0, w: 1}
     _scale: {x: 1, y: 1, z: 1}
-  _modularSnapVerticalStep: 3
+  _modularSnapVerticalStep: 7
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.08319473, y: 0.14999999, z: 0.08319473}
