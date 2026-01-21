@@ -44,7 +44,7 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties:
-    - '#BAKERY{"meshName":["DoubleDoorL","Glass","BigGlass","DoubleDoorR","CornerGlass","ColorDoor"],"padding":[70,44,33,73,26,73],"unwrapper":[0,0,0,0,0,0]}'
+    - '#BAKERY{"meshName":["DoubleDoorL","Glass","BigGlass","DoubleDoorR","CornerGlass","ColorDoor"],"padding":[70,44,33,73,30,73],"unwrapper":[0,0,0,0,0,0]}'
     clipAnimations: []
     isReadable: 0
   meshes:
