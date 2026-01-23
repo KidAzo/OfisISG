@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3795621369206016066}
   - component: {fileID: 9032609053789845355}
   - component: {fileID: 895299192379117064}
+  - component: {fileID: 2003495827321547232}
   m_Layer: 0
   m_Name: BlueSofa
   m_TagString: Untagged
@@ -86,3 +87,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2003495827321547232
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6839501112772335898}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1435645, y: 0.36288628, z: 0.5611067}
+  m_Center: {x: 0.00000011920929, y: 0.18144314, z: -0.000000059604645}

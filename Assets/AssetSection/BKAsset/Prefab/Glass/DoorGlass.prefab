@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6609219793419259302}
   - component: {fileID: 3668020151628403979}
   - component: {fileID: 5205138669178088406}
+  - component: {fileID: 3303098621603697121}
   m_Layer: 0
   m_Name: DoorGlass
   m_TagString: Untagged
@@ -87,3 +88,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3303098621603697121
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3567375036662842630}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0003743, y: 2.0012987, z: 0.18489052}
+  m_Center: {x: 0.50018513, y: 1.0006493, z: 0.029987263}

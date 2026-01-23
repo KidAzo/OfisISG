@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3278007052376085988}
   - component: {fileID: 287001505523558626}
   - component: {fileID: 114146026081228759}
+  - component: {fileID: 6726422656993841448}
   m_Layer: 0
   m_Name: RestoChair
   m_TagString: Untagged
@@ -87,3 +88,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6726422656993841448
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4146214499556078479}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.7730646, y: 0.8283935, z: 0.7177767}
+  m_Center: {x: -0.88261056, y: 0.41419676, z: 0.29169697}

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3483858012648497002}
   - component: {fileID: 9081693770298430460}
   - component: {fileID: 8653499240349614930}
+  - component: {fileID: 7959947466665480724}
   m_Layer: 0
   m_Name: LargeLoungeY
   m_TagString: Untagged
@@ -86,3 +87,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7959947466665480724
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671461269429974964}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.757964, y: 0.73813343, z: 0.6040665}
+  m_Center: {x: 0.00000230968, y: 0.36906672, z: -0.04500054}

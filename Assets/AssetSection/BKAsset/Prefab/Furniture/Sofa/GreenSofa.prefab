@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3458631612453575533}
   - component: {fileID: 1380652121773023920}
   - component: {fileID: 9169019341024868923}
+  - component: {fileID: 3866993527758103595}
   m_Layer: 0
   m_Name: GreenSofa
   m_TagString: Untagged
@@ -86,3 +87,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3866993527758103595
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5081502008338119181}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1435647, y: 0.36288628, z: 0.5611068}
+  m_Center: {x: 0.00000059604645, y: 0.18144314, z: -0.0000019669533}

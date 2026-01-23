@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 633869033993761998}
   - component: {fileID: 405981765682573298}
   - component: {fileID: 572826454621091220}
+  - component: {fileID: 8664112700574828967}
   m_Layer: 0
   m_Name: DoubleDoorL
   m_TagString: Untagged
@@ -87,3 +88,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8664112700574828967
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4754997306327450944}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0003738, y: 2.0012987, z: 0.18489048}
+  m_Center: {x: -0.5001869, y: 1.0006493, z: 0.029987255}

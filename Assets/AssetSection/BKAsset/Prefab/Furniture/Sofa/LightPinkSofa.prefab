@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4558435871630325700}
   - component: {fileID: 938021826573241225}
   - component: {fileID: 979311508652368513}
+  - component: {fileID: 7795861704897709111}
   m_Layer: 0
   m_Name: LightPinkSofa
   m_TagString: Untagged
@@ -86,3 +87,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7795861704897709111
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2829445037782185116}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5124421, y: 0.80114496, z: 0.62635976}
+  m_Center: {x: 0.0009853246, y: 0.4005724, z: 0.03262449}

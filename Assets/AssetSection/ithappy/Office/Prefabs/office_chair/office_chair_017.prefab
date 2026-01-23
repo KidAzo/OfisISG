@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 0a6e339872f15e0438be90b9b94c33da, type: 3}
@@ -52,7 +53,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 0a6e339872f15e0438be90b9b94c33da, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 59df974a77d071848b115f5e8507b9e6, type: 2}
     - target: {fileID: 919132149155446097, guid: 0a6e339872f15e0438be90b9b94c33da, type: 3}
@@ -60,23 +61,36 @@ PrefabInstance:
       value: office_chair_017
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a6e339872f15e0438be90b9b94c33da, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1611187105563052286}
   m_SourcePrefab: {fileID: 100100000, guid: 0a6e339872f15e0438be90b9b94c33da, type: 3}
 --- !u!1 &582883279634083479 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a6e339872f15e0438be90b9b94c33da, type: 3}
   m_PrefabInstance: {fileID: 348950428116292550}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &-5146406797742303408
-MeshCollider:
+--- !u!65 &1611187105563052286
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582883279634083479}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -805261262815493750, guid: 0a6e339872f15e0438be90b9b94c33da, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 0.6549389, y: 1.158469, z: 0.68891656}
+  m_Center: {x: 0.0024218713, y: 0.5777128, z: -0.033187486}

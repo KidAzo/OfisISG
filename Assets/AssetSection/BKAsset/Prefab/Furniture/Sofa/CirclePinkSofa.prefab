@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6695406561866198515}
   - component: {fileID: 6773362542700031932}
   - component: {fileID: 1050736609229956725}
+  - component: {fileID: 2724055404919351489}
   m_Layer: 0
   m_Name: CirclePinkSofa
   m_TagString: Untagged
@@ -86,3 +87,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2724055404919351489
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8561128126879289690}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.48139322, y: 0.31216446, z: 0.48139322}
+  m_Center: {x: -0.0000017434359, y: 0.15608223, z: 0.0000009536743}
