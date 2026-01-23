@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4857113253820517214}
   - component: {fileID: 2430615098810696347}
   - component: {fileID: 1314426921833655280}
+  - component: {fileID: 7255494496603736754}
   m_Layer: 0
   m_Name: OpenShelf
   m_TagString: Untagged
@@ -87,3 +88,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7255494496603736754
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3767054679633970500}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.000001, y: 0.42402074, z: 0.368428}
+  m_Center: {x: -0.9999969, y: 0.21201037, z: 0.18421206}
