@@ -13,7 +13,7 @@ namespace Woi.Player
         [SerializeField] private float _groundCheckDistance = 0.2f;
         
         [Header("Look Settings")]
-        [SerializeField] private Transform _cameraTransform;
+        [SerializeField] private Transform _cameraPivotTransform;
         [SerializeField] private float _mouseSensitivity = 2f;
         [SerializeField] private float _maxLookAngle = 80f;
         
@@ -91,9 +91,9 @@ namespace Woi.Player
             _cameraPitch -= _lookInput.y * _mouseSensitivity * Time.deltaTime;;
             _cameraPitch = Mathf.Clamp(_cameraPitch, -_maxLookAngle, _maxLookAngle);
             
-            if (_cameraTransform != null)
+            if (_cameraPivotTransform != null)
             {
-                _cameraTransform.localRotation = Quaternion.Euler(_cameraPitch, 0f, 0f);
+                _cameraPivotTransform.localRotation = Quaternion.Euler(_cameraPitch, 0f, 0f);
             }
         }
         
