@@ -3674,3 +3674,876 @@ Running ftraceRTX batchpointlightprobeshlegacy "C:\Users\ilhan\AppData\Local\Tem
 Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "probes" 4 0 5 comp_5.bin
 Running ftraceRTX texgiprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "probes_final" 1924 16 5 "gi_probes4.bin" "probes_lights_HDR.lz4" vbTraceTex.bin
 Running ftraceRTX addsh "C:\Users\ilhan\AppData\Local\Temp\frender" "probes_final_" 4 0 5 shcomp_5.bin
+Done
+Done
+Done
+Done
+Loaded vertex shader: quad.vso
+Loaded pixel shader: skyOutput.pso
+Loaded pixel shader: cookieOutput.pso
+initShaders done
+initScene done
+Done
+Loaded vertex shader: quad.vso
+Loaded pixel shader: skyOutput.pso
+Loaded pixel shader: cookieOutput.pso
+initShaders done
+Rendering UV GBuffer for Office_LM0 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA1 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA2 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA3 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA4 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for probes 512
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV GBuffer for Office_VLM 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Done
+Done
+Running ftraceRTX fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_Office_LMA1.lz4" 2 0 1 0
+Running ftraceRTX fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_Office_LMA3.lz4" 2 0 3 0
+Running ftraceRTX fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_Office_LM0.lz4" 2 0 0 0
+Running ftraceRTX fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_Office_LMA2.lz4" 2 0 2 0
+Running ftraceRTX fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_Office_LMA4.lz4" 2 0 4 0
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_5" 1924 0 5 lights0.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_5" 1924 0 5 lights1.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_5" 1924 0 5 lights2.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_5" 1924 0 5 lights3.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_5" 1924 0 5 lights4.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_5" 1924 0 5 lights5.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_5" 1924 0 5 lights6.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_5" 1924 0 5 lights7.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_5" 1924 0 5 lights8.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_5" 1924 0 5 lights9.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_5" 1924 0 5 lights10.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_5" 1924 0 5 lights11.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_5" 1924 0 5 lights12.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_5" 1924 0 5 lights13.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_5" 1924 0 5 lights14.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_5" 1924 0 5 lights15.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_5" 1924 0 5 lights16.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_5" 1924 0 5 lights17.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_5" 1924 0 5 lights18.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_5" 1924 0 5 lights19.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_5" 1924 0 5 lights20.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_5" 1924 0 5 lights21.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_5" 1924 0 5 lights22.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_5" 1924 0 5 lights23.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_5" 1924 0 5 lights24.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_5" 1924 0 5 lights25.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_5" 1924 0 5 lights26.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_5" 1924 0 5 lights27.bin
+Running ftraceRTX batchpointlightprobeshlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_5_0_8" 1924 0 5 batchpointlight_5_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "probes" 4 0 5 comp_5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_6" 68 0 6 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_6" 68 0 6 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_6" 68 0 6 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_6" 68 0 6 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_6" 68 0 6 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_6" 68 0 6 lights16.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_6" 68 0 6 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_6" 68 0 6 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_6" 68 0 6 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_6" 68 0 6 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_6" 68 0 6 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_6" 68 0 6 lights27.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM" 4 0 6 comp_6.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_lights_Dir.lz4" 64 0 6 dircomp_6.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_1" 68 0 1 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_1" 68 0 1 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_1" 68 0 1 lights2.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_1" 68 0 1 lights3.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_1" 68 0 1 lights4.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_1" 68 0 1 lights5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_1" 68 0 1 lights6.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_1" 68 0 1 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_1" 68 0 1 lights8.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_1" 68 0 1 lights9.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_1" 68 0 1 lights10.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_1" 68 0 1 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_1" 68 0 1 lights12.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_1" 68 0 1 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_1" 68 0 1 lights14.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_1" 68 0 1 lights15.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_1" 68 0 1 lights16.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_1" 68 0 1 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_1" 68 0 1 lights18.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_1" 68 0 1 lights19.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_1" 68 0 1 lights20.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_1" 68 0 1 lights21.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_1" 68 0 1 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_1" 68 0 1 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_1" 68 0 1 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_1" 68 0 1 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_1" 68 0 1 lights26.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_1" 68 0 1 lights27.bin
+Running ftraceRTX batchpointlightlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_1_0_8" 68 0 1 batchpointlight_1_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1" 4 0 1 comp_1.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_lights_Dir.lz4" 64 0 1 dircomp_1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_3" 68 0 3 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_3" 68 0 3 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_3" 68 0 3 lights2.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_3" 68 0 3 lights3.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_3" 68 0 3 lights4.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_3" 68 0 3 lights5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_3" 68 0 3 lights6.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_3" 68 0 3 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_3" 68 0 3 lights8.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_3" 68 0 3 lights9.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_3" 68 0 3 lights10.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_3" 68 0 3 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_3" 68 0 3 lights12.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_3" 68 0 3 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_3" 68 0 3 lights14.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_3" 68 0 3 lights15.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_3" 68 0 3 lights16.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_3" 68 0 3 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_3" 68 0 3 lights18.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_3" 68 0 3 lights19.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_3" 68 0 3 lights20.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_3" 68 0 3 lights21.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_3" 68 0 3 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_3" 68 0 3 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_3" 68 0 3 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_3" 68 0 3 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_3" 68 0 3 lights26.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_3" 68 0 3 lights27.bin
+Running ftraceRTX batchpointlightlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_3_0_8" 68 0 3 batchpointlight_3_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3" 4 0 3 comp_3.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_lights_Dir.lz4" 64 0 3 dircomp_3.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_0" 68 0 0 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_0" 68 0 0 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_0" 68 0 0 lights2.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_0" 68 0 0 lights3.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_0" 68 0 0 lights4.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_0" 68 0 0 lights5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_0" 68 0 0 lights6.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_0" 68 0 0 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_0" 68 0 0 lights8.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_0" 68 0 0 lights9.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_0" 68 0 0 lights10.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_0" 68 0 0 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_0" 68 0 0 lights12.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_0" 68 0 0 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_0" 68 0 0 lights14.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_0" 68 0 0 lights15.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_0" 68 0 0 lights16.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_0" 68 0 0 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_0" 68 0 0 lights18.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_0" 68 0 0 lights19.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_0" 68 0 0 lights20.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_0" 68 0 0 lights21.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_0" 68 0 0 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_0" 68 0 0 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_0" 68 0 0 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_0" 68 0 0 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_0" 68 0 0 lights26.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_0" 68 0 0 lights27.bin
+Running ftraceRTX batchpointlightlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_0_0_8" 68 0 0 batchpointlight_0_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0" 4 0 0 comp_0.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_lights_Dir.lz4" 64 0 0 dircomp_0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_2" 68 0 2 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_2" 68 0 2 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_2" 68 0 2 lights2.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_2" 68 0 2 lights3.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_2" 68 0 2 lights4.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_2" 68 0 2 lights5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_2" 68 0 2 lights6.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_2" 68 0 2 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_2" 68 0 2 lights8.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_2" 68 0 2 lights9.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_2" 68 0 2 lights10.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_2" 68 0 2 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_2" 68 0 2 lights12.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_2" 68 0 2 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_2" 68 0 2 lights14.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_2" 68 0 2 lights15.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_2" 68 0 2 lights16.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_2" 68 0 2 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_2" 68 0 2 lights18.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_2" 68 0 2 lights19.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_2" 68 0 2 lights20.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_2" 68 0 2 lights21.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_2" 68 0 2 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_2" 68 0 2 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_2" 68 0 2 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_2" 68 0 2 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_2" 68 0 2 lights26.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_2" 68 0 2 lights27.bin
+Running ftraceRTX batchpointlightlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_2_0_8" 68 0 2 batchpointlight_2_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2" 4 0 2 comp_2.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_lights_Dir.lz4" 64 0 2 dircomp_2.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_4" 68 0 4 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_4" 68 0 4 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_4" 68 0 4 lights5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_4" 68 0 4 lights6.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_4" 68 0 4 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_4" 68 0 4 lights8.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_4" 68 0 4 lights10.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_4" 68 0 4 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_4" 68 0 4 lights12.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_4" 68 0 4 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_4" 68 0 4 lights14.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_4" 68 0 4 lights15.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_4" 68 0 4 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_4" 68 0 4 lights20.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_4" 68 0 4 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_4" 68 0 4 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_4" 68 0 4 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_4" 68 0 4 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_4" 68 0 4 lights26.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_4" 68 0 4 lights27.bin
+Running ftraceRTX batchpointlightlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_4_0_8" 68 0 4 batchpointlight_4_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4" 4 0 4 comp_4.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_lights_Dir.lz4" 64 0 4 dircomp_4.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_diffuse" 4 16 6 "gi_Office_VLM0.bin" "Office_VLM_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_diffuse" 4 16 1 "gi_Office_LMA10.bin" "Office_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_diffuse" 4 16 3 "gi_Office_LMA30.bin" "Office_LMA3_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_diffuse" 4 16 0 "gi_Office_LM00.bin" "Office_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_diffuse" 4 16 2 "gi_Office_LMA20.bin" "Office_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_diffuse" 4 16 4 "gi_Office_LMA40.bin" "Office_LMA4_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_diffuse" 4 16 6 "gi_Office_VLM1.bin" "Office_VLM_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_diffuse" 4 16 1 "gi_Office_LMA11.bin" "Office_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_diffuse" 4 16 3 "gi_Office_LMA31.bin" "Office_LMA3_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_diffuse" 4 16 0 "gi_Office_LM01.bin" "Office_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_diffuse" 4 16 2 "gi_Office_LMA21.bin" "Office_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_diffuse" 4 16 4 "gi_Office_LMA41.bin" "Office_LMA4_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_diffuse" 4 16 6 "gi_Office_VLM2.bin" "Office_VLM_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_diffuse" 4 16 1 "gi_Office_LMA12.bin" "Office_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_diffuse" 4 16 3 "gi_Office_LMA32.bin" "Office_LMA3_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_diffuse" 4 16 0 "gi_Office_LM02.bin" "Office_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_diffuse" 4 16 2 "gi_Office_LMA22.bin" "Office_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_diffuse" 4 16 4 "gi_Office_LMA42.bin" "Office_LMA4_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_diffuse" 4 16 6 "gi_Office_VLM3.bin" "Office_VLM_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_diffuse" 4 16 1 "gi_Office_LMA13.bin" "Office_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_diffuse" 4 16 3 "gi_Office_LMA33.bin" "Office_LMA3_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_diffuse" 4 16 0 "gi_Office_LM03.bin" "Office_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_diffuse" 4 16 2 "gi_Office_LMA23.bin" "Office_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_diffuse" 4 16 4 "gi_Office_LMA43.bin" "Office_LMA4_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgiprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "probes_final" 1924 16 5 "gi_probes4.bin" "probes_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_final" 68 16 6 "gi_Office_VLM4.bin" "Office_VLM_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_final" 68 16 1 "gi_Office_LMA14.bin" "Office_LMA1_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_final" 68 16 3 "gi_Office_LMA34.bin" "Office_LMA3_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_final" 68 16 0 "gi_Office_LM04.bin" "Office_LM0_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_final" 68 16 2 "gi_Office_LMA24.bin" "Office_LMA2_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_final" 68 16 4 "gi_Office_LMA44.bin" "Office_LMA4_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX addsh "C:\Users\ilhan\AppData\Local\Temp\frender" "probes_final_" 4 0 5 shcomp_5.bin
+Running denoiserOIDN2 D "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_Dir.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_Dir.lz4" 2048 0
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "1" "Office_LMA1_final_HDR.lz4" "Office_LMA1_final_Dir.lz4
+Loading geometry...
+Tris filtered by LMID: was 200008, left 13178
+Collecting edges...
+39534 edges
+Sorting...
+Finding seams...X
+1350 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running denoiserOIDN2 D "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_Dir.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_Dir.lz4" 2048 0
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Loading half-float lightmap...
+Rendering...
+Saving...
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "3" "Office_LMA3_final_HDR.lz4" "Office_LMA3_final_Dir.lz4
+Loading geometry...
+Tris filtered by LMID: was 200008, left 2767
+Collecting edges...
+8301 edges
+Sorting...
+Finding seams...X
+499 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running denoiserOIDN2 D "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_Dir.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_Dir.lz4" 2048 0
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Loading half-float lightmap...
+Rendering...
+Saving...
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "0" "Office_LM0_final_HDR.lz4" "Office_LM0_final_Dir.lz4
+Loading geometry...
+Tris filtered by LMID: was 200008, left 19414
+Collecting edges...
+55623 edges
+Sorting...
+Finding seams...X
+1203 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running denoiserOIDN2 D "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_Dir.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_Dir.lz4" 2048 0
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Loading half-float lightmap...
+Rendering...
+Saving...
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "2" "Office_LMA2_final_HDR.lz4" "Office_LMA2_final_Dir.lz4
+Loading geometry...
+Tris filtered by LMID: was 200008, left 12801
+Collecting edges...
+18060 edges
+Sorting...
+Finding seams...X
+644 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running denoiserOIDN2 D "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_Dir.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_Dir.lz4" 1024 0
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Loading half-float lightmap...
+Rendering...
+Saving...
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_HDR.lz4" 1024 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "4" "Office_LMA4_final_HDR.lz4" "Office_LMA4_final_Dir.lz4
+Loading geometry...
+Tris filtered by LMID: was 200008, left 398
+Collecting edges...
+1179 edges
+Sorting...
+Finding seams...X
+5 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA1_final.hdr" 1024
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Loading half-float lightmap...
+Rendering...
+Saving...
+Running rgba2tga "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_Dir.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA1_dir.tga" 
+Initializing D3D...
+Done
+Done
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA3_final.hdr" 1024
+Running rgba2tga "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_Dir.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA3_dir.tga" 
+Initializing D3D...
+Done
+Done
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LM0_final.hdr" 1024
+Running rgba2tga "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_Dir.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LM0_dir.tga" 
+Initializing D3D...
+Done
+Done
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA2_final.hdr" 1024
+Running rgba2tga "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_Dir.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA2_dir.tga" 
+Initializing D3D...
+Done
+Done
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA4_final.hdr" 1024
+Running rgba2tga "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_Dir.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA4_dir.tga" 
+Initializing D3D...
+Done
+Done
+Done
+Done
+Done
+Done
+Loaded vertex shader: quad.vso
+Loaded pixel shader: skyOutput.pso
+Loaded pixel shader: cookieOutput.pso
+initShaders done
+initScene done
+Done
+Rendering UV GBuffer for Office_LM0 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA1 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA2 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA3 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA4 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_VLM 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Done
+Done
+Running ftraceRTX fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_Office_LMA1.lz4" 2 0 1 0
+Running ftraceRTX fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_Office_LMA3.lz4" 2 0 3 0
+Running ftraceRTX fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_Office_LM0.lz4" 2 0 0 0
+Running ftraceRTX fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_Office_LMA2.lz4" 2 0 2 0
+Running ftraceRTX fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_Office_LMA4.lz4" 2 0 4 0
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_5" 68 0 5 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_5" 68 0 5 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_5" 68 0 5 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_5" 68 0 5 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_5" 68 0 5 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_5" 68 0 5 lights16.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_5" 68 0 5 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_5" 68 0 5 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_5" 68 0 5 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_5" 68 0 5 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_5" 68 0 5 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_5" 68 0 5 lights27.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM" 4 0 5 comp_5.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_lights_Dir.lz4" 64 0 5 dircomp_5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_1" 68 0 1 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_1" 68 0 1 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_1" 68 0 1 lights2.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_1" 68 0 1 lights3.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_1" 68 0 1 lights4.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_1" 68 0 1 lights5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_1" 68 0 1 lights6.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_1" 68 0 1 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_1" 68 0 1 lights8.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_1" 68 0 1 lights9.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_1" 68 0 1 lights10.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_1" 68 0 1 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_1" 68 0 1 lights12.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_1" 68 0 1 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_1" 68 0 1 lights14.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_1" 68 0 1 lights15.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_1" 68 0 1 lights16.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_1" 68 0 1 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_1" 68 0 1 lights18.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_1" 68 0 1 lights19.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_1" 68 0 1 lights20.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_1" 68 0 1 lights21.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_1" 68 0 1 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_1" 68 0 1 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_1" 68 0 1 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_1" 68 0 1 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_1" 68 0 1 lights26.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_1" 68 0 1 lights27.bin
+Running ftraceRTX batchpointlightlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_1_0_8" 68 0 1 batchpointlight_1_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1" 4 0 1 comp_1.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_lights_Dir.lz4" 64 0 1 dircomp_1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_3" 68 0 3 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_3" 68 0 3 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_3" 68 0 3 lights2.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_3" 68 0 3 lights3.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_3" 68 0 3 lights4.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_3" 68 0 3 lights5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_3" 68 0 3 lights6.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_3" 68 0 3 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_3" 68 0 3 lights8.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_3" 68 0 3 lights9.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_3" 68 0 3 lights10.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_3" 68 0 3 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_3" 68 0 3 lights12.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_3" 68 0 3 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_3" 68 0 3 lights14.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_3" 68 0 3 lights15.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_3" 68 0 3 lights16.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_3" 68 0 3 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_3" 68 0 3 lights18.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_3" 68 0 3 lights19.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_3" 68 0 3 lights20.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_3" 68 0 3 lights21.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_3" 68 0 3 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_3" 68 0 3 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_3" 68 0 3 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_3" 68 0 3 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_3" 68 0 3 lights26.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_3" 68 0 3 lights27.bin
+Running ftraceRTX batchpointlightlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_3_0_8" 68 0 3 batchpointlight_3_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3" 4 0 3 comp_3.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_lights_Dir.lz4" 64 0 3 dircomp_3.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_0" 68 0 0 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_0" 68 0 0 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_0" 68 0 0 lights2.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_0" 68 0 0 lights3.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_0" 68 0 0 lights4.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_0" 68 0 0 lights5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_0" 68 0 0 lights6.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_0" 68 0 0 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_0" 68 0 0 lights8.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_0" 68 0 0 lights9.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_0" 68 0 0 lights10.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_0" 68 0 0 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_0" 68 0 0 lights12.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_0" 68 0 0 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_0" 68 0 0 lights14.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_0" 68 0 0 lights15.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_0" 68 0 0 lights16.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_0" 68 0 0 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_0" 68 0 0 lights18.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_0" 68 0 0 lights19.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_0" 68 0 0 lights20.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_0" 68 0 0 lights21.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_0" 68 0 0 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_0" 68 0 0 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_0" 68 0 0 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_0" 68 0 0 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_0" 68 0 0 lights26.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_0" 68 0 0 lights27.bin
+Running ftraceRTX batchpointlightlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_0_0_8" 68 0 0 batchpointlight_0_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0" 4 0 0 comp_0.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_lights_Dir.lz4" 64 0 0 dircomp_0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_2" 68 0 2 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_2" 68 0 2 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_2" 68 0 2 lights2.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_2" 68 0 2 lights3.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_2" 68 0 2 lights4.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_2" 68 0 2 lights5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_2" 68 0 2 lights6.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_2" 68 0 2 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_2" 68 0 2 lights8.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_2" 68 0 2 lights9.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_2" 68 0 2 lights10.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_2" 68 0 2 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_2" 68 0 2 lights12.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_2" 68 0 2 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_2" 68 0 2 lights14.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_2" 68 0 2 lights15.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_2" 68 0 2 lights16.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_2" 68 0 2 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_2" 68 0 2 lights18.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_2" 68 0 2 lights19.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_2" 68 0 2 lights20.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_2" 68 0 2 lights21.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_2" 68 0 2 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_2" 68 0 2 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_2" 68 0 2 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_2" 68 0 2 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_2" 68 0 2 lights26.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_2" 68 0 2 lights27.bin
+Running ftraceRTX batchpointlightlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_2_0_8" 68 0 2 batchpointlight_2_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2" 4 0 2 comp_2.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_lights_Dir.lz4" 64 0 2 dircomp_2.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_4" 68 0 4 lights0.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_4" 68 0 4 lights1.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_4" 68 0 4 lights5.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_4" 68 0 4 lights6.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_4" 68 0 4 lights7.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_4" 68 0 4 lights8.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_4" 68 0 4 lights10.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_4" 68 0 4 lights11.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_4" 68 0 4 lights12.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_4" 68 0 4 lights13.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_4" 68 0 4 lights14.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_4" 68 0 4 lights15.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_4" 68 0 4 lights17.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_4" 68 0 4 lights20.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_4" 68 0 4 lights22.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_4" 68 0 4 lights23.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_4" 68 0 4 lights24.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_4" 68 0 4 lights25.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_4" 68 0 4 lights26.bin
+Running ftraceRTX arealightdir "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_4" 68 0 4 lights27.bin
+Running ftraceRTX batchpointlightlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_4_0_8" 68 0 4 batchpointlight_4_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4" 4 0 4 comp_4.bin
+Running ftraceRTX diradd "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_lights_Dir.lz4" 64 0 4 dircomp_4.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_diffuse" 4 16 5 "gi_Office_VLM0.bin" "Office_VLM_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_diffuse" 4 16 1 "gi_Office_LMA10.bin" "Office_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_diffuse" 4 16 3 "gi_Office_LMA30.bin" "Office_LMA3_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_diffuse" 4 16 0 "gi_Office_LM00.bin" "Office_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_diffuse" 4 16 2 "gi_Office_LMA20.bin" "Office_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_diffuse" 4 16 4 "gi_Office_LMA40.bin" "Office_LMA4_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_diffuse" 4 16 5 "gi_Office_VLM1.bin" "Office_VLM_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_diffuse" 4 16 1 "gi_Office_LMA11.bin" "Office_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_diffuse" 4 16 3 "gi_Office_LMA31.bin" "Office_LMA3_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_diffuse" 4 16 0 "gi_Office_LM01.bin" "Office_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_diffuse" 4 16 2 "gi_Office_LMA21.bin" "Office_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_diffuse" 4 16 4 "gi_Office_LMA41.bin" "Office_LMA4_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_diffuse" 4 16 5 "gi_Office_VLM2.bin" "Office_VLM_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_diffuse" 4 16 1 "gi_Office_LMA12.bin" "Office_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_diffuse" 4 16 3 "gi_Office_LMA32.bin" "Office_LMA3_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_diffuse" 4 16 0 "gi_Office_LM02.bin" "Office_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_diffuse" 4 16 2 "gi_Office_LMA22.bin" "Office_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_diffuse" 4 16 4 "gi_Office_LMA42.bin" "Office_LMA4_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_diffuse" 4 16 5 "gi_Office_VLM3.bin" "Office_VLM_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_diffuse" 4 16 1 "gi_Office_LMA13.bin" "Office_LMA1_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_diffuse" 4 16 3 "gi_Office_LMA33.bin" "Office_LMA3_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_diffuse" 4 16 0 "gi_Office_LM03.bin" "Office_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_diffuse" 4 16 2 "gi_Office_LMA23.bin" "Office_LMA2_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_diffuse" 4 16 4 "gi_Office_LMA43.bin" "Office_LMA4_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_VLM_final" 68 16 5 "gi_Office_VLM4.bin" "Office_VLM_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA1_final" 68 16 1 "gi_Office_LMA14.bin" "Office_LMA1_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA3_final" 68 16 3 "gi_Office_LMA34.bin" "Office_LMA3_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LM0_final" 68 16 0 "gi_Office_LM04.bin" "Office_LM0_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA2_final" 68 16 2 "gi_Office_LMA24.bin" "Office_LMA2_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX texgidir "C:\Users\ilhan\AppData\Local\Temp\frender" "Office_LMA4_final" 68 16 4 "gi_Office_LMA44.bin" "Office_LMA4_lights_HDR.lz4" vbTraceTex.bin
+Running denoiserOIDN2 D "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_Dir.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_Dir.lz4" 2048 0
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "1" "Office_LMA1_final_HDR.lz4" "Office_LMA1_final_Dir.lz4
+Loading geometry...
+Tris filtered by LMID: was 166516, left 13178
+Collecting edges...
+39534 edges
+Sorting...
+Finding seams...X
+1350 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running denoiserOIDN2 D "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_Dir.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_Dir.lz4" 2048 0
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Loading half-float lightmap...
+Rendering...
+Saving...
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "3" "Office_LMA3_final_HDR.lz4" "Office_LMA3_final_Dir.lz4
+Loading geometry...
+Tris filtered by LMID: was 166516, left 2765
+Collecting edges...
+8295 edges
+Sorting...
+Finding seams...X
+496 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running denoiserOIDN2 D "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_Dir.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_Dir.lz4" 2048 0
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Loading half-float lightmap...
+Rendering...
+Saving...
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "0" "Office_LM0_final_HDR.lz4" "Office_LM0_final_Dir.lz4
+Loading geometry...
+Tris filtered by LMID: was 166516, left 19414
+Collecting edges...
+55623 edges
+Sorting...
+Finding seams...X
+1203 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running denoiserOIDN2 D "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_Dir.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_Dir.lz4" 2048 0
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Loading half-float lightmap...
+Rendering...
+Saving...
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_HDR.lz4" 2048 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "2" "Office_LMA2_final_HDR.lz4" "Office_LMA2_final_Dir.lz4
+Loading geometry...
+Tris filtered by LMID: was 166516, left 4430
+Collecting edges...
+13290 edges
+Sorting...
+Finding seams...X
+629 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running denoiserOIDN2 D "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_Dir.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_Dir.lz4" 1024 0
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Loading half-float lightmap...
+Rendering...
+Saving...
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_HDR.lz4" 1024 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "4" "Office_LMA4_final_HDR.lz4" "Office_LMA4_final_Dir.lz4
+Loading geometry...
+Tris filtered by LMID: was 166516, left 398
+Collecting edges...
+1179 edges
+Sorting...
+Finding seams...X
+5 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Loading half-float lightmap...
+Rendering...
+Saving...
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA1_final.hdr" 1024
+Running rgba2tga "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA1_final_Dir.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA1_dir.tga" 
+Initializing D3D...
+Done
+Done
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA3_final.hdr" 1024
+Running rgba2tga "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA3_final_Dir.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA3_dir.tga" 
+Initializing D3D...
+Done
+Done
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LM0_final.hdr" 1024
+Running rgba2tga "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LM0_final_Dir.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LM0_dir.tga" 
+Initializing D3D...
+Done
+Done
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA2_final.hdr" 1024
+Running rgba2tga "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA2_final_Dir.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA2_dir.tga" 
+Initializing D3D...
+Done
+Done
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA4_final.hdr" 1024
+Running rgba2tga "C:\Users\ilhan\AppData\Local\Temp\frender/Office_LMA4_final_Dir.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/Office_LMA4_dir.tga" 
+Initializing D3D...
+Done
+Done
+Loaded vertex shader: quad.vso
+Loaded pixel shader: skyOutput.pso
+Loaded pixel shader: cookieOutput.pso
+initShaders done
+initScene done
+Done
+Rendering UV GBuffer for Office_LM0 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA1 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA2 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA3 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for Office_LMA4 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Rendering UV GBuffer for probes 512
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV GBuffer for Office_VLM 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Done
+Done
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_5" 1924 0 5 lights0.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_5" 1924 0 5 lights1.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_5" 1924 0 5 lights2.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_5" 1924 0 5 lights3.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_5" 1924 0 5 lights4.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_5" 1924 0 5 lights5.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_5" 1924 0 5 lights6.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_5" 1924 0 5 lights7.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_5" 1924 0 5 lights8.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_5" 1924 0 5 lights9.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_5" 1924 0 5 lights10.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_5" 1924 0 5 lights11.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_5" 1924 0 5 lights12.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_5" 1924 0 5 lights13.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_5" 1924 0 5 lights14.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_5" 1924 0 5 lights15.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_5" 1924 0 5 lights16.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_5" 1924 0 5 lights17.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_5" 1924 0 5 lights18.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_5" 1924 0 5 lights19.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_5" 1924 0 5 lights20.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_5" 1924 0 5 lights21.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_5" 1924 0 5 lights22.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_5" 1924 0 5 lights23.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_5" 1924 0 5 lights24.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_5" 1924 0 5 lights25.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_5" 1924 0 5 lights26.bin
+Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_5" 1924 0 5 lights27.bin
+Running ftraceRTX batchpointlightprobeshlegacy "C:\Users\ilhan\AppData\Local\Temp\frender" "PointBatch_5_0_8" 1924 0 5 batchpointlight_5_0_8.bin
+Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "probes" 4 0 5 comp_5.bin
+Running ftraceRTX texgiprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "probes_final" 1924 16 5 "gi_probes4.bin" "probes_lights_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX addsh "C:\Users\ilhan\AppData\Local\Temp\frender" "probes_final_" 4 0 5 shcomp_5.bin
+abort_threads: Failed aborting id: 000000000000E69C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000849C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000E69C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000849C, mono_thread_manage will ignore it
+
+Done
+Done
+Done
+Done
