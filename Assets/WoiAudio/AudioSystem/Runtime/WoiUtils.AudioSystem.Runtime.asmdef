@@ -1,0 +1,16 @@
+{
+    "name": "WoiUtils.AudioSystem.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:86a80fba6882dad4b8847b7bc03b1a62"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,16 @@
+{
+    "name": "Woi.HelpfulEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:87769dfb32b5b774d8e7fd603ca327a0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
