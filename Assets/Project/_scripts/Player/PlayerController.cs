@@ -1,11 +1,18 @@
+using System;
+using Reflex.Attributes;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
+using UnityEngine.TextCore.Text;
 
 namespace Woi.Player
 {
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
+        [Inject] IPlayerService _playerService;
+        [SerializeField] private Transform initialPosition;
+
         [Header("Movement Settings")]
         [SerializeField] private float _walkSpeed = 5f;
         [SerializeField] private float _sprintSpeed = 8f;
@@ -29,6 +36,8 @@ namespace Woi.Player
         
         private void Awake()
         {
+            _playerService.RegisterPlayer(this);
+            
             _characterController = GetComponent<CharacterController>();
             _playerActions = new();
             
@@ -36,7 +45,7 @@ namespace Woi.Player
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-        
+
         private void OnEnable()
         {
             _playerActions.Enable();
@@ -127,6 +136,45 @@ namespace Woi.Player
         private void OnSprint(InputAction.CallbackContext context)
         {
             _isSprinting = context.ReadValueAsButton();
+        }
+    }
+
+    public interface IPlayerService
+    {
+        Transform GetPlayerTransform();
+        void SetPlayerLocomotion(Vector3 position);
+        void RegisterPlayer(PlayerController player);
+        event Action OnPlayerRegistered;
+    }
+
+    public class PlayerService : IPlayerService
+    {
+        private Transform _playerTransform;
+        private PlayerController _playerController;
+        private CharacterController ch;
+
+        public event Action OnPlayerRegistered;
+
+        public Transform GetPlayerTransform()
+        {
+            return _playerTransform;
+        }
+
+        public void RegisterPlayer(PlayerController player)
+        {
+            _playerController = player; 
+            _playerTransform = player.transform;
+            ch = player.GetComponent<CharacterController>();
+            OnPlayerRegistered?.Invoke();   
+        }
+
+        public void SetPlayerLocomotion(Vector3 position)
+        {
+            Debug.Log("Setting player position to: " + position);
+            ch.enabled = false; // Disable CharacterController to avoid collision issues
+            ch.transform.position = position;
+            ch.transform.rotation = Quaternion.Euler(0, -90, 0);
+            ch.enabled = true; // Re-enable CharacterController
         }
     }
 }

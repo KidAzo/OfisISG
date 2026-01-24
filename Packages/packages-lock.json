@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.gustavopsantos.reflex": {
-      "version": "https://github.com/gustavopsantos/reflex.git?path=/Assets/Reflex/#14.0.0",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "7860febed99b82ca2dc273ca621c13965dc497a2"
-    },
     "com.kyrylokuzyk.primetween": {
       "version": "file:../Assets/Plugins/PrimeTween/internal/com.kyrylokuzyk.primetween.tgz",
       "depth": 0,

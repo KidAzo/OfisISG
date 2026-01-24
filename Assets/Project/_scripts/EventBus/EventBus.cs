@@ -8,153 +8,146 @@ namespace Woi.Events
 
 	public static class EventBus
 	{
-		// Delegate cache to avoid boxing and reflection
+		// Her event type için listener listesi
 		private class EventListeners<T> where T : IEvent
 		{
-			private readonly List<WeakActionRef<T>> _listeners = new();
-			private readonly List<WeakActionRef<T>> _toRemove = new(); // Reuse list to avoid GC
+			private readonly List<Action<T>> _listeners = new();
+			private readonly List<Action<T>> _listenersToAdd = new();
+			private readonly List<Action<T>> _listenersToRemove = new();
+			private bool _isInvoking;
 
 			public void Add(Action<T> callback)
 			{
-				// Check for duplicates
-				var target = callback.Target;
-				var method = callback.Method;
+				if (callback == null) return;
 
-				for (int i = 0; i < _listeners.Count; i++)
+				// Invoking sırasında ekleme - sonra ekle
+				if (_isInvoking)
 				{
-					if (_listeners[i].Matches(target, method))
-						return; // Already subscribed
+					if (!_listenersToAdd.Contains(callback))
+						_listenersToAdd.Add(callback);
+					return;
 				}
 
-				_listeners.Add(new WeakActionRef<T>(callback));
+				// Duplicate check
+				if (!_listeners.Contains(callback))
+					_listeners.Add(callback);
 			}
 
 			public bool Remove(Action<T> callback)
 			{
-				var target = callback.Target;
-				var method = callback.Method;
+				if (callback == null) return false;
 
-				for (int i = 0; i < _listeners.Count; i++)
+				// Invoking sırasında silme - sonra sil
+				if (_isInvoking)
 				{
-					if (_listeners[i].Matches(target, method))
+					if (!_listenersToRemove.Contains(callback))
 					{
-						_listeners.RemoveAt(i);
+						_listenersToRemove.Add(callback);
 						return true;
 					}
+					return false;
 				}
-				return false;
+
+				return _listeners.Remove(callback);
 			}
 
 			public void Invoke(T evt)
 			{
 				if (_listeners.Count == 0) return;
 
-				_toRemove.Clear();
+				_isInvoking = true;
 
-				// Process listeners
+				// Listener'ları invoke et
 				for (int i = 0; i < _listeners.Count; i++)
 				{
-					var listener = _listeners[i];
-					if (!listener.TryInvoke(evt))
+					try
 					{
-						_toRemove.Add(listener);
+						_listeners[i]?.Invoke(evt);
+					}
+					catch (Exception ex)
+					{
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+						Debug.LogError($"EventBus error in {typeof(T).Name}: {ex.Message}\n{ex.StackTrace}");
+#endif
 					}
 				}
 
-				// Remove dead references
-				if (_toRemove.Count > 0)
+				_isInvoking = false;
+
+				// Pending eklemeleri yap
+				if (_listenersToAdd.Count > 0)
 				{
-					for (int i = 0; i < _toRemove.Count; i++)
+					foreach (var listener in _listenersToAdd)
 					{
-						_listeners.Remove(_toRemove[i]);
+						if (!_listeners.Contains(listener))
+							_listeners.Add(listener);
 					}
+					_listenersToAdd.Clear();
+				}
+
+				// Pending silmeleri yap
+				if (_listenersToRemove.Count > 0)
+				{
+					foreach (var listener in _listenersToRemove)
+					{
+						_listeners.Remove(listener);
+					}
+					_listenersToRemove.Clear();
 				}
 			}
 
 			public int Count => _listeners.Count;
-			public void Clear() => _listeners.Clear();
-		}
-
-		private class WeakActionRef<T> where T : IEvent
-		{
-			private readonly WeakReference _targetRef;
-			private readonly string _methodName;
-			private readonly bool _isStatic;
-			private Action<T> _cachedAction; // For static methods
-
-			public WeakActionRef(Action<T> action)
+			
+			public void Clear()
 			{
-				_isStatic = action.Target == null;
-				_methodName = action.Method.Name;
-
-				if (_isStatic)
-				{
-					_cachedAction = action; // Static methods don't need weak ref
-				}
-				else
-				{
-					_targetRef = new WeakReference(action.Target);
-				}
+				_listeners.Clear();
+				_listenersToAdd.Clear();
+				_listenersToRemove.Clear();
 			}
-
-			public bool TryInvoke(T evt)
-			{
-				try
-				{
-					if (_isStatic)
-					{
-						_cachedAction?.Invoke(evt);
-						return true;
-					}
-
-					if (_targetRef?.Target != null)
-					{
-						// Recreate action - still faster than reflection
-						var target = _targetRef.Target;
-						var action = (Action<T>)Delegate.CreateDelegate(typeof(Action<T>), target, _methodName);
-						action.Invoke(evt);
-						return true;
-					}
-
-					return false; // Dead reference
-				}
-				catch (Exception ex)
-				{
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-					Debug.LogError($"EventBus error in {_methodName}: {ex.Message}");
-#endif
-					return _isStatic; // Keep static methods even if they error
-				}
-			}
-
-			public bool Matches(object target, System.Reflection.MethodInfo method)
-			{
-				if (_isStatic)
-					return target == null && method.Name == _methodName;
-
-				return _targetRef?.Target == target && method.Name == _methodName;
-			}
-
-			public bool IsAlive => _isStatic || (_targetRef?.IsAlive ?? false);
 		}
 
 		// Type-specific listener storage
 		private static readonly Dictionary<Type, object> _eventListeners = new();
-
-		public static void Subscribe<T>(Action<T> callback) where T : IEvent
+		
+		// Subscription handle pattern - otomatik dispose için
+		public class Subscription : IDisposable
 		{
-			if (callback == null) return;
+			private Action _unsubscribeAction;
+			private bool _disposed;
 
-			var type = typeof(T);
-			if (!_eventListeners.TryGetValue(type, out var listeners))
+			public Subscription(Action unsubscribeAction)
 			{
-				listeners = new EventListeners<T>();
-				_eventListeners[type] = listeners;
+				_unsubscribeAction = unsubscribeAction;
 			}
 
-			((EventListeners<T>)listeners).Add(callback);
+			public void Dispose()
+			{
+				if (_disposed) return;
+				_disposed = true;
+				_unsubscribeAction?.Invoke();
+				_unsubscribeAction = null;
+			}
 		}
 
+		/// <summary>
+		/// Event'e subscribe ol. Dönen IDisposable ile otomatik unsubscribe yapabilirsin.
+		/// </summary>
+		public static Subscription Subscribe<T>(Action<T> callback) where T : IEvent
+		{
+			if (callback == null) 
+			{
+				Debug.LogWarning("EventBus: Null callback provided to Subscribe");
+				return new Subscription(null);
+			}
+
+			GetOrCreateListeners<T>().Add(callback);
+			
+			return new Subscription(() => Unsubscribe(callback));
+		}
+
+		/// <summary>
+		/// Event'ten unsubscribe ol
+		/// </summary>
 		public static bool Unsubscribe<T>(Action<T> callback) where T : IEvent
 		{
 			if (callback == null) return false;
@@ -162,14 +155,29 @@ namespace Woi.Events
 			var type = typeof(T);
 			if (_eventListeners.TryGetValue(type, out var listeners))
 			{
-				return ((EventListeners<T>)listeners).Remove(callback);
+				var result = ((EventListeners<T>)listeners).Remove(callback);
+				
+				// Eğer listener kalmadıysa dictionary'den kaldır (memory optimization)
+				if (((EventListeners<T>)listeners).Count == 0)
+				{
+					_eventListeners.Remove(type);
+				}
+				
+				return result;
 			}
 			return false;
 		}
 
+		/// <summary>
+		/// Event publish et - tüm subscriber'lar çağrılır
+		/// </summary>
 		public static void Publish<T>(T evt) where T : IEvent
 		{
-			if (evt == null) return;
+			if (evt == null)
+			{
+				Debug.LogWarning($"EventBus: Null event of type {typeof(T).Name} published");
+				return;
+			}
 
 			var type = typeof(T);
 			if (_eventListeners.TryGetValue(type, out var listeners))
@@ -178,6 +186,9 @@ namespace Woi.Events
 			}
 		}
 
+		/// <summary>
+		/// Belirli bir event type için listener sayısını al
+		/// </summary>
 		public static int GetListenerCount<T>() where T : IEvent
 		{
 			var type = typeof(T);
@@ -188,37 +199,167 @@ namespace Woi.Events
 			return 0;
 		}
 
+		/// <summary>
+		/// Tüm event listener'ları temizle
+		/// </summary>
 		public static void Clear()
 		{
 			_eventListeners.Clear();
 		}
 
-		// Clean up specific event type
+		/// <summary>
+		/// Belirli bir event type'ının tüm listener'larını temizle
+		/// </summary>
 		public static void Clear<T>() where T : IEvent
 		{
 			var type = typeof(T);
 			if (_eventListeners.TryGetValue(type, out var listeners))
 			{
 				((EventListeners<T>)listeners).Clear();
+				_eventListeners.Remove(type);
 			}
 		}
 
+		private static EventListeners<T> GetOrCreateListeners<T>() where T : IEvent
+		{
+			var type = typeof(T);
+			if (!_eventListeners.TryGetValue(type, out var listeners))
+			{
+				listeners = new EventListeners<T>();
+				_eventListeners[type] = listeners;
+			}
+			return (EventListeners<T>)listeners;
+		}
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+		/// <summary>
+		/// Debug için event bus durumunu yazdır
+		/// </summary>
 		public static void PrintDebugInfo()
 		{
-			Debug.Log($"EventBus - Active event types: {_eventListeners.Count}");
+			Debug.Log($"═══════════════════════════════════════");
+			Debug.Log($"EventBus Debug Info");
+			Debug.Log($"═══════════════════════════════════════");
+			Debug.Log($"Active event types: {_eventListeners.Count}");
+			
 			foreach (var kvp in _eventListeners)
 			{
-				var count = kvp.Value.GetType().GetMethod("get_Count")?.Invoke(kvp.Value, null);
-				Debug.Log($"  {kvp.Key.Name}: {count} listeners");
+				var listenerType = kvp.Value.GetType();
+				var countProperty = listenerType.GetProperty("Count");
+				var count = countProperty?.GetValue(kvp.Value);
+				Debug.Log($"  • {kvp.Key.Name}: {count} listener(s)");
+			}
+			Debug.Log($"═══════════════════════════════════════");
+		}
+
+		/// <summary>
+		/// Belirli bir event type için listener'ları listele
+		/// </summary>
+		public static void PrintListeners<T>() where T : IEvent
+		{
+			var type = typeof(T);
+			Debug.Log($"Listeners for {type.Name}:");
+			
+			if (_eventListeners.TryGetValue(type, out var listeners))
+			{
+				var count = ((EventListeners<T>)listeners).Count;
+				Debug.Log($"  Total: {count} listener(s)");
+			}
+			else
+			{
+				Debug.Log($"  No listeners registered");
 			}
 		}
 #endif
 
+		/// <summary>
+		/// Unity domain reload'da otomatik temizlik
+		/// </summary>
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
 		private static void Initialize()
 		{
 			Clear();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+			Debug.Log("EventBus initialized and cleared");
+#endif
 		}
 	}
+
+	#region Helper Extensions
+	/// <summary>
+	/// MonoBehaviour için extension - otomatik unsubscribe
+	/// </summary>
+	public static class EventBusExtensions
+	{
+		private class SubscriptionTracker : MonoBehaviour
+		{
+			private readonly List<EventBus.Subscription> _subscriptions = new();
+			private readonly List<EventBus.Subscription> _enableSubscriptions = new();
+
+			public void Track(EventBus.Subscription subscription, bool disposeOnDisable)
+			{
+				if (disposeOnDisable)
+					_enableSubscriptions.Add(subscription);
+				else
+					_subscriptions.Add(subscription);
+			}
+
+			private void OnDisable()
+			{
+				// OnDisable'da sadece enable subscriptions'ları temizle
+				foreach (var sub in _enableSubscriptions)
+				{
+					sub?.Dispose();
+				}
+				_enableSubscriptions.Clear();
+			}
+
+			private void OnDestroy()
+			{
+				// OnDestroy'da her şeyi temizle
+				foreach (var sub in _subscriptions)
+				{
+					sub?.Dispose();
+				}
+				_subscriptions.Clear();
+				
+				foreach (var sub in _enableSubscriptions)
+				{
+					sub?.Dispose();
+				}
+				_enableSubscriptions.Clear();
+			}
+		}
+
+		/// <summary>
+		/// OnDestroy'da otomatik unsubscribe (GameObject destroy olunca)
+		/// Pooling kullanıyorsan bunu KULLANMA!
+		/// </summary>
+		public static void SubscribeWithCleanup<T>(this MonoBehaviour behaviour, Action<T> callback) where T : IEvent
+		{
+			var subscription = EventBus.Subscribe(callback);
+			
+			var tracker = behaviour.GetComponent<SubscriptionTracker>();
+			if (tracker == null)
+				tracker = behaviour.gameObject.AddComponent<SubscriptionTracker>();
+			
+			tracker.Track(subscription, disposeOnDisable: false);
+		}
+
+		/// <summary>
+		/// OnDisable'da otomatik unsubscribe (GameObject deaktif olunca)
+		/// Pooling/Menu sistemleri için bunu kullan!
+		/// </summary>
+		public static void SubscribeWhileEnabled<T>(this MonoBehaviour behaviour, Action<T> callback) where T : IEvent
+		{
+			var subscription = EventBus.Subscribe(callback);
+			
+			var tracker = behaviour.GetComponent<SubscriptionTracker>();
+			if (tracker == null)
+				tracker = behaviour.gameObject.AddComponent<SubscriptionTracker>();
+			
+			tracker.Track(subscription, disposeOnDisable: true);
+		}
+	}
+	#endregion
 }
