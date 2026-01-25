@@ -1,15 +1,19 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Woi.Player;
+using Reflex.Attributes;
 
 public class InteractableController : MonoBehaviour
 {
+    [Inject] IPlayerService playerService;
     [SerializeField] LayerMask interactableLayerMask;
     RayInteractor<IInteractable> rayInteractor;
-    [SerializeField] Camera cam;
 
     void Start()
     {
-        rayInteractor = new RayInteractor<IInteractable>(new ScreenCenterRayProvider(cam), new PhysicsRaycastService(), new RaySelector());
+        rayInteractor = new RayInteractor<IInteractable>(new ScreenCenterRayProvider(playerService.playerCamera), 
+        new PhysicsRaycastService(), 
+        new RaySelector());
     }
 
     void Update()

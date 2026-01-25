@@ -23,7 +23,7 @@ public class Door : MonoBehaviour, IInteractable
 
     void Open()
     {
-        tween.Stop(); // varsa eskisini öldürür (güvenli)
+        tween.Stop();
 
         isOpened = true;
         tween = Tween.LocalRotation(

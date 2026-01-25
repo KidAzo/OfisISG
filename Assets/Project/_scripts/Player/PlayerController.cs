@@ -11,7 +11,6 @@ namespace Woi.Player
     public class PlayerController : MonoBehaviour
     {
         [Inject] IPlayerService _playerService;
-        [SerializeField] private Transform initialPosition;
 
         [Header("Movement Settings")]
         [SerializeField] private float _walkSpeed = 5f;
@@ -21,6 +20,7 @@ namespace Woi.Player
         
         [Header("Look Settings")]
         [SerializeField] private Transform _cameraPivotTransform;
+        public Camera playerCamera;
         [SerializeField] private float _mouseSensitivity = 2f;
         [SerializeField] private float _maxLookAngle = 80f;
         
@@ -141,6 +141,7 @@ namespace Woi.Player
 
     public interface IPlayerService
     {
+        Camera playerCamera { get; }    
         Transform GetPlayerTransform();
         void SetPlayerLocomotion(Vector3 position);
         void RegisterPlayer(PlayerController player);
@@ -152,6 +153,8 @@ namespace Woi.Player
         private Transform _playerTransform;
         private PlayerController _playerController;
         private CharacterController ch;
+
+        public Camera playerCamera => _playerController.playerCamera;
 
         public event Action OnPlayerRegistered;
 
