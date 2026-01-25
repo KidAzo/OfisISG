@@ -174,7 +174,6 @@ namespace Woi.Player
 
         public void SetPlayerLocomotion(Vector3 position)
         {
-            Debug.Log("Setting player position to: " + position);
             ch.enabled = false; // Disable CharacterController to avoid collision issues
             ch.transform.position = position;
             ch.transform.rotation = Quaternion.Euler(0, -90, 0);
