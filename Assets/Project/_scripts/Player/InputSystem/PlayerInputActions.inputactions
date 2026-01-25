@@ -3,7 +3,7 @@
     "name": "PlayerInputActions",
     "maps": [
         {
-            "name": "Player",
+            "name": "Gameplay",
             "id": "1d18af68-3dbf-4ca1-8494-c9013ed80ac4",
             "actions": [
                 {
@@ -28,6 +28,15 @@
                     "name": "Sprint",
                     "type": "Button",
                     "id": "df4d7460-a963-4b64-95d7-d7d88050d6e4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "0c2039ff-68c1-477f-83af-dfca71f3ff1b",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -109,6 +118,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0436a12e-3b95-4763-9166-2b7b73b01d77",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

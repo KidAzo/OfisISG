@@ -1,4 +1,5 @@
 using System;
+using Obvious.Soap;
 using Reflex.Attributes;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,6 +24,11 @@ namespace Woi.Player
         public Camera playerCamera;
         [SerializeField] private float _mouseSensitivity = 2f;
         [SerializeField] private float _maxLookAngle = 80f;
+
+        [Header("Input Actions")]
+        [SerializeField] private ScriptableEventVector2 moveInputEvent;
+        [SerializeField] private ScriptableEventVector2 lookInputEvent;
+        [SerializeField] private ScriptableEventBool sprintInputEvent;
         
         private CharacterController _characterController;
         private PlayerInputActions _playerActions;
@@ -48,31 +54,16 @@ namespace Woi.Player
 
         private void OnEnable()
         {
-            _playerActions.Enable();
-            
-            // Bind input events
-            _playerActions.Player.Move.performed += OnMove;
-            _playerActions.Player.Move.canceled += OnMove;
-            
-            _playerActions.Player.Look.performed += OnLook;
-            _playerActions.Player.Look.canceled += OnLook;
-            
-            _playerActions.Player.Sprint.performed += OnSprint;
-            _playerActions.Player.Sprint.canceled += OnSprint;
+            moveInputEvent.OnRaised += OnMove;
+            lookInputEvent.OnRaised += OnLook;  
+            sprintInputEvent.OnRaised += OnSprint;
         }
         
         private void OnDisable()
         {
-            _playerActions.Disable();
-            
-            _playerActions.Player.Move.performed -= OnMove;
-            _playerActions.Player.Move.canceled -= OnMove;
-            
-            _playerActions.Player.Look.performed -= OnLook;
-            _playerActions.Player.Look.canceled -= OnLook;
-            
-            _playerActions.Player.Sprint.performed -= OnSprint;
-            _playerActions.Player.Sprint.canceled -= OnSprint;
+            moveInputEvent.OnRaised -= OnMove;
+            lookInputEvent.OnRaised -= OnLook;
+            sprintInputEvent.OnRaised -= OnSprint;
         }
         
         private void Update()
@@ -123,19 +114,19 @@ namespace Woi.Player
         }
         
         // Input callbacks
-        private void OnMove(InputAction.CallbackContext context)
+        private void OnMove(Vector2 context)
         {
-            _moveInput = context.ReadValue<Vector2>();
+            _moveInput = context;
         }
         
-        private void OnLook(InputAction.CallbackContext context)
+        private void OnLook(Vector2 context)
         {
-            _lookInput = context.ReadValue<Vector2>();
+            _lookInput = context;
         }
         
-        private void OnSprint(InputAction.CallbackContext context)
+        private void OnSprint(bool context)
         {
-            _isSprinting = context.ReadValueAsButton();
+            _isSprinting = context;
         }
     }
 

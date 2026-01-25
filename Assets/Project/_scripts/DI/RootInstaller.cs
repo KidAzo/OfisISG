@@ -1,16 +1,21 @@
+using System;
+using Reflex.Core;
 using UnityEngine;
 
-public class RootInstaller : MonoBehaviour
+public class RootInstaller : MonoBehaviour, IInstaller
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] InputManager inputManagerPrefab;
 
-    // Update is called once per frame
-    void Update()
+    public void InstallBindings(ContainerBuilder builder)
     {
-        
+        // InputManager'ı sahneler arası kalıcı bir singleton gibi bind ediyoruz
+        var instance = Instantiate(inputManagerPrefab);
+        DontDestroyOnLoad(instance);
+
+        builder.RegisterValue(instance, new Type[]
+        {
+            typeof(IInputProvider),
+            typeof(InputManager)
+        });
     }
 }
