@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
@@ -510,3 +511,4 @@ private void CreateNewFolder(Transform parent)
         return result;
     }
 }
+#endif

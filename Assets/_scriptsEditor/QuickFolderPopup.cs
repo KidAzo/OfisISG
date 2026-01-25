@@ -1,8 +1,10 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 // Mini popup pencere - M tuşu ile açılır
+
 public class QuickFolderPopup : EditorWindow
 {
     private string folderName = "New Folder";
@@ -136,3 +138,4 @@ private void CreateFolderAndMove()
     EditorApplication.RepaintHierarchyWindow();
 }
 }
+#endif

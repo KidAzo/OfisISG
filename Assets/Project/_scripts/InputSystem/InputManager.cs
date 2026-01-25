@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour, IInputProvider
     private void Awake()
     {
         inputActions = new PlayerInputActions();
+        inputActions.Enable();  
         contextStack = new InputContextStack();
         PushContexts(contexts);
         Debug.Log("[InputManager] Initialized");
@@ -24,6 +25,7 @@ public class InputManager : MonoBehaviour, IInputProvider
     
     private void OnDestroy()
     {
+        inputActions?.Disable();
         contextStack?.Clear();
         inputActions?.Dispose();
     }

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System;
@@ -40,3 +41,4 @@ public class EditorSearchBar
         return targetName.IndexOf(SearchString, StringComparison.OrdinalIgnoreCase) >= 0;
     }
 }
+#endif

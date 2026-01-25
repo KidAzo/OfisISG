@@ -1,33 +1,32 @@
 using UnityEngine;
-using UnityEditor;
 using Sirenix.OdinInspector;
 
-[ExecuteAlways]
+//[ExecuteAlways]
 public class DisableContributeGIRecursive : MonoBehaviour
 {
-    [Button]
-    public void Apply()
-    {
-        var renderers = GetComponentsInChildren<MeshRenderer>(true);
-        int changed = 0;
+    // [Button]
+    // public void Apply()
+    // {
+    //     var renderers = GetComponentsInChildren<MeshRenderer>(true);
+    //     int changed = 0;
 
-        foreach (var r in renderers)
-        {
-            var go = r.gameObject;
+    //     foreach (var r in renderers)
+    //     {
+    //         var go = r.gameObject;
 
-            Undo.RecordObject(go, "Disable Contribute GI");
+    //         Undo.RecordObject(go, "Disable Contribute GI");
 
-            var flags = GameObjectUtility.GetStaticEditorFlags(go);
+    //         var flags = GameObjectUtility.GetStaticEditorFlags(go);
 
-            if ((flags & StaticEditorFlags.ContributeGI) != 0)
-            {
-                flags &= ~StaticEditorFlags.ContributeGI; // bayraðý kaldýr
-                GameObjectUtility.SetStaticEditorFlags(go, flags);
-                EditorUtility.SetDirty(go);
-                changed++;
-            }
-        }
+    //         if ((flags & StaticEditorFlags.ContributeGI) != 0)
+    //         {
+    //             flags &= ~StaticEditorFlags.ContributeGI; // bayraï¿½ï¿½ kaldï¿½r
+    //             GameObjectUtility.SetStaticEditorFlags(go, flags);
+    //             EditorUtility.SetDirty(go);
+    //             changed++;
+    //         }
+    //     }
 
-        Debug.Log($"[DisableContributeGIRecursive] Updated {changed} objects under {name}");
-    }
+    //     Debug.Log($"[DisableContributeGIRecursive] Updated {changed} objects under {name}");
+    // }
 }
