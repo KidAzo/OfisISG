@@ -132,7 +132,6 @@ namespace Woi.Player
         private void OnLook(Vector2 context)
         {
             _lookInput = context;
-            Debug.Log($"LOOK: {_lookInput}");
         }
 
         private void OnSprint(bool context)
