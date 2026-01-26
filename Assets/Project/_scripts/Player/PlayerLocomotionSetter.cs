@@ -9,12 +9,13 @@ namespace Woi.Player
         [Inject] IPlayerService playerService;
         [SerializeField] Transform initialPosition;
 
-        void OnEnable()
+        void Start()
         {
+            HandlePlayerRegistered();
             playerService.OnPlayerRegistered += HandlePlayerRegistered;
         }
 
-        void OnDisable()
+        void OnDestroy()
         {
             playerService.OnPlayerRegistered -= HandlePlayerRegistered;
         }
