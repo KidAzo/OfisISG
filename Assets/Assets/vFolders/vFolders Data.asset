@@ -24,6 +24,7 @@ MonoBehaviour:
     - 9c53962885c2c4f449125a979d6ad240
     - d05eb52668af30e49a12f3c7596d940a
     - 0ebffbee3cd1c3b42851a60b6e248acb
+    - 0c7033661a88278489c0a6e29f8b2355
     values:
     - iconNameOrGuid: 
       colorIndex: 10
@@ -63,6 +64,10 @@ MonoBehaviour:
       isColorRecursive: 0
     - iconNameOrGuid: 
       colorIndex: 3
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: AnimationClip Icon
+      colorIndex: 0
       isIconRecursive: 0
       isColorRecursive: 0
   bookmarks:
