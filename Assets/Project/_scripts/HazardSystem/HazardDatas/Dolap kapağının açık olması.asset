@@ -12,10 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccae3291acb9a8e47b27bd9027375dcf, type: 3}
   m_Name: "Dolap kapa\u011F\u0131n\u0131n a\xE7\u0131k olmas\u0131"
   m_EditorClassIdentifier: 
-  hazardName: "A\u015F\u0131r\u0131 y\xFCklenmi\u015F \xE7o\u011Falt\u0131c\u0131
-    priz"
-  description: "A\u015F\u0131r\u0131 y\xFCklenmi\u015F \xE7o\u011Falt\u0131c\u0131
-    prizde \u0131s\u0131nma ve k\u0131v\u0131lc\u0131m olu\u015Fumu sonucu yang\u0131n
-    riski"
+  hazardName: "Dolap kapa\u011F\u0131n\u0131n a\xE7\u0131k olmas\u0131"
+  description: "Dolap kapa\u011F\u0131n\u0131n a\xE7\u0131k olmas\u0131"
   score: 0
-  type: 0
+  type: 2
