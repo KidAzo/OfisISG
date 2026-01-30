@@ -12,6 +12,7 @@ namespace HazardSystem
 		{
 			{ HazardType.ToggleObjects, new ToggleObjectsOperationBuilder() },
 			{ HazardType.Event, new EventOperationBuilder() },
+			{ HazardType.Rotation, new RotationObjectsOperationBuilder() },
 		};
 
 		public static void Build<TConfig>(
@@ -72,11 +73,39 @@ namespace HazardSystem
 		}
 	}
 
+	public class RotationObjectsOperationBuilder : IHazardOperationBuilder<RotationObjectConfig>
+	{
+		public void Build(RotationObjectConfig config, Hazard hazard, List<IHazardOperation> operations)
+		{
+			if (config == null)
+			{
+				Debug.LogError($"RotationObjectsOperationBuilder: config is null on hazard {hazard?.name}");
+				return;
+			}
+
+			var op = new RotationObjectsOperation(
+				config.rotationObjects,
+				config.targetRotation,
+				config.duration
+			);
+
+			operations.Add(op);
+		}
+	}
+
 	[Serializable]
 	public class ToggleObjectsConfig 
 	{
 		public GameObject[] Enables;
 		public GameObject[] Disables;
+	}
+
+	[Serializable]
+	public class RotationObjectConfig 
+	{
+		public GameObject[] rotationObjects;
+		public Vector3 targetRotation;
+		public float duration = 2.0f;
 	}
 
 	[Serializable]

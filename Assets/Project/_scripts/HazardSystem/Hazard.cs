@@ -63,9 +63,10 @@ namespace HazardSystem
 
 	public enum HazardType
 	{
-		ToggleObjects,   // Objeleri a�/kapat
-		Transform,       // Pozisyon/rotation d�zelt
-		Animation,        // Animasyon de�i�tir (�rnek)
-	    Event
+		ToggleObjects = 0,   
+		Position = 1,
+		Rotation = 2,      
+		Animation = 3,      
+	    Event = 4
 	}
 }

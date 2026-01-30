@@ -1,17 +1,19 @@
-using HazardSystem;
 using UnityEngine;
 
-public class ToggleObjectsHazard : Hazard
+namespace HazardSystem
 {
-	[SerializeField] ToggleObjectsConfig config;
-
-	protected override void BuildOperations()
+	public class ToggleObjectsHazard : Hazard
 	{
-		HazardOperationFactory.Build(
-			HazardType.ToggleObjects,
-			config,
-			this,
-			operations
-		);
+		[SerializeField] ToggleObjectsConfig config;
+
+		protected override void BuildOperations()
+		{
+			HazardOperationFactory.Build(
+				HazardType.ToggleObjects,
+				config,
+				this,
+				operations
+			);
+		}
 	}
 }
