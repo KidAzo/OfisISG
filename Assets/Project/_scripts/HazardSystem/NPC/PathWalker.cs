@@ -1,0 +1,45 @@
+using UnityEngine;
+
+
+namespace HazardSystem.NPC
+{
+    public class PathWalker : MonoBehaviour
+    {
+        [SerializeField] Transform[] npcs; 
+        [SerializeField] Transform[] waypoints;
+        [SerializeField] float speed = 2f;
+        [SerializeField] float arriveDistance = 0.1f;
+
+        int _index;
+
+        void Update()
+        {
+            Transform target = waypoints[_index];
+            Vector3 pos = transform.position;
+            Vector3 dest = target.position;
+
+            foreach (var npc in npcs)
+            {
+                npc.position = Vector3.MoveTowards(npc.position, dest, speed * Time.deltaTime);
+            }
+
+            Vector3 dir = (dest - pos);
+            dir.y = 0;
+
+            if (dir.sqrMagnitude > 0.0001f)
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 12f * Time.deltaTime);
+
+            if ((transform.position - dest).sqrMagnitude <= arriveDistance * arriveDistance)
+            {
+                _index = Mathf.Min(_index + 1, waypoints.Length - 1); 
+            }
+        }
+   
+        public void SetSpeedZero()
+        {
+            speed = 0f;
+        }
+    }
+    }
+
+
