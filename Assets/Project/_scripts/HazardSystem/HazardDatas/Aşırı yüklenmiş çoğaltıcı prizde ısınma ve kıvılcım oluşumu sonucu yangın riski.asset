@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: "A\u015F\u0131r\u0131 y\xFCklenmi\u015F \xE7o\u011Falt\u0131c\u0131 prizde
     \u0131s\u0131nma ve k\u0131v\u0131lc\u0131m olu\u015Fumu sonucu yang\u0131n riski"
   m_EditorClassIdentifier: 
-  hazardName: 
-  description: 
+  hazardName: "A\u015F\u0131r\u0131 y\xFCklenmi\u015F \xE7o\u011Falt\u0131c\u0131
+    priz"
+  description: "A\u015F\u0131r\u0131 y\xFCklenmi\u015F \xE7o\u011Falt\u0131c\u0131
+    prizde \u0131s\u0131nma ve k\u0131v\u0131lc\u0131m olu\u015Fumu sonucu yang\u0131n
+    riski"
   score: 0
   type: 0
