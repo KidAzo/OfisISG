@@ -33,7 +33,7 @@ public sealed class PhysicsRaycastService : IRaycastService
 {
     public bool TryRaycast(Ray ray, float maxDistance, LayerMask mask, out RaycastHit hit)
     {
-        return Physics.Raycast(ray, out hit, maxDistance, mask, QueryTriggerInteraction.Ignore);
+        return Physics.Raycast(ray, out hit, maxDistance, mask, QueryTriggerInteraction.Collide);
     }
 }
 
@@ -62,7 +62,7 @@ public sealed class RaySelector : IHitSelector<IRayTarget>
     {
         result = null;
 
-        var hits = Physics.RaycastAll(ray, maxDistance, mask, QueryTriggerInteraction.Ignore);
+        var hits = Physics.RaycastAll(ray, maxDistance, mask, QueryTriggerInteraction.Collide);
         if (hits == null || hits.Length == 0) return false;
 
         var rayOrigin = ray.origin;
