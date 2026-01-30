@@ -1,12 +1,16 @@
 using System.Collections.Generic;
+using Obvious.Soap;
 using UnityEngine;
+using UnityEngine.Events;
 using Woi.Events;
 
 namespace HazardSystem
 {
-	public abstract class Hazard : MonoBehaviour, IHazard
+	public abstract class Hazard : MonoBehaviour, IHazard, IInteractable
 	{
 		public HazardData data;
+		public ScriptableEventNoParam onHazardFixedEvent;
+		public UnityEvent onHazardFixedUE;
 
 		protected readonly List<IHazardOperation> operations = new();
 
@@ -32,9 +36,15 @@ namespace HazardSystem
 			IsFixed = true;
 
 			EventBus.Publish(new OnHazardFixed(data.hazardName, data.description, data.score));
-			//HazardFixedSoundController.PlaySound(data.soundData);
+			onHazardFixedEvent?.Raise();
+			onHazardFixedUE?.Invoke();
 		}
-	}
+
+        public void Interact()
+        {
+            Fix();
+        }
+    }
 
 	public interface IHazard
 	{
