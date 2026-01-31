@@ -22,6 +22,8 @@ namespace Woi.HazardSystem
             {
                 Debug.Log($"Missed HazardName: {checkable.TaskName}");
             }
+
+            Debug.Log($"Score Ratio: {result.Score}");
         }
     }
 }

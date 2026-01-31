@@ -15,6 +15,8 @@ namespace Woi.HazardSystem
         public float FoundRatio => TotalHazards == 0
             ? 0f
             : (float)foundedChecks.Count / TotalHazards;
+
+        public int Score => (int)(FoundRatio * 100);
     }
 
     public interface ICheckable
