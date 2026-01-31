@@ -14,6 +14,7 @@ namespace Woi.PopUpSystem
         {
             titleText.text = title;
             messageText.text = message;
+            gameObject.SetActive(true); 
             
             //notificationManager = GetComponent<NotificationManager>();
             //notificationManager.Open();
@@ -21,6 +22,7 @@ namespace Woi.PopUpSystem
 
         public override void Hide()
         {
+            gameObject.SetActive(false);    
             //notificationManager.Close();
         }
     }
