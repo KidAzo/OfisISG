@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using PrimeTween;
 
-namespace HazardSystem
+namespace Woi.HazardSystem
 {
 	public class ToggleObjectsOperation : IHazardOperation
 	{

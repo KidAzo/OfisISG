@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace HazardSystem
+namespace Woi.HazardSystem
 {
     public class RotationObjectHazard : Hazard
 	{

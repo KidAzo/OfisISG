@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Woi.Events;
 
-namespace HazardSystem
+namespace Woi.HazardSystem	
 {
 	public abstract class Hazard : MonoBehaviour, IHazard, IInteractable
 	{

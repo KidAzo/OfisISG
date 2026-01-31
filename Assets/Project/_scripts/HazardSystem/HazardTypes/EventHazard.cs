@@ -1,17 +1,21 @@
 using HazardSystem;
 using UnityEngine;
 
-public class EventHazard : Hazard
+namespace Woi.HazardSystem
 {
-	[SerializeField] EventConfig config;
-	
-	protected override void BuildOperations()
+	public class EventHazard : Hazard
 	{
-		HazardOperationFactory.Build(
-			HazardType.Event,
-			config,
-			this,
-			operations
-		);
-	}
-}	
+		[SerializeField] EventConfig config;
+		
+		protected override void BuildOperations()
+		{
+			HazardOperationFactory.Build(
+				HazardType.Event,
+				config,
+				this,
+				operations
+			);
+		}
+	}	
+}
+

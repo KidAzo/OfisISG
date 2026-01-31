@@ -1,4 +1,4 @@
-﻿using Sirenix.Utilities;
+using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +7,9 @@ using UnityEngine.Events;
 using Woi.Events;
 using WoiUtils;
 
-namespace HazardSystem
+namespace Woi.HazardSystem
 {
-	public class HazardManager : Singleton<HazardManager>
+	public class HazardManager : MonoBehaviour, IHazardManagerService
 	{
 		[Header("Events")]
 		public UnityEvent<HazardData> OnHazardRegistered;
@@ -39,7 +39,7 @@ namespace HazardSystem
 			}
 		}
 
-		public void Register(Hazard hazard)
+		void Register(Hazard hazard)
 		{
 			if (hazard == null) return;
 			if (Hazards.Contains(hazard)) return;
@@ -55,7 +55,7 @@ namespace HazardSystem
 			UpdateProgress();
 		}
 
-		public void Unregister(Hazard hazard)
+		void Unregister(Hazard hazard)
 		{
 			if (hazard == null) return;
 			if (Hazards.Remove(hazard))
@@ -106,7 +106,7 @@ namespace HazardSystem
 
 		#endregion
 
-		public void GetHazardResults(
+		void GetHazardResults(
 			out List<HazardData> fixedHazards,
 			out List<HazardData> unfixedHazards)
 		{
@@ -122,26 +122,28 @@ namespace HazardSystem
 			}
 		}
 
-		// public HazardCheckResult BuildHazardCheckResult()
-		// {
-		// 	GetHazardResults(out var fixedHazards, out var unfixedHazards);
+		public HazardCheckResult BuildHazardCheckResult()
+		{
+			GetHazardResults(out var fixedHazards, out var unfixedHazards);
 
-		// 	var result = new HazardCheckResult();
+			var result = new HazardCheckResult();
 
-		// 	Debug.Log(fixedHazards.Count);
-		// 	Debug.Log(unfixedHazards.Count);
-			
-		// 	foreach (var h in fixedHazards)
-		// 	{
-		// 		result.foundedChecks.Add(h);
-		// 	}
+			foreach (var h in fixedHazards)
+			{
+				result.foundedChecks.Add(h);
+			}
 
-		// 	foreach (var h in unfixedHazards)
-		// 	{
-		// 		result.missedChecks.Add(h);
-		// 	}
+			foreach (var h in unfixedHazards)
+			{
+				result.missedChecks.Add(h);
+			}
 
-		// 	return result;
-		// }
+			return result;
+		}
+	}
+
+	public interface IHazardManagerService
+	{
+		HazardCheckResult BuildHazardCheckResult();
 	}
 }

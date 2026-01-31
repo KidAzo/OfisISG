@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-namespace HazardSystem
+namespace Woi.HazardSystem
 {
 	public class HazardDetector : MonoBehaviour
 	{

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace HazardSystem
+namespace Woi.HazardSystem
 {
 	public class ToggleObjectsHazard : Hazard
 	{

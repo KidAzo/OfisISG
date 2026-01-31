@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using Woi.Events;
 
-namespace HazardSystem
+namespace Woi.HazardSystem	
 {
 	public class ControllerRayProvider : RayProviderBase
 	{
