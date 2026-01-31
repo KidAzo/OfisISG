@@ -42,7 +42,7 @@ namespace WoiUtils.AudioSystem
         {
             Data = data;
             this.owner = owner;
-          
+
             isReturning = false;
         }
 
@@ -63,19 +63,19 @@ namespace WoiUtils.AudioSystem
 
 
             audioSource.priority = data.priority;
-            
+
             audioSource.volume = Mathf.Clamp(
                 data.volume * ctx.volumeMul,
                 0f,
                 1.5f
             );
 
-            audioSource.pitch  = data.pitch * (ctx.pitchMul <= 0 ? 1f : ctx.pitchMul);
+            audioSource.pitch = data.pitch * (ctx.pitchMul <= 0 ? 1f : ctx.pitchMul);
             audioSource.panStereo = data.panStereo;
             audioSource.spatialBlend = data.spatialBlend;
 
             Debug.Log($"[AudioVoice] Applying SoundDefinition settings to AudioSource for clip '{audioSource.spatialBlend}'");
-            
+
             audioSource.reverbZoneMix = data.reverbZoneMix;
             audioSource.dopplerLevel = data.dopplerLevel;
             audioSource.spread = data.spread;
@@ -125,7 +125,12 @@ namespace WoiUtils.AudioSystem
             ReturnToPool();
         }
 
-      public void Stop()
+        public void SetPitch(float pitch)
+        {
+            audioSource.pitch = pitch;
+        }
+
+        public void Stop()
         {
             // Even if already returning, at least ensure audio is silenced
             if (audioSource != null && audioSource.isPlaying)
@@ -184,8 +189,8 @@ namespace WoiUtils.AudioSystem
         /// <summary> DOTween yok. Coroutine ile fade. </summary>
         public void SetVolume(float targetVolume, float duration, Action onComplete = null)
         {
-              if (fadeRoutine != null) StopCoroutine(fadeRoutine);
-                fadeRoutine = null;   
+            if (fadeRoutine != null) StopCoroutine(fadeRoutine);
+            fadeRoutine = null;
 
             // duration 0 ise direkt set
             if (duration <= 0f)
@@ -265,11 +270,11 @@ namespace WoiUtils.AudioSystem
         public void Release()
         {
             if (fadeRoutine != null) StopCoroutine(fadeRoutine);
-                fadeRoutine = null;
-            
+            fadeRoutine = null;
+
             // güvenlik: coroutine ve state temizle
             if (endRoutine != null) StopCoroutine(endRoutine);
-                endRoutine = null;
+            endRoutine = null;
 
             StopFollow();
 

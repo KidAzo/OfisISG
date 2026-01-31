@@ -84,6 +84,10 @@ namespace WoiUtils.AudioSystem
         private float lastTriggerTime = -999f;
         private int lastFrame = -1;
 
+        //public pro
+        public SoundDefinition Sound => sound;
+        public AudioSystem AudioSystem => audioSystem;
+
         private void Awake()
         {
             // Designer-friendly: auto-resolve if not assigned.
