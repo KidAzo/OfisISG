@@ -12,6 +12,6 @@ namespace Woi.HazardSystem
         [TextArea] public string description;
         public int score;
         public HazardType type;
-        //public SoundData soundData;
+        public SoundDefinition soundDefinition;
     }
 }

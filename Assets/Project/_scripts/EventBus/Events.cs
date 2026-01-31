@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Serialization;
+using WoiUtils.AudioSystem;
 
 namespace Woi.Events
 {
@@ -40,15 +41,17 @@ namespace Woi.Events
 
     public struct OnHazardFixed : IEvent
     {
+        public SoundDefinition soundDefinition;
         public string hazardTitle;
         public string description;
         public int score;
 
-        public OnHazardFixed(string hazardTitle, string description, int score)
+        public OnHazardFixed(string hazardTitle, string description, int score, SoundDefinition soundDefinition)
         {
             this.hazardTitle = hazardTitle;
             this.score = score;
 			this.description = description;
+            this.soundDefinition = soundDefinition;
 		}
 	}
 

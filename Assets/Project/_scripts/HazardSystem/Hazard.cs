@@ -35,7 +35,7 @@ namespace Woi.HazardSystem
 
 			IsFixed = true;
 
-			EventBus.Publish(new OnHazardFixed(data.hazardName, data.description, data.score));
+			EventBus.Publish(new OnHazardFixed(data.TaskName, data.description, data.score, data.soundDefinition));
 			onHazardFixedEvent?.Raise();
 			onHazardFixedUE?.Invoke();
 		}

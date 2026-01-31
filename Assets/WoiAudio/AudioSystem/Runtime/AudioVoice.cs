@@ -11,6 +11,7 @@ namespace WoiUtils.AudioSystem
     {
         public SoundDefinition Data { get; private set; }
         public LinkedListNode<AudioVoice> Node { get; set; }
+        public event Action<int> OnCompleted;
 
         AudioSystem owner;
         AudioSource audioSource;
@@ -122,6 +123,8 @@ namespace WoiUtils.AudioSystem
             while (!isReturning && audioSource != null && (audioSource.isPlaying || isPaused))
                 yield return null;
 
+            OnCompleted?.Invoke(Generation);
+
             ReturnToPool();
         }
 
@@ -146,6 +149,8 @@ namespace WoiUtils.AudioSystem
             isPaused = false;
             pausedTime = 0f;
 
+
+            OnCompleted?.Invoke(Generation);
             ReturnToPool();
         }
 
