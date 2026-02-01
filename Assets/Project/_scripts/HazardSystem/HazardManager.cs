@@ -24,6 +24,10 @@ namespace Woi.HazardSystem
 		public int FixedCount => Hazards.Count(h => h.IsFixed);
 		public int TotalCount => Hazards.Count;
 
+		HazardCheckResult _hazardCheckResult;
+
+		public HazardCheckResult HazardCheckResult => _hazardCheckResult;
+		
 		#region Register / Unregister
 
 		private void Start()
@@ -126,24 +130,25 @@ namespace Woi.HazardSystem
 		{
 			GetHazardResults(out var fixedHazards, out var unfixedHazards);
 
-			var result = new HazardCheckResult();
+			_hazardCheckResult = new HazardCheckResult();
 
 			foreach (var h in fixedHazards)
 			{
-				result.foundedChecks.Add(h);
+				_hazardCheckResult.foundedChecks.Add(h);
 			}
 
 			foreach (var h in unfixedHazards)
 			{
-				result.missedChecks.Add(h);
+				_hazardCheckResult.missedChecks.Add(h);
 			}
 
-			return result;
+			return _hazardCheckResult;
 		}
 	}
 
 	public interface IHazardManagerService
 	{
 		HazardCheckResult BuildHazardCheckResult();
+		HazardCheckResult HazardCheckResult { get; }
 	}
 }
