@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
+using WoiUtils.Pooling;
 
 namespace Woi.PopUpSystem
 {
-    public abstract class BasePopup : MonoBehaviour, IPopup
+    public abstract class BasePopup : MonoBehaviour, IPopup, IPoolable
     {
         protected string title;
         protected string message;
@@ -18,5 +19,15 @@ namespace Woi.PopUpSystem
         public virtual void SetMessage(string message) => this.message = message;
         public virtual void OnConfirm(Action callback) => onConfirmCallback = callback;
         public virtual void OnCancel(Action callback) => onCancelCallback = callback;
+
+        public void Get()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Release()
+        {
+            gameObject.SetActive(false);    
+        }
     }
 }

@@ -325,8 +325,12 @@ namespace WoiUtils.AudioSystem
 {
     if (sound == null) return null;
 
-       if (sound.instanceMode == InstanceMode.SingleGlobal && IsAnyInstancePlaying(sound))
-        return null;
+    //    if (sound.instanceMode == InstanceMode.SingleGlobal && IsAnyInstancePlaying(sound))
+    //         {
+    //           Debug.Log($"[Play] SingleGlobal instance already playing for {sound.name}, ignoring play request.");
+    //            return null;
+    //         }
+
 
     // 1. KARAR MEKANİZMASI: Bu ses kuyruğa (playlist) mi girmeli?
     // Hem QueueAll modu hem de Queue zamanlama modu burada kontrol edilir.
@@ -416,13 +420,21 @@ namespace WoiUtils.AudioSystem
             {
                 if (singleGlobals.TryGetValue(sound, out var existing) && existing != null)
                 {
-                    if (!ctx.ignoreCooldowns && sound.reTriggerMode == ReTriggerMode.Ignore)
-                        return existing;
+                    if (!existing.IsPlaying())
+                    {
+                        singleGlobals.Remove(sound);
+                    }
+                    else
+                    {
+                        if (!ctx.ignoreCooldowns && sound.reTriggerMode == ReTriggerMode.Ignore)
+                            return existing;
 
-                    existing.Stop();
-                    singleGlobals.Remove(sound);
+                        existing.Stop();
+                        singleGlobals.Remove(sound);
+                    }
                 }
             }
+
 
             if (!TryResolveClipEntry(sound, ctx, out var clipEntry))
                 return null;
@@ -463,17 +475,27 @@ namespace WoiUtils.AudioSystem
                     return null;
             }
 
-            if (sound.instanceMode == InstanceMode.SingleGlobal)
+         if (sound.instanceMode == InstanceMode.SingleGlobal)
             {
                 if (singleGlobals.TryGetValue(sound, out var existing) && existing != null)
                 {
-                    if (!ctx.ignoreCooldowns && sound.reTriggerMode == ReTriggerMode.Ignore)
-                        return existing;
+                    // stale: artık çalmıyorsa registry temizle
+                    if (!existing.IsPlaying())
+                    {
+                        singleGlobals.Remove(sound);
+                    }
+                    else
+                    {
+                        // çalıyorken ne yapacağız?
+                        if (!ctx.ignoreCooldowns && sound.reTriggerMode == ReTriggerMode.Ignore)
+                            return existing;
 
-                    existing.Stop();
-                    singleGlobals.Remove(sound);
+                        existing.Stop();
+                        singleGlobals.Remove(sound);
+                    }
                 }
             }
+
 
             var voice = adapter.Get();
             voice.Bind(sound, this);

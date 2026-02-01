@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace WoiUtils.AudioSystem
 {
-    public struct PlayContext
+    public partial struct PlayContext
     {
         public bool ignoreCooldowns;
         public bool hasPosition;

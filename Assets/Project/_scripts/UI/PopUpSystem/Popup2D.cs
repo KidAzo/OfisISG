@@ -1,6 +1,8 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Pool;
+using WoiUtils.Pooling;
 
 namespace Woi.PopUpSystem
 {
@@ -22,7 +24,7 @@ namespace Woi.PopUpSystem
 
         public override void Hide()
         {
-            gameObject.SetActive(false);    
+            gameObject.SetActive(false);  
             //notificationManager.Close();
         }
     }

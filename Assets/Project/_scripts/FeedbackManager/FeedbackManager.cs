@@ -4,6 +4,7 @@ using Woi.PopUpSystem;
 using System.Collections.Generic;
 using Reflex.Attributes;
 using Cysharp.Threading.Tasks;
+using Woi.Events;
 
 namespace Woi.FeedbackManager
 {
@@ -12,6 +13,32 @@ namespace Woi.FeedbackManager
         [Inject] private AudioSystem audioSystem;
         [Inject] private PopupManager popupManager;
         [SerializeField] private PopupData popupData;
+        private FeedbackController feedbackController;
+
+        void Awake()
+        {
+            feedbackController = new FeedbackController(audioSystem, popupManager, popupData);
+        }
+
+        void OnEnable()
+        {
+            EventBus.Subscribe<OnHazardFixed>(OnHazardFixed);
+        }
+
+        void OnDisable()
+        {
+            EventBus.Unsubscribe<OnHazardFixed>(OnHazardFixed);
+        }
+
+        private void OnHazardFixed(OnHazardFixed evt)
+        {
+            feedbackController.FeedbackRequest(
+                evt.soundDefinition,
+                evt.hazardTitle,
+                evt.description,
+                true
+            );
+        }
     }
 
     public class FeedbackController
@@ -36,6 +63,8 @@ namespace Woi.FeedbackManager
         {
             float duration = GetDuration(soundDefinition);
             queue.Enqueue(new Feedbacker(soundDefinition, title, message, isHazard, duration));
+
+            Debug.Log(queue.Count);
 
             if (!isRunning)
                 RunQueueLoop().Forget();
@@ -65,12 +94,14 @@ namespace Woi.FeedbackManager
 
         private async UniTaskVoid RunQueueLoop()
         {
+            Debug.Log("FeedbackManager: Starting queue loop.");
             isRunning = true;
 
             try
             {
                 while (queue.Count > 0)
                 {
+                    Debug.Log("FeedbackManager: Processing next item in queue.");
                     var item = queue.Dequeue();
                     await PlayOne(item);
                 }
@@ -85,29 +116,27 @@ namespace Woi.FeedbackManager
         {
             SetPopupData(item.title, item.message, item.isHazard, item.duration);
 
-            popupManager.CreateInfoPopup(popupTemplate, item.isHazard);
+            popupManager.EnqueuePopup(popupTemplate);
 
-            var voice = audioSystem.Play(item.sound);
+            AudioVoice voice = null;
+
+
+            var ctx = PlayContext.Default;
+            ctx.ignoreCooldowns = true;
+
+            voice = audioSystem.Play(
+                item.sound,
+                ctx
+            );
+
             if (voice == null)
-            {
-                // ses yoksa fallback: duration kadar bekle
-                await UniTask.Delay(System.TimeSpan.FromSeconds(item.duration));
                 return;
-            }
 
             int gen = voice.Generation;
-
-            // opsiyonel: loop ise asla bitmez -> fallback
-            if (voice.Data != null && voice.Data.loop)
-            {
-                await UniTask.Delay(System.TimeSpan.FromSeconds(item.duration));
-                return;
-            }
-
-            await WaitVoiceCompletion(voice, gen);
+            await WaitVoiceCompletion(voice, gen, item.duration);
         }
 
-        private UniTask WaitVoiceCompletion(AudioVoice voice, int generation)
+        private UniTask WaitVoiceCompletion(AudioVoice voice, int generation, float timeoutSeconds)
         {
             var tcs = new UniTaskCompletionSource();
 
@@ -119,17 +148,27 @@ namespace Woi.FeedbackManager
 
             voice.OnCompleted += Handler;
 
-            return AwaitAndUnsub(voice, Handler, tcs.Task);
+            if (voice.LastCompletedGeneration == generation)
+                tcs.TrySetResult();
 
-            static async UniTask AwaitAndUnsub(AudioVoice v, System.Action<int> h, UniTask task)
+            return AwaitAndUnsub(voice, Handler, tcs.Task, timeoutSeconds);
+
+            static async UniTask AwaitAndUnsub(AudioVoice v, System.Action<int> h, UniTask task, float timeoutSeconds)
             {
-                try { await task; }
+                try
+                {
+                    await UniTask.WhenAny(
+                        task,
+                        UniTask.Delay(timeoutSeconds)
+                    );
+                }
                 finally
                 {
                     if (v != null) v.OnCompleted -= h;
                 }
             }
         }
+
     }
 
     public readonly struct Feedbacker

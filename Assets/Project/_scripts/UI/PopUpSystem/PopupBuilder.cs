@@ -7,10 +7,9 @@ namespace Woi.PopUpSystem
     {
         BasePopup popup;
 
-        public BasePopup BuildPopup(BasePopup popup, Vector3 position, string title, string message, System.Action onConfirm, System.Action onCancel)
+        public BasePopup BuildPopup(BasePopup popup, string title, string message, System.Action onConfirm, System.Action onCancel)
         {
             return WithPopup(popup)
-                .WithPosition(position)
                 .WithTitle(title)
                 .WithMessage(message)
                 .OnConfirm(onConfirm)

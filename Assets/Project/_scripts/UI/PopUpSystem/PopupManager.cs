@@ -11,7 +11,7 @@ namespace Woi.PopUpSystem
 	public class PopupManager : MonoBehaviour
 	{
 		[SerializeField] PopupFactory factory;
-		[SerializeField] Vector3 spawnCanvasPosition;
+		[SerializeField] PopupPoolAdapter popupPoolAdapter;
 		[SerializeField] float delayBetweenPopups = 0.5f;
 
 		// VR Settings
@@ -24,7 +24,6 @@ namespace Woi.PopUpSystem
 		PopupBuilder popupBuilder = new PopupBuilder();
 		Stack<IPopup> activePopups = new Stack<IPopup>();
 		Queue<PopupRequest> popupQueue = new Queue<PopupRequest>();
-		Transform popupContainer;
 		Camera vrCamera;
 
 		BasePopup currentPopup;
@@ -39,10 +38,6 @@ namespace Woi.PopUpSystem
 			EventBus.Subscribe<OnSceneGroupUnloaded>(UnSeceneUnloaded_Event);
 		}
 
-		public void RegisterPopupContainer(Transform container)
-		{
-			popupContainer = container;
-		}
 
 		void LateUpdate()
 		{
@@ -109,13 +104,12 @@ namespace Woi.PopUpSystem
 
 		public BasePopup CreateInfoPopup(PopupData data, bool isHazard)
 		{
-			BasePopup popup = factory.CreatePopup(popupContainer, isHazard);
+			Debug.Log("Creating Info Popup");
+			BasePopup popup = factory.CreatePopup(popupPoolAdapter, isHazard);
 			activePopups.Push(popup);
 			currentPopup = popup;
 
-			Vector3 position = isVRMode ? GetVRPopupPosition() : spawnCanvasPosition;
-
-			var builtPopup = popupBuilder.BuildPopup(popup, position, data.title, data.message,
+			var builtPopup = popupBuilder.BuildPopup(popup, data.title, data.message,
 				() => OnPopupClosed(),
 				() => OnPopupClosed());
 
@@ -146,17 +140,14 @@ namespace Woi.PopUpSystem
 			// 👇 EKLE: Kamera hazır olana kadar bekle
 			await WaitForVRCamera(ct);
 
-			BasePopup popup = factory.CreatePopup(popupContainer, isHazard);
+			BasePopup popup = factory.CreatePopup(popupPoolAdapter, isHazard);
 			activePopups.Push(popup);
 			currentPopup = popup;
 
 			var completionSource = new UniTaskCompletionSource();
 
-			Vector3 position = isVRMode ? GetVRPopupPosition() : spawnCanvasPosition;
-
 			popupBuilder.BuildPopup(
 				popup,
-				position,
 				request.data.title,
 				request.data.message,
 				() =>
@@ -230,29 +221,6 @@ namespace Woi.PopUpSystem
 			}
 		}
 
-		// VR için popup pozisyonunu hesapla
-		private Vector3 GetVRPopupPosition()
-		{
-			// Kamera bulunamazsa bir kere daha dene
-			if (vrCamera == null && isVRMode)
-			{
-				FindVRCamera();
-			}
-
-			if (vrCamera != null)
-			{
-				// Kameranın önüne yerleştir
-				Vector3 forward = vrCamera.transform.forward;
-				Vector3 position = vrCamera.transform.position + forward * vrPopupDistance + vrPopupOffset;
-				Debug.Log($"📍 Popup position: {position}");
-				return position;
-			}
-
-			// Fallback
-			Debug.LogWarning("⚠️ Using fallback position!");
-			return spawnCanvasPosition;
-		}
-
 		// VR popup'ı için özel ayarlar
 		private void SetupVRPopup(BasePopup popup)
 		{
@@ -274,9 +242,6 @@ namespace Woi.PopUpSystem
 			}
 
 			// Pozisyonu ayarla
-			popupTransform.position = GetVRPopupPosition();
-
-			// Kameraya doğru baktır
 			Vector3 directionToCamera = vrCamera.transform.position - popupTransform.position;
 			popupTransform.rotation = Quaternion.LookRotation(-directionToCamera);
 
@@ -292,6 +257,7 @@ namespace Woi.PopUpSystem
 
 		private void OnPopupClosed()
 		{
+			popupPoolAdapter.Return((currentPopup));
 			currentPopup = null;
 		}
 
@@ -304,6 +270,8 @@ namespace Woi.PopUpSystem
 				{
 					activePopups.Pop();
 				}
+
+				popupPoolAdapter.Return((currentPopup));
 				currentPopup = null;
 			}
 		}

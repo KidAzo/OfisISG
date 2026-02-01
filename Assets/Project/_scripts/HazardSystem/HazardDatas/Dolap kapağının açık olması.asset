@@ -16,3 +16,4 @@ MonoBehaviour:
   description: "Dolap kapa\u011F\u0131n\u0131n a\xE7\u0131k olmas\u0131"
   score: 0
   type: 2
+  soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}

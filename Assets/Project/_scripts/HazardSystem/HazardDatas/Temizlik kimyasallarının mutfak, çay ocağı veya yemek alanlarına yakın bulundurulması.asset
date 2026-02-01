@@ -18,3 +18,4 @@ MonoBehaviour:
     Bulunmas\u0131"
   score: 0
   type: 0
+  soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}

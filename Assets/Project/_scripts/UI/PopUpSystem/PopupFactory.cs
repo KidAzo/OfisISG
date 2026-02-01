@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace Woi.PopUpSystem
 {
@@ -17,12 +18,12 @@ namespace Woi.PopUpSystem
         
         [SerializeField] private PlatformType currentPlatform;
         
-        public BasePopup CreatePopup(Transform popupContainer, bool isHazard)
+        public BasePopup CreatePopup(PopupPoolAdapter popupPoolAdapter, bool isHazard)
         {
             Popup2D popupPrefab = isHazard ? hazardPopup  : popup2DPrefab;
             
-            //Pool
-            BasePopup popup = Instantiate(popupPrefab, popupContainer);
+            BasePopup popup = popupPoolAdapter.Get();
+            
             return popup;
         }
     }
