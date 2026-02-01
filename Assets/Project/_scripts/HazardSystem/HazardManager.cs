@@ -20,7 +20,7 @@ namespace Woi.HazardSystem
 		private int _currentScore;
 
 		public int CurrentScore => _currentScore;
-		public int MaxScore => Hazards.Sum(h => h.data.score);
+		public int MaxScore => Hazards.Sum(h => h.currentData.score);
 		public int FixedCount => Hazards.Count(h => h.IsFixed);
 		public int TotalCount => Hazards.Count;
 
@@ -49,11 +49,11 @@ namespace Woi.HazardSystem
 			if (Hazards.Contains(hazard)) return;
 
 			Hazards.Add(hazard);
-			OnHazardRegistered?.Invoke(hazard.data);
+			OnHazardRegistered?.Invoke(hazard.currentData);
 
 			if (hazard.IsFixed)
 			{
-				AddScore(hazard.data.score);
+				AddScore(hazard.currentData.score);
 			}
 
 			UpdateProgress();
@@ -120,9 +120,9 @@ namespace Woi.HazardSystem
 			foreach (var h in Hazards)
 			{
 				if (h.IsFixed)
-					fixedHazards.Add(h.data);
+					fixedHazards.Add(h.currentData);
 				else
-					unfixedHazards.Add(h.data);
+					unfixedHazards.Add(h.currentData);
 			}
 		}
 

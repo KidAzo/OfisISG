@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccae3291acb9a8e47b27bd9027375dcf, type: 3}
+  m_Name: Leaving scissors, utility knives, or similar sharp objects on desks
+  m_EditorClassIdentifier: 
+  hazardName: Leaving scissors, utility knives, or similar sharp objects on desks
+  description: 'Sharp, piercing, and cutting tools found in offices (such as staples,
+    thumbtacks, scissors, utility knives, and pointed pens) require special attention
+    and must not be left unattended on desks after use.
+
+'
+  score: 0
+  type: 0
+  soundDefinition: {fileID: 11400000, guid: dbdcb135f24b4894d80766d9dc51a560, type: 2}
+  language: 1
+  hazardID: 30

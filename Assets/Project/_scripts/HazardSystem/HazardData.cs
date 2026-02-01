@@ -1,5 +1,6 @@
 using HazardSystem;
 using UnityEngine;
+using Woi.Localization;
 using WoiUtils.AudioSystem;
 
 namespace Woi.HazardSystem
@@ -13,5 +14,7 @@ namespace Woi.HazardSystem
         public int score;
         public HazardType type;
         public SoundDefinition soundDefinition;
+        public Language language;
+        public int hazardID;
     }
 }

@@ -120,8 +120,8 @@ namespace Woi.FeedbackManager
 
             AudioVoice voice = null;
 
-
             var ctx = PlayContext.Default;
+            ctx.SetClipIndex(item.hazardID - 1);
             ctx.ignoreCooldowns = true;
 
             voice = audioSystem.Play(
@@ -178,14 +178,16 @@ namespace Woi.FeedbackManager
         public readonly string message;
         public readonly bool isHazard;
         public readonly float duration;
+        public readonly int hazardID;
 
-        public Feedbacker(SoundDefinition sound, string title, string message, bool isHazard, float duration)
+        public Feedbacker(SoundDefinition sound, string title, string message, bool isHazard, float duration, int hazardID)
         {
             this.sound = sound;
             this.title = title;
             this.message = message;
             this.isHazard = isHazard;
             this.duration = duration;
+            this.hazardID = hazardID;
         }
     }
 }
