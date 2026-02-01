@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Pool;
 using WoiUtils.Pooling;
+using PrimeTween;
 
 namespace Woi.PopUpSystem
 {
@@ -10,22 +11,44 @@ namespace Woi.PopUpSystem
     {
         [SerializeField] private TMP_Text titleText;
         [SerializeField] private TMP_Text messageText;
+        private float openDuration = 0.25f;
+        private float closeDuration = 0.2f;
         //private NotificationManager notificationManager;
+
+        Tween _scaleTween;
 
         public override void Show()
         {
             titleText.text = title;
             messageText.text = message;
-            gameObject.SetActive(true); 
-            
+            gameObject.SetActive(true);
+
+            _scaleTween.Stop();
+
+            transform.localScale = Vector3.zero;
+
+            _scaleTween = Tween.Scale(
+                transform,
+                Vector3.one,
+                openDuration,
+                Ease.OutBack
+            );
+
             //notificationManager = GetComponent<NotificationManager>();
             //notificationManager.Open();
         }
 
         public override void Hide()
         {
-            gameObject.SetActive(false);  
-            //notificationManager.Close();
+            _scaleTween = Tween.Scale(
+          transform,
+          Vector3.zero,
+          closeDuration,
+          Ease.InBack
+      ).OnComplete(() =>
+      {
+          gameObject.SetActive(false);
+      });
         }
     }
 }
