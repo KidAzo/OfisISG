@@ -1,14 +1,19 @@
 using Reflex.Attributes;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Woi.HazardSystem
 {
     public class HazardResultController : MonoBehaviour
     {
         [Inject] IHazardManagerService hazardManagerService;
+        [SerializeField] private Button button;
 
-        [Button]    
+        bool _usedThisGame;
+        int _lastClickFrame = -1;
+
+        [Button]
         private void GetHazardResult()
         {
             var result = hazardManagerService.BuildHazardCheckResult();
@@ -24,6 +29,23 @@ namespace Woi.HazardSystem
             }
 
             Debug.Log($"Score Ratio: {result.Score}");
+        }
+
+        public void GetCvsDatas()
+        {
+            if (Time.frameCount == _lastClickFrame)
+                return;
+
+            _lastClickFrame = Time.frameCount;
+
+            if (_usedThisGame)
+                return;
+
+            _usedThisGame = true;
+
+            button.interactable = false;
+
+            GetHazardResult();
         }
     }
 }

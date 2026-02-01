@@ -11,6 +11,7 @@ namespace Woi.DataHandler
     {
         private const string FileName = "HazardResults.csv";
         private const char Sep = ';';
+        private const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
         private const string Header =
             "Player Name;" +
@@ -18,7 +19,8 @@ namespace Woi.DataHandler
             "Undetected Hazards;" +
             "Detected Count;" +
             "Undetected Count;" +
-            "Safety Score";
+            "Safety Score" +
+            "Date Time;";
 
         public static void Append(string playerName, HazardCheckResult result)
         {
@@ -31,6 +33,8 @@ namespace Woi.DataHandler
             if (!fileExists)
                 sb.AppendLine(Header);
 
+            string dateTime = DateTime.Now.ToString(DateTimeFormat);
+
             // Hücre içi ALT ALTA liste (• ile)
             string founded = FormatList(result.foundedChecks.Select(x => x.TaskName));
             string missed = FormatList(result.missedChecks.Select(x => x.TaskName));
@@ -42,10 +46,11 @@ namespace Woi.DataHandler
               .Append(Escape(missed)).Append(Sep)
               .Append(result.foundedChecks.Count).Append(Sep)
               .Append(result.missedChecks.Count).Append(Sep)
-              .Append(scoreText)
+              .Append(Escape(scoreText)).Append(Sep)
+              .Append(Escape(dateTime))
               .AppendLine();
 
-            // UTF8 BOM → Excel / Sheets Türkçe garanti
+            // UTF8 BOM → Türkçe karakterler Excel'de garanti
             File.AppendAllText(
                 filePath,
                 sb.ToString(),
@@ -53,11 +58,9 @@ namespace Woi.DataHandler
             );
         }
 
-        // • item
-        // • item
-        private static string FormatList(IEnumerable<string> items)
+        private static string FormatList(System.Collections.Generic.IEnumerable<string> items)
         {
-            var list = items.ToList();
+            var list = items.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
             if (list.Count == 0)
                 return "—";
 
@@ -71,7 +74,6 @@ namespace Woi.DataHandler
             return "İyi";
         }
 
-        // CSV güvenliği
         private static string Escape(string value)
         {
             if (string.IsNullOrEmpty(value))
