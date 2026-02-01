@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: "\xC7\xF6p kutusunun tamamen dolmas\u0131 ve at\u0131klar\u0131n ta\u015Fmas\u0131"
   m_EditorClassIdentifier: 
   hazardName: "\xC7\xF6p kutusunun tamamen dolmas\u0131 ve at\u0131klar\u0131n ta\u015Fmas\u0131"
-  description: "\xC7\xF6p kutusunun tamamen dolmas\u0131 ve at\u0131klar\u0131n ta\u015Fmas\u0131"
+  description: "\xC7\xF6p kutusunun tamamen dolmas\u0131 ve at\u0131klar\u0131n ta\u015Fmas\u0131
+    hem hijyen sorunlar\u0131na hem de \xE7al\u0131\u015Fma alan\u0131nda d\xFCzensizlik
+    ve kayma\u2013\xE7arpma risklerinin artmas\u0131na neden olur. At\u0131klar\u0131n
+    zaman\u0131nda bo\u015Falt\u0131lmas\u0131, ofis i\xE7i d\xFCzeni ve sa\u011Fl\u0131kl\u0131
+    bir \xE7al\u0131\u015Fma ortam\u0131n\u0131 korumak i\xE7in kritik bir ad\u0131md\u0131r."
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 38

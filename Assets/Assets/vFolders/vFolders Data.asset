@@ -27,10 +27,10 @@ MonoBehaviour:
     - 0c7033661a88278489c0a6e29f8b2355
     - 71f3a24c3eec53147a4ddad66e39f73a
     - 11e750b99f194e445818762d2d553a43
-    - e2b30d733108d634aa74c3f1e92e67bb
     - c558f4eaf3a4e7f408f3773f56a26ac2
-    - aec73be6ea37bda48ba091173a598254
+    - 5429c8678cc64ed4eba9b50d48e67a56
     - e463d55198c4b0342ad298d57ea2b074
+    - ce78d55823f785649b71aa68fa33956c
     values:
     - iconNameOrGuid: 
       colorIndex: 10
@@ -84,20 +84,20 @@ MonoBehaviour:
       colorIndex: 0
       isIconRecursive: 0
       isColorRecursive: 0
-    - iconNameOrGuid: 
-      colorIndex: 3
-      isIconRecursive: 0
-      isColorRecursive: 0
     - iconNameOrGuid: AudioSource Icon
       colorIndex: 0
       isIconRecursive: 0
       isColorRecursive: 0
     - iconNameOrGuid: 
-      colorIndex: 1
+      colorIndex: 3
       isIconRecursive: 0
       isColorRecursive: 0
     - iconNameOrGuid: 
       colorIndex: 5
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 8
       isIconRecursive: 0
       isColorRecursive: 0
   bookmarks:

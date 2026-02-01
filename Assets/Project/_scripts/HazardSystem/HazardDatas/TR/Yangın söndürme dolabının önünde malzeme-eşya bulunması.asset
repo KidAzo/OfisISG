@@ -15,8 +15,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hazardName: "Yang\u0131n s\xF6nd\xFCrme dolab\u0131n\u0131n \xF6n\xFCnde malzeme-e\u015Fya
     bulunmas\u0131"
-  description: "Yang\u0131n s\xF6nd\xFCrme dolab\u0131n\u0131n \xF6n\xFCnde malzeme-e\u015Fya
-    bulunmas\u0131"
+  description: "Yang\u0131n s\xF6nd\xFCrme dolaplar\u0131 her zaman rahatl\u0131kla
+    g\xF6r\xFClebilir ve ula\u015F\u0131labilir olmal\u0131d\u0131r. Bu ekipmanlar\u0131n
+    \xF6n\xFCne malzeme, s\xFCs bitkisi vb. konulmamal\u0131d\u0131r."
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 21

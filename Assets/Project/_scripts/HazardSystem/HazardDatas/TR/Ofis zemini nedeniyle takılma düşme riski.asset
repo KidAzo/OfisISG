@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccae3291acb9a8e47b27bd9027375dcf, type: 3}
   m_Name: "Ofis zemini nedeniyle tak\u0131lma d\xFC\u015Fme riski"
   m_EditorClassIdentifier: 
-  hazardName: "\xC7\xF6p kutusunun tamamen dolmas\u0131 ve at\u0131klar\u0131n ta\u015Fmas\u0131"
-  description: "\xC7\xF6p kutusunun tamamen dolmas\u0131 ve at\u0131klar\u0131n ta\u015Fmas\u0131"
+  hazardName: "Ofis zemini nedeniyle tak\u0131lma d\xFC\u015Fme riski"
+  description: "Ofis zeminindeki bozukluklar, kablolar veya uygunsuz kaplamalar tak\u0131lma
+    ve d\xFC\u015Fme riskine neden olabilir. G\xFCvenli bir \xE7al\u0131\u015Fma
+    ortam\u0131 i\xE7in zeminler d\xFCzenli olarak kontrol edilmeli ve gerekli d\xFCzenlemeler
+    yap\u0131lmal\u0131d\u0131r."
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 29

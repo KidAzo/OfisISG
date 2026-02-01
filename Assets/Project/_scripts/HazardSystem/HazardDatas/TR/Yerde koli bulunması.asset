@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: "Yerde koli bulunmas\u0131"
   m_EditorClassIdentifier: 
   hazardName: "Yerde koli bulunmas\u0131"
-  description: "Yerde koli bulunmas\u0131"
+  description: "Yerde koli bulunmas\u0131, y\xFCr\xFCy\xFC\u015F yollar\u0131n\u0131
+    daraltarak \xE7al\u0131\u015Fanlar\u0131n tak\u0131l\u0131p d\xFC\u015Fmesine
+    ve ciddi yaralanmalar ya\u015Fanmas\u0131na neden olabilir. Kolilerin zeminde
+    b\u0131rak\u0131lmamas\u0131, uygun raf veya depolama alan\u0131na kald\u0131r\u0131lmas\u0131
+    gerekir."
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 20

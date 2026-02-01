@@ -13,7 +13,14 @@ MonoBehaviour:
   m_Name: "Tan\u0131ms\u0131z kimyasal bulunmas\u0131"
   m_EditorClassIdentifier: 
   hazardName: "Tan\u0131ms\u0131z kimyasal bulunmas\u0131"
-  description: "Tan\u0131ms\u0131z kimyasal bulunmas\u0131"
+  description: "Tan\u0131ms\u0131z kimyasallar\u0131n \xE7al\u0131\u015Fma alan\u0131nda
+    bulunmas\u0131, i\xE7erik ve riskleri bilinmedi\u011Fi i\xE7in ciddi sa\u011Fl\u0131k
+    ve g\xFCvenlik tehditleri olu\u015Fturur. Etiketlenmemi\u015F her kimyasal; yanl\u0131\u015F
+    kullan\u0131m, soluma, cilt temas\u0131 veya uygunsuz tepkime gibi beklenmedik
+    kazalara yol a\xE7abilece\u011Finden t\xFCm kimyasallar\u0131n do\u011Fru etiketlenmesi
+    ve g\xFCvenli \u015Fekilde depolanmas\u0131 gerekir."
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 13

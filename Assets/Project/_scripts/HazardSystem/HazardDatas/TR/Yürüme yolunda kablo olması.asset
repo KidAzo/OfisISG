@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: "Y\xFCr\xFCme yolunda kablo olmas\u0131"
   m_EditorClassIdentifier: 
   hazardName: "Y\xFCr\xFCme yolunda kablo olmas\u0131"
-  description: "Tan\u0131ms\u0131z kimyasal bulunmas\u0131"
+  description: "Elektrik kablolar\u0131 tak\u0131lma ve d\xFC\u015Fmelere sebep olmamas\u0131
+    i\xE7in y\xFCr\xFCme yollar\u0131ndan ge\xE7irilmemelidir.\r\n"
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 15

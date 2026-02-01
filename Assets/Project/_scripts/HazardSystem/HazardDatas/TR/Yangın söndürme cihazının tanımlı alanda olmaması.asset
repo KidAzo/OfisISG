@@ -15,8 +15,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hazardName: "Yang\u0131n s\xF6nd\xFCrme cihaz\u0131n\u0131n tan\u0131ml\u0131 alanda
     olmamas\u0131"
-  description: "Yang\u0131n s\xF6nd\xFCrme cihaz\u0131n\u0131n tan\u0131ml\u0131
-    alanda olmamas\u0131"
+  description: "Yang\u0131n s\xF6nd\xFCrme t\xFCplerinin yerleri de\u011Fi\u015Ftirilmemeli,
+    \xF6n\xFCne malzeme konulmamal\u0131 ve amac\u0131 d\u0131\u015F\u0131nda kullan\u0131lmamal\u0131d\u0131r.\r\n"
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 11

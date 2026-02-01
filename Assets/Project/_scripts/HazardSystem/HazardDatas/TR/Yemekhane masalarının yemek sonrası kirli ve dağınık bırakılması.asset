@@ -13,9 +13,14 @@ MonoBehaviour:
   m_Name: "Yemekhane masalar\u0131n\u0131n yemek sonras\u0131 kirli ve da\u011F\u0131n\u0131k
     b\u0131rak\u0131lmas\u0131"
   m_EditorClassIdentifier: 
-  hazardName: "Yemekhane masalar\u0131n\u0131n da\u011F\u0131n\u0131kl\u0131\u011F\u0131"
-  description: "Yemekhane masalar\u0131n\u0131n yemek sonras\u0131 kirli ve da\u011F\u0131n\u0131k
+  hazardName: "Yemekhane masalar\u0131n\u0131n yemek sonras\u0131 kirli ve da\u011F\u0131n\u0131k
     b\u0131rak\u0131lmas\u0131"
+  description: "Yemekhane masalar\u0131n\u0131n kirli ve da\u011F\u0131n\u0131k b\u0131rak\u0131lmas\u0131,
+    hijyen risklerinin yan\u0131 s\u0131ra sa\u011Fl\u0131k sorunlar\u0131na yol
+    a\xE7abilir. Ortak kullan\u0131m alanlar\u0131n\u0131n g\xFCvenli ve sa\u011Fl\u0131kl\u0131
+    kalmas\u0131 i\xE7in masalar kullan\u0131m sonras\u0131 temiz b\u0131rak\u0131lmal\u0131d\u0131r."
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 16

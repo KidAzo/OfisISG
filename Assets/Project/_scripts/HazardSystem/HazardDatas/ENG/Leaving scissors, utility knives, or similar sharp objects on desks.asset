@@ -20,6 +20,6 @@ MonoBehaviour:
 '
   score: 0
   type: 0
-  soundDefinition: {fileID: 11400000, guid: dbdcb135f24b4894d80766d9dc51a560, type: 2}
+  soundDefinition: {fileID: 11400000, guid: 95410c7e60db9014789e1e6d6abe1e0a, type: 2}
   language: 1
   hazardID: 30

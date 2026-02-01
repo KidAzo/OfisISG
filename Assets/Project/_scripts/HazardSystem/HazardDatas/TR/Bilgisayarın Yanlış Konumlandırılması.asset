@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccae3291acb9a8e47b27bd9027375dcf, type: 3}
   m_Name: "Bilgisayar\u0131n Yanl\u0131\u015F Konumland\u0131r\u0131lmas\u0131"
   m_EditorClassIdentifier: 
-  hazardName: "\xC7\xF6p kutusunun tamamen dolmas\u0131 ve at\u0131klar\u0131n ta\u015Fmas\u0131"
-  description: "\xC7\xF6p kutusunun tamamen dolmas\u0131 ve at\u0131klar\u0131n ta\u015Fmas\u0131"
+  hazardName: "Bilgisayar\u0131n Yanl\u0131\u015F Konumland\u0131r\u0131lmas\u0131"
+  description: "Bilgisayar\u0131n Yanl\u0131\u015F Konumland\u0131r\u0131lmas\u0131"
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 35

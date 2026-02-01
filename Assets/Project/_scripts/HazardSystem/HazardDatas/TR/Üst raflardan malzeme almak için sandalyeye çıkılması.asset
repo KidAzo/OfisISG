@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccae3291acb9a8e47b27bd9027375dcf, type: 3}
   m_Name: "\xDCst raflardan malzeme almak i\xE7in sandalyeye \xE7\u0131k\u0131lmas\u0131"
   m_EditorClassIdentifier: 
-  hazardName: "\xDCst raflardan malzeme almak i\xE7in sandalyeye \xE7\u0131k\u0131lmas\u0131"
-  description: "\xDCst raflardan malzeme almak i\xE7in sandalyeye \xE7\u0131k\u0131lmas\u0131"
+  hazardName: "\xDCst raflardan malzeme alan \xE7al\u0131\u015Fan\u0131n sandalye
+    \xFCzerine \xE7\u0131kmas\u0131"
+  description: "Y\xFCksek raflardan bir \u015Fey almak ve/veya b\u0131rakmak i\xE7in
+    bu i\u015F i\xE7in tasarlanm\u0131\u015F g\xFCvenli basamaklar veya A tipi merdivenler
+    kullan\u0131lmal\u0131d\u0131r."
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 27

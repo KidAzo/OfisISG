@@ -13,9 +13,14 @@ MonoBehaviour:
   m_Name: "Temizlik kimyasallar\u0131n\u0131n mutfak, \xE7ay oca\u011F\u0131 veya
     yemek alanlar\u0131na yak\u0131n bulundurulmas\u0131"
   m_EditorClassIdentifier: 
-  hazardName: "Acil \xC7\u0131k\u0131\u015F Kap\u0131s\u0131 \xD6n\xFCnde Malzeme "
-  description: "Acil \xC7\u0131k\u0131\u015F Kap\u0131s\u0131 \xD6n\xFCnde Malzeme
-    Bulunmas\u0131"
+  hazardName: "Temizlik kimyasallar\u0131n\u0131n mutfak, \xE7ay oca\u011F\u0131
+    veya yemek alanlar\u0131na yak\u0131n bulundurulmas\u0131"
+  description: "Temizlik kimyasallar\u0131n\u0131n g\u0131da haz\u0131rlanan veya
+    t\xFCketilen alanlara yak\u0131n depolanmas\u0131, yanl\u0131\u015Fl\u0131kla
+    temas ve \xE7apraz bula\u015Fma riskini art\u0131r\u0131r. Kimyasallar, g\u0131da
+    alanlar\u0131ndan ayr\u0131 ve g\xFCvenli alanlarda muhafaza edilmelidir."
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 8
