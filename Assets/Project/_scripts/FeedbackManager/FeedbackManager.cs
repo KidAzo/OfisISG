@@ -36,7 +36,8 @@ namespace Woi.FeedbackManager
                 evt.soundDefinition,
                 evt.hazardTitle,
                 evt.description,
-                true
+                true,
+                evt.hazardID
             );
         }
     }
@@ -59,10 +60,10 @@ namespace Woi.FeedbackManager
         }
 
         //PUBLIC APIs
-        public void FeedbackRequest(SoundDefinition soundDefinition, string title, string message, bool isHazard)
+        public void FeedbackRequest(SoundDefinition soundDefinition, string title, string message, bool isHazard, int hazardID)
         {
             float duration = GetDuration(soundDefinition);
-            queue.Enqueue(new Feedbacker(soundDefinition, title, message, isHazard, duration));
+            queue.Enqueue(new Feedbacker(soundDefinition, title, message, isHazard, duration, hazardID));
 
             Debug.Log(queue.Count);
 

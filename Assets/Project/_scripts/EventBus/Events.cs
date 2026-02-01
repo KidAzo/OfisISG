@@ -45,13 +45,15 @@ namespace Woi.Events
         public string hazardTitle;
         public string description;
         public int score;
+        public int hazardID;
 
-        public OnHazardFixed(string hazardTitle, string description, int score, SoundDefinition soundDefinition)
+        public OnHazardFixed(string hazardTitle, string description, int score, SoundDefinition soundDefinition, int hazardID)
         {
             this.hazardTitle = hazardTitle;
             this.score = score;
 			this.description = description;
             this.soundDefinition = soundDefinition;
+            this.hazardID = hazardID;
 		}
 	}
 
