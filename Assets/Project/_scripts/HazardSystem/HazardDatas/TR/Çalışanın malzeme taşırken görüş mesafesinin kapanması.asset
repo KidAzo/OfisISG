@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccae3291acb9a8e47b27bd9027375dcf, type: 3}
+  m_Name: "\xC7al\u0131\u015Fan\u0131n malzeme ta\u015F\u0131rken g\xF6r\xFC\u015F
+    mesafesinin kapanmas\u0131"
+  m_EditorClassIdentifier: 
+  hazardName: "\xDCst raflardan malzeme alan \xE7al\u0131\u015Fan\u0131n sandalye
+    \xFCzerine \xE7\u0131kmas\u0131"
+  description: "Elinizde bir \u015Feyler ta\u015F\u0131rken g\xF6r\xFC\u015F mesafesinin
+    kapanmamas\u0131na dikkat etmek, y\xFCr\xFCy\xFC\u015F yolundaki engelleri zaman\u0131nda
+    fark ederek tak\u0131lma, \xE7arpma ve d\xFC\u015Fme gibi kazalar\u0131n \xF6n\xFCne
+    ge\xE7er. Y\xFCk\xFC v\xFCcudu kapatmayacak \u015Fekilde konumland\u0131rmak
+    ve gerekti\u011Finde b\xF6lerek ta\u015F\u0131mak hem g\xFCvenli\u011Fi hem de
+    i\u015F ak\u0131\u015F\u0131n\u0131 korur."
+  score: 0
+  type: 0
+  soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 10

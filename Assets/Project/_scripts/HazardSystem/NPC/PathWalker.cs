@@ -9,6 +9,9 @@ namespace HazardSystem.NPC
         [SerializeField] Transform[] waypoints;
         [SerializeField] float speed = 2f;
         [SerializeField] float arriveDistance = 0.1f;
+        
+        [SerializeField] bool loop = false; 
+        [SerializeField] float rotationSpeed = 12f;  
 
         int _index;
 
@@ -27,11 +30,18 @@ namespace HazardSystem.NPC
             dir.y = 0;
 
             if (dir.sqrMagnitude > 0.0001f)
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 12f * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), rotationSpeed * Time.deltaTime);
 
             if ((transform.position - dest).sqrMagnitude <= arriveDistance * arriveDistance)
             {
-                _index = Mathf.Min(_index + 1, waypoints.Length - 1); 
+                if (loop)
+                {
+                    _index = (_index + 1) % waypoints.Length;
+                }
+                else
+                {
+                    _index = Mathf.Min(_index + 1, waypoints.Length - 1);
+                }
             }
         }
    
