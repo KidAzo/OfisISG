@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccae3291acb9a8e47b27bd9027375dcf, type: 3}
+  m_Name: "Ergonomik olmayan oturu\u015F"
+  m_EditorClassIdentifier: 
+  hazardName: "Ergonomik olmayan oturu\u015F"
+  description: "Sandalyede dik oturup s\u0131rt\u0131 tam olarak yaslamak, omurga
+    \xFCzerindeki gereksiz y\xFCk\xFC azalt\u0131r ve uzun s\xFCreli masa ba\u015F\u0131
+    \xE7al\u0131\u015Fmalarda kas-iskelet zorlanmalar\u0131n\u0131n \xF6n\xFCne ge\xE7er."
+  score: 0
+  type: 0
+  soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
+  language: 0
+  hazardID: 14
