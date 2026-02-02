@@ -19,15 +19,16 @@ namespace Woi.HazardSystem
 
 		public bool IsFixed { get; private set; }
 
-		protected virtual void Awake()
+		protected virtual void Start()
 		{
-			BuildOperations();
 			SetHazardData();
+			BuildOperations();
 		}
 
 		public void SetHazardData()
 		{
 			var language = LanguageManager.CurrentLanguage;
+			Debug.Log($"Setting hazard data for language: {language}");
 
 			foreach (var setting in hazardSettings)
 			{
@@ -42,9 +43,6 @@ namespace Woi.HazardSystem
 			currentData = hazardSettings[0].hazardData;
 		}
 
-		/// <summary>
-		/// T�reyen hazard tipi, kendi operation�lar�n� burada kuracak.
-		/// </summary>
 		protected abstract void BuildOperations();
 
 		public void Fix()

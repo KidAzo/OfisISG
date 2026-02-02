@@ -11,12 +11,13 @@ namespace Woi.PopUpSystem
     {
         [SerializeField] private TMP_Text titleText;
         [SerializeField] private TMP_Text messageText;
-        private float openDuration = 0.25f;
-        private float closeDuration = 0.2f;
+
         //private NotificationManager notificationManager;
 
         Tween _scaleTween;
 
+        float openDuration = 0.2f;
+    
         public override void Show()
         {
             titleText.text = title;
@@ -27,12 +28,12 @@ namespace Woi.PopUpSystem
 
             transform.localScale = Vector3.zero;
 
-            _scaleTween = Tween.Scale(
-                transform,
-                Vector3.one,
-                openDuration,
-                Ease.OutBack
-            );
+                _scaleTween = Tween.Scale(
+                    transform,
+                    Vector3.one,
+                    openDuration,
+                    Ease.OutBack
+                );
 
             //notificationManager = GetComponent<NotificationManager>();
             //notificationManager.Open();
@@ -40,15 +41,15 @@ namespace Woi.PopUpSystem
 
         public override void Hide()
         {
-            _scaleTween = Tween.Scale(
-          transform,
-          Vector3.zero,
-          closeDuration,
-          Ease.InBack
-      ).OnComplete(() =>
-      {
-          gameObject.SetActive(false);
-      });
+                _scaleTween = Tween.Scale(
+                transform,
+                Vector3.zero,
+                closeDuration,
+                Ease.InBack
+            ).OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+            });
         }
     }
 }

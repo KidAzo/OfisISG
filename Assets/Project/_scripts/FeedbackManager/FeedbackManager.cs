@@ -49,6 +49,8 @@ namespace Woi.FeedbackManager
         private readonly PopupData popupTemplate;
         private readonly Queue<Feedbacker> queue;
         private bool isRunning;
+        private const float extraWaitTime = 0.2f;
+        private const float beforeTheVoice = 0.2f;
 
         public FeedbackController(AudioSystem audioSystem, PopupManager popupManager, PopupData popupTemplate)
         {
@@ -62,24 +64,21 @@ namespace Woi.FeedbackManager
         //PUBLIC APIs
         public void FeedbackRequest(SoundDefinition soundDefinition, string title, string message, bool isHazard, int hazardID)
         {
-            float duration = GetDuration(soundDefinition);
+            float duration = GetDuration(soundDefinition, hazardID - 1);
             queue.Enqueue(new Feedbacker(soundDefinition, title, message, isHazard, duration, hazardID));
-
-            Debug.Log(queue.Count);
 
             if (!isRunning)
                 RunQueueLoop().Forget();
         }
 
-        private float GetDuration(SoundDefinition soundDefinition)
+        private float GetDuration(SoundDefinition soundDefinition, int indis)
         {
-            // senin logic: ilk clip uzunluğu, yoksa 1s
             if (soundDefinition != null &&
                 soundDefinition.clips != null &&
                 soundDefinition.clips.Count > 0 &&
-                soundDefinition.clips[0].clip != null)
+                soundDefinition.clips[indis].clip != null)
             {
-                return soundDefinition.clips[0].clip.length;
+                return soundDefinition.clips[indis].clip.length;
             }
 
             return 1f;
@@ -125,6 +124,8 @@ namespace Woi.FeedbackManager
             ctx.SetClipIndex(item.hazardID - 1);
             ctx.ignoreCooldowns = true;
 
+            await UniTask.Delay(beforeTheVoice); 
+            
             voice = audioSystem.Play(
                 item.sound,
                 ctx
@@ -134,7 +135,7 @@ namespace Woi.FeedbackManager
                 return;
 
             int gen = voice.Generation;
-            await WaitVoiceCompletion(voice, gen, item.duration);
+            await WaitVoiceCompletion(voice, gen, item.duration + extraWaitTime);
         }
 
         private UniTask WaitVoiceCompletion(AudioVoice voice, int generation, float timeoutSeconds)

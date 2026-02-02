@@ -9,6 +9,7 @@ namespace Woi.PopUpSystem
         protected string title;
         protected string message;
         protected bool isHazard;
+        protected float closeDuration;
         protected Action onConfirmCallback;
         protected Action onCancelCallback;
 
@@ -19,6 +20,7 @@ namespace Woi.PopUpSystem
         public virtual void SetMessage(string message) => this.message = message;
         public virtual void OnConfirm(Action callback) => onConfirmCallback = callback;
         public virtual void OnCancel(Action callback) => onCancelCallback = callback;
+        public virtual void SetCloseDuration(float closeDuration) => this.closeDuration = closeDuration;
 
         public void Get()
         {

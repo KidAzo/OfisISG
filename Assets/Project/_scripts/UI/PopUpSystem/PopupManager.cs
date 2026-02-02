@@ -121,21 +121,21 @@ namespace Woi.PopUpSystem
 			return builtPopup;
 		}
 
-		private async UniTaskVoid ProcessQueue(CancellationToken ct, bool isHazard)
+		private async UniTaskVoid ProcessQueue(CancellationToken ct, bool isHazard, float closeDuration = 0.2f)
 		{
 			while (popupQueue.Count > 0 && !ct.IsCancellationRequested)
 			{
 				isShowingPopup = true;
 				var request = popupQueue.Dequeue();
 
-				await ShowPopupAsync(request, ct, isHazard);
+				await ShowPopupAsync(request, ct, isHazard, closeDuration);
 				await UniTask.WaitForSeconds(delayBetweenPopups, cancellationToken: ct);
 			}
 
 			isShowingPopup = false;
 		}
 
-		private async UniTask ShowPopupAsync(PopupRequest request, CancellationToken ct, bool isHazard)
+		private async UniTask ShowPopupAsync(PopupRequest request, CancellationToken ct, bool isHazard, float closeDuration)
 		{
 			// 👇 EKLE: Kamera hazır olana kadar bekle
 			await WaitForVRCamera(ct);
@@ -143,6 +143,7 @@ namespace Woi.PopUpSystem
 			BasePopup popup = factory.CreatePopup(popupPoolAdapter, isHazard);
 			activePopups.Push(popup);
 			currentPopup = popup;
+			popup.SetCloseDuration(closeDuration);	
 
 			var completionSource = new UniTaskCompletionSource();
 
