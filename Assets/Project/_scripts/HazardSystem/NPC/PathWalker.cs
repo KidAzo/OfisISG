@@ -1,17 +1,23 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 namespace HazardSystem.NPC
 {
     public class PathWalker : MonoBehaviour
     {
-        [SerializeField] Transform[] npcs; 
+        [SerializeField] Transform[] npcs;
         [SerializeField] Transform[] waypoints;
         [SerializeField] float speed = 2f;
         [SerializeField] float arriveDistance = 0.1f;
-        
-        [SerializeField] bool loop = false; 
-        [SerializeField] float rotationSpeed = 12f;  
+
+        [SerializeField] bool loop = false;
+        [SerializeField] float rotationSpeed = 12f;
+
+        [SerializeField] UnityEvent onReachedFirstWaypoint;
+        [SerializeField] UnityEvent onReachedLastWaypoint;
+        [SerializeField] private bool canEventsInvoke;
 
         int _index;
 
@@ -36,6 +42,11 @@ namespace HazardSystem.NPC
             {
                 if (loop)
                 {
+                    if (_index == 0 && canEventsInvoke)
+                        onReachedFirstWaypoint?.Invoke();
+                    else if (_index == waypoints.Length - 1 && canEventsInvoke)
+                        onReachedLastWaypoint?.Invoke();
+
                     _index = (_index + 1) % waypoints.Length;
                 }
                 else
@@ -44,12 +55,30 @@ namespace HazardSystem.NPC
                 }
             }
         }
-   
+
         public void SetSpeedZero()
         {
             speed = 0f;
         }
+
+        public void SetCanInvokeEvents(bool canInvoke)
+        {
+            canEventsInvoke = canInvoke;
+        }
+
+        public void SetAnimationUpToIndex()
+        {
+            int index = _index;
+            if (index == 0)
+            {
+                onReachedLastWaypoint?.Invoke();
+            }
+            else if (index == waypoints.Length - 1)
+            {
+                onReachedFirstWaypoint?.Invoke();
+            }
+        }
     }
-    }
+}
 
 
