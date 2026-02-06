@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,8 +18,10 @@ namespace HazardSystem.NPC
 
         [SerializeField] UnityEvent onReachedFirstWaypoint;
         [SerializeField] UnityEvent onReachedLastWaypoint;
+        [SerializeField] UnityEvent collisionEvent;
         [SerializeField] private bool canEventsInvoke;
-
+        bool isWorked;
+        bool isReached;
         int _index;
 
         void Update()
@@ -29,6 +32,7 @@ namespace HazardSystem.NPC
 
             foreach (var npc in npcs)
             {
+                if(isWorked) return;
                 npc.position = Vector3.MoveTowards(npc.position, dest, speed * Time.deltaTime);
             }
 
@@ -36,14 +40,18 @@ namespace HazardSystem.NPC
             dir.y = 0;
 
             if (dir.sqrMagnitude > 0.0001f)
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), rotationSpeed * Time.deltaTime);
-
-            if ((transform.position - dest).sqrMagnitude <= arriveDistance * arriveDistance)
             {
+                foreach (var npc in npcs)
+                     npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, Quaternion.LookRotation(dir), rotationSpeed * Time.deltaTime);
+            }
+
+            if ((npcs[0].position - dest).sqrMagnitude <= arriveDistance * arriveDistance)            {
                 if (loop)
                 {
                     if (_index == 0 && canEventsInvoke)
+                    {
                         onReachedFirstWaypoint?.Invoke();
+                    }
                     else if (_index == waypoints.Length - 1 && canEventsInvoke)
                         onReachedLastWaypoint?.Invoke();
 
@@ -52,6 +60,12 @@ namespace HazardSystem.NPC
                 else
                 {
                     _index = Mathf.Min(_index + 1, waypoints.Length - 1);
+                    if (!isWorked)
+                    {
+                        Debug.Log("Worked");  
+                        collisionEvent?.Invoke();
+                        isWorked = true;
+                    }
                 }
             }
         }

@@ -29,6 +29,7 @@ public class NPCAnimationController : MonoBehaviour
 
     public void ChangeState(string newStateName)
     {
+        Debug.Log($"Changing animation state to: {newStateName}");  
         int newStateHash = Animator.StringToHash(newStateName);
         SetAnimationState(newStateHash);
     }
