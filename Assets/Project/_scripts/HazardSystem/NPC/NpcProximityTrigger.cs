@@ -1,4 +1,5 @@
 using Reflex.Attributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using Woi.Player;
@@ -13,9 +14,10 @@ namespace HazardSystem.NPC
 
         [Header("Trigger")]
         [SerializeField] float triggerDistance = 2f;
-        [SerializeField] float playerTriggerDistance = 3f;
-        
+        float playerTriggerDistance = 3f;
+
         [SerializeField] UnityEvent onCloseEnough;
+        [SerializeField] UnityEvent onFarEnough;
 
         PlayerDistanceChecker _distanceChecker;
 
@@ -30,8 +32,10 @@ namespace HazardSystem.NPC
 
         void Start()
         {
-            _distanceChecker = new PlayerDistanceChecker(transform, 
-            playerService.GetPlayerTransform(), 
+            playerTriggerDistance = triggerDistance;
+
+            _distanceChecker = new PlayerDistanceChecker(transform,
+            playerService.GetPlayerTransform(),
             playerTriggerDistance);
 
             _startPositionA = npcA.position;
@@ -40,21 +44,20 @@ namespace HazardSystem.NPC
 
         void Update()
         {
-            // if (!_inRange && !InPlayerTriggerRange)
-            // {
-            //     return;
-            // }   
+            if (!_inRange && !InPlayerTriggerRange)
+            {
+                Debug.Log("Player is not close enough to trigger NPC proximity.");
+                onFarEnough?.Invoke();
+                return;
+            }
 
-            // _inRange = true;
+            _inRange = true;
 
             if (_fired) return;
 
-            float sqr = (npcA.position - npcB.position).sqrMagnitude;
-            if (sqr <= triggerDistance * triggerDistance)
-            {
-                _fired = true;           
-                onCloseEnough?.Invoke(); 
-            }
+            Debug.Log("NPCs are close enough to trigger event.");
+            _fired = true;
+            onCloseEnough?.Invoke();
         }
 
         public void ResetTrigger()

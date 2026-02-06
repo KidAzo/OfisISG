@@ -23,6 +23,12 @@ namespace HazardSystem.NPC
         bool isWorked;
         bool isReached;
         int _index;
+        float defaultSpeed;
+        
+        void Start()
+        {
+            defaultSpeed = speed;
+        }
 
         void Update()
         {
@@ -73,6 +79,12 @@ namespace HazardSystem.NPC
         public void SetSpeedZero()
         {
             speed = 0f;
+        }
+
+        
+        public void SetSpeedDefault()
+        {
+            speed = defaultSpeed;
         }
 
         public void SetCanInvokeEvents(bool canInvoke)
