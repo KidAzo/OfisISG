@@ -59,7 +59,9 @@ namespace HazardSystem.NPC
                         onReachedFirstWaypoint?.Invoke();
                     }
                     else if (_index == waypoints.Length - 1 && canEventsInvoke)
+                    {
                         onReachedLastWaypoint?.Invoke();
+                    }
 
                     _index = (_index + 1) % waypoints.Length;
                 }
@@ -68,7 +70,6 @@ namespace HazardSystem.NPC
                     _index = Mathf.Min(_index + 1, waypoints.Length - 1);
                     if (!isWorked)
                     {
-                        Debug.Log("Worked");  
                         collisionEvent?.Invoke();
                         isWorked = true;
                     }
