@@ -18,11 +18,11 @@ public class NPCAnimationController : MonoBehaviour
         if (playOnStart)
         {
             stateHash = Animator.StringToHash(stateName);
-            SetAnimationState(stateHash);
+            SetAnimationState(stateHash, 0);
         }
     }
 
-    void SetAnimationState(int hash)
+    void SetAnimationState(int hash, float fadeTime)
     {
         animator.CrossFade(hash, fadeTime, layer);
     }
@@ -31,6 +31,6 @@ public class NPCAnimationController : MonoBehaviour
     {
         Debug.Log($"Changing animation state to: {newStateName}");  
         int newStateHash = Animator.StringToHash(newStateName);
-        SetAnimationState(newStateHash);
+        SetAnimationState(newStateHash, fadeTime);
     }
 }
