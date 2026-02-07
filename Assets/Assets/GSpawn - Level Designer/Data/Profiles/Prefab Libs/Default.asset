@@ -384,6 +384,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.6293579, y: 0.6455367, z: 0.053466912}
   _uiSelected: 0
+--- !u!114 &-8963137446744837044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Revir
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: e3a96141-16ec-498e-a011-4670a1cd1efc
+  _prefabAsset: {fileID: 3041929386060820942, guid: c0cf5b07fd081bf4999e9c3863abef94, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 3041929386060820942, guid: c0cf5b07fd081bf4999e9c3863abef94, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: -31.811249, y: 1.2400124, z: -13.952418}
+    _rotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+    _scale: {x: 1.4300002, y: 1.43, z: 1.4300002}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25, y: 0.10313567, z: 0.0046239803}
+  _uiSelected: 0
 --- !u!114 &-8956764350104552536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -988,7 +1020,7 @@ MonoBehaviour:
   - {fileID: 6803461546896509152}
   - {fileID: 2922217474517502033}
   - {fileID: 2063950624375623603}
-  _uiSelected: 1
+  _uiSelected: 0
   _uiPinned: 0
 --- !u!114 &-8529623514432357030
 MonoBehaviour:
@@ -2366,6 +2398,30 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 5.013424, y: 3.0947394, z: 1.7659996}
   _uiSelected: 0
+--- !u!114 &-7606102809561705130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: AcilCikis
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 2a17499d-0ead-4561-b13c-3cbaf73223ef
+  _parentLib: {fileID: 0}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: AcilCikis
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab/AcilCikis
+    _reveresedPath: AcilCikis/Prefab/BKAsset/AssetSection/Assets
+  _prefabs: []
+  _uiSelected: 1
+  _uiPinned: 0
 --- !u!114 &-7603221169155238474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3897,6 +3953,40 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.6170044, y: 0.7820422, z: 0.6688147}
   _uiSelected: 0
+--- !u!114 &-6721253338867995959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b09c502d52d26944bd03a0b831a19c4, type: 3}
+  m_Name: OdaLevha
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: c4f3e2c8-f009-4ec9-b358-0e3c95cb0cd3
+  _parentLib: {fileID: 0}
+  _directChildren: []
+  _prefabsVisibleInManager: 1
+  _libName: OdaLevha
+  _folderPath:
+    _path: Assets/AssetSection/BKAsset/Prefab/OdaLevha
+    _reveresedPath: OdaLevha/Prefab/BKAsset/AssetSection/Assets
+  _prefabs:
+  - {fileID: 2619044465380829294}
+  - {fileID: 3192685824657090362}
+  - {fileID: -4544683568473701871}
+  - {fileID: 6771354706970301865}
+  - {fileID: -5745676008612151088}
+  - {fileID: -5311555167239583480}
+  - {fileID: -3915792541450350563}
+  - {fileID: -8963137446744837044}
+  - {fileID: 4644992226188128320}
+  - {fileID: 1970601241517924747}
+  _uiSelected: 0
+  _uiPinned: 0
 --- !u!114 &-6714122371887382142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5239,6 +5329,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 2, y: 0.42402074, z: 0.36842778}
   _uiSelected: 0
+--- !u!114 &-5745676008612151088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Mutfak
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 172614df-7f28-41d2-91b6-5eeb148a164c
+  _prefabAsset: {fileID: 860839020379694316, guid: ae465e69115f536489ec173e2bbb3b84, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 860839020379694316, guid: ae465e69115f536489ec173e2bbb3b84, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1.43, y: 1.43, z: 1.43}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25, y: 0.10313567, z: 0.0046239803}
+  _uiSelected: 0
 --- !u!114 &-5693386558634627571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5686,6 +5808,38 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.72403085, y: 1.0378354, z: 0.022981122}
+  _uiSelected: 0
+--- !u!114 &-5311555167239583480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: Pano
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 1e069d0a-a7ea-4abc-83e8-6b895aa2a0ac
+  _prefabAsset: {fileID: 5808965568641879712, guid: 3e63f83c6e016734ea37af05999b48f2, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5808965568641879712, guid: 3e63f83c6e016734ea37af05999b48f2, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: -51.811253, y: 1.2338183, z: -2.1248922}
+    _rotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+    _scale: {x: 1.4300002, y: 1.43, z: 1.4300002}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25, y: 0.10313567, z: 0.0046239803}
   _uiSelected: 0
 --- !u!114 &-5292281428823382467
 MonoBehaviour:
@@ -6871,6 +7025,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 1.15624, y: 1.1567669, z: 0.055947345}
   _uiSelected: 0
+--- !u!114 &-4544683568473701871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: "Genel M\xFCd\xFCr"
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 1cb962ba-d234-4315-906b-bcf59a57022b
+  _prefabAsset: {fileID: 7601270068548837493, guid: 04d232889e04df6478b8eafbd6717e9f, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 7601270068548837493, guid: 04d232889e04df6478b8eafbd6717e9f, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1.43, y: 1.43, z: 1.43}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25, y: 0.10313567, z: 0.0046239803}
+  _uiSelected: 0
 --- !u!114 &-4508965160668724895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7510,6 +7696,38 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.9206543, y: 1.9860014, z: 0.32135013}
+  _uiSelected: 0
+--- !u!114 &-3915792541450350563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: 'Plastik kutusu cop '
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 35fde585-8778-44c6-97a3-b6a433c9bdf5
+  _prefabAsset: {fileID: 1100105281762178677, guid: 4be0d43b55a7581409e18d2027a81e8c, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 1100105281762178677, guid: 4be0d43b55a7581409e18d2027a81e8c, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: 0, y: 0, z: 0}
+    _rotation: {x: 0, y: 0, z: 0, w: 1}
+    _scale: {x: 1, y: 1, z: 1}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.34572652, y: 0.07872474, z: 0.35891715}
   _uiSelected: 0
 --- !u!114 &-3901964574650925271
 MonoBehaviour:
@@ -12675,6 +12893,8 @@ MonoBehaviour:
   - {fileID: -7057017806671337109}
   - {fileID: 374829042297485416}
   - {fileID: -8532923631419692840}
+  - {fileID: -7606102809561705130}
+  - {fileID: -6721253338867995959}
 --- !u!114 &11702387752740586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15294,6 +15514,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 1.6417017, y: 2.9861405, z: 1.4718156}
   _uiSelected: 0
+--- !u!114 &1970601241517924747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: "Toplant\u0131 Odas\u0131"
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: c325ca65-72c4-4586-be97-79eaa6943431
+  _prefabAsset: {fileID: 988296493679842356, guid: a7b35aba944795d4bb7c456dfe977912, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 988296493679842356, guid: a7b35aba944795d4bb7c456dfe977912, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: -72.1887, y: 1.3169795, z: -5.8281894}
+    _rotation: {x: -0, y: 0.7071068, z: -0, w: -0.7071068}
+    _scale: {x: 1.4300002, y: 1.43, z: 1.4300002}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25, y: 0.10313567, z: 0.0046239803}
+  _uiSelected: 1
 --- !u!114 &1970924571831437593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16397,6 +16649,38 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 2.3778963, y: 1.0274024, z: 0.8332766}
   _uiSelected: 0
+--- !u!114 &2619044465380829294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: "Ar\u015Fiv"
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 5aa1dd15-fb4a-449d-a10d-f60b228ac2a2
+  _prefabAsset: {fileID: 326371299851009269, guid: beac6ed75847e854f830022badc37c6b, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 326371299851009269, guid: beac6ed75847e854f830022badc37c6b, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: -51.811302, y: 1.2831299, z: -14.236575}
+    _rotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+    _scale: {x: 1.4300002, y: 1.43, z: 1.4300002}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25, y: 0.10313567, z: 0.0046239803}
+  _uiSelected: 0
 --- !u!114 &2624817974357919544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17100,6 +17384,38 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.65494144, y: 1.1972876, z: 0.7447328}
+  _uiSelected: 0
+--- !u!114 &3192685824657090362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: "Fotokopi Odas\u0131"
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: b6a700ef-6c1e-4e99-a89f-6ede2f2d7161
+  _prefabAsset: {fileID: 2803129078172901102, guid: 670e21e663dcea944ad16451b05a7f94, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 2803129078172901102, guid: 670e21e663dcea944ad16451b05a7f94, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: -51.811253, y: 1.2884666, z: -6.186442}
+    _rotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+    _scale: {x: 1.4300002, y: 1.43, z: 1.4300002}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25, y: 0.10313567, z: 0.0046239803}
   _uiSelected: 0
 --- !u!114 &3201409537523659869
 MonoBehaviour:
@@ -18775,7 +19091,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
-  m_Name: Lobi
+  m_Name: lobi
   m_EditorClassIdentifier: 
   _guid:
     _guidString: 9903276c-2898-4d52-bfbf-97e2c92dc033
@@ -19148,6 +19464,38 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.29999924, y: 0.30000007, z: 0.3}
+  _uiSelected: 0
+--- !u!114 &4644992226188128320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: "Temizlik Odas\u0131"
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: ca133bc4-d0c1-4b62-a8f7-e0c264c475fc
+  _prefabAsset: {fileID: 5136246476056510408, guid: 99db95a4507f79442841a54a257e23c2, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 5136246476056510408, guid: 99db95a4507f79442841a54a257e23c2, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: -48.188736, y: 1.3769047, z: -7.683852}
+    _rotation: {x: -0, y: 0.7071068, z: -0, w: -0.7071068}
+    _scale: {x: 1.4300002, y: 1.43, z: 1.4300002}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25, y: 0.10313567, z: 0.0046239803}
   _uiSelected: 0
 --- !u!114 &4667837676598491551
 MonoBehaviour:
@@ -22324,6 +22672,38 @@ MonoBehaviour:
   _surfaceSnapAppliedOffsetFromSurface: 0
   _tags: 0
   _modelSize: {x: 0.06634472, y: 0.22017819, z: 0.061495475}
+  _uiSelected: 0
+--- !u!114 &6771354706970301865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
+  m_Name: IT
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 3a50159f-52e4-44dc-a27a-8b33e036e59c
+  _prefabAsset: {fileID: 8178791747077005057, guid: 9c8bfe4a1cb8e2249af5f68b5daaf60e, type: 3}
+  _preview:
+    _prefabAsset: {fileID: 8178791747077005057, guid: 9c8bfe4a1cb8e2249af5f68b5daaf60e, type: 3}
+    _texture: {fileID: 0}
+    _yaw: 0
+    _pitch: 0
+  _sceneToObjectGroup:
+    _serializedKeys: []
+    _serializedValues: []
+  _spawnGuideTransformTRS:
+    _position: {x: -48.188713, y: 1.3586464, z: -15.676074}
+    _rotation: {x: -0, y: 0.7071068, z: -0, w: -0.7071068}
+    _scale: {x: 1.4300002, y: 1.43, z: 1.4300002}
+  _modularSnapVerticalStep: 0
+  _surfaceSnapAppliedOffsetFromSurface: 0
+  _tags: 0
+  _modelSize: {x: 0.25, y: 0.10313567, z: 0.0046239803}
   _uiSelected: 0
 --- !u!114 &6787318341838371340
 MonoBehaviour:
