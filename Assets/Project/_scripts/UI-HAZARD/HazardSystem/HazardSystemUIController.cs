@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Woi.Events;
 using Woi.HazardSystem;
+using Woi.Localization;
 
 public class HazardSystemUIController : MonoBehaviour
 {
@@ -13,11 +14,28 @@ public class HazardSystemUIController : MonoBehaviour
 
 	public TextMeshProUGUI titleText;
 	public TextMeshProUGUI playerNameText;
+	public TextMeshProUGUI playerNamePrefixText;
 	public TextMeshProUGUI dateText;
+	public TextMeshProUGUI datePrefixText;
 	public TextMeshProUGUI durationText;
+	public TextMeshProUGUI durationPrefixText;
 	public TextMeshProUGUI gradeLetterText;
 	public TextMeshProUGUI gradeDescText;
 	public TextMeshProUGUI totalScoreText;
+	public TextMeshProUGUI generalPerformanceText;
+	public TextMeshProUGUI totalScoreTextPrefix;
+	public TextMeshProUGUI progressText;
+
+	[Header("Middle Tabs")]
+
+	public TextMeshProUGUI middleTitle;
+	public TextMeshProUGUI middleSubTitle;
+	public TextMeshProUGUI foundedButtonTextC;
+	public TextMeshProUGUI foundedButtonText;
+	public TextMeshProUGUI missedButtonTextC;
+	public TextMeshProUGUI missedButtonText;
+	
+
 	public Image totalScoreFillImage;
 
 	[Header("Tehlike Listeleri")]
@@ -67,14 +85,30 @@ public class HazardSystemUIController : MonoBehaviour
 		ICheckResultProvider hazardResult,
 		DateTime reportDate)
 	{
-		titleText.text = $"Ofis Tehlike Avı Raporu";
+		missedButtonText.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Gozden Kacanlar" : "Missed Hazards";
+		missedButtonTextC.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Gozden Kacanlar" : "Missed Hazards";
+		foundedButtonText.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Bulunanlar" : "Founded Hazards";
+		foundedButtonTextC.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Bulunanlar" : "Founded Hazards";
+		middleTitle.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Ofis Tehlike Raporu" : "Office Hazard Report";
+		middleSubTitle.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Tespit edilen riskler" : "Identified Risks";
+		
+		titleText.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Ofis Tehlike Avı Raporu" : "Office Hazard Hunt Report";
+		generalPerformanceText.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Genel Performans" : "General Performance";
+		totalScoreTextPrefix.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Toplam Puan:" : "Total Score:";	
+		progressText.text = LanguageManager.CurrentLanguage == Language.Turkish ? "İlerleme" : "Progress";
+		
+		playerNamePrefixText.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Oyuncu:" : "Player:";	
 		playerNameText.text = playerName;
+
+		datePrefixText.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Tarih:" : "Date:";
 		dateText.text = reportDate.ToString("dd.MM.yyyy");
+
+		durationPrefixText.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Süre:" : "Duration:";
 		durationText.text = $"{duration.Minutes:00}:{duration.Seconds:00}";
 
 		totalScoreText.text = hazardResult.Score.ToString();
 
-		HazardScoreCalculator.GetGrade(0, out string letter, out string description);
+		HazardScoreCalculator.GetGrade(hazardResult.Score, LanguageManager.CurrentLanguage, out string letter, out string description);
 
 		gradeLetterText.text = letter;
 		gradeDescText.text = description;
