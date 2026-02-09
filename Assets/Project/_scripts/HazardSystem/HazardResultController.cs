@@ -1,35 +1,48 @@
+using Cysharp.Threading.Tasks;
 using Reflex.Attributes;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
+using Woi.Events;
 
 namespace Woi.HazardSystem
 {
     public class HazardResultController : MonoBehaviour
     {
         [Inject] IHazardManagerService hazardManagerService;
-        [SerializeField] private Button button;
-
         bool _usedThisGame;
         int _lastClickFrame = -1;
 
-        [Button]
-        private void GetHazardResult()
+        [SerializeField] HazardSystemUIController _uiController;
+        SceneTimer _sceneTimer;
+
+        void Start()
         {
+            _sceneTimer = FindFirstObjectByType<SceneTimer>();
+        }
+
+        [Button]
+        public void GetHazardResult()
+        {
+            ShowHazardResult().Forget();    
+        }
+
+        async UniTaskVoid ShowHazardResult()
+        {
+            EventBus.Publish(new OnHazardResultRequested());
+
             var result = hazardManagerService.BuildHazardCheckResult();
 
-            foreach (var checkable in result.foundedChecks)
-            {
-                Debug.Log($"HazardName: {checkable.TaskName}");
-            }
+            _uiController.BuildReport("Ahmet Yilmaz",
+            _sceneTimer.GetElapsedTime(),
+            result,
+            System.DateTime.Now);
+             
+             await UniTask.NextFrame();
 
-            foreach (var checkable in result.missedChecks)
-            {
-                Debug.Log($"Missed HazardName: {checkable.TaskName}");
-            }
-
-            Debug.Log($"Score Ratio: {result.Score}");
+            _uiController.gameObject.SetActive(true);
         }
+        
 
         public void GetCvsDatas()
         {
@@ -43,10 +56,13 @@ namespace Woi.HazardSystem
 
             _usedThisGame = true;
 
-            button.interactable = false;
-
             GetHazardResult();
         }
+    }
+
+    public struct OnHazardResultRequested : IEvent
+    {
+
     }
 }
 

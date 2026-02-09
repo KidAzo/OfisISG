@@ -30,5 +30,6 @@ namespace Woi.HazardSystem
         List<ICheckable> missedChecks { get; }
         float FoundRatio { get; }
         int TotalHazards { get; }
+        int Score { get; }
     }
 }

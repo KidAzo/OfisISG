@@ -14,6 +14,7 @@ public class GameplayInputContext : InputContext
     [SerializeField] private ScriptableEventBool onFireInput;
     [SerializeField] private ScriptableEventBool onSprintInput;
     [SerializeField] private ScriptableEventNoParam onInteractInput;
+    [SerializeField] private ScriptableEventNoParam onGameplayFinishedInput;
     
     // Runtime input control
     private bool moveEnabled = true;
@@ -43,6 +44,7 @@ public class GameplayInputContext : InputContext
         inputActions.Gameplay.Sprint.canceled += ctx => OnSprint(false);
         
         inputActions.Gameplay.Interact.performed += OnInteract;
+        inputActions.Gameplay.GameplayFinished.performed += OnGameplayFinished;
     }
     
     public override void OnExit()
@@ -54,6 +56,7 @@ public class GameplayInputContext : InputContext
         inputActions.Gameplay.Look.performed -= OnLook;
         inputActions.Gameplay.Look.canceled -= OnLook;
         inputActions.Gameplay.Interact.performed -= OnInteract;
+        inputActions.Gameplay.GameplayFinished.performed -= OnGameplayFinished;
         
         inputActions.Gameplay.Disable();
     }
@@ -86,6 +89,11 @@ public class GameplayInputContext : InputContext
     private void OnInteract(InputAction.CallbackContext ctx)
     {
         if (interactEnabled) onInteractInput?.Raise();
+    }
+
+    private void OnGameplayFinished(InputAction.CallbackContext ctx)
+    {
+        onGameplayFinishedInput?.Raise();
     }
     
     // Runtime input control methods
