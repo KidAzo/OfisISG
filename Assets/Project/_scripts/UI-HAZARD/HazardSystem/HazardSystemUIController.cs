@@ -114,7 +114,7 @@ public class HazardSystemUIController : MonoBehaviour
 		hazardsFoundPercentText.text = $"%{percent}";
 
 		if (totalScoreFillImage != null)
-			totalScoreFillImage.fillAmount = percent;
+			totalScoreFillImage.fillAmount = ratio;
 	}
 
 	// ------- HELPERS -------
