@@ -6769,38 +6769,6 @@ MonoBehaviour:
   _tags: 0
   _modelSize: {x: 0.14086914, y: 0.21006186, z: 0.13207763}
   _uiSelected: 0
---- !u!114 &-4674561751383991603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
-  m_Name: electronics_035
-  m_EditorClassIdentifier: 
-  _guid:
-    _guidString: b4c54cf9-fb4e-4a68-b2e8-919848834459
-  _prefabAsset: {fileID: 1847875815450632894, guid: a869cfd0e75505248ad0ea667fafd9fe, type: 3}
-  _preview:
-    _prefabAsset: {fileID: 1847875815450632894, guid: a869cfd0e75505248ad0ea667fafd9fe, type: 3}
-    _texture: {fileID: 0}
-    _yaw: 0
-    _pitch: 0
-  _sceneToObjectGroup:
-    _serializedKeys: []
-    _serializedValues: []
-  _spawnGuideTransformTRS:
-    _position: {x: 11, y: 1, z: 15}
-    _rotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-    _scale: {x: 1.5900006, y: 1.59, z: 1.5900006}
-  _modularSnapVerticalStep: 1
-  _surfaceSnapAppliedOffsetFromSurface: 0
-  _tags: 0
-  _modelSize: {x: 1.5411968, y: 0.8267784, z: 0.065616876}
-  _uiSelected: 1
 --- !u!114 &-4666027838245427613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19091,7 +19059,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
-  m_Name: lobi
+  m_Name: Lobi
   m_EditorClassIdentifier: 
   _guid:
     _guidString: 9903276c-2898-4d52-bfbf-97e2c92dc033
@@ -26009,7 +25977,6 @@ MonoBehaviour:
   - {fileID: -4508965160668724895}
   - {fileID: -7069107362818376996}
   - {fileID: -3837149682478383074}
-  - {fileID: -4674561751383991603}
   - {fileID: 5092590192796992343}
   - {fileID: -8123794108759568426}
   - {fileID: 8954871953692635588}
