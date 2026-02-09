@@ -17,7 +17,10 @@ public class HazardSystemUIController : MonoBehaviour
 	public TextMeshProUGUI playerNamePrefixText;
 	public TextMeshProUGUI dateText;
 	public TextMeshProUGUI datePrefixText;
-	public TextMeshProUGUI durationText;
+	public TextMeshProUGUI durationTextEng;
+	public GameObject durationTextEngObj;
+	public TextMeshProUGUI durationTextTr;
+	public GameObject durationTextTrObj;
 	public TextMeshProUGUI durationPrefixText;
 	public TextMeshProUGUI gradeLetterText;
 	public TextMeshProUGUI gradeDescText;
@@ -103,8 +106,12 @@ public class HazardSystemUIController : MonoBehaviour
 		datePrefixText.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Tarih:" : "Date:";
 		dateText.text = reportDate.ToString("dd.MM.yyyy");
 
+		durationTextEngObj.SetActive(LanguageManager.CurrentLanguage != Language.Turkish);
+		durationTextTrObj.SetActive(LanguageManager.CurrentLanguage == Language.Turkish);
+		
 		durationPrefixText.text = LanguageManager.CurrentLanguage == Language.Turkish ? "Süre:" : "Duration:";
-		durationText.text = $"{duration.Minutes:00}:{duration.Seconds:00}";
+		durationTextEng.text = $"{duration.Minutes:00}:{duration.Seconds:00}";
+		durationTextTr.text = $"{duration.Minutes:00}:{duration.Seconds:00}";
 
 		totalScoreText.text = hazardResult.Score.ToString();
 

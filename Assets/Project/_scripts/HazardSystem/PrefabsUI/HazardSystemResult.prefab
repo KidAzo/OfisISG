@@ -2414,7 +2414,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3012448127741847200}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2436,11 +2436,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   titleText: {fileID: 7655484567305090228}
   playerNameText: {fileID: 8516487953795113451}
+  playerNamePrefixText: {fileID: 6849769721426266792}
   dateText: {fileID: 8061413948248765816}
+  datePrefixText: {fileID: 7751752927802659845}
   durationText: {fileID: 6842746804820393800}
+  durationPrefixText: {fileID: 8875651981714572034}
   gradeLetterText: {fileID: 2226933798919302969}
   gradeDescText: {fileID: 8532689900127708411}
   totalScoreText: {fileID: 1539075192792154903}
+  generalPerformanceText: {fileID: 154073742489263700}
+  totalScoreTextPrefix: {fileID: 7681276841934170250}
+  progressText: {fileID: 8914386345901976048}
+  middleTitle: {fileID: 4287301843563754857}
+  middleSubTitle: {fileID: 6813810171873116164}
+  foundedButtonTextC: {fileID: 2893552738546781310}
+  foundedButtonText: {fileID: 8065369082346482379}
+  missedButtonTextC: {fileID: 8434404709015532609}
+  missedButtonText: {fileID: 1105770800077493099}
   totalScoreFillImage: {fileID: 1538640463731559875}
   missedContainer: {fileID: 4096990967274978450}
   foundedContainer: {fileID: 8802109701812531025}
@@ -4980,7 +4992,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &4496973383093236839
 MonoBehaviour:
@@ -5404,8 +5416,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -547, y: -42}
-  m_SizeDelta: {x: -1176.7609, y: 43.1092}
+  m_AnchoredPosition: {x: -476.90323, y: -42}
+  m_SizeDelta: {x: -1036.5674, y: 43.1092}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3725949488302294880
 CanvasRenderer:
@@ -6163,7 +6175,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Oyuncu: '
+  m_text: 'Oyuncu:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6197,7 +6209,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -7571,8 +7583,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 145.47502, y: -21.5}
-  m_SizeDelta: {x: 188.0734, y: 44.64}
+  m_AnchoredPosition: {x: 227.4847, y: -21.5}
+  m_SizeDelta: {x: 352.0927, y: 44.64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7708143497654463251
 CanvasRenderer:
@@ -7602,7 +7614,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Iyi
+  m_text: Need Improvement
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8010,7 +8022,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "G\xF6zden Ka\xE7anlar"
+  m_text: Missed Hazards
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8653,7 +8665,7 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 130.8
+  m_PreferredWidth: 171.5
   m_PreferredHeight: 36.7707
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
@@ -9578,7 +9590,7 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: 0
   m_MinHeight: 0
-  m_PreferredWidth: 187.48
+  m_PreferredWidth: 171.5
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
@@ -9957,7 +9969,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Bulunanlar
+  m_text: Founded Hazards
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
