@@ -8,26 +8,34 @@ namespace Woi.HazardSystem
 	{
 		private readonly GameObject[] _toEnable;
 		private readonly GameObject[] _toDisable;
+		private readonly bool _isTweenRequested;
 
-		public ToggleObjectsOperation(GameObject[] toEnable, GameObject[] toDisable)
+		public ToggleObjectsOperation(GameObject[] toEnable, GameObject[] toDisable, bool isTweenRequested = true)
 		{
 			_toEnable = toEnable;
 			_toDisable = toDisable;
+			_isTweenRequested = isTweenRequested;
 		}
 
 		public void Execute()
 		{
-			if (_toEnable != null)
+			HazardFeedback.SetScale(_toDisable, 0f, isTweenRequested: _isTweenRequested, Ease.OutElastic, () =>
 			{
-				foreach (var go in _toEnable)
-					if (go != null) go.SetActive(true);
-			}
+				SetActiveStates(_toDisable, false);
+			});
 
-			if (_toDisable != null)
+			HazardFeedback.SetScale(_toEnable, 0f, isTweenRequested: false, Ease.OutBack, () =>
 			{
-				foreach (var go in _toDisable)
-					if (go != null) go.SetActive(false);
-			}
+				SetActiveStates(_toEnable, true);
+			});
+
+			HazardFeedback.SetScale(_toEnable, 1f, isTweenRequested: _isTweenRequested, Ease.InOutBack, () => {});
+		}
+
+		void SetActiveStates(GameObject[] go, bool active)
+		{
+			foreach (var obj in go)
+				if (obj != null) obj.SetActive(active);
 		}
 	}
 

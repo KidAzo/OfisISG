@@ -51,7 +51,8 @@ namespace Woi.HazardSystem
 
 			var op = new ToggleObjectsOperation(
 				config.Enables,
-				config.Disables
+				config.Disables,	
+				config.isTweenRequested
 			);
 
 			operations.Add(op);
@@ -98,6 +99,7 @@ namespace Woi.HazardSystem
 	{
 		public GameObject[] Enables;
 		public GameObject[] Disables;
+		public bool isTweenRequested = true;
 	}
 
 	[Serializable]
