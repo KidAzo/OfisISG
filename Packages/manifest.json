@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "com.eflatun.scenereference": "git+https://github.com/starikcetin/Eflatun.SceneReference.git#4.1.1",
     "com.kyrylokuzyk.primetween": "file:../Assets/Plugins/PrimeTween/internal/com.kyrylokuzyk.primetween.tgz",
+    "com.unity.addressables": "2.7.6",
     "com.unity.ai.navigation": "2.0.9",
     "com.unity.burst": "1.8.25",
     "com.unity.collab-proxy": "2.9.3",

@@ -5,7 +5,8 @@ using WoiUtils.AudioSystem;
 namespace Woi.Events
 {
 	public struct OnSceneGroupLoaded : IEvent
-	{
+    {
+        
     }
 
     public struct OnSceneGroupUnloaded : IEvent
