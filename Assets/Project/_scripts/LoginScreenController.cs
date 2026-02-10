@@ -108,6 +108,9 @@ namespace Woi.UI
                 });
             }
 
+            userIdField.RegisterValueChangedCallback(OnUserIdChanged);
+
+
             // --- INIT ---
             nameField.SetValueWithoutNotify("");
             userIdField.SetValueWithoutNotify("");   // ID alanı boş, SEÇİLEBİLİR
@@ -116,6 +119,28 @@ namespace Woi.UI
             SetLanguage(selectedLang);
             RefreshUIState();
         }
+
+        private void OnUserIdChanged(ChangeEvent<string> evt)
+        {
+            if (userIdField == null) return;
+
+            // sadece rakamları tut
+            string digitsOnly = "";
+            foreach (char c in evt.newValue)
+            {
+                if (char.IsDigit(c))
+                    digitsOnly += c;
+            }
+
+            // değiştiyse geri yaz (loop yapmaması için notify kapalı)
+            if (digitsOnly != evt.newValue)
+            {
+                userIdField.SetValueWithoutNotify(digitsOnly);
+            }
+
+            UpdateUserIdPlaceholder();
+        }
+
 
         private void UpdateUserIdPlaceholder()
         {
