@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Reflex.Attributes;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using WoiUtils;
 
@@ -6,14 +7,22 @@ namespace Woi.Settings
 {
 	public class Bootstrapper : PersistentSingleton<Bootstrapper>
 	{
-		// private const string BootstrapperSceneName = "Bootstrapper";
+		private const string BootstrapperSceneName = "Bootstrapper";
+		
+		[Inject] ISceneLoaderService sceneLoaderService;
+		[SerializeField] string sceneName = "LoginScreen";
 
-		// [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-		// private static async void Init()
-		// {
-		// 	await SceneManager.LoadSceneAsync(BootstrapperSceneName, LoadSceneMode.Single);
-		// }
-	}
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+		private static async void Init()
+		{
+			await SceneManager.LoadSceneAsync(BootstrapperSceneName, LoadSceneMode.Single);
+		}
+
+        void Start()
+        {
+            sceneLoaderService.LoadScene(sceneName);
+        }
+    }
 }
 
 

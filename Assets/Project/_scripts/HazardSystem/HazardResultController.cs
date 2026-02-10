@@ -10,6 +10,7 @@ namespace Woi.HazardSystem
     public class HazardResultController : MonoBehaviour
     {
         [Inject] IHazardManagerService hazardManagerService;
+        [Inject] IGameManager gameManager;
         bool _usedThisGame;
         int _lastClickFrame = -1;
 
@@ -33,7 +34,7 @@ namespace Woi.HazardSystem
 
             var result = hazardManagerService.BuildHazardCheckResult();
 
-            _uiController.BuildReport("Ahmet Yilmaz",
+            _uiController.BuildReport(gameManager.GetGameSettings().PlayerName,
             _sceneTimer.GetElapsedTime(),
             result,
             System.DateTime.Now);

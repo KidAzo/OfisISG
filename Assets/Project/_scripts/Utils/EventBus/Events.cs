@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 using WoiUtils.AudioSystem;
 
 namespace Woi.Events
@@ -72,4 +73,18 @@ namespace Woi.Events
 	{
 		
 	}
+
+    public struct OnLogged : IEvent
+    {
+        public string playerName;
+        public int playerID;
+        public int language;
+
+        public OnLogged(string playerName, int playerID, int language)
+        {
+            this.playerName = playerName;
+            this.playerID = playerID;
+            this.language = language;
+        }
+    }
 }

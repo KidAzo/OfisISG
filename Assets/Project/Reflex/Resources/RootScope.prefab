@@ -59,3 +59,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputManagerPrefab: {fileID: 951432063688280164, guid: 57d9fc88efe92274594980071166aa9f, type: 3}
   sceneLoaderPrefab: {fileID: 2471870503346728076, guid: 54824f171b9715a458e9399b77b31da1, type: 3}
+  gameManagerPrefab: {fileID: -758642899396502977, guid: ad50cb75c0d77ff4f9d8a86f24342bdc, type: 3}

@@ -1,13 +1,15 @@
 using System.Collections.Generic;
+using Reflex.Attributes;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Woi.Events;
+using Woi.Settings;
 
 namespace Woi.UI
 {
     public class LoginScreenController : MonoBehaviour
     {
         [SerializeField] private UIDocument ui;
-
         // UI refs
         private Label nameLabel, userIdLabel, langLabel;
         private Label namePlaceholder;
@@ -198,6 +200,10 @@ namespace Woi.UI
         private void OnStartClicked()
         {
             Debug.Log($"LOGIN | Name={nameField.value} | ID={userIdField.value} | Lang={selectedLang}");
+
+            EventBus.Publish(new OnLogged(nameField.value, 
+            int.TryParse(userIdField.value, out int id) ? id : 0, 
+            selectedLang == "TR" ? 0 : 1));
         }
     }
 }

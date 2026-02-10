@@ -188,6 +188,12 @@ MonoBehaviour:
   loadingCanvas: {fileID: 4255367274868301361}
   loadingCamera: {fileID: 5440194429965117180}
   sceneGroups:
+  - GroupName: LoginScreen
+    Scenes:
+    - Reference:
+        asset: {fileID: 102900000, guid: 18149f31848f1a74db4823a16a2364dd, type: 3}
+        guid: 18149f31848f1a74db4823a16a2364dd
+      SceneType: 3
   - GroupName: Office
     Scenes:
     - Reference:

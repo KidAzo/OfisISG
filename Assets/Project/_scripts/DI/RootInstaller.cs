@@ -8,12 +8,16 @@ public class RootInstaller : MonoBehaviour, IInstaller
 {
     [SerializeField] InputManager inputManagerPrefab;
     [SerializeField] SceneLoader sceneLoaderPrefab;
+    [SerializeField] GameManager gameManagerPrefab;
 
     public void InstallBindings(ContainerBuilder builder)
     {
         // InputManager'ı sahneler arası kalıcı bir singleton gibi bind ediyoruz
         var inputManagerInstance = Instantiate(inputManagerPrefab);
         var sceneLoaderInstance = Instantiate(sceneLoaderPrefab);
+        var gameManagerInstance = Instantiate(gameManagerPrefab);
+        
+        DontDestroyOnLoad(gameManagerInstance);
         DontDestroyOnLoad(inputManagerInstance);
         DontDestroyOnLoad(sceneLoaderInstance);
 
@@ -27,6 +31,12 @@ public class RootInstaller : MonoBehaviour, IInstaller
         {
             typeof(ISceneLoaderService),
             typeof(SceneLoader)
+        });
+
+        builder.RegisterValue(gameManagerInstance, new Type[]
+        {
+            typeof(IGameManager),
+            typeof(GameManager)
         });
     }
 }
