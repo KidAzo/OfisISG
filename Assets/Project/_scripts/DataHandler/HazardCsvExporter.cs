@@ -15,6 +15,8 @@ namespace Woi.DataHandler
 
         private const string Header =
             "Player Name;" +
+            "Player ID;" +
+            "Player Duration;" +
             "Detected Hazards;" +
             "Undetected Hazards;" +
             "Detected Count;" +
@@ -22,7 +24,7 @@ namespace Woi.DataHandler
             "Safety Score" +
             "Date Time;";
 
-        public static void Append(string playerName, HazardCheckResult result)
+        public static void Append(string playerName, int playerID, TimeSpan duration, HazardCheckResult result)
         {
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string filePath = Path.Combine(desktopPath, FileName);
@@ -34,6 +36,7 @@ namespace Woi.DataHandler
                 sb.AppendLine(Header);
 
             string dateTime = DateTime.Now.ToString(DateTimeFormat);
+        	string durationData = $"{duration.Minutes:00}:{duration.Seconds:00}";
 
             // Hücre içi ALT ALTA liste (• ile)
             string founded = FormatList(result.foundedChecks.Select(x => x.TaskName));
@@ -42,6 +45,8 @@ namespace Woi.DataHandler
             string scoreText = $"{result.Score} ({GetScoreLabel(result.Score)})";
 
             sb.Append(Escape(playerName)).Append(Sep)
+                .Append(Escape(playerID.ToString())).Append(Sep)
+                .Append(Escape(durationData)).Append(Sep)
               .Append(Escape(founded)).Append(Sep)
               .Append(Escape(missed)).Append(Sep)
               .Append(result.foundedChecks.Count).Append(Sep)

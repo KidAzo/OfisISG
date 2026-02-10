@@ -3,7 +3,7 @@ using Reflex.Attributes;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Woi.HazardSystem;
-
+using Obvious.Soap;
 
 namespace Woi.DataHandler
 {   
@@ -11,11 +11,13 @@ namespace Woi.DataHandler
     {
         [Inject] IHazardManagerService hazardManagerService;
         [SerializeField] string playerName;
-
+        [SerializeField] int playerID;
+        [SerializeField] SceneTimer sceneTimer;
+  
         [Button]
         public void ExportHazardData()
         {
-            HazardCsvExporter.Append(playerName, hazardManagerService.HazardCheckResult);
+            HazardCsvExporter.Append(playerName, playerID, sceneTimer.GetElapsedTime(), hazardManagerService.HazardCheckResult);
         }
     }
 }

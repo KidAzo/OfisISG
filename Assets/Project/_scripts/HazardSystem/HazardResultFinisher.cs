@@ -1,11 +1,13 @@
 using UnityEngine;
 using Obvious.Soap;
+using Woi.DataHandler;
 
 namespace Woi.HazardSystem
 {
     public class HazardResultFinisher : MonoBehaviour
     {
         [SerializeField] ScriptableEventNoParam onHazardResultFinished;
+        [SerializeField] GetCvsOutput getCvsOutput;
         HazardResultController hazardResultController;
 
         void Start()
@@ -26,6 +28,7 @@ namespace Woi.HazardSystem
         void OnHazardResultFinished()
         {
             hazardResultController.GetHazardResult();
+            getCvsOutput.ExportHazardData();
         }
     }
 }
