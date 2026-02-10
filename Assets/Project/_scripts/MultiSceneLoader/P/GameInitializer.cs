@@ -6,9 +6,9 @@ public class GameInitializer : MonoBehaviour
 {
 	[SerializeField] string starterSceneName;
 
-    [Inject] private SceneLoader sceneLoader;
+    [Inject] SceneLoader sceneLoader;
 	
-	private async void Start()
+	async void Start()
 	{
 		await sceneLoader.LoadScene(starterSceneName);
 	}

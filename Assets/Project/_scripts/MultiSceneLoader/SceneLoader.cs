@@ -2,21 +2,22 @@
 using System.Threading.Tasks;
 using Systems.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Woi.Settings
 {
 	public class SceneLoader : MonoBehaviour, ISceneLoaderService
 	{
-		//[SerializeField] private ProgressBar progressBar;
+		[SerializeField] private Image progressBar;
 		[SerializeField] private float fillSpeed = 0.5f;
 		[SerializeField] private Canvas loadingCanvas;
 		[SerializeField] private Camera loadingCamera;
 		[SerializeField] private SceneGroup[] sceneGroups;
 
 		private float targetProgress;
-		private const float progressHandler = 0.1f;
 		private bool isLoading;
 		private const float delay = 1;
+		private const float beforeDelayScene = 1000f;
 		public readonly SceneGroupManager manager = new();
 		private int currentSceneGroupID = 0;	
 		public void SetCurrentSceneGroupId(int id) => currentSceneGroupID = id;
@@ -37,40 +38,21 @@ namespace Woi.Settings
 			await LoadSceneGroup(currentSceneGroupID);
 		}
 
-		//[Button]
-		//public async Task LoadCrusherScene()
-		//{
-		//	await LoadSceneGroup(0);
-		//}
-
-		//[Button]
-		//public async Task LoadVRMScene()
-		//{
-		//	await LoadSceneGroup(1);
-		//}
-
-		//private async void Start()
-		//{
-		//	await LoadScene("CrusherSceneGroup");
-		//}
-
 		private void Update()
 		{
 			if (!isLoading) return;
 
-			// float currentValue = progressBar.currentPercent;
-			// float progressDifference = Mathf.Abs(currentValue - targetProgress);
-			
-			// float dynamicFillSpeed = progressDifference * fillSpeed * progressHandler;
-
-			// float value = Mathf.Lerp(currentValue, targetProgress, Time.deltaTime * dynamicFillSpeed);
-			// progressBar.SetValue(value);
+			progressBar.fillAmount = Mathf.MoveTowards(
+				progressBar.fillAmount,
+				targetProgress,
+				fillSpeed * Time.deltaTime
+			);
 		}
 
 		public async Task LoadSceneGroup(int index)
 		{
-			//progressBar.SetValue(0.0f);
-			targetProgress = 100f;
+			progressBar.fillAmount = 0f;
+			targetProgress = 1f;
 
 			if (index < 0 || index >= sceneGroups.Length)
 			{
@@ -85,7 +67,7 @@ namespace Woi.Settings
 			
 			await manager.LoadScenes(sceneGroups[index], progress, false);
 
-			await Task.Delay(100); //A little delay to ensure progress bar reaches 100%	
+			await Task.Delay((int)beforeDelayScene); //A little delay to ensure progress bar reaches 100%	
 
 			EnableLoadingCanvas(false);
 		}
@@ -94,6 +76,7 @@ namespace Woi.Settings
 		{
 			isLoading = enable;
 			loadingCanvas.gameObject.SetActive(enable);
+			loadingCamera.gameObject.SetActive(enable);
 		}
 
 		private int GetGroupIndex(string name) => Array.FindIndex(sceneGroups, g => g.GroupName == name);

@@ -12,16 +12,18 @@ public class RootInstaller : MonoBehaviour, IInstaller
     public void InstallBindings(ContainerBuilder builder)
     {
         // InputManager'ı sahneler arası kalıcı bir singleton gibi bind ediyoruz
-        var instance = Instantiate(inputManagerPrefab);
-        DontDestroyOnLoad(instance);
+        var inputManagerInstance = Instantiate(inputManagerPrefab);
+        var sceneLoaderInstance = Instantiate(sceneLoaderPrefab);
+        DontDestroyOnLoad(inputManagerInstance);
+        DontDestroyOnLoad(sceneLoaderInstance);
 
-        builder.RegisterValue(instance, new Type[]
+        builder.RegisterValue(inputManagerInstance, new Type[]
         {
             typeof(IInputProvider),
             typeof(InputManager)
         });
 
-        builder.RegisterValue(instance, new Type[]
+        builder.RegisterValue(sceneLoaderInstance, new Type[]
         {
             typeof(ISceneLoaderService),
             typeof(SceneLoader)
