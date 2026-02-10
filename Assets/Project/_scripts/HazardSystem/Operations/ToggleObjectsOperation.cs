@@ -19,7 +19,7 @@ namespace Woi.HazardSystem
 
 		public void Execute()
 		{
-			HazardFeedback.SetScale(_toDisable, 0f, isTweenRequested: _isTweenRequested, Ease.OutElastic, () =>
+			HazardFeedback.SetScale(_toDisable, 0f, isTweenRequested: _isTweenRequested, Ease.InBack, () =>
 			{
 				SetActiveStates(_toDisable, false);
 			});

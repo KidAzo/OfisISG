@@ -107,7 +107,7 @@ MonoBehaviour:
       isIconRecursive: 0
       isColorRecursive: 0
     - iconNameOrGuid: SceneAsset Icon
-      colorIndex: 6
+      colorIndex: 0
       isIconRecursive: 0
       isColorRecursive: 0
   bookmarks:
