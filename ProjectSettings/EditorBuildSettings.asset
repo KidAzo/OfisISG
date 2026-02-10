@@ -9,6 +9,7 @@ EditorBuildSettings:
     path: Assets/OfficeStartScene/Office.unity
     guid: ccc99b344bc2e7b4fb2a33754a89014a
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 854e8bf763ca59e428d806bfd18e1002, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 5b18eef71522e724bba55c5bd054301e, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: ffb171ba750d1ab409b99d2e80be0525, type: 2}

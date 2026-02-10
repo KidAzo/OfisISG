@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Project/_scripts/UI_Toolkit/loading-screen.uss?fileID=7433441132597879392&amp;guid=4ff56af340d681749abbaadf0c34f43a&amp;type=3#loading-screen" />
+    <ui:VisualElement class="root">
+        <ui:VisualElement class="card">
+            <ui:Label name="NameLabel" text="OYUNCU ADI" class="label" />
+            <ui:VisualElement name="NameInputWrapper" class="input-wrapper">
+                <ui:TextField name="NameField" enabled="true" class="input" />
+                <ui:Label name="NamePlaceholder" text="Oyuncu Adını Gir" picking-mode="Ignore" class="placeholder" style="color: rgb(147, 147, 147); top: 19px; left: 27px;" />
+            </ui:VisualElement>
+            <ui:Label name="UserIdLabel" text="KULLANICI KİMLİĞİ (ID)" class="label" />
+            <ui:TextField name="UserIdField" value="ID: #0000" focusable="false" class="input" style="color: rgb(111, 111, 111);" />
+            <ui:Label name="LangLabel" text="DİL SEÇİMİ" class="label" />
+            <ui:VisualElement class="language-row">
+                <ui:Button name="TRButton" text="🇹🇷  TR" class="lang-button selected" />
+                <ui:Button name="ENButton" text="🇬🇧  EN" class="lang-button" />
+            </ui:VisualElement>
+            <ui:Button name="StartButton" text="OYUNA BAŞLA" class="start-button disabled" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

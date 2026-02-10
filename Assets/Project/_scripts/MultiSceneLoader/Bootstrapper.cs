@@ -6,13 +6,13 @@ namespace Woi.Settings
 {
 	public class Bootstrapper : PersistentSingleton<Bootstrapper>
 	{
-		private const string BootstrapperSceneName = "Bootstrapper";
+		// private const string BootstrapperSceneName = "Bootstrapper";
 
-		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-		private static async void Init()
-		{
-			await SceneManager.LoadSceneAsync(BootstrapperSceneName, LoadSceneMode.Single);
-		}
+		// [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+		// private static async void Init()
+		// {
+		// 	await SceneManager.LoadSceneAsync(BootstrapperSceneName, LoadSceneMode.Single);
+		// }
 	}
 }
 
