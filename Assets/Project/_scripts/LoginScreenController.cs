@@ -77,7 +77,6 @@ namespace Woi.UI
             startBtn = root.Q<Button>("StartButton");
 
             namePlaceholder = root.Q<Label>("NamePlaceholder");
-            userIdField.RegisterValueChangedCallback(OnUserIdChanged);
 
             // Safety checks (optional but useful)
             if (nameField == null || startBtn == null || trBtn == null || enBtn == null)
