@@ -1,3 +1,4 @@
+using Reflex.Attributes;
 using UnityEngine;
 
 namespace Woi.Localization
@@ -5,16 +6,13 @@ namespace Woi.Localization
     public class LanguageManager : MonoBehaviour
     {
         [SerializeField] private Language defaultLanguage = Language.Turkish;
+        [Inject] IGameManager gameManager;
+
         public static Language CurrentLanguage { get; private set; } = Language.Turkish;
 
         void Awake()
         {
-            SetLanguage(defaultLanguage);   
-        }
-        
-        public static void SetLanguage(Language language)
-        {
-            CurrentLanguage = language;
+            CurrentLanguage = gameManager.GetGameSettings().Language;
         }
     }
 
