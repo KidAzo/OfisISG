@@ -78,6 +78,8 @@ namespace Woi.HazardSystem
 	public interface IHazardOperation
 	{
 		void Execute();
+		Action OnExecuteComplete { get; set; }
+		Action OnExecuteStart { get; set; }	
 	}
 
 	public enum HazardType

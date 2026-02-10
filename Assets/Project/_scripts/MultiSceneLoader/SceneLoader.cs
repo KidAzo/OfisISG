@@ -21,7 +21,7 @@ namespace Woi.Settings
 		public readonly SceneGroupManager manager = new();
 		private int currentSceneGroupID = 0;	
 		public void SetCurrentSceneGroupId(int id) => currentSceneGroupID = id;
-
+		
 		public async Task LoadScene(string name)
 		{
 			int index = GetGroupIndex(name);

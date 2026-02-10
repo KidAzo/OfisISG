@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Woi.HazardSystem
@@ -7,6 +8,8 @@ namespace Woi.HazardSystem
 	{
 		[SerializeField] ToggleObjectsConfig config;
 		public ToggleObjectsConfig Config => config;
+		public UnityEvent onStart;
+		public UnityEvent onComplete;
 
 		protected override void BuildOperations()
 		{
@@ -14,8 +17,20 @@ namespace Woi.HazardSystem
 				HazardType.ToggleObjects,
 				config,
 				this,
-				operations
+				operations,	
+				RaiseOnComplete,
+				RaiseOnStart
 			);
+		}
+
+		void RaiseOnComplete()
+		{
+			onComplete?.Invoke();
+		}	
+
+		void RaiseOnStart()
+		{
+			onStart?.Invoke();
 		}
 	}
 }

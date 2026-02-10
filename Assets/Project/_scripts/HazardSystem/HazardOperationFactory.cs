@@ -19,7 +19,9 @@ namespace Woi.HazardSystem
 			  HazardType type,
 			  TConfig config,
 			  Hazard hazard,
-			  List<IHazardOperation> ops)
+			  List<IHazardOperation> ops,
+			  Action onComplete = null,
+			  Action onStart = null)
 		{
 			if (builders.TryGetValue(type, out var builderObj))
 			{
@@ -30,7 +32,7 @@ namespace Woi.HazardSystem
 					return;
 				}
 
-				builder.Build(config, hazard, ops);
+				builder.Build(config, hazard, ops, onComplete, onStart);
 			}
 			else
 			{
@@ -41,7 +43,7 @@ namespace Woi.HazardSystem
 
 	public class ToggleObjectsOperationBuilder : IHazardOperationBuilder<ToggleObjectsConfig>
 	{
-		public void Build(ToggleObjectsConfig config, Hazard hazard, List<IHazardOperation> operations)
+		public void Build(ToggleObjectsConfig config, Hazard hazard, List<IHazardOperation> operations, Action onComplete, Action onStart)
 		{
 			if (config == null)
 			{
@@ -56,12 +58,14 @@ namespace Woi.HazardSystem
 			);
 
 			operations.Add(op);
+			op.OnExecuteComplete += onComplete;
+			op.OnExecuteStart += onStart;
 		}
 	}
 
 	public class EventOperationBuilder : IHazardOperationBuilder<EventConfig>
 	{
-		public void Build(EventConfig config, Hazard hazard, List<IHazardOperation> operations)
+		public void Build(EventConfig config, Hazard hazard, List<IHazardOperation> operations, Action onComplete, Action onStart)
 		{
 			if (config == null)
 			{
@@ -76,7 +80,7 @@ namespace Woi.HazardSystem
 
 	public class RotationObjectsOperationBuilder : IHazardOperationBuilder<RotationObjectConfig>
 	{
-		public void Build(RotationObjectConfig config, Hazard hazard, List<IHazardOperation> operations)
+		public void Build(RotationObjectConfig config, Hazard hazard, List<IHazardOperation> operations, Action onComplete, Action onStart)
 		{
 			if (config == null)
 			{
@@ -92,7 +96,8 @@ namespace Woi.HazardSystem
 
 			operations.Add(op);
 		}
-	}
+
+    }
 
 	[Serializable]
 	public class ToggleObjectsConfig 
@@ -118,6 +123,6 @@ namespace Woi.HazardSystem
 
 	public interface IHazardOperationBuilder<TConfig>
 	{
-		void Build(TConfig config, Hazard hazard, List<IHazardOperation> operations);
+		void Build(TConfig config, Hazard hazard, List<IHazardOperation> operations, Action onComplete, Action onStart);
 	}
 }

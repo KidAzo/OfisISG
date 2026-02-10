@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using PrimeTween;
+using System;
 
 namespace Woi.HazardSystem
 {
@@ -9,7 +10,9 @@ namespace Woi.HazardSystem
 		private readonly GameObject[] _toEnable;
 		private readonly GameObject[] _toDisable;
 		private readonly bool _isTweenRequested;
-
+        public Action OnExecuteComplete { get; set; }	
+        public Action OnExecuteStart { get; set; }	
+		
 		public ToggleObjectsOperation(GameObject[] toEnable, GameObject[] toDisable, bool isTweenRequested = true)
 		{
 			_toEnable = toEnable;
@@ -17,8 +20,10 @@ namespace Woi.HazardSystem
 			_isTweenRequested = isTweenRequested;
 		}
 
-		public void Execute()
+        public void Execute()
 		{
+			OnExecuteStart?.Invoke();
+
 			HazardFeedback.SetScale(_toDisable, 0f, isTweenRequested: _isTweenRequested, Ease.InBack, () =>
 			{
 				SetActiveStates(_toDisable, false);
@@ -29,7 +34,10 @@ namespace Woi.HazardSystem
 				SetActiveStates(_toEnable, true);
 			});
 
-			HazardFeedback.SetScale(_toEnable, 1f, isTweenRequested: _isTweenRequested, Ease.InOutBack, () => {});
+			HazardFeedback.SetScale(_toEnable, 1f, isTweenRequested: _isTweenRequested, Ease.InOutBack, () =>
+			{
+				OnExecuteComplete?.Invoke();
+			});
 		}
 
 		void SetActiveStates(GameObject[] go, bool active)
@@ -52,6 +60,9 @@ namespace Woi.HazardSystem
 			_duration = duration;
 		}
 
+        public Action OnExecuteComplete { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Action OnExecuteStart { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         public void Execute()
         {
             if (_rotationObjects != null)
@@ -71,7 +82,10 @@ namespace Woi.HazardSystem
 			_event = evt;
 		}
 
-		public void Execute()
+        public Action OnExecuteComplete { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Action OnExecuteStart { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public void Execute()
 		{
 			_event?.Invoke();
 		}
