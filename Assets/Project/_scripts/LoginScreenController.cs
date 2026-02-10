@@ -13,15 +13,12 @@ namespace Woi.UI
         private Label namePlaceholder;
         private TextField nameField, userIdField;
         private Button trBtn, enBtn, startBtn;
+        private VisualElement nameWrapper;
+        private Label userIdPlaceholder;
 
-        // prefs keys
-        private const string NameKey = "login_name";
-        private const string UserIdKey = "login_userid";
-        private const string LangKey = "login_lang";
 
         private string selectedLang = "TR";
 
-        // Simple localization table
         private readonly Dictionary<string, Dictionary<string, string>> T = new()
         {
             ["TR"] = new()
@@ -55,13 +52,6 @@ namespace Woi.UI
 
         private void OnEnable()
         {
-            if (ui == null)
-            {
-                Debug.LogError("UIDocument reference is missing on LoginScreenController.");
-                enabled = false;
-                return;
-            }
-
             var root = ui.rootVisualElement;
 
             // Query
@@ -72,80 +62,78 @@ namespace Woi.UI
             nameField = root.Q<TextField>("NameField");
             userIdField = root.Q<TextField>("UserIdField");
 
+            namePlaceholder = root.Q<Label>("NamePlaceholder");
+            nameWrapper = root.Q<VisualElement>("NameInputWrapper");
+
             trBtn = root.Q<Button>("TRButton");
             enBtn = root.Q<Button>("ENButton");
             startBtn = root.Q<Button>("StartButton");
 
-            namePlaceholder = root.Q<Label>("NamePlaceholder");
+            userIdPlaceholder = root.Q<Label>("UserIdPlaceholder");
 
-            // Safety checks (optional but useful)
-            if (nameField == null || startBtn == null || trBtn == null || enBtn == null)
+            userIdField.RegisterValueChangedCallback(_ => UpdateUserIdPlaceholder());
+
+            // Safety
+            if (nameField == null || userIdField == null || startBtn == null)
             {
-                Debug.LogError("Login UXML element names mismatch. Check NameField / StartButton / TRButton / ENButton.");
+                Debug.LogError("UXML name mismatch.");
                 enabled = false;
                 return;
             }
 
-            // Events
-            trBtn.clicked += OnTRClicked;
-            enBtn.clicked += OnENClicked;
+            // --- EVENTS ---
+            trBtn.clicked += () => SetLanguage("TR");
+            enBtn.clicked += () => SetLanguage("EN");
             startBtn.clicked += OnStartClicked;
 
-            nameField.RegisterValueChangedCallback(OnNameChanged);
+            nameField.RegisterValueChangedCallback(_ => RefreshUIState());
 
-            // Placeholder bug fix: focus handling
-            nameField.RegisterCallback<FocusInEvent>(OnNameFocusIn);
-            nameField.RegisterCallback<FocusOutEvent>(OnNameFocusOut);
+            // Placeholder focus behavior
+            nameField.RegisterCallback<FocusInEvent>(_ =>
+            {
+                namePlaceholder.style.display = DisplayStyle.None;
+            });
 
-            // Apply initial state
-            SetLanguage(selectedLang);
+            nameField.RegisterCallback<FocusOutEvent>(_ =>
+            {
+                UpdateNamePlaceholder();
+            });
 
-            var nameWrapper = root.Q<VisualElement>("NameInputWrapper");
+            // Wrapper click → focus name (SADECE name)
             if (nameWrapper != null)
             {
                 nameWrapper.RegisterCallback<PointerDownEvent>(_ =>
                 {
                     nameField.Focus();
                 });
-}
+            }
 
+            // --- INIT ---
+            nameField.SetValueWithoutNotify("");
+            userIdField.SetValueWithoutNotify("");   // ID alanı boş, SEÇİLEBİLİR
+            selectedLang = "TR";
+
+            SetLanguage(selectedLang);
             RefreshUIState();
         }
 
-        private void OnDisable()
+        private void UpdateUserIdPlaceholder()
         {
-            if (ui == null || ui.rootVisualElement == null) return;
+            if (userIdPlaceholder == null) return;
 
-            // Important: avoid double subscription if object is re-enabled
-            if (trBtn != null) trBtn.clicked -= OnTRClicked;
-            if (enBtn != null) enBtn.clicked -= OnENClicked;
-            if (startBtn != null) startBtn.clicked -= OnStartClicked;
-
-            if (nameField != null)
-            {
-                nameField.UnregisterValueChangedCallback(OnNameChanged);
-                nameField.UnregisterCallback<FocusInEvent>(OnNameFocusIn);
-                nameField.UnregisterCallback<FocusOutEvent>(OnNameFocusOut);
-            }
+            bool empty = string.IsNullOrWhiteSpace(userIdField.value);
+            userIdPlaceholder.style.display = empty ? DisplayStyle.Flex : DisplayStyle.None;
         }
-
-        private void OnTRClicked() => SetLanguage("TR");
-        private void OnENClicked() => SetLanguage("EN");
 
         private void SetLanguage(string lang)
         {
             selectedLang = lang;
 
-            // save
-            PlayerPrefs.SetString(LangKey, selectedLang);
-            PlayerPrefs.Save();
+            trBtn.RemoveFromClassList("selected");
+            enBtn.RemoveFromClassList("selected");
 
-            // selected class
-            if (trBtn != null) trBtn.RemoveFromClassList("selected");
-            if (enBtn != null) enBtn.RemoveFromClassList("selected");
-
-            if (lang == "TR") trBtn?.AddToClassList("selected");
-            else enBtn?.AddToClassList("selected");
+            if (lang == "TR") trBtn.AddToClassList("selected");
+            else enBtn.AddToClassList("selected");
 
             ApplyLocalization();
         }
@@ -154,64 +142,37 @@ namespace Woi.UI
         {
             var dict = T[selectedLang];
 
-            if (nameLabel != null) nameLabel.text = dict["NameLabel"];
-            if (userIdLabel != null) userIdLabel.text = dict["UserIdLabel"];
-            if (langLabel != null) langLabel.text = dict["LangLabel"];
-            if (startBtn != null) startBtn.text = dict["StartButton"];
-            if (namePlaceholder != null) namePlaceholder.text = dict["NamePlaceholder"];
-        }
-
-        private void OnNameChanged(ChangeEvent<string> _)
-        {
-            RefreshUIState();
-        }
-
-        private void OnNameFocusIn(FocusInEvent _)
-        {
-            // Hide placeholder on focus to avoid visual bug
-            if (namePlaceholder != null)
-                namePlaceholder.style.display = DisplayStyle.None;
-        }
-
-        private void OnNameFocusOut(FocusOutEvent _)
-        {
-            // When leaving field: show placeholder again if still empty
-            UpdateNamePlaceholder();
+            nameLabel.text = dict["NameLabel"];
+            userIdLabel.text = dict["UserIdLabel"];
+            langLabel.text = dict["LangLabel"];
+            startBtn.text = dict["StartButton"];
+            namePlaceholder.text = dict["NamePlaceholder"];
         }
 
         private void RefreshUIState()
         {
-            UpdateStartButtonState();
+            UpdateStartButton();
             UpdateNamePlaceholder();
         }
 
-        private void UpdateStartButtonState()
+        private void UpdateStartButton()
         {
             bool valid = !string.IsNullOrWhiteSpace(nameField.value);
 
-            startBtn.RemoveFromClassList("enabled");
-            startBtn.RemoveFromClassList("disabled");
-            startBtn.AddToClassList(valid ? "enabled" : "disabled");
             startBtn.SetEnabled(valid);
+            startBtn.EnableInClassList("enabled", valid);
+            startBtn.EnableInClassList("disabled", !valid);
         }
 
         private void UpdateNamePlaceholder()
         {
-            if (namePlaceholder == null) return;
-
             bool empty = string.IsNullOrWhiteSpace(nameField.value);
             namePlaceholder.style.display = empty ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         private void OnStartClicked()
         {
-            Debug.Log($"LOGIN OK | Name={nameField.value} | UserId={userIdField?.value} | Lang={selectedLang}");
-
-            nameField.SetValueWithoutNotify("");
-            userIdField.SetValueWithoutNotify("ID: #0000");
-           
-            // TODO: scene geçişi
-            // SceneManager.LoadScene("MainMenu");
+            Debug.Log($"LOGIN | Name={nameField.value} | ID={userIdField.value} | Lang={selectedLang}");
         }
     }
 }

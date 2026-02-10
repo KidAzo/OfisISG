@@ -45,6 +45,13 @@
     padding-left: 14px;
 }
 
+.input-wrapper {
+    position: relative;
+    height: 40px;
+    margin-bottom: 14px;
+}
+
+
 /* TextField içindeki BEYAZ alanı kapat */
 .input .unity-text-input {
     background-color: transparent;

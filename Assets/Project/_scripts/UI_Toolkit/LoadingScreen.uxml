@@ -8,7 +8,11 @@
                 <ui:Label name="NamePlaceholder" text="Oyuncu Adını Gir" picking-mode="Ignore" class="placeholder" style="color: rgb(147, 147, 147); top: 19px; left: 27px;" />
             </ui:VisualElement>
             <ui:Label name="UserIdLabel" text="KULLANICI KİMLİĞİ (ID)" class="label" />
-            <ui:TextField name="UserIdField" value="ID: #0000" focusable="false" class="input" style="color: rgb(111, 111, 111);" />
+            <ui:VisualElement name="UserIdInputWrapper" class="input-wrapper">
+                <ui:TextField name="UserIdField" class="input">
+                    <ui:Label name="UserIdPlaceholder" text="ID Giriniz" picking-mode="Ignore" class="placeholder" style="top: 16px; left: 19px; color: rgb(167, 167, 167);" />
+                </ui:TextField>
+            </ui:VisualElement>
             <ui:Label name="LangLabel" text="DİL SEÇİMİ" class="label" />
             <ui:VisualElement class="language-row">
                 <ui:Button name="TRButton" text="🇹🇷  TR" class="lang-button selected" />
