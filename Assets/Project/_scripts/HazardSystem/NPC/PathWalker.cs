@@ -24,7 +24,7 @@ namespace HazardSystem.NPC
         bool isReached;
         int _index;
         float defaultSpeed;
-        
+
         void Start()
         {
             defaultSpeed = speed;
@@ -38,7 +38,7 @@ namespace HazardSystem.NPC
 
             foreach (var npc in npcs)
             {
-                if(isWorked) return;
+                if (isWorked) return;
                 npc.position = Vector3.MoveTowards(npc.position, dest, speed * Time.deltaTime);
             }
 
@@ -48,18 +48,21 @@ namespace HazardSystem.NPC
             if (dir.sqrMagnitude > 0.0001f)
             {
                 foreach (var npc in npcs)
-                     npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, Quaternion.LookRotation(dir), rotationSpeed * Time.deltaTime);
+                    npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, Quaternion.LookRotation(dir), rotationSpeed * Time.deltaTime);
             }
 
-            if ((npcs[0].position - dest).sqrMagnitude <= arriveDistance * arriveDistance)            {
+            if ((npcs[0].position - dest).sqrMagnitude <= arriveDistance * arriveDistance)
+            {
                 if (loop)
                 {
                     if (_index == 0 && canEventsInvoke)
                     {
+                        Debug.Log("First waypoint reached, invoking event.");
                         onReachedFirstWaypoint?.Invoke();
                     }
                     else if (_index == waypoints.Length - 1 && canEventsInvoke)
                     {
+                        Debug.Log("Last waypoint reached, invoking event.");
                         onReachedLastWaypoint?.Invoke();
                     }
 
@@ -67,12 +70,17 @@ namespace HazardSystem.NPC
                 }
                 else
                 {
-                    _index = Mathf.Min(_index + 1, waypoints.Length - 1);
-                    if (!isWorked)
+                    if (_index == waypoints.Length - 1)
                     {
-                        collisionEvent?.Invoke();
-                        isWorked = true;
+                        if (!isWorked)
+                        {
+                            collisionEvent?.Invoke();
+                            isWorked = true;
+                        }
+                        
+                        return;
                     }
+                    _index = Mathf.Min(_index + 1, waypoints.Length - 1);
                 }
             }
         }
@@ -82,7 +90,7 @@ namespace HazardSystem.NPC
             speed = 0f;
         }
 
-        
+
         public void SetSpeedDefault()
         {
             speed = defaultSpeed;

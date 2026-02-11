@@ -5,12 +5,9 @@ namespace Woi.ApplicationController
 {
     public class ApplicationManager : MonoBehaviour
     {
-        void Update()
+        public void QuitApplication()
         {
-            if(Keyboard.current.escapeKey.wasPressedThisFrame)
-            {
-                Application.Quit();
-            }
+            Application.Quit();
         }
     }
 }
