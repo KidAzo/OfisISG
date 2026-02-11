@@ -1,16 +1,10 @@
 using UnityEngine;
 
-public class NPCSairsController : MonoBehaviour
+namespace Woi.NPC
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class NPCSairsController : MonoBehaviour
     {
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
     }
 }

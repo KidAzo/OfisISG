@@ -83,8 +83,8 @@ MonoBehaviour:
       colorIndex: 8
       isIconRecursive: 0
       isColorRecursive: 0
-    - iconNameOrGuid: cs Script Icon
-      colorIndex: 0
+    - iconNameOrGuid: 
+      colorIndex: 2
       isIconRecursive: 0
       isColorRecursive: 0
     - iconNameOrGuid: AudioSource Icon
