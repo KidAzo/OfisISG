@@ -33,6 +33,7 @@ MonoBehaviour:
     - ce78d55823f785649b71aa68fa33956c
     - b79e9a11fe88abf4a998e1c0b67ecc0e
     - 2c5001fe2f34e6645baa229e52b1d656
+    - ff46acfec5ac04c44828bbcbd25f781b
     values:
     - iconNameOrGuid: 
       colorIndex: 10
@@ -107,6 +108,10 @@ MonoBehaviour:
       isIconRecursive: 0
       isColorRecursive: 0
     - iconNameOrGuid: SceneAsset Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: AudioSource Icon
       colorIndex: 0
       isIconRecursive: 0
       isColorRecursive: 0
