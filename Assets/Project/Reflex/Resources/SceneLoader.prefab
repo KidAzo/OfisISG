@@ -199,7 +199,7 @@ MonoBehaviour:
     - Reference:
         asset: {fileID: 102900000, guid: ccc99b344bc2e7b4fb2a33754a89014a, type: 3}
         guid: ccc99b344bc2e7b4fb2a33754a89014a
-      SceneType: 1
+      SceneType: 0
 --- !u!1001 &5831096569337628718
 PrefabInstance:
   m_ObjectHideFlags: 0
