@@ -25,6 +25,7 @@ namespace Systems.SceneManagement
 		SceneGroup ActiveSceneGroup;
 
 		const float delayBetweenSceneLoads = 2f;	
+		const string bootstrapperSceneName = "Bootstrapper";
 
 		public async UniTask LoadScenes(SceneGroup group, IProgress<float> progress, bool reloadDupScenes = false)
 		{
@@ -96,7 +97,7 @@ namespace Systems.SceneManagement
 				if (!sceneAt.isLoaded) continue;
 
 				var sceneName = sceneAt.name;
-				if (sceneName == "Bootstrapper") continue;
+				if (sceneName == bootstrapperSceneName) continue;
 				if (handleGroup.Handles.Any(h => h.IsValid() && h.Result.Scene.name == sceneName)) continue;
 
 				scenes.Add(sceneName);
