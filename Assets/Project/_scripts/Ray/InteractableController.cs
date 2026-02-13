@@ -8,6 +8,7 @@ public class InteractableController : MonoBehaviour
     [Inject] IPlayerService playerService;
     [SerializeField] LayerMask interactableLayerMask;
     RayInteractor<IRayTarget> rayInteractor;
+    [SerializeField] float interactDistance = 5f;
 
     void Start()
     {
@@ -20,7 +21,7 @@ public class InteractableController : MonoBehaviour
     {
          if (Mouse.current.leftButton.wasPressedThisFrame)
          {
-              if (rayInteractor.TryGetTarget(10f, interactableLayerMask, out IRayTarget target))
+              if (rayInteractor.TryGetTarget(interactDistance, interactableLayerMask, out IRayTarget target))
               {
                     if (target is IInteractable interactable)
                     {

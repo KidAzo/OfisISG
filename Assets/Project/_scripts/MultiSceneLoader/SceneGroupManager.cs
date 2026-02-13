@@ -96,7 +96,7 @@ namespace Systems.SceneManagement
 				if (!sceneAt.isLoaded) continue;
 
 				var sceneName = sceneAt.name;
-				if (sceneName.Equals(activeScene) || sceneName == "Bootstrapper") continue;
+				if (sceneName == "Bootstrapper") continue;
 				if (handleGroup.Handles.Any(h => h.IsValid() && h.Result.Scene.name == sceneName)) continue;
 
 				scenes.Add(sceneName);
