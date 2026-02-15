@@ -12,14 +12,15 @@ namespace Woi.Settings
 		[Inject] ISceneLoaderService sceneLoaderService;
 		[SerializeField] string sceneName = "LoginScreen";
 
-		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-		private static async void Init()
-		{
-			await SceneManager.LoadSceneAsync(BootstrapperSceneName, LoadSceneMode.Single);
-		}
+		// [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+		// private static async void Init()
+		// {
+		// 	await SceneManager.LoadSceneAsync(BootstrapperSceneName, LoadSceneMode.Single);
+		// }
 
         void Start()
         {
+			Debug.Log("Bootstrapper started. Loading initial scene...");	
             sceneLoaderService.LoadScene(sceneName);
         }
     }

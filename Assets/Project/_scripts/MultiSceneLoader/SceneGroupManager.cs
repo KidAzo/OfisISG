@@ -78,7 +78,7 @@ namespace Systems.SceneManagement
 			{
 				SceneManager.SetActiveScene(activeScene);
 			}
-
+			
 			OnSceneGroupLoaded.Invoke();
 
 			EventBus.Publish(new OnSceneGroupLoaded());

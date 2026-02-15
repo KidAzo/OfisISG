@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95e2cd3e387fac641b57c03aacda8faa, type: 3}
   m_Name: Gameplay Input Context
   m_EditorClassIdentifier: 
-  contextName: Context
+  contextName: Pc
   priority: 0
   blockLowerContexts: 1
   onMoveInput: {fileID: 11400000, guid: 45c0f4be073f3a44e9fb2926f4c8820c, type: 2}

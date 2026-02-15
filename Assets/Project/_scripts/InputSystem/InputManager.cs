@@ -1,23 +1,32 @@
 using System;
+using Reflex.Attributes;
 using UnityEngine;
+using Woi.Porting;
 
 public class InputManager : MonoBehaviour, IInputProvider
 {
-    [SerializeField] private InputContext[] contexts;
+    [SerializeField] private InputSets inputSets;
     private PlayerInputActions inputActions;
     private InputContextStack contextStack;
     
     public PlayerInputActions InputActions => inputActions;
     
+    [SerializeField] private PortingController portingService;
+    private InputContext currentContext;    
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
         inputActions.Enable();  
         contextStack = new InputContextStack();
+
+        Debug.Log(portingService);
+
+        var contexts = GetInputContexts(portingService.CurrentMode);
         PushContexts(contexts);
         Debug.Log("[InputManager] Initialized");
     }
-    
+
     private void Update()
     {
         contextStack?.Update();
@@ -48,6 +57,33 @@ public class InputManager : MonoBehaviour, IInputProvider
     {
         contextStack.Clear();
     }
+
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+        {
+            inputActions.Disable();
+        }
+        else
+        {
+            inputActions.Enable();
+        }
+    }
+
+    private InputContext[] GetInputContexts(AppMode mode)
+    {
+        bool isVrMode = portingService.CurrentMode == AppMode.VR;
+        var currentSet = !isVrMode ? inputSets.GameplayContexts : inputSets.VrContexts;
+        
+        return currentSet;
+    }  
+
+    [Serializable]
+    public struct InputSets
+    {
+        public InputContext[] GameplayContexts;
+        public InputContext[] VrContexts;
+    }     
 }
 
 public interface IInputProvider

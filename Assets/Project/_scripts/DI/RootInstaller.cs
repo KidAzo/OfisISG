@@ -2,6 +2,7 @@ using System;
 using Reflex.Core;
 using UnityEditor.SearchService;
 using UnityEngine;
+using Woi.Porting;
 using Woi.Settings;
 
 public class RootInstaller : MonoBehaviour, IInstaller
@@ -9,17 +10,25 @@ public class RootInstaller : MonoBehaviour, IInstaller
     [SerializeField] InputManager inputManagerPrefab;
     [SerializeField] SceneLoader sceneLoaderPrefab;
     [SerializeField] GameManager gameManagerPrefab;
+    [SerializeField] PortingController portingControllerPrefab;
 
     public void InstallBindings(ContainerBuilder builder)
     {
-        // InputManager'ı sahneler arası kalıcı bir singleton gibi bind ediyoruz
         var inputManagerInstance = Instantiate(inputManagerPrefab);
         var sceneLoaderInstance = Instantiate(sceneLoaderPrefab);
         var gameManagerInstance = Instantiate(gameManagerPrefab);
+        var portingControllerInstance = Instantiate(portingControllerPrefab);
         
         DontDestroyOnLoad(gameManagerInstance);
         DontDestroyOnLoad(inputManagerInstance);
         DontDestroyOnLoad(sceneLoaderInstance);
+        DontDestroyOnLoad(portingControllerInstance);
+        
+        builder.RegisterValue(portingControllerInstance, new Type[]
+        {
+            typeof(IPortingService),
+            typeof(PortingController)
+        });
 
         builder.RegisterValue(inputManagerInstance, new Type[]
         {

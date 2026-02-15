@@ -44,5 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bddb5c35a25742a4c97c1e1890728111, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contexts:
-  - {fileID: 11400000, guid: 1ecc43e6e895b074eb8fa7d7788e8d20, type: 2}
+  inputSets:
+    GameplayContexts:
+    - {fileID: 11400000, guid: 1ecc43e6e895b074eb8fa7d7788e8d20, type: 2}
+    VrContexts:
+    - {fileID: 11400000, guid: 8a0062946cdf35741ab93ca0b938a0de, type: 2}
+  portingService: {fileID: 2871583918290122692, guid: 353795c3cc9c1bb4ca43b798539da415, type: 3}

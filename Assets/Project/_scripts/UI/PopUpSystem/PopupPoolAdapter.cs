@@ -1,13 +1,29 @@
+using Reflex.Attributes;
 using UnityEngine;
+using Woi.Porting;
 using WoiUtils.Pooling;
 
 namespace Woi.PopUpSystem
 {
-    public class PopupPoolAdapter : MonoBehaviour
+    public class PopupPoolAdapter : MonoBehaviour, IModeParticipant
     {
-        [SerializeField] Transform parent;
+        [SerializeField] Transform pcContainer;
+        [SerializeField] Transform vrContainer;
         [SerializeField] BasePopup popupPrefab;
+        [Inject] IPortingService portingService;
         IObjectPool<BasePopup> pool;
+
+        Transform currentCanvas;
+
+        void OnEnable()
+        {
+            portingService.Register(this);
+        }
+
+        void OnDisable()
+        {
+            portingService.Unregister(this);
+        }
 
         void Awake()
         {
@@ -27,7 +43,7 @@ namespace Woi.PopUpSystem
 
         BasePopup CreatePopup()
         {
-            var p = Instantiate(popupPrefab, parent);
+            var p = Instantiate(popupPrefab, currentCanvas);
             p.gameObject.SetActive(false);
             return p;
         }
@@ -44,6 +60,21 @@ namespace Woi.PopUpSystem
             if (!popup || popup.gameObject == null) return;
 
             pool.ReturnToPool(popup);
+        }
+
+        public void OnBeforeModeChange(AppMode from, AppMode to)
+        {
+            
+        }
+
+        public void OnAfterModeChange(AppMode mode)
+        {
+            SetCanvas(mode);   
+        }
+
+        void SetCanvas(AppMode mode)
+        {
+            currentCanvas = mode == AppMode.VR ? vrContainer : pcContainer;
         }
     }
 }

@@ -1,0 +1,16 @@
+{
+    "name": "Porting",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b67975ebbb694024796e2609c73fff7b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
