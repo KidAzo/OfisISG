@@ -74,7 +74,7 @@ namespace Woi.PopUpSystem
 
         void SetCanvas(AppMode mode)
         {
-            currentCanvas = mode == AppMode.VR ? vrContainer : pcContainer;
+            currentCanvas = mode == AppMode.XR ? vrContainer : pcContainer;
         }
     }
 }

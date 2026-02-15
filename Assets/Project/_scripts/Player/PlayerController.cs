@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.PlayerLoop;
 using UnityEngine.TextCore.Text;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 namespace Woi.Player
 {
@@ -147,6 +148,22 @@ namespace Woi.Player
         void SetPlayerLocomotion(Vector3 position);
         void RegisterPlayer(PlayerController player);
         event Action OnPlayerRegistered;
+    }
+
+    public interface IXRPlayerService 
+    {
+        XRRayInteractor XrRayInteractor { get; }
+        void Register(XRRayInteractor interactor);
+    }
+
+    public class XRPlayerService : IXRPlayerService
+    {
+        public XRRayInteractor XrRayInteractor { get; private set; }
+
+        public void Register(XRRayInteractor interactor)
+        {
+            XrRayInteractor = interactor;
+        }
     }
 
     public class PlayerService : IPlayerService

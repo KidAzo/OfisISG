@@ -21,7 +21,7 @@ namespace Woi.Porting
 
         public void OnAfterModeChange(AppMode mode)
         {
-            bool isVr = mode == AppMode.VR;
+            bool isVr = mode == AppMode.XR;
 
             pcPlayer.SetActive(!isVr);
             xrPlayer.SetActive(isVr);

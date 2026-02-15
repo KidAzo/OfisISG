@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using Woi.Events;
+using Woi.Porting;
 
 namespace Woi.HazardSystem
 {
@@ -11,15 +12,21 @@ namespace Woi.HazardSystem
     {
         [Inject] IHazardManagerService hazardManagerService;
         [Inject] IGameManager gameManager;
+        [Inject] IPortingService portingService;
+        
         bool _usedThisGame;
         int _lastClickFrame = -1;
 
-        [SerializeField] HazardSystemUIController _uiController;
+        [SerializeField] HazardSystemUIController _uiControllerPc;
+        [SerializeField] HazardSystemUIController _uiControllerXR;
+        HazardSystemUIController _uiControllerCurrent;
         SceneTimer _sceneTimer;
 
         void Start()
         {
             _sceneTimer = FindFirstObjectByType<SceneTimer>();
+            _uiControllerCurrent = portingService.CurrentMode == AppMode.XR ? _uiControllerXR : _uiControllerPc;
+            _uiControllerCurrent.gameObject.SetActive(false);
         }
 
         [Button]
@@ -34,14 +41,14 @@ namespace Woi.HazardSystem
 
             var result = hazardManagerService.BuildHazardCheckResult();
 
-            _uiController.BuildReport(gameManager.GetGameSettings().PlayerName,
+            _uiControllerCurrent.BuildReport(gameManager.GetGameSettings().PlayerName,
             _sceneTimer.GetElapsedTime(),
             result,
             System.DateTime.Now);
              
              await UniTask.NextFrame();
 
-            _uiController.gameObject.SetActive(true);
+            _uiControllerCurrent.gameObject.SetActive(true);
         }
         
 

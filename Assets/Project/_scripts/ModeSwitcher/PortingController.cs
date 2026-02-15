@@ -6,7 +6,7 @@ using Woi.Events;
 
 namespace Woi.Porting
 {
-    public enum AppMode { PC, VR }
+    public enum AppMode { PC, XR }
 
     public interface IModeParticipant
     {
@@ -92,7 +92,7 @@ namespace Woi.Porting
 
         public void Toggle()
         {
-            SetMode(CurrentMode == AppMode.PC ? AppMode.VR : AppMode.PC);
+            SetMode(CurrentMode == AppMode.PC ? AppMode.XR : AppMode.PC);
         }
 
         public void SetMode(AppMode mode)

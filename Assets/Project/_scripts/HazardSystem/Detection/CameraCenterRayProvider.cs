@@ -1,10 +1,33 @@
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public interface IRayProvider
 {
     Ray GetRay();
+}
+
+public sealed class XrRayProvider : IRayProvider
+{
+    private XRRayInteractor xrRayInteractor;
+
+    public XrRayProvider(XRRayInteractor xrRayInteractor)
+    {
+        this.xrRayInteractor = xrRayInteractor;
+    }
+
+    public Ray GetRay()
+    {
+		Transform attachTransform = xrRayInteractor.attachTransform;
+
+        if (attachTransform != null)
+        {
+            return new Ray(attachTransform.position, attachTransform.forward);
+        }
+
+        return new Ray(Vector3.zero, Vector3.forward);
+    }
 }
 
 public sealed class ScreenCenterRayProvider : IRayProvider
@@ -118,12 +141,12 @@ public sealed class RayInteractor<T> where T : IRayTarget
 
 public interface IInteractable : IRayTarget
 {
-	void Interact();
+    void Interact();
 }
 
 public interface IRayTarget
 
-{  
+{
 }
 
 

@@ -23,6 +23,12 @@ namespace Woi.Utils.DI
                 Resolution.Lazy
             );
 
+            builder.RegisterFactory<IXRPlayerService>(
+                _ => new XRPlayerService(),
+                Lifetime.Singleton,
+                Resolution.Lazy
+            );
+
             builder.RegisterValue(hazardManager,
             new[] { typeof(HazardManager),
                    typeof(IHazardManagerService) });

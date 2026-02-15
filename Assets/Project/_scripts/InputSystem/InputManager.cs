@@ -72,7 +72,7 @@ public class InputManager : MonoBehaviour, IInputProvider
 
     private InputContext[] GetInputContexts(AppMode mode)
     {
-        bool isVrMode = portingService.CurrentMode == AppMode.VR;
+        bool isVrMode = portingService.CurrentMode == AppMode.XR;
         var currentSet = !isVrMode ? inputSets.GameplayContexts : inputSets.VrContexts;
         
         return currentSet;
