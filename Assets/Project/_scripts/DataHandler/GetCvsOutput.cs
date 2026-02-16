@@ -5,6 +5,7 @@ using UnityEngine;
 using Woi.HazardSystem;
 using Obvious.Soap;
 using System;
+using Woi.Porting;
 
 namespace Woi.DataHandler
 {
@@ -15,6 +16,7 @@ namespace Woi.DataHandler
         [SerializeField] int playerID;
         [SerializeField] SceneTimer sceneTimer;
         [Inject] IGameManager gameManager;
+        [Inject] IPortingService portingService;
 
         void Start()
         {
@@ -22,20 +24,38 @@ namespace Woi.DataHandler
             playerName = gameSettings.PlayerName;
             playerID = gameSettings.PlayerID;
         }
-        
+
         [Button]
         public void ExportHazardData()
         {
+            if(portingService.CurrentMode == AppMode.PC)
+            {
+                HazardCsvExporter.Append(
+                    playerName,
+                    playerID,
+                    sceneTimer.GetElapsedTime(),
+                    hazardManagerService.HazardCheckResult
+                );
+            }    
+
             TimeSpan duration = DateTime.Now - SessionManager.Instance.CurrentSession.StartTime;
-            
-            HazardCsvExporter.AppendSession(
-                SessionManager.Instance.CurrentSession, 
-                duration,                                
-                hazardManagerService.HazardCheckResult   
-            );
-            
-            SessionManager.Instance.ClearSession();      
-      }
+
+            if (portingService.CurrentMode == AppMode.XR)
+            {
+
+                HazardCsvExporter.AppendSession(
+                    SessionManager.Instance.CurrentSession,
+                    duration,
+                    hazardManagerService.HazardCheckResult
+                );
+
+                SessionManager.Instance.ClearSession();
+
+                return;
+            }
+
+            HazardCsvExporter.Append(playerName, playerID, duration, hazardManagerService.HazardCheckResult);
+        }
     }
 }
 

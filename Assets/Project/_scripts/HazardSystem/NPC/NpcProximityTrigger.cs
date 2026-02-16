@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using Woi.Player;
+using Woi.Porting;
 
 namespace HazardSystem.NPC
 {
@@ -22,6 +23,8 @@ namespace HazardSystem.NPC
         PlayerDistanceChecker _distanceChecker;
 
         [Inject] IPlayerService playerService;
+        [Inject] IXRPlayerService xrPlayerService;
+        [Inject] IPortingService portingService;
 
         bool _fired;
         bool _inRange;
@@ -34,8 +37,9 @@ namespace HazardSystem.NPC
         {
             playerTriggerDistance = triggerDistance;
 
+            Transform playerTransform = portingService.CurrentMode == AppMode.XR ? xrPlayerService.PlayerTransform : playerService.GetPlayerTransform();
             _distanceChecker = new PlayerDistanceChecker(transform,
-            playerService.GetPlayerTransform(),
+            playerTransform,
             playerTriggerDistance);
 
             _startPositionA = npcA.position;
