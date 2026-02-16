@@ -15,6 +15,7 @@ namespace Woi.Level
         ILevelController levelController;
         [SerializeField] ScriptableEventNoParam onLevelFinished;
         
+        
         void OnEnable()
         {
             onLevelFinished.OnRaised += FinishLevel;
