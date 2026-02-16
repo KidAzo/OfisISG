@@ -23,12 +23,18 @@ public class InteractableController : MonoBehaviour
 
     void OnEnable()
     {
-        onInteractVr.OnRaised += InteractWithController;
+        if (portingService.CurrentMode == AppMode.XR)
+        {
+            onInteractVr.OnRaised += InteractWithController;
+        }
     }
 
     void OnDisable()
     {
-        onInteractVr.OnRaised -= InteractWithController;
+         if (portingService.CurrentMode == AppMode.XR)
+         {
+            onInteractVr.OnRaised -= InteractWithController;
+         }
     }
 
     void InteractWithController()
@@ -66,5 +72,7 @@ public class InteractableController : MonoBehaviour
                     }
               }
          }
+
+         
     }
 }

@@ -25,5 +25,5 @@ MonoBehaviour:
       Entry: 6
       Data: 
   TagIndex: 0
-  Description: 
-  _value: 1
+  Description: Change port mode easly
+  _value: 0
