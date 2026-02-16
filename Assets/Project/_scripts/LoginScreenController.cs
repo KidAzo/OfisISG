@@ -27,7 +27,7 @@ namespace Woi.UI
             {
                 ["NameLabel"] = "OYUNCU ADI",
                 ["NamePlaceholder"] = "Oyuncu Adını Gir",
-                ["UserIdLabel"] = "KULLANICI KİMLİĞİ (ID)",
+                ["UserIdLabel"] = "KULLANICI SİCİL NUMARASI (ID)",
                 ["LangLabel"] = "DİL SEÇİMİ",
                 ["StartButton"] = "OYUNA BAŞLA",
             },
