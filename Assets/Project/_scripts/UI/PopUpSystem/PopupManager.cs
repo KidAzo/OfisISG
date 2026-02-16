@@ -27,7 +27,7 @@ namespace Woi.PopUpSystem
 		Camera vrCamera;
 
 		BasePopup currentPopup;
-		bool isShowingPopup = false;
+		bool isProcessingQueue = false; // isShowingPopup yerine daha açık isim
 		CancellationTokenSource queueCts;
 		bool vrCameraFound = false;
 
@@ -37,7 +37,6 @@ namespace Woi.PopUpSystem
 			EventBus.Subscribe<OnSceneGroupLoaded>(OnSceneLoaded_Event);
 			EventBus.Subscribe<OnSceneGroupUnloaded>(UnSeceneUnloaded_Event);
 		}
-
 
 		void LateUpdate()
 		{
@@ -95,9 +94,11 @@ namespace Woi.PopUpSystem
 			};
 
 			popupQueue.Enqueue(request);
+			Debug.Log($"[PopupManager] Popup enqueued. Queue count: {popupQueue.Count}, isProcessingQueue: {isProcessingQueue}");
 
-			if (!isShowingPopup)
+			if (!isProcessingQueue)
 			{
+				Debug.Log("[PopupManager] Starting ProcessQueue");
 				ProcessQueue(queueCts.Token, data.isHazard).Forget();
 			}
 		}
@@ -121,19 +122,48 @@ namespace Woi.PopUpSystem
 			return builtPopup;
 		}
 
-		private async UniTaskVoid ProcessQueue(CancellationToken ct, bool isHazard, float closeDuration = 0.2f)
+private async UniTaskVoid ProcessQueue(CancellationToken ct, bool isHazard, float closeDuration = 0.2f)
+{
+	if (isProcessingQueue)
+	{
+		Debug.LogWarning("[PopupManager] ProcessQueue already running!");
+		return;
+	}
+
+	Debug.Log("[PopupManager] ProcessQueue started");
+	isProcessingQueue = true;
+
+	try
+	{
+		while (popupQueue.Count > 0 && !ct.IsCancellationRequested)
 		{
-			while (popupQueue.Count > 0 && !ct.IsCancellationRequested)
+			Debug.Log($"[PopupManager] Processing popup. Queue count: {popupQueue.Count}");
+			var request = popupQueue.Dequeue();
+
+			try
 			{
-				isShowingPopup = true;
-				var request = popupQueue.Dequeue();
-
 				await ShowPopupAsync(request, ct, isHazard, closeDuration);
-				await UniTask.WaitForSeconds(delayBetweenPopups, cancellationToken: ct);
 			}
-
-			isShowingPopup = false;
+			catch (OperationCanceledException)
+			{
+				Debug.Log("[PopupManager] ShowPopup cancelled");
+				throw;
+			}
+			
+			// Delay'i her durumda yap (queue boş olsa bile, çünkü yeni item gelebilir)
+			await UniTask.WaitForSeconds(delayBetweenPopups, cancellationToken: ct);
 		}
+	}
+	catch (OperationCanceledException)
+	{
+		Debug.Log("[PopupManager] ProcessQueue cancelled");
+	}
+	finally
+	{
+		isProcessingQueue = false;
+		Debug.Log($"[PopupManager] ProcessQueue finished. isProcessingQueue set to false. Remaining queue: {popupQueue.Count}");
+	}
+}
 
 		private async UniTask ShowPopupAsync(PopupRequest request, CancellationToken ct, bool isHazard, float closeDuration)
 		{
@@ -184,6 +214,8 @@ namespace Woi.PopUpSystem
 				}
 				catch (OperationCanceledException)
 				{
+					Debug.Log("[PopupManager] ShowPopup cancelled during autoClose wait");
+					throw;
 				}
 			}
 			else
@@ -192,13 +224,12 @@ namespace Woi.PopUpSystem
 			}
 		}
 
-		// 👇 EKLE: Kamerayı bekle
 		private async UniTask WaitForVRCamera(CancellationToken ct)
 		{
 			if (!isVRMode) return;
 
 			int attempts = 0;
-			int maxAttempts = 100; // 100 frame (yaklaşık 1-2 saniye)
+			int maxAttempts = 100;
 
 			while (!vrCameraFound && attempts < maxAttempts && !ct.IsCancellationRequested)
 			{
@@ -206,7 +237,7 @@ namespace Woi.PopUpSystem
 
 				if (!vrCameraFound)
 				{
-					await UniTask.Yield(ct); // Bir frame bekle
+					await UniTask.Yield(ct);
 					attempts++;
 				}
 			}
@@ -221,7 +252,6 @@ namespace Woi.PopUpSystem
 			}
 		}
 
-		// VR popup'ı için özel ayarlar
 		private void SetupVRPopup(BasePopup popup)
 		{
 			if (vrCamera == null)
@@ -232,7 +262,6 @@ namespace Woi.PopUpSystem
 
 			Transform popupTransform = popup.transform;
 
-			// Canvas'ı World Space'e çevir (eğer değilse)
 			Canvas canvas = popup.GetComponentInParent<Canvas>();
 			if (canvas != null && canvas.renderMode != RenderMode.WorldSpace)
 			{
@@ -241,11 +270,9 @@ namespace Woi.PopUpSystem
 				Debug.Log("🖼️ Canvas set to WorldSpace");
 			}
 
-			// Pozisyonu ayarla
 			Vector3 directionToCamera = vrCamera.transform.position - popupTransform.position;
 			popupTransform.rotation = Quaternion.LookRotation(-directionToCamera);
 
-			// Scale'i ayarla
 			RectTransform rectTransform = popup.GetComponent<RectTransform>();
 			if (rectTransform != null)
 			{
@@ -265,6 +292,7 @@ namespace Woi.PopUpSystem
 		{
 			if (currentPopup != null)
 			{
+				Debug.Log("[PopupManager] Closing current popup");
 				currentPopup.Hide();
 				if (activePopups.Count > 0 && activePopups.Peek() == currentPopup)
 				{
@@ -287,6 +315,7 @@ namespace Woi.PopUpSystem
 
 		public void CloseAllPopups()
 		{
+			Debug.Log("[PopupManager] Closing all popups");
 			popupQueue.Clear();
 
 			while (activePopups.Count > 0)
@@ -295,7 +324,7 @@ namespace Woi.PopUpSystem
 			}
 
 			currentPopup = null;
-			isShowingPopup = false;
+			isProcessingQueue = false; // Queue'yu temizlediğimizde flag'i de sıfırla
 		}
 
 		public void ClearQueue()
@@ -325,5 +354,4 @@ namespace Woi.PopUpSystem
 		public PopupData data;
 		public float timestamp;
 	}
-
 }
