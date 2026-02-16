@@ -38,23 +38,23 @@ namespace Woi.DataHandler
                 );
             }    
 
-            TimeSpan duration = DateTime.Now - SessionManager.Instance.CurrentSession.StartTime;
+            // TimeSpan duration = DateTime.Now - SessionManager.Instance.CurrentSession.StartTime;
 
-            if (portingService.CurrentMode == AppMode.XR)
-            {
+            // if (portingService.CurrentMode == AppMode.XR)
+            // {
 
-                HazardCsvExporter.AppendSession(
-                    SessionManager.Instance.CurrentSession,
-                    duration,
-                    hazardManagerService.HazardCheckResult
-                );
+            //     HazardCsvExporter.AppendSession(
+            //         SessionManager.Instance.CurrentSession,
+            //         duration,
+            //         hazardManagerService.HazardCheckResult
+            //     );
 
-                SessionManager.Instance.ClearSession();
+            //     SessionManager.Instance.ClearSession();
 
-                return;
-            }
+            //     return;
+            // }
 
-            HazardCsvExporter.Append(playerName, playerID, duration, hazardManagerService.HazardCheckResult);
+           // HazardCsvExporter.Append(playerName, playerID, duration, hazardManagerService.HazardCheckResult);
         }
     }
 }

@@ -1,3 +1,4 @@
+using Obvious.Soap;
 using Reflex.Attributes;
 using UnityEngine;
 using Woi.Events;
@@ -12,6 +13,17 @@ namespace Woi.Level
         [Inject] IPortingService portingService;
         [Inject] IHazardManagerService hazardManagerService;
         ILevelController levelController;
+        [SerializeField] ScriptableEventNoParam onLevelFinished;
+        
+        void OnEnable()
+        {
+            onLevelFinished.OnRaised += FinishLevel;
+        }
+
+        void OnDisable()
+        {
+            onLevelFinished.OnRaised -= FinishLevel;
+        }
 
         void Start()
         {
@@ -24,7 +36,6 @@ namespace Woi.Level
             levelController.FinishLevel();
         }
     }
-
 
     public class XrLevelController : ILevelController
     {

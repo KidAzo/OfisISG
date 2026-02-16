@@ -252,6 +252,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FinishedGame"",
+                    ""type"": ""Button"",
+                    ""id"": ""7bf3510e-07a0-497b-9f2f-3728357141a1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -263,6 +272,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""58f31dbf-e0c6-4f15-ace8-68ac407475aa"",
+                    ""path"": ""<XRController>{RightHand}/{GripButton}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FinishedGame"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -281,6 +301,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // VR
         m_VR = asset.FindActionMap("VR", throwIfNotFound: true);
         m_VR_Interact = m_VR.FindAction("Interact", throwIfNotFound: true);
+        m_VR_FinishedGame = m_VR.FindAction("FinishedGame", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -503,6 +524,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_VR;
     private List<IVRActions> m_VRActionsCallbackInterfaces = new List<IVRActions>();
     private readonly InputAction m_VR_Interact;
+    private readonly InputAction m_VR_FinishedGame;
     /// <summary>
     /// Provides access to input actions defined in input action map "VR".
     /// </summary>
@@ -518,6 +540,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "VR/Interact".
         /// </summary>
         public InputAction @Interact => m_Wrapper.m_VR_Interact;
+        /// <summary>
+        /// Provides access to the underlying input action "VR/FinishedGame".
+        /// </summary>
+        public InputAction @FinishedGame => m_Wrapper.m_VR_FinishedGame;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -547,6 +573,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @FinishedGame.started += instance.OnFinishedGame;
+            @FinishedGame.performed += instance.OnFinishedGame;
+            @FinishedGame.canceled += instance.OnFinishedGame;
         }
 
         /// <summary>
@@ -561,6 +590,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @FinishedGame.started -= instance.OnFinishedGame;
+            @FinishedGame.performed -= instance.OnFinishedGame;
+            @FinishedGame.canceled -= instance.OnFinishedGame;
         }
 
         /// <summary>
@@ -651,5 +683,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "FinishedGame" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFinishedGame(InputAction.CallbackContext context);
     }
 }

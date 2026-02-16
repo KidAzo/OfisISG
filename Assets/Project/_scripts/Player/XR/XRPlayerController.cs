@@ -45,7 +45,8 @@ namespace Woi.Player.XR
         {
             characterController.enabled = false; // Disable the CharacterController to avoid collision issues
             transform.position = targetPosition; // Move the player to the target position
-            characterController.enabled = true; // Re-enable the CharacterController
+            characterController.enabled = true; 
+            Debug.Log("[XRPlayerController] CharacterController re-enabled");
         }
 
         public void OnLevelFinished(OnXRHazardResultFinished eventData)

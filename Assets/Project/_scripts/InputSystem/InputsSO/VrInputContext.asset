@@ -16,3 +16,4 @@ MonoBehaviour:
   priority: 0
   blockLowerContexts: 1
   onInteractInput: {fileID: 11400000, guid: 1d9a287af48119a45888db3e7bba417a, type: 2}
+  onFinishedGame: {fileID: 11400000, guid: 85edb64f0104e784c8466e114b2e0ba1, type: 2}

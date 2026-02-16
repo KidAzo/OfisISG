@@ -51,6 +51,8 @@ namespace Woi.Settings
 				targetProgress,
 				loadingScreenSettings.fillSpeed * Time.deltaTime
 			);
+
+			Debug.Log($"Current Progress: {loadingScreenSettings.progressBar.fillAmount}, Target Progress: {targetProgress}");
 		}
 
 		public async Task LoadSceneGroup(int index)

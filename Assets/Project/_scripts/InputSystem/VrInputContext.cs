@@ -8,6 +8,7 @@ namespace Woi.InputSystem
     public class VrInputContext : InputContext
     {
         [SerializeField] private ScriptableEventNoParam onInteractInput;
+        [SerializeField] private ScriptableEventNoParam onFinishedGame;
 
         public override void OnEnter()
         {
@@ -20,6 +21,7 @@ namespace Woi.InputSystem
             inputActions.VR.Enable();
 
             inputActions.VR.Interact.performed += OnInteract;
+            inputActions.VR.FinishedGame.performed += OnGameplayFinished;
         }
 
         public override void OnExit()
@@ -29,12 +31,19 @@ namespace Woi.InputSystem
             inputActions.VR.Disable();
            
             inputActions.VR.Interact.performed -= OnInteract;
+            inputActions.VR.FinishedGame.performed -= OnGameplayFinished;
         }
 
         private void OnInteract(InputAction.CallbackContext ctx)
         {
             Debug.Log("[VrInputContext] Interact input performed");
             onInteractInput?.Raise();
+        }
+
+        private void OnGameplayFinished(InputAction.CallbackContext ctx)
+        {
+            Debug.Log("[VrInputContext] Finished Game input performed");
+            onFinishedGame?.Raise();
         }
     }
 }
