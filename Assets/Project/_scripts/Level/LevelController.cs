@@ -3,7 +3,9 @@ using Reflex.Attributes;
 using UnityEngine;
 using Woi.Events;
 using Woi.HazardSystem;
+using Woi.Localization;
 using Woi.Porting;
+using WoiUtils.AudioSystem;
 
 namespace Woi.Level
 {
@@ -14,8 +16,9 @@ namespace Woi.Level
         [Inject] IHazardManagerService hazardManagerService;
         ILevelController levelController;
         [SerializeField] ScriptableEventNoParam onLevelFinished;
-        
-        
+        [SerializeField] SoundDefinition anoncementSounds;
+        [Inject] AudioSystem audioSystem;
+
         void OnEnable()
         {
             onLevelFinished.OnRaised += FinishLevel;
@@ -30,6 +33,21 @@ namespace Woi.Level
         {
             bool isXr = portingService.CurrentMode == AppMode.XR;
             levelController = isXr ? new XrLevelController(hazardManagerService, playerResultTransform.position) : new PcLevelController();
+            
+            PlayAnnouncementSound();
+        }
+
+        void PlayAnnouncementSound()
+        {
+            var ctx = PlayContext.Default;
+            if (LanguageManager.CurrentLanguage == Language.Turkish)
+            {
+                ctx = ctx.SetClipIndex(0); 
+            }
+            else            
+                ctx = ctx.SetClipIndex(1);  
+
+             audioSystem.Play(anoncementSounds, ctx);
         }
 
         public void FinishLevel()
