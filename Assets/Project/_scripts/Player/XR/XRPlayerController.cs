@@ -12,17 +12,17 @@ namespace Woi.Player.XR
     {
         CharacterController characterController;
         TeleportationProvider teleportationProvider;
-        XRRayInteractor xRRayInteractor;
-        IXRPlayerService xrPlayerService;
+        [SerializeField] XRRayInteractor xRRayInteractor;
+        [SerializeField] Camera playerCamera;
+        [Inject] IXRPlayerService xrPlayerService;
         [Inject] IPortingService  portingService;
-
+    
         void Awake()
         {
             characterController = GetComponent<CharacterController>();
             teleportationProvider = GetComponentInChildren<TeleportationProvider>();
            
-            xRRayInteractor = GetComponentInChildren<XRRayInteractor>();
-            xrPlayerService.Register(xRRayInteractor);  
+            xrPlayerService.Register(xRRayInteractor, playerCamera, transform);  
         }
 
         void OnEnable()

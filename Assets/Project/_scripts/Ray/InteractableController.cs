@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using Woi.Player;
 using Reflex.Attributes;
 using Woi.Porting;
+using Obvious.Soap;
 
 public class InteractableController : MonoBehaviour
 {
@@ -12,10 +13,34 @@ public class InteractableController : MonoBehaviour
     [SerializeField] LayerMask interactableLayerMask;
     RayInteractor<IRayTarget> rayInteractor;
     [SerializeField] float interactDistance = 5f;
+    [SerializeField] ScriptableEventNoParam onInteractVr;
 
     void Start()
     {
+        Debug.Log(portingService.CurrentMode);
         SetRayType();
+    }
+
+    void OnEnable()
+    {
+        onInteractVr.OnRaised += InteractWithController;
+    }
+
+    void OnDisable()
+    {
+        onInteractVr.OnRaised -= InteractWithController;
+    }
+
+    void InteractWithController()
+    {
+        Debug.Log("Interact event received in InteractableController"); 
+        if (rayInteractor.TryGetTarget(interactDistance, interactableLayerMask, out IRayTarget target))
+        {
+            if (target is IInteractable interactable)
+            {
+                interactable.Interact();
+            }
+        }
     }
 
     void SetRayType()

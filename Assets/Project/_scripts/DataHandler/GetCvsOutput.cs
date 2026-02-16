@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Woi.HazardSystem;
 using Obvious.Soap;
+using System;
 
 namespace Woi.DataHandler
 {
@@ -25,8 +26,16 @@ namespace Woi.DataHandler
         [Button]
         public void ExportHazardData()
         {
-            HazardCsvExporter.Append(playerName, playerID, sceneTimer.GetElapsedTime(), hazardManagerService.HazardCheckResult);
-        }
+            TimeSpan duration = DateTime.Now - SessionManager.Instance.CurrentSession.StartTime;
+            
+            HazardCsvExporter.AppendSession(
+                SessionManager.Instance.CurrentSession, 
+                duration,                                
+                hazardManagerService.HazardCheckResult   
+            );
+            
+            SessionManager.Instance.ClearSession();      
+      }
     }
 }
 

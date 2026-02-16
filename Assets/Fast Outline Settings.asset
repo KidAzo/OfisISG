@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 0}
   materialInstanced: {fileID: 0}
-  isActive: 0
+  isActive: 1
   RenderingLayer:
     serializedVersion: 0
     m_Bits: 1
@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d9423b8a94407596116cb6ff8e3e59, type: 3}
   m_Name: Fast Outline Settings
   m_EditorClassIdentifier: 
-  injectionPoint: 600
+  injectionPoint: 550
   showInSceneView: 1
   outlines:
   - {fileID: -6988718267407673498}

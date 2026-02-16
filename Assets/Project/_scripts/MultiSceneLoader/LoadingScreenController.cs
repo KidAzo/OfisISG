@@ -9,13 +9,13 @@ namespace Woi.Settings
     public class LoadingScreenController : MonoBehaviour
     {
         [SerializeField] LoadingScreenSettings[] settings;
-        [SerializeField] PortingController portingController;
+        [SerializeField] ScriptableEnumPortingVariable portingVariable;
         LoadingScreenSettings currentLoadingScreenSettings;
         public LoadingScreenSettings CurrentLoadingScreenSettings => currentLoadingScreenSettings;
 
         void Awake()
         {
-            SetLoadingScreen(portingController.CurrentMode);
+            SetLoadingScreen(portingVariable.Value);
         }
 
         void SetLoadingScreen(AppMode mode)

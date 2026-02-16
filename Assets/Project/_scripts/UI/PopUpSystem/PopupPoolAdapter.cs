@@ -25,8 +25,10 @@ namespace Woi.PopUpSystem
             portingService.Unregister(this);
         }
 
-        void Awake()
+
+        void Start()
         {
+            SetCanvas(portingService.CurrentMode);
             InitializePool();
         }
 

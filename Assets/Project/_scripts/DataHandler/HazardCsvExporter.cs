@@ -4,6 +4,7 @@ using System.Text;
 using System;
 using Woi.HazardSystem;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Woi.DataHandler
 {
@@ -24,43 +25,92 @@ namespace Woi.DataHandler
             "Safety Score" +
             "Date Time;";
 
-        public static void Append(string playerName, int playerID, TimeSpan duration, HazardCheckResult result)
-        {
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string filePath = Path.Combine(desktopPath, FileName);
+        //public static void Append(string playerName, int playerID, TimeSpan duration, HazardCheckResult result)
+        // {
+        //     string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        //     string filePath = Path.Combine(desktopPath, FileName);
 
-            bool fileExists = File.Exists(filePath);
+        //     bool fileExists = File.Exists(filePath);
+        //     var sb = new StringBuilder();
+
+        //     if (!fileExists)
+        //         sb.AppendLine(Header);
+
+        //     string dateTime = DateTime.Now.ToString(DateTimeFormat);
+        // 	string durationData = $"{duration.Minutes:00}:{duration.Seconds:00}";
+
+        //     // Hücre içi ALT ALTA liste (• ile)
+        //     string founded = FormatList(result.foundedChecks.Select(x => x.TaskName));
+        //     string missed = FormatList(result.missedChecks.Select(x => x.TaskName));
+
+        //     string scoreText = $"{result.Score} ({GetScoreLabel(result.Score)})";
+
+        //     sb.Append(Escape(playerName)).Append(Sep)
+        //         .Append(Escape(playerID.ToString())).Append(Sep)
+        //         .Append(Escape(durationData)).Append(Sep)
+        //       .Append(Escape(founded)).Append(Sep)
+        //       .Append(Escape(missed)).Append(Sep)
+        //       .Append(result.foundedChecks.Count).Append(Sep)
+        //       .Append(result.missedChecks.Count).Append(Sep)
+        //       .Append(Escape(scoreText)).Append(Sep)
+        //       .Append(Escape(dateTime))
+        //       .AppendLine();
+
+        //     // UTF8 BOM → Türkçe karakterler Excel'de garanti
+        //     File.AppendAllText(
+        //         filePath,
+        //         sb.ToString(),
+        //         new UTF8Encoding(encoderShouldEmitUTF8Identifier: true)
+        //     );
+        // }
+
+        public static void AppendSession(PlayerSession session, TimeSpan duration, HazardCheckResult result)
+        {
+            if (session == null)
+            {
+                Debug.LogError("[CSV] Session null! Kayıt yapılamadı.");
+                return;
+            }
+
+            // CSV satırını oluştur
+            string csvLine = GenerateCSVLine(
+                session.PlayerName,
+                session.PlayerID,
+                duration,
+                result
+            );
+
+            SessionManager.Instance.SendResultToPC(csvLine);
+            Debug.Log($"[CSV] Sonuç oluşturuldu ve PC'ye gönderildi: {session}");
+        }
+
+        // CSV satırını oluşturan yardımcı metod
+        private static string GenerateCSVLine(
+            string playerName,
+            int playerID,
+            TimeSpan duration,
+            HazardCheckResult result)
+        {
             var sb = new StringBuilder();
 
-            if (!fileExists)
-                sb.AppendLine(Header);
-
             string dateTime = DateTime.Now.ToString(DateTimeFormat);
-        	string durationData = $"{duration.Minutes:00}:{duration.Seconds:00}";
+            string durationData = $"{duration.Minutes:00}:{duration.Seconds:00}";
 
-            // Hücre içi ALT ALTA liste (• ile)
             string founded = FormatList(result.foundedChecks.Select(x => x.TaskName));
             string missed = FormatList(result.missedChecks.Select(x => x.TaskName));
-
             string scoreText = $"{result.Score} ({GetScoreLabel(result.Score)})";
 
             sb.Append(Escape(playerName)).Append(Sep)
-                .Append(Escape(playerID.ToString())).Append(Sep)
-                .Append(Escape(durationData)).Append(Sep)
+              .Append(Escape(playerID.ToString())).Append(Sep)
+              .Append(Escape(durationData)).Append(Sep)
               .Append(Escape(founded)).Append(Sep)
               .Append(Escape(missed)).Append(Sep)
               .Append(result.foundedChecks.Count).Append(Sep)
               .Append(result.missedChecks.Count).Append(Sep)
               .Append(Escape(scoreText)).Append(Sep)
-              .Append(Escape(dateTime))
-              .AppendLine();
+              .Append(Escape(dateTime));
 
-            // UTF8 BOM → Türkçe karakterler Excel'de garanti
-            File.AppendAllText(
-                filePath,
-                sb.ToString(),
-                new UTF8Encoding(encoderShouldEmitUTF8Identifier: true)
-            );
+            return sb.ToString();
         }
 
         private static string FormatList(System.Collections.Generic.IEnumerable<string> items)

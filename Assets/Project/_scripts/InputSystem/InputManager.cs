@@ -11,18 +11,17 @@ public class InputManager : MonoBehaviour, IInputProvider
     
     public PlayerInputActions InputActions => inputActions;
     
-    [SerializeField] private PortingController portingService;
-    private InputContext currentContext;    
+    [SerializeField] private ScriptableEnumPortingVariable portingVariable;
 
-    private void Awake()
+    private void Start()
     {
         inputActions = new PlayerInputActions();
         inputActions.Enable();  
         contextStack = new InputContextStack();
 
-        Debug.Log(portingService);
+        Debug.Log(portingVariable.Value);
 
-        var contexts = GetInputContexts(portingService.CurrentMode);
+        var contexts = GetInputContexts(portingVariable.Value);
         PushContexts(contexts);
         Debug.Log("[InputManager] Initialized");
     }
@@ -45,6 +44,7 @@ public class InputManager : MonoBehaviour, IInputProvider
         {
             ctx.Initialize(inputActions);
             contextStack.PushContext(ctx);
+            Debug.Log($"[InputManager] Pushed context: {ctx.name}");
         }
     }
     
@@ -58,21 +58,21 @@ public class InputManager : MonoBehaviour, IInputProvider
         contextStack.Clear();
     }
 
-    private void OnApplicationFocus(bool hasFocus)
-    {
-        if (!hasFocus)
-        {
-            inputActions.Disable();
-        }
-        else
-        {
-            inputActions.Enable();
-        }
-    }
+    // private void OnApplicationFocus(bool hasFocus)
+    // {
+    //     if (!hasFocus)
+    //     {
+    //         inputActions.Disable();
+    //     }
+    //     else
+    //     {
+    //         inputActions.Enable();
+    //     }
+    // }
 
     private InputContext[] GetInputContexts(AppMode mode)
     {
-        bool isVrMode = portingService.CurrentMode == AppMode.XR;
+        bool isVrMode = portingVariable.Value == AppMode.XR;
         var currentSet = !isVrMode ? inputSets.GameplayContexts : inputSets.VrContexts;
         
         return currentSet;

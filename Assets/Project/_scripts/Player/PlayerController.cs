@@ -152,17 +152,23 @@ namespace Woi.Player
 
     public interface IXRPlayerService 
     {
+        Transform PlayerTransform { get; }
         XRRayInteractor XrRayInteractor { get; }
-        void Register(XRRayInteractor interactor);
+        Camera PlayerCamera { get; }
+        void Register(XRRayInteractor interactor, Camera playerCamera, Transform playerTransform);
     }
 
     public class XRPlayerService : IXRPlayerService
     {
         public XRRayInteractor XrRayInteractor { get; private set; }
+        public Camera PlayerCamera { get; private set; }
+        public Transform PlayerTransform { get; private set; }
 
-        public void Register(XRRayInteractor interactor)
+        public void Register(XRRayInteractor interactor, Camera playerCamera, Transform playerTransform)
         {
             XrRayInteractor = interactor;
+            PlayerCamera = playerCamera;
+            PlayerTransform = playerTransform;
         }
     }
 

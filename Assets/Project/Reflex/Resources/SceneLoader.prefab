@@ -221,7 +221,7 @@ MonoBehaviour:
     loadingCamera: {fileID: 5440194429965117180}
     progressBar: {fileID: 4505069500048346732}
     fillSpeed: 4
-  portingController: {fileID: 2871583918290122692, guid: 353795c3cc9c1bb4ca43b798539da415, type: 3}
+  portingVariable: {fileID: 11400000, guid: b898580eabc2f4d4d8b1b029cc64ed87, type: 2}
 --- !u!1001 &5831096569337628718
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -368,13 +368,17 @@ PrefabInstance:
       propertyPath: m_UiScaleMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4870731565502939938, guid: 112d293616025f84ea56281295bab79a, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7773827115237414431, guid: 112d293616025f84ea56281295bab79a, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 5440194429965117180}
     - target: {fileID: 7773827115237414431, guid: 112d293616025f84ea56281295bab79a, type: 3}
       propertyPath: m_RenderMode
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7773827115237414431, guid: 112d293616025f84ea56281295bab79a, type: 3}
       propertyPath: m_SortingOrder
@@ -467,7 +471,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2399347267750838206, guid: 112d293616025f84ea56281295bab79a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6632380335599057401}
   m_SourcePrefab: {fileID: 100100000, guid: 112d293616025f84ea56281295bab79a, type: 3}
 --- !u!224 &172033848384616490 stripped
 RectTransform:
@@ -490,3 +497,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5946436164997778683 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2399347267750838206, guid: 112d293616025f84ea56281295bab79a, type: 3}
+  m_PrefabInstance: {fileID: 8343425798965637957}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6632380335599057401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5946436164997778683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caca79aaf87a2ab479678d9155e59e9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 1741735398497559898}
+  vrCamera: {fileID: 5440194429965117180}
+  renderMode: 2
+  retryInterval: 0.1
+  maxRetries: 500

@@ -133,7 +133,7 @@ namespace NGS.AdvancedCullingSystem.Static
 
             List<StaticCullingSource> validSources = new List<StaticCullingSource>();
 
-            foreach (var source in FindObjectsOfType<StaticCullingSource>())
+            foreach (var source in FindObjectsByType<StaticCullingSource>(FindObjectsSortMode.None))
             {
                 if (source.Validate())
                 {
@@ -288,7 +288,7 @@ namespace NGS.AdvancedCullingSystem.Static
 
             try
             {
-                StaticCullingSource[] sceneSources = FindObjectsOfType<StaticCullingSource>();
+                StaticCullingSource[] sceneSources = FindObjectsByType<StaticCullingSource>(FindObjectsSortMode.None);
 
                 foreach (var source in sceneSources)
                 {

@@ -32,7 +32,7 @@ namespace Woi.Porting
         public event Action<AppMode, AppMode> OnModeChanging;
         public event Action<AppMode> OnModeChanged;
 
-        [SerializeField] AppMode currentMode = AppMode.PC;
+        [SerializeField] ScriptableEnumPortingVariable currentMode;
 
         readonly List<IModeParticipant> _participants = new();
         bool _isSwitching;
@@ -41,12 +41,12 @@ namespace Woi.Porting
 
         void Awake()
         {
-            CurrentMode = currentMode;
+            CurrentMode = currentMode.Value;
         }
 
         void Start()
         {
-            SetMode(currentMode);
+            SetMode(currentMode.Value);
         }
 
         void OnEnable()
@@ -61,7 +61,7 @@ namespace Woi.Porting
 
         void OnSceneGroupLoadedHandler(OnSceneGroupLoaded evt)
         {
-            SetMode(currentMode);
+            SetMode(currentMode.Value);
         }
 
         /// <summary>
@@ -98,7 +98,6 @@ namespace Woi.Porting
         public void SetMode(AppMode mode)
         {
             if (_isSwitching) return;
-            if (mode == CurrentMode) return;
 
             var from = CurrentMode;
             var to = mode;

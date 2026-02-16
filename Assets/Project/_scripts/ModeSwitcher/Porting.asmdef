@@ -2,7 +2,8 @@
     "name": "Porting",
     "rootNamespace": "",
     "references": [
-        "GUID:b67975ebbb694024796e2609c73fff7b"
+        "GUID:b67975ebbb694024796e2609c73fff7b",
+        "GUID:ee6baafdecd94804a8714654c4bd097f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
