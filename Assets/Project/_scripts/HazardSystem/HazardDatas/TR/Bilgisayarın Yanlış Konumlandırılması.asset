@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: "Bilgisayar\u0131n Yanl\u0131\u015F Konumland\u0131r\u0131lmas\u0131"
   m_EditorClassIdentifier: 
   hazardName: "Bilgisayar\u0131n Yanl\u0131\u015F Konumland\u0131r\u0131lmas\u0131"
-  description: "Bilgisayar\u0131n Yanl\u0131\u015F Konumland\u0131r\u0131lmas\u0131"
+  description: "Masa yerle\u015Fiminde bilgisayar ekran\u0131n\u0131n pencereye d\xF6n\xFCk
+    olmamas\u0131, yans\u0131malar\u0131 ve parlama kaynakl\u0131 g\xF6z zorlanmas\u0131n\u0131
+    \xF6nleyerek daha ergonomik ve konforlu bir \xE7al\u0131\u015Fma ortam\u0131
+    sa\u011Flar."
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}

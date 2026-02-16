@@ -13,7 +13,12 @@ MonoBehaviour:
   m_Name: "Kesici-delici aletlerin ortada b\u0131rak\u0131lmas\u0131"
   m_EditorClassIdentifier: 
   hazardName: "Kesici-delici aletlerin ortada b\u0131rak\u0131lmas\u0131"
-  description: "Kesici-delici aletlerin ortada b\u0131rak\u0131lmas\u0131"
+  description: "Sivri u\xE7lu, kesici ve delici malzemeleri kulland\u0131ktan sonra
+    geli\u015Fig\xFCzel ortal\u0131kta b\u0131rakmamak hem \xE7al\u0131\u015Fanlar\u0131n
+    yaralanma riskini azalt\u0131r hem de ofis i\xE7inde g\xFCvenli dola\u015F\u0131m
+    alan\u0131 sa\u011Flar. Bu t\xFCr ekipmanlar\u0131n i\u015F bitiminde uygun yerine
+    kald\u0131r\u0131lmas\u0131, d\xFCzenli ve kazas\u0131z bir \xE7al\u0131\u015Fma
+    ortam\u0131n\u0131n olmazsa olmaz\u0131d\u0131r."
   score: 0
   type: 0
   soundDefinition: {fileID: 11400000, guid: ac1536c88e2be1f4a9a811f79c7aa70c, type: 2}
