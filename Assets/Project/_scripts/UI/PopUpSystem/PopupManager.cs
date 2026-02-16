@@ -137,7 +137,6 @@ namespace Woi.PopUpSystem
 
 		private async UniTask ShowPopupAsync(PopupRequest request, CancellationToken ct, bool isHazard, float closeDuration)
 		{
-			// 👇 EKLE: Kamera hazır olana kadar bekle
 			await WaitForVRCamera(ct);
 
 			BasePopup popup = factory.CreatePopup(popupPoolAdapter, isHazard);

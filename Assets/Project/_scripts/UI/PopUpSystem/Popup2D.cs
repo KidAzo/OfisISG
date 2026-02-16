@@ -16,7 +16,7 @@ namespace Woi.PopUpSystem
 
         Tween _scaleTween;
 
-        float openDuration = 0.2f;
+        float openDuration = 0.1f;
     
         public override void Show()
         {
