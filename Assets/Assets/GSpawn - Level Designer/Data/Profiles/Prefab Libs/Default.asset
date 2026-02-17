@@ -19059,7 +19059,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
-  m_Name: lobi
+  m_Name: Lobi
   m_EditorClassIdentifier: 
   _guid:
     _guidString: 9903276c-2898-4d52-bfbf-97e2c92dc033

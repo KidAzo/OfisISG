@@ -1,6 +1,7 @@
 using Obvious.Soap;
 using Reflex.Attributes;
 using UnityEngine;
+using UnityEngine.Events;
 using Woi.Events;
 using Woi.HazardSystem;
 using Woi.Localization;
@@ -18,6 +19,9 @@ namespace Woi.Level
         [SerializeField] ScriptableEventNoParam onLevelFinished;
         [SerializeField] SoundDefinition anoncementSounds;
         [Inject] AudioSystem audioSystem;
+        [SerializeField] UnityEvent onTrSelected;
+        [SerializeField] UnityEvent onEnSelected;
+
 
         void OnEnable()
         {
@@ -43,9 +47,13 @@ namespace Woi.Level
             if (LanguageManager.CurrentLanguage == Language.Turkish)
             {
                 ctx = ctx.SetClipIndex(0); 
+                onTrSelected?.Invoke();
             }
-            else            
+            else
+            {
                 ctx = ctx.SetClipIndex(1);  
+                onEnSelected?.Invoke(); 
+            }            
 
              audioSystem.Play(anoncementSounds, ctx);
         }
