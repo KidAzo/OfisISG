@@ -1,5 +1,24 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7716693059469787385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f79425504febc2843801a7aa28fd9495, type: 3}
+  m_Name: Layer_1
+  m_EditorClassIdentifier: 
+  _guid:
+    _guidString: 4f1d549a-1d3b-4bf6-b56c-0460685a1a8b
+  _layer: 1
+  _isErasable: 1
+  _isTerrainMesh: 0
+  _isSphericalMesh: 0
+  _uiSelected: 0
 --- !u!114 &-452030091090751906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33,7 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _layers:
   - {fileID: -452030091090751906}
-  - {fileID: 0}
+  - {fileID: -7716693059469787385}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
