@@ -25,10 +25,9 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
-  - {fileID: 7234282537746805733}
   - {fileID: 6825304755379087826}
   - {fileID: 9024824692350781855}
-  m_RendererFeatureMap: e5b335a3a3556564d2a92754835ab85e9f09befb3d9e3e7d
+  m_RendererFeatureMap: d2a92754835ab85e9f09befb3d9e3e7d
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -73,29 +72,6 @@ MonoBehaviour:
     outline: {fileID: 4800000, guid: 981392195909457093e91e09efd412a1, type: 3}
     outlineInstanced: {fileID: 4800000, guid: 43dbe363270164c96812acf35572a126, type: 3}
     clear: {fileID: 4800000, guid: 9d6033fe8c48f4059a892093b5eec20b, type: 3}
---- !u!114 &7234282537746805733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e598cd55476104d909f677d2b056f508, type: 3}
-  m_Name: SoftOutline
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  settings: {fileID: 11400000, guid: 54a60441e5bc8a643924ed9389a15d4e, type: 2}
-  shaders:
-    mask: {fileID: 4800000, guid: 231df427ffff4fee9202f22ce6a5d357, type: 3}
-    silhouette: {fileID: 4800000, guid: b0e6032b7b104d8db7f40d7f6e743674, type: 3}
-    silhouetteInstanced: {fileID: 4800000, guid: b7b25b6fd39f14aeeba46013a510a40c, type: 3}
-    boxBlur: {fileID: 4800000, guid: d8d4df91388b465aa9a07d27ccc72b73, type: 3}
-    gaussianBlur: {fileID: 4800000, guid: cb6a37cd1abc46e180a83317d8fefb26, type: 3}
-    kawaseBlur: {fileID: 4800000, guid: ead7e4745cd94d22beaeeea69ae381a7, type: 3}
-    dilate: {fileID: 4800000, guid: a987f6629a694e19a74290edccde4040, type: 3}
-    outline: {fileID: 4800000, guid: b0cf66d628f541279229be85e2c31db3, type: 3}
 --- !u!114 &9024824692350781855
 MonoBehaviour:
   m_ObjectHideFlags: 0
