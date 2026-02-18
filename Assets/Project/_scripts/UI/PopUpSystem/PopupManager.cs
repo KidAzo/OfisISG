@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Reflex.Attributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Woi.Events;
+using Woi.Player;
 
 namespace Woi.PopUpSystem
 {
@@ -20,49 +22,22 @@ namespace Woi.PopUpSystem
 		[SerializeField] float vrPopupDistance = 2f;
 		[SerializeField] Vector3 vrPopupOffset = new Vector3(0, 0.5f, 0);
 		[SerializeField] float vrPopupScale = 0.001f;
+		[Inject] IXRPlayerService xRPlayerService;
 
 		PopupBuilder popupBuilder = new PopupBuilder();
 		Stack<IPopup> activePopups = new Stack<IPopup>();
 		Queue<PopupRequest> popupQueue = new Queue<PopupRequest>();
-		Camera vrCamera;
+		[SerializeField] Camera vrCamera;
 
 		BasePopup currentPopup;
 		bool isProcessingQueue = false; // isShowingPopup yerine daha açık isim
 		CancellationTokenSource queueCts;
-		bool vrCameraFound = false;
 
 		void Start()
 		{
 			queueCts = new CancellationTokenSource();
 			EventBus.Subscribe<OnSceneGroupLoaded>(OnSceneLoaded_Event);
 			EventBus.Subscribe<OnSceneGroupUnloaded>(UnSeceneUnloaded_Event);
-		}
-
-		void LateUpdate()
-		{
-			// Kamera bulunamadıysa her frame dene
-			if (!vrCameraFound && isVRMode)
-			{
-				FindVRCamera();
-			}
-		}
-
-		void FindVRCamera()
-		{
-			try
-			{
-				// XRPlayerView'den kamerayı almaya çalış
-				// if (XRPlayerView.Instance?.playerCamera != null)
-				// {
-				// 	vrCameraFound = true;
-				// 	vrCamera = XRPlayerView.Instance.playerCamera;
-				// 	Debug.Log("✅ VR Camera found for popup positioning");
-				// }
-			}
-			catch (Exception e)
-			{
-				Debug.LogWarning($"⚠️ Error finding VR camera: {e.Message}");
-			}
 		}
 
 		void UnSeceneUnloaded_Event(OnSceneGroupUnloaded evt)
@@ -80,9 +55,7 @@ namespace Woi.PopUpSystem
 
 		private void OnSceneLoaded_Event(OnSceneGroupLoaded loaded)
 		{
-			vrCameraFound = false;
-			vrCamera = null;
-			FindVRCamera();
+			
 		}
 
 		public void EnqueuePopup(PopupData data)
@@ -167,8 +140,6 @@ private async UniTaskVoid ProcessQueue(CancellationToken ct, bool isHazard, floa
 
 		private async UniTask ShowPopupAsync(PopupRequest request, CancellationToken ct, bool isHazard, float closeDuration)
 		{
-			await WaitForVRCamera(ct);
-
 			BasePopup popup = factory.CreatePopup(popupPoolAdapter, isHazard);
 			activePopups.Push(popup);
 			currentPopup = popup;
@@ -221,34 +192,6 @@ private async UniTaskVoid ProcessQueue(CancellationToken ct, bool isHazard, floa
 			else
 			{
 				await completionSource.Task;
-			}
-		}
-
-		private async UniTask WaitForVRCamera(CancellationToken ct)
-		{
-			if (!isVRMode) return;
-
-			int attempts = 0;
-			int maxAttempts = 100;
-
-			while (!vrCameraFound && attempts < maxAttempts && !ct.IsCancellationRequested)
-			{
-				FindVRCamera();
-
-				if (!vrCameraFound)
-				{
-					await UniTask.Yield(ct);
-					attempts++;
-				}
-			}
-
-			if (!vrCameraFound)
-			{
-				Debug.LogError($"❌ [PopupManager] VR Camera not found after {attempts} attempts!");
-			}
-			else
-			{
-				Debug.Log($"✅ [PopupManager] VR Camera ready after {attempts} attempts");
 			}
 		}
 

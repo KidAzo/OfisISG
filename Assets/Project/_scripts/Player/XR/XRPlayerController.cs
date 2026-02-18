@@ -53,12 +53,18 @@ namespace Woi.Player.XR
         {
             TeleportationState(false); // Disable teleportation after setting the player's position
             Teleport(eventData.position);
+            RotatePlayer();
         }
 
         void TeleportationState(bool state)
         {
             teleportationProvider.enabled = state;
         }
+
+        void RotatePlayer()
+        {
+            transform.rotation = Quaternion.identity; 
     }
+}
 }
 
