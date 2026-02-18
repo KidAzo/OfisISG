@@ -21,6 +21,8 @@ namespace Woi.Level
         [Inject] AudioSystem audioSystem;
         [SerializeField] UnityEvent onTrSelected;
         [SerializeField] UnityEvent onEnSelected;
+        [SerializeField] UnityEvent onPcSelected;
+        [SerializeField] UnityEvent onXrSelected;
 
 
         void OnEnable()
@@ -39,6 +41,15 @@ namespace Woi.Level
             levelController = isXr ? new XrLevelController(hazardManagerService, playerResultTransform.position) : new PcLevelController();
             
             PlayAnnouncementSound();
+            
+            if (isXr)
+            {
+                onXrSelected?.Invoke();
+            }
+            else
+            {
+                onPcSelected?.Invoke();
+            }
         }
 
         void PlayAnnouncementSound()
