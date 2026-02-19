@@ -25,6 +25,8 @@ public class PlayerInfoUI : MonoBehaviour
     [SerializeField] private ScriptableEventNoParam onSessionStarted;
     void Start()
     {
+        registrationPanel.SetActive(true);
+                
         WaitingState();
 
         if (SessionManager.Instance != null)

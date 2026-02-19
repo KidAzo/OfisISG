@@ -15,7 +15,7 @@ public class XRLanguageToggle : MonoBehaviour
 
     void Start()
     {
-        SwitchLanguage((int)gameManager.GetGameSettings().Language);    
+        SwitchLanguage((int)LanguageManager.CurrentLanguage);    
     }
 
     public void SwitchLanguage(int language)
