@@ -11,7 +11,7 @@ namespace Woi.Player.XR
     public class XRPlayerController : MonoBehaviour
     {
         CharacterController characterController;
-        TeleportationProvider teleportationProvider;
+        [SerializeField ]TeleportationProvider teleportationProvider;
         [SerializeField] XRRayInteractor xRRayInteractor;
         [SerializeField] Camera playerCamera;
         [Inject] IXRPlayerService xrPlayerService;
@@ -20,7 +20,6 @@ namespace Woi.Player.XR
         void Awake()
         {
             characterController = GetComponent<CharacterController>();
-            teleportationProvider = GetComponentInChildren<TeleportationProvider>();
            
             xrPlayerService.Register(xRRayInteractor, playerCamera, transform);  
         }

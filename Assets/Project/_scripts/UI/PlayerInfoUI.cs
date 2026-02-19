@@ -23,10 +23,11 @@ public class PlayerInfoUI : MonoBehaviour
     [SerializeField] private Button startGameUIButton;
     [SerializeField] private UnityEvent onStartGame;
     [SerializeField] private ScriptableEventNoParam onSessionStarted;
+    
     void Start()
     {
         registrationPanel.SetActive(true);
-                
+
         WaitingState();
 
         if (SessionManager.Instance != null)
@@ -41,17 +42,6 @@ public class PlayerInfoUI : MonoBehaviour
         {
             SessionManager.Instance.OnSessionReady -= ApprovedState;
         }
-    }
-
-    /// <summary>
-    /// Paneli gizle
-    /// </summary>
-    public void HidePanel()
-    {
-        if (registrationPanel != null)
-            registrationPanel.SetActive(false);
-
-        Debug.Log("[PlayerInfoUI] Panel gizlendi");
     }
 
     void WaitingState()

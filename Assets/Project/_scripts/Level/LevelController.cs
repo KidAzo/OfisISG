@@ -54,6 +54,25 @@ namespace Woi.Level
 
         void PlayAnnouncementSound()
         {
+            if (portingService.CurrentMode == AppMode.XR) return;
+        
+            var ctx = PlayContext.Default;
+            if (LanguageManager.CurrentLanguage == Language.Turkish)
+            {
+                ctx = ctx.SetClipIndex(0); 
+                onTrSelected?.Invoke();
+            }
+            else
+            {
+                ctx = ctx.SetClipIndex(1);  
+                onEnSelected?.Invoke(); 
+            }            
+
+             audioSystem.Play(anoncementSounds, ctx);
+        }
+
+        public void PlayAnnouncementSoundXR()
+        {
             var ctx = PlayContext.Default;
             if (LanguageManager.CurrentLanguage == Language.Turkish)
             {
