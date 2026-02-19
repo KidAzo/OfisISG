@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,40 +5,71 @@ using UnityEngine;
 namespace Woi.DataHandler
 {
     /// <summary>
-    /// Network thread'lerinden gelen verileri Unity main thread'inde çalıştırmak için
-    /// UDP listener başka thread'de çalıştığı için buna ihtiyacımız var
+    /// Network thread'lerinden gelen işleri Unity main thread'inde çalıştırmak için.
+    /// IMPORTANT: Instance mutlaka MAIN THREAD'de (Awake/Start) oluşturulmalı.
     /// </summary>
-    public class UnityMainThreadDispatcher : MonoBehaviour
+    public sealed class UnityMainThreadDispatcher : MonoBehaviour
     {
         private static UnityMainThreadDispatcher _instance;
         private static readonly Queue<Action> _executionQueue = new Queue<Action>();
+        private static readonly object _lock = new object();
 
+        public static bool HasInstance => _instance != null;
+
+        /// <summary>
+        /// MAIN THREAD'de çağırın. (örn. SessionManager.Awake)
+        /// </summary>
         public static UnityMainThreadDispatcher Instance()
         {
-            if (_instance == null)
-            {
-                GameObject go = new GameObject("UnityMainThreadDispatcher");
-                _instance = go.AddComponent<UnityMainThreadDispatcher>();
-                DontDestroyOnLoad(go); // Scene değişse bile yok olmasın
-            }
+            if (_instance != null) return _instance;
+
+            // ✅ Main thread’de create edilmeli
+            var go = new GameObject(nameof(UnityMainThreadDispatcher));
+            _instance = go.AddComponent<UnityMainThreadDispatcher>();
+            DontDestroyOnLoad(go);
+
+            Debug.Log("[Dispatcher] Created (main thread).");
             return _instance;
         }
 
+        /// <summary>
+        /// Queue'ya iş ekler. Thread-safe.
+        /// </summary>
         public void Enqueue(Action action)
         {
-            lock (_executionQueue)
+            if (action == null) return;
+
+            lock (_lock)
             {
                 _executionQueue.Enqueue(action);
             }
         }
 
-        void Update()
+        private void Update()
         {
-            lock (_executionQueue)
+            // Bu frame’de çalıştırılacak işleri local listeye al (lock kısa sürsün)
+            Action[] actionsToRun = null;
+
+            lock (_lock)
             {
-                while (_executionQueue.Count > 0)
+                if (_executionQueue.Count > 0)
                 {
-                    _executionQueue.Dequeue().Invoke();
+                    actionsToRun = _executionQueue.ToArray();
+                    _executionQueue.Clear();
+                }
+            }
+
+            if (actionsToRun == null) return;
+
+            for (int i = 0; i < actionsToRun.Length; i++)
+            {
+                try
+                {
+                    actionsToRun[i]?.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[Dispatcher] Action threw exception: {ex}");
                 }
             }
         }

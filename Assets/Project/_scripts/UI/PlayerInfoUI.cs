@@ -1,30 +1,35 @@
 using UnityEngine;
 using TMPro;
 using Woi.DataHandler;
+using UnityEngine.UI;
+using UnityEngine.Events;
+using Obvious.Soap;
 
 public class PlayerInfoUI : MonoBehaviour
 {
+    [SerializeField] private GameObject registrationPanel;
+
     [Header("UI Referansları")]
     [SerializeField] private TextMeshProUGUI playerNameText;
     [SerializeField] private TextMeshProUGUI playerIDText;
-    [SerializeField] private GameObject infoPanel;
-    
-    [Header("Ayarlar")]
-    [SerializeField] private float displayDuration = 5f; // Kaç saniye göster
-    [SerializeField] private bool hideAfterDelay = true; // Otomatik gizlensin mi
-
+    [SerializeField] private TextMeshProUGUI identificationText;
+    [SerializeField] private Image headerImage;    
+    [SerializeField] private Image backgroundImage;
+    [SerializeField] private Image approvedImage;
+    [SerializeField] private Image waitingImage;
+    [SerializeField] private Color approvedColor = Color.green;
+    [SerializeField] private Color waitingColor = Color.red;
+    [SerializeField] private GameObject startGameButton;    
+    [SerializeField] private Button startGameUIButton;
+    [SerializeField] private UnityEvent onStartGame;
+    [SerializeField] private ScriptableEventNoParam onSessionStarted;
     void Start()
     {
-        if (infoPanel != null)
-            infoPanel.SetActive(false);
+        WaitingState();
 
         if (SessionManager.Instance != null)
         {
-            SessionManager.Instance.OnSessionReady += OnPlayerRegistered;
-        }
-        else
-        {
-            Debug.LogError("[PlayerInfoUI] SessionManager bulunamadı!");
+            SessionManager.Instance.OnSessionReady += ApprovedState;
         }
     }
 
@@ -32,34 +37,7 @@ public class PlayerInfoUI : MonoBehaviour
     {
         if (SessionManager.Instance != null)
         {
-            SessionManager.Instance.OnSessionReady -= OnPlayerRegistered;
-        }
-    }
-
-    private void OnPlayerRegistered(PlayerSession session)
-    {
-        Debug.Log($"[PlayerInfoUI] Oyuncu bilgileri gösteriliyor: {session.FullName}");
-
-        // Paneli göster
-        if (infoPanel != null)
-            infoPanel.SetActive(true);
-
-        // İsim ve soyadı göster
-        if (playerNameText != null)
-        {
-            playerNameText.text = $"{session.PlayerName}";
-        }
-
-        // ID'yi göster
-        if (playerIDText != null)
-        {
-            playerIDText.text = $"ID: {session.PlayerID}";
-        }
-
-        // Belirlenen süre sonra gizle
-        if (hideAfterDelay)
-        {
-            Invoke(nameof(HidePanel), displayDuration);
+            SessionManager.Instance.OnSessionReady -= ApprovedState;
         }
     }
 
@@ -68,25 +46,41 @@ public class PlayerInfoUI : MonoBehaviour
     /// </summary>
     public void HidePanel()
     {
-        if (infoPanel != null)
-            infoPanel.SetActive(false);
+        if (registrationPanel != null)
+            registrationPanel.SetActive(false);
 
         Debug.Log("[PlayerInfoUI] Panel gizlendi");
     }
 
-    /// <summary>
-    /// Manuel olarak göster (isteğe bağlı)
-    /// </summary>
-    [ContextMenu("Test: Paneli Göster")]
-    public void ShowCurrentPlayer()
+    void WaitingState()
     {
-        if (SessionManager.Instance.CurrentSession != null)
-        {
-            OnPlayerRegistered(SessionManager.Instance.CurrentSession);
-        }
-        else
-        {
-            Debug.LogWarning("Henüz oyuncu kaydı yok!");
-        }
+            backgroundImage.color = waitingColor;
+
+            headerImage.gameObject.SetActive(false);
+            approvedImage.gameObject.SetActive(false);
+            waitingImage.gameObject.SetActive(true);
+
+            playerNameText.text = "XXXXX";
+            playerIDText.text = "Staff ID: XXXXX";
+            identificationText.text = "Identification in progress...";
+            startGameButton.SetActive(false);
+    }
+
+    void ApprovedState(PlayerSession session)
+    {
+            backgroundImage.color = approvedColor;
+
+            approvedImage.gameObject.SetActive(true);
+            waitingImage.gameObject.SetActive(false);
+
+            identificationText.text = "Identification Successful!";
+
+            playerNameText.text = $"{session.PlayerName}";
+            playerIDText.text = $"ID: {session.PlayerID}";
+            headerImage.gameObject.SetActive(true);
+            startGameButton.SetActive(true);
+           
+            startGameUIButton.onClick.AddListener(() => onStartGame?.Invoke());
+            onSessionStarted?.Raise();
     }
 }

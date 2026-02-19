@@ -10,9 +10,11 @@ namespace Woi.HazardSystem
         [SerializeField] ScriptableEventNoParam onHazardResultFinished;
         [SerializeField] GetCvsOutput getCvsOutput;
         HazardResultController hazardResultController;
+        bool usedThisGame;
 
         void Start()
         {
+            usedThisGame = false;
             hazardResultController = GetComponent<HazardResultController>();
         }
 
@@ -28,8 +30,11 @@ namespace Woi.HazardSystem
 
         void OnHazardResultFinished()
         {
+            if (usedThisGame) return;
+
             hazardResultController.GetHazardResult();
             getCvsOutput.ExportHazardData();
+            usedThisGame = true;
         }
     }
 

@@ -50,7 +50,6 @@ namespace Woi.HazardSystem
 
             _uiControllerCurrent.gameObject.SetActive(true);
         }
-        
 
         public void GetCvsDatas()
         {

@@ -25,6 +25,16 @@ namespace Woi.HazardSystem
 			BuildOperations();
 		}
 
+		protected virtual void OnEnable()
+		{
+			EventBus.Subscribe<OnLanguageChanged>(SetHazardData);
+		}
+
+		protected virtual void OnDisable()
+		{
+			EventBus.Unsubscribe<OnLanguageChanged>(SetHazardData);
+		}
+
 		public void SetHazardData()
 		{
 			var language = LanguageManager.CurrentLanguage;
@@ -40,6 +50,20 @@ namespace Woi.HazardSystem
 			}
 
 			Debug.LogWarning($"Hazard data not found for language: {language}. Using default.");
+			currentData = hazardSettings[0].hazardData;
+		}
+
+		public void SetHazardData(OnLanguageChanged evt)
+		{
+			foreach (var setting in hazardSettings)
+			{
+				if ((int)setting.language == evt.language)
+				{
+					currentData = setting.hazardData;
+					return;
+				}
+			}
+
 			currentData = hazardSettings[0].hazardData;
 		}
 

@@ -58,7 +58,6 @@ namespace HazardSystem.NPC
                 {
                     if (_index == 0 && canEventsInvoke)
                     {
-                        Debug.Log("First waypoint reached, invoking event.");
                         onReachedFirstWaypoint?.Invoke();
 
                         if (canReset)
@@ -70,7 +69,6 @@ namespace HazardSystem.NPC
                     }
                     else if (_index == waypoints.Length - 1 && canEventsInvoke)
                     {
-                        Debug.Log("Last waypoint reached, invoking event.");
                         onReachedLastWaypoint?.Invoke();
                     }
 

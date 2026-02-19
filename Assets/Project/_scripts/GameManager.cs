@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Woi.Events;
 using Woi.Localization;
@@ -23,6 +24,12 @@ public class GameManager : MonoBehaviour, IGameManager
         EventBus.Unsubscribe<OnLogged>(GetGameSettings);
     }
 
+    public void SetLanguage(Language language)
+    {
+        gameSettings.Language = language;
+        LanguageManager.SetLanguage(language);
+        EventBus.Publish(new OnLanguageChanged((int)language));
+    }
 
     public void GetGameSettings(OnLogged evt)
     {
@@ -43,4 +50,6 @@ public class GameManager : MonoBehaviour, IGameManager
 public interface IGameManager
 {
     GameManager.GameSettings GetGameSettings();
+    void SetLanguage(Language language);
 }
+

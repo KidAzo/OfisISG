@@ -14,6 +14,11 @@ namespace Woi.Localization
         {
             CurrentLanguage = gameManager.GetGameSettings().Language;
         }
+
+        public static void SetLanguage(Language language)
+        {
+            CurrentLanguage = language;
+        }
     }
 
     public enum Language

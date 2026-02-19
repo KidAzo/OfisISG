@@ -87,4 +87,14 @@ namespace Woi.Events
             this.language = language;
         }
     }
+
+    public struct OnLanguageChanged : IEvent
+    {
+        public int language;
+
+        public OnLanguageChanged(int language)
+        {
+            this.language = language;
+        }
+    }
 }
