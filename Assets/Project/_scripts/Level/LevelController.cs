@@ -6,11 +6,12 @@ using Woi.Events;
 using Woi.HazardSystem;
 using Woi.Localization;
 using Woi.Porting;
+using WoiUtils;
 using WoiUtils.AudioSystem;
 
 namespace Woi.Level
 {
-    public class LevelManager : MonoBehaviour
+    public class LevelManager : Singleton<LevelManager>
     {
         [SerializeField] Transform playerResultTransform;
         [Inject] IPortingService portingService;
@@ -24,6 +25,26 @@ namespace Woi.Level
         [SerializeField] UnityEvent onPcSelected;
         [SerializeField] UnityEvent onXrSelected;
 
+        public bool canFinishLevel;    
+
+        public bool CanLevelFinishedOnXr()
+        {
+            if (portingService.CurrentMode == AppMode.PC) return true;
+
+            if (!canFinishLevel) return false;
+
+            return true;
+        }
+
+        public bool IsOnPcMode()
+        {
+            return portingService.CurrentMode == AppMode.PC;
+        }
+
+        public void EnableLevelFinish()
+        {
+            canFinishLevel = true;
+        }
 
         void OnEnable()
         {
@@ -37,6 +58,8 @@ namespace Woi.Level
 
         void Start()
         {
+            canFinishLevel = false;
+
             bool isXr = portingService.CurrentMode == AppMode.XR;
             levelController = isXr ? new XrLevelController(hazardManagerService, playerResultTransform.position) : new PcLevelController();
             

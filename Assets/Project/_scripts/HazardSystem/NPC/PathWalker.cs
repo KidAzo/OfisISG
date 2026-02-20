@@ -19,8 +19,10 @@ namespace HazardSystem.NPC
         [SerializeField] UnityEvent onReachedFirstWaypoint;
         [SerializeField] UnityEvent onReachedLastWaypoint;
         [SerializeField] UnityEvent collisionEvent;
+        [SerializeField] UnityEvent reachedEvent;
         [SerializeField] private bool canEventsInvoke;
         [SerializeField] private bool canReset;
+        [SerializeField] private bool canIncrease;
         bool isWorked;
         bool isReached;
         int _index;
@@ -65,6 +67,9 @@ namespace HazardSystem.NPC
                             isWorked = true;
                             Invoke(nameof(ResetIndex), 2f);
                         }
+
+                        if(canIncrease)
+                             _index = (_index + 1) % waypoints.Length;
                         return;
                     }
                     else if (_index == waypoints.Length - 1 && canEventsInvoke)

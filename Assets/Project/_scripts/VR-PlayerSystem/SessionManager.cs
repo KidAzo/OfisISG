@@ -8,6 +8,7 @@ using System.Collections;
 using WoiUtils;
 using Woi.Events;
 using Obvious.Soap;
+using Woi.Porting;
 
 namespace Woi.DataHandler
 {
@@ -20,6 +21,8 @@ namespace Woi.DataHandler
         [Header("━━━━━━━ DEBUG AYARLARI ━━━━━━━")]
         [SerializeField] private bool showDebugLogs = true;
         [SerializeField] private ScriptableEventNoParam onSessionStarted;   
+        [SerializeField] private ServerDiscoveryClient discovery;
+        [SerializeField] private IPortingService portingService;
 
         public PlayerSession CurrentSession { get; private set; }
 
@@ -37,6 +40,19 @@ namespace Woi.DataHandler
             StartListening();
         }
 
+        void Start()
+        {
+            if (discovery != null)
+            {
+                discovery.OnServerDiscovered += SetPcServerUrl;
+                Log("📡 Discovery client bulundu, server arama başladı...");
+            }
+            else
+            {
+                LogError("❌ ServerDiscoveryClient sahnede yok!");
+            }
+        }
+
         private void OnDestroy()
         {
             StopListening();
@@ -47,17 +63,23 @@ namespace Woi.DataHandler
             StopListening();
         }
 
-        private void StartListening()
+        public void SetPcServerUrl(string url)
         {
+            pcServerUrl = url;
+            Log($"🔧 PC Server URL set: {pcServerUrl}");
+        }
+
+       private void StartListening()
+        {
+            StopListening(); // ✅ önce varsa kapat
+
             try
             {
-                StopListening(); // güvenlik: tekrar başlatma varsa kapat
-
-                udpListener = new UdpClient(udpListenPort);
+                udpListener = new UdpClient();
                 udpListener.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                udpListener.Client.Bind(new IPEndPoint(IPAddress.Any, udpListenPort));
 
                 isListening = true;
-
                 udpListener.BeginReceive(OnDataReceived, null);
 
                 Log($"✅ UDP Dinleme BAŞLATILDI - Port: {udpListenPort}");
@@ -70,14 +92,21 @@ namespace Woi.DataHandler
             }
         }
 
+        private void OnEnable() => StartListening();
+        private void OnDisable() => StopListening();
+
+
         private void StopListening()
         {
             isListening = false;
 
-            try { udpListener?.Close(); }
-            catch { /* ignore */ }
+            if (udpListener == null) return;
+
+            try { udpListener.Close(); } catch {}
+            try { udpListener.Dispose(); } catch {}
 
             udpListener = null;
+            Log("🛑 UDP dinleme durduruldu");
         }
 
         // ⚠️ Background thread

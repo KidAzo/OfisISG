@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Woi.Events;
 using Woi.Player;
+using Woi.Porting;
 
 namespace Woi.PopUpSystem
 {
@@ -28,13 +29,18 @@ namespace Woi.PopUpSystem
 		Stack<IPopup> activePopups = new Stack<IPopup>();
 		Queue<PopupRequest> popupQueue = new Queue<PopupRequest>();
 		[SerializeField] Camera vrCamera;
+		[Inject] IPortingService portingService;
 
 		BasePopup currentPopup;
 		bool isProcessingQueue = false; // isShowingPopup yerine daha açık isim
 		CancellationTokenSource queueCts;
 
+
+
 		void Start()
 		{
+			isVRMode = portingService.CurrentMode == AppMode.XR;
+			
 			queueCts = new CancellationTokenSource();
 			EventBus.Subscribe<OnSceneGroupLoaded>(OnSceneLoaded_Event);
 			EventBus.Subscribe<OnSceneGroupUnloaded>(UnSeceneUnloaded_Event);

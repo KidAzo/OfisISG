@@ -1,6 +1,7 @@
 using Obvious.Soap;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Woi.Level;
 
 namespace Woi.InputSystem
 {
@@ -42,8 +43,19 @@ namespace Woi.InputSystem
 
         private void OnGameplayFinished(InputAction.CallbackContext ctx)
         {
-            Debug.Log("[VrInputContext] Finished Game input performed");
-            onFinishedGame?.Raise();
+            if(LevelManager.Instance == null) return;
+
+            if (LevelManager.Instance.CanLevelFinishedOnXr())
+            {
+                onFinishedGame?.Raise();
+                return;
+            }   
+
+            if (LevelManager.Instance.IsOnPcMode())
+            {
+                onFinishedGame?.Raise();
+                return;
+            }
         }
     }
 }

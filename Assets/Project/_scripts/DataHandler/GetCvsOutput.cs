@@ -36,6 +36,7 @@ namespace Woi.DataHandler
                     sceneTimer.GetElapsedTime(),
                     hazardManagerService.HazardCheckResult
                 );
+                return; 
             }    
 
             TimeSpan duration = DateTime.Now - SessionManager.Instance.CurrentSession.StartTime;
