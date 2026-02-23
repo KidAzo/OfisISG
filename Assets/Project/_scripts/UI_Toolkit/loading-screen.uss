@@ -124,3 +124,34 @@
     background-color: #2563eb;
     color: white;
 }
+
+/* ================= CLOSE BUTTON ================= */
+
+.card {
+    position: relative; /* absolute child için gerekli */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    width: 28px;
+    height: 28px;
+
+    border-radius: 8px;
+    background-color: rgba(255,255,255,0.05);
+    border-width: 0;
+
+    color: #94a3b8;
+    unity-font-style: bold;
+    font-size: 14px;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.close-button:hover {
+    background-color: rgba(255,255,255,0.12);
+    color: white;
+}

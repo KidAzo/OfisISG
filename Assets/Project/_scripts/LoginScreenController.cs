@@ -14,7 +14,7 @@ namespace Woi.UI
         private Label nameLabel, userIdLabel, langLabel;
         private Label namePlaceholder;
         private TextField nameField, userIdField;
-        private Button trBtn, enBtn, startBtn;
+        private Button trBtn, enBtn, startBtn, closeBtn;
         private VisualElement nameWrapper;
         private Label userIdPlaceholder;
 
@@ -61,6 +61,7 @@ namespace Woi.UI
             userIdLabel = root.Q<Label>("UserIdLabel");
             langLabel = root.Q<Label>("LangLabel");
 
+
             nameField = root.Q<TextField>("NameField");
             userIdField = root.Q<TextField>("UserIdField");
 
@@ -70,6 +71,7 @@ namespace Woi.UI
             trBtn = root.Q<Button>("TRButton");
             enBtn = root.Q<Button>("ENButton");
             startBtn = root.Q<Button>("StartButton");
+            closeBtn = root.Q<Button>("CloseButton");
 
             userIdPlaceholder = root.Q<Label>("UserIdPlaceholder");
 
@@ -87,6 +89,7 @@ namespace Woi.UI
             trBtn.clicked += () => SetLanguage("TR");
             enBtn.clicked += () => SetLanguage("EN");
             startBtn.clicked += OnStartClicked;
+            closeBtn.clicked += QuitGame;   
 
             nameField.RegisterValueChangedCallback(_ => RefreshUIState());
 
@@ -163,6 +166,11 @@ namespace Woi.UI
             else enBtn.AddToClassList("selected");
 
             ApplyLocalization();
+        }
+
+        void QuitGame()
+        {
+            Application.Quit();            
         }
 
         private void ApplyLocalization()

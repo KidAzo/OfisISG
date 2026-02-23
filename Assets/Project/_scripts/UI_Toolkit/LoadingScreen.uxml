@@ -2,6 +2,7 @@
     <Style src="project://database/Assets/Project/_scripts/UI_Toolkit/loading-screen.uss?fileID=7433441132597879392&amp;guid=4ff56af340d681749abbaadf0c34f43a&amp;type=3#loading-screen" />
     <ui:VisualElement class="root">
         <ui:VisualElement class="card">
+            <ui:Button name="CloseButton" text="✕" class="close-button" />
             <ui:Label name="NameLabel" text="OYUNCU ADI" class="label" />
             <ui:VisualElement name="NameInputWrapper" class="input-wrapper">
                 <ui:TextField name="NameField" enabled="true" class="input" />
