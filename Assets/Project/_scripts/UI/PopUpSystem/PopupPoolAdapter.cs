@@ -46,6 +46,7 @@ namespace Woi.PopUpSystem
         BasePopup CreatePopup()
         {
             var p = Instantiate(popupPrefab, currentCanvas);
+            p.transform.rotation = Quaternion.identity; 
             p.gameObject.SetActive(false);
             return p;
         }

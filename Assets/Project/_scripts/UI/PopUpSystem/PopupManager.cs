@@ -212,23 +212,23 @@ private async UniTaskVoid ProcessQueue(CancellationToken ct, bool isHazard, floa
 			Transform popupTransform = popup.transform;
 
 			Canvas canvas = popup.GetComponentInParent<Canvas>();
-			if (canvas != null && canvas.renderMode != RenderMode.WorldSpace)
+			if (canvas != null)
 			{
-				canvas.renderMode = RenderMode.WorldSpace;
+				if (canvas.renderMode != RenderMode.WorldSpace)
+					canvas.renderMode = RenderMode.WorldSpace;
+
 				canvas.worldCamera = vrCamera;
-				Debug.Log("🖼️ Canvas set to WorldSpace");
 			}
 
-			Vector3 directionToCamera = vrCamera.transform.position - popupTransform.position;
-			popupTransform.rotation = Quaternion.LookRotation(-directionToCamera);
+			Vector3 toCam = vrCamera.transform.position - popupTransform.position;
+			toCam.y = 0f;
+
+			if (toCam.sqrMagnitude > 0.0001f)
+				popupTransform.rotation = Quaternion.LookRotation(toCam, Vector3.up);
 
 			RectTransform rectTransform = popup.GetComponent<RectTransform>();
 			if (rectTransform != null)
-			{
 				rectTransform.localScale = Vector3.one * vrPopupScale;
-			}
-
-			Debug.Log($"✅ VR Popup setup complete - Pos: {popupTransform.position}, Scale: {rectTransform?.localScale}");
 		}
 
 		private void OnPopupClosed()

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Obvious.Soap;
+using Woi.Porting;
 
 [CreateAssetMenu(menuName = "Input System/Contexts/Gameplay Context")]
 public class GameplayInputContext : InputContext
@@ -15,6 +16,8 @@ public class GameplayInputContext : InputContext
     [SerializeField] private ScriptableEventBool onSprintInput;
     [SerializeField] private ScriptableEventNoParam onInteractInput;
     [SerializeField] private ScriptableEventNoParam onGameplayFinishedInput;
+    [SerializeField] private ScriptableEventNoParam preOnGameplayFinishedInput;
+    [SerializeField] private ScriptableEnumPortingVariable portingVariable;
     
     // Runtime input control
     private bool moveEnabled = true;
@@ -93,6 +96,12 @@ public class GameplayInputContext : InputContext
 
     private void OnGameplayFinished(InputAction.CallbackContext ctx)
     {
+        if(portingVariable.Value == AppMode.XR)
+        {
+            preOnGameplayFinishedInput?.Raise();
+            return;
+        }
+
         onGameplayFinishedInput?.Raise();
     }
     
