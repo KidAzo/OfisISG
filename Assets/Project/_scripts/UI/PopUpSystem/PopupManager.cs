@@ -224,7 +224,7 @@ private async UniTaskVoid ProcessQueue(CancellationToken ct, bool isHazard, floa
 			toCam.y = 0f;
 
 			if (toCam.sqrMagnitude > 0.0001f)
-				popupTransform.rotation = Quaternion.LookRotation(toCam, Vector3.up);
+				popupTransform.rotation = Quaternion.LookRotation(-toCam, Vector3.up);
 
 			RectTransform rectTransform = popup.GetComponent<RectTransform>();
 			if (rectTransform != null)

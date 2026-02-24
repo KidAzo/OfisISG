@@ -8,13 +8,13 @@ public class ExitPanelController : MonoBehaviour
 {
     [SerializeField] GameObject trPanel;
     [SerializeField] GameObject enPanel;
+    [SerializeField] GameObject exitPanel;  
     [SerializeField] ScriptableEventNoParam preOnGameFinishEvent;  
     [SerializeField] ScriptableEventNoParam onGameFinishEvent;  
 
     void Start()
     {
-       trPanel.SetActive(false);
-       enPanel.SetActive(false);
+       exitPanel.SetActive(false); 
     }
 
     void OnEnable()
@@ -29,6 +29,8 @@ public class ExitPanelController : MonoBehaviour
 
     public void Show()
     {
+        exitPanel.SetActive(exitPanel.activeSelf ? false : true);
+       
         if(LanguageManager.CurrentLanguage == Language.Turkish)
         {
             trPanel.SetActive(trPanel.activeSelf ? false : true);
@@ -39,11 +41,17 @@ public class ExitPanelController : MonoBehaviour
         }
     }
 
-    public void Raise()
+    public void Hide()
     {
+        exitPanel.SetActive(false);
         trPanel.SetActive(false);
         enPanel.SetActive(false);
+    }
 
+    public void Raise()
+    {
         onGameFinishEvent.Raise();
+
+        exitPanel.SetActive(false);
     }
 }

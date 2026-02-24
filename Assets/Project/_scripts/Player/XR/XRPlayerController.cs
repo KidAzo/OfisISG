@@ -1,3 +1,4 @@
+using System.Collections;
 using Reflex.Attributes;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
@@ -42,16 +43,33 @@ namespace Woi.Player.XR
 
         void Teleport(Vector3 targetPosition)
         {
-            characterController.enabled = false; // Disable the CharacterController to avoid collision issues
-            transform.position = targetPosition; // Move the player to the target position
-            characterController.enabled = true; 
-            Debug.Log("[XRPlayerController] CharacterController re-enabled");
+                characterController.enabled = false;
+
+                Vector3 delta = targetPosition - playerCamera.transform.position;
+                transform.position += delta;
+
+                characterController.enabled = true;
         }
 
         public void OnLevelFinished(OnXRHazardResultFinished eventData)
         {
-            TeleportationState(false); // Disable teleportation after setting the player's position
-            Teleport(eventData.position);
+            TeleportationState(false);
+            StartCoroutine(TeleportAfterXRStable(eventData.position));
+        }
+
+        private IEnumerator TeleportAfterXRStable(Vector3 targetWorldPos)
+        {
+            yield return new WaitForSeconds(1f); 
+ 
+            yield return null;
+            yield return null;
+            yield return null;
+
+            Teleport(targetWorldPos);
+
+            yield return null;
+            yield return null;
+            yield return null;
             RotatePlayer();
         }
 

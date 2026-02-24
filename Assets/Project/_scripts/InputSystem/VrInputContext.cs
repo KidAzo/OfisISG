@@ -2,6 +2,7 @@ using Obvious.Soap;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Woi.Level;
+using Woi.Porting;
 
 namespace Woi.InputSystem
 {
@@ -10,6 +11,8 @@ namespace Woi.InputSystem
     {
         [SerializeField] private ScriptableEventNoParam onInteractInput;
         [SerializeField] private ScriptableEventNoParam onFinishedGame;
+        [SerializeField] private ScriptableEventNoParam preOnGameplayFinishedInput;
+        [SerializeField] private ScriptableEnumPortingVariable portingVariable;
 
         public override void OnEnter()
         {
@@ -47,15 +50,8 @@ namespace Woi.InputSystem
 
             if (LevelManager.Instance.CanLevelFinishedOnXr())
             {
-                onFinishedGame?.Raise();
-                return;
+                preOnGameplayFinishedInput?.Raise();
             }   
-
-            if (LevelManager.Instance.IsOnPcMode())
-            {
-                onFinishedGame?.Raise();
-                return;
-            }
         }
     }
 }

@@ -17,3 +17,5 @@ MonoBehaviour:
   blockLowerContexts: 1
   onInteractInput: {fileID: 11400000, guid: 1d9a287af48119a45888db3e7bba417a, type: 2}
   onFinishedGame: {fileID: 11400000, guid: 85edb64f0104e784c8466e114b2e0ba1, type: 2}
+  preOnGameplayFinishedInput: {fileID: 11400000, guid: d646fcbe570b51a45b5a96283989d63c, type: 2}
+  portingVariable: {fileID: 11400000, guid: b898580eabc2f4d4d8b1b029cc64ed87, type: 2}
