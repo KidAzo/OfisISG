@@ -1195,3 +1195,243 @@ launch3
 launch4
 $
 Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Loading shader denoisePrepareOIDN.ptx::oxMain...
+Loaded
+Loading shader denoiseFinishOIDN.ptx::oxMain...
+Loaded
+launch1
+launch2
+launch3
+launch4
+Device 0: NVIDIA GeForce RTX 3060 Ti (ON)
+launch1
+launch2
+launch3
+launch4
+$
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Loading shader denoisePrepareOIDN.ptx::oxMain...
+Loaded
+Loading shader denoiseFinishOIDN.ptx::oxMain...
+Loaded
+launch1
+launch2
+launch3
+launch4
+Device 0: NVIDIA GeForce RTX 3060 Ti (ON)
+launch1
+launch2
+launch3
+launch4
+$
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Loading shader denoisePrepareOIDN.ptx::oxMain...
+Loaded
+Loading shader denoiseFinishOIDN.ptx::oxMain...
+Loaded
+launch1
+launch2
+launch3
+launch4
+Device 0: NVIDIA GeForce RTX 3060 Ti (ON)
+launch1
+launch2
+launch3
+launch4
+$
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Loading shader denoisePrepareOIDN.ptx::oxMain...
+Loaded
+Loading shader denoiseFinishOIDN.ptx::oxMain...
+Loaded
+launch1
+launch2
+launch3
+launch4
+Device 0: NVIDIA GeForce RTX 3060 Ti (ON)
+launch1
+launch2
+launch3
+launch4
+$
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Loading shader denoisePrepareOIDN.ptx::oxMain...
+Loaded
+Loading shader denoiseFinishOIDN.ptx::oxMain...
+Loaded
+launch1
+launch2
+launch3
+launch4
+Device 0: NVIDIA GeForce RTX 3060 Ti (ON)
+launch1
+launch2
+launch3
+launch4
+$
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Loading shader denoisePrepareOIDN.ptx::oxMain...
+Loaded
+Loading shader denoiseFinishOIDN.ptx::oxMain...
+Loaded
+launch1
+launch2
+launch3
+launch4
+Device 0: NVIDIA GeForce RTX 3060 Ti (ON)
+launch1
+launch2
+launch3
+launch4
+$
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Loading shader denoisePrepareOIDN.ptx::oxMain...
+Loaded
+Loading shader denoiseFinishOIDN.ptx::oxMain...
+Loaded
+launch1
+launch2
+launch3
+launch4
+Device 0: NVIDIA GeForce RTX 3060 Ti (ON)
+launch1
+launch2
+launch3
+launch4
+$
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Loading shader denoisePrepareOIDN.ptx::oxMain...
+Loaded
+Loading shader denoiseFinishOIDN.ptx::oxMain...
+Loaded
+launch1
+launch2
+launch3
+launch4
+Device 0: NVIDIA GeForce RTX 3060 Ti (ON)
+launch1
+launch2
+launch3
+launch4
+$
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Loading shader denoisePrepareOIDN.ptx::oxMain...
+Loaded
+Loading shader denoiseFinishOIDN.ptx::oxMain...
+Loaded
+launch1
+launch2
+launch3
+launch4
+Device 0: NVIDIA GeForce RTX 3060 Ti (ON)
+launch1
+launch2
+launch3
+launch4
+$
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Done
+2026-3-3
+Init...
+Context created
+Tiles: 1
+Loading shader denoisePrepareOIDN.ptx::oxMain...
+Loaded
+Loading shader denoiseFinishOIDN.ptx::oxMain...
+Loaded
+launch1
+launch2
+launch3
+launch4
+Device 0: NVIDIA GeForce RTX 3060 Ti (ON)
+launch1
+launch2
+launch3
+launch4
+$
+Done
