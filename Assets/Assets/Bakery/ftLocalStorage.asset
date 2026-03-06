@@ -30,4 +30,5 @@ MonoBehaviour:
   - Assets/AssetSection/BKAsset/Mesh/First/lobi.fbx
   - Assets/AssetSection/BKAsset/Mesh/First/Cafeteria.fbx
   - Assets/AssetSection/BKAsset/Textures/NewGround/StartBat.fbx
-  modifiedAssetPaddingHash: d6a958ff3a3d5ece7f21819e45447b5a43e8fd74ecc12491ed6a7abcc2fc0066aab01064930b74321b3a80333f09ecc087430bca19b707053ec5d890b05c02fe80c5d890
+  - Assets/AssetSection/BKAsset/Mesh/NewAddLobby/LobiSecond.fbx
+  modifiedAssetPaddingHash: d6a958ffb25295217f21819e45447b5a88cd6a7becc12491ed6a7abcc2fc00669b1d3466930b74321b3a80333f09ecc087430bca19b707053ec5d890b05c02fe80c5d8906d67e2a8

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: PluginPrefabManagerUI
   m_EditorClassIdentifier: 
   _prefabViewState: {fileID: -8523911575125300597, guid: ff8ffa59d5206854e88354c33ce51cf0, type: 2}
-  _prefabPreviewScale: 0.93
+  _prefabPreviewScale: 0.89
   _prefabFilters: -1
   _targetLibs:
-  - {fileID: 11702387752740586, guid: 3efb3b5755f564847a730bbffa19c602, type: 2}
+  - {fileID: -8197960125167567832, guid: 3efb3b5755f564847a730bbffa19c602, type: 2}
   _targetLibSet:
     _serializedList:
-    - {fileID: 11702387752740586, guid: 3efb3b5755f564847a730bbffa19c602, type: 2}
-  _numPrefabs: 63
+    - {fileID: -8197960125167567832, guid: 3efb3b5755f564847a730bbffa19c602, type: 2}
+  _numPrefabs: 21

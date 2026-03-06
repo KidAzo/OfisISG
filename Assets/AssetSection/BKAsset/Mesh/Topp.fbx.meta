@@ -29,7 +29,7 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties:
-    - '#BAKERY{"meshName":["TopDB","TopNS","TopNB"],"padding":[24,48,24],"unwrapper":[0,0,0]}'
+    - '#BAKERY{"meshName":["TopDB","TopNS","TopNB"],"padding":[25,48,24],"unwrapper":[0,0,0]}'
     clipAnimations: []
     isReadable: 0
   meshes:
