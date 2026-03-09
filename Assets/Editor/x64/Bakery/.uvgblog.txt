@@ -10706,3 +10706,22 @@ Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "
 Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "probes" 4 0 4 comp_4.bin
 Running ftraceRTX texgiprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "probes_final" 1924 16 4 "gi_probes4.bin" "probes_lights_HDR.lz4" vbTraceTex.bin
 Running ftraceRTX addsh "C:\Users\ilhan\AppData\Local\Temp\frender" "probes_final_" 4 0 4 shcomp_4.bin
+Symbol file LoadedFromMemory is not a mono symbol file
+Symbol file LoadedFromMemory is not a mono symbol file
+Symbol file LoadedFromMemory is not a mono symbol file
+abort_threads: Failed aborting id: 000000000000A798, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000957C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000009580, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000A798, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000957C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000009580, mono_thread_manage will ignore it
+
+Done
+Done
+Done
+Done
