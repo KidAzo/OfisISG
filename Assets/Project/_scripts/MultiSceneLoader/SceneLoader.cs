@@ -15,7 +15,7 @@ namespace Woi.Settings
 		private float targetProgress;
 		private bool isLoading;
 		private const float delay = 1;
-		private const float beforeDelayScene = 1000f;
+		private const float beforeDelayScene = 2000f;
 		public readonly SceneGroupManager manager = new();
 		public SceneGroupManager Manager => manager;
 		private int currentSceneGroupID = 0;
