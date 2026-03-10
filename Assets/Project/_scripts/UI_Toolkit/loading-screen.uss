@@ -4,7 +4,7 @@
     flex-grow: 1;
     justify-content: center;
     align-items: center;
-    background-color: #060b17;
+    background-color: #bbbbbb;
 }
 
 /* ================= CARD ================= */
