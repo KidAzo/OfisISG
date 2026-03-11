@@ -17,6 +17,7 @@ namespace Woi.DataHandler
         [SerializeField] SceneTimer sceneTimer;
         [Inject] IGameManager gameManager;
         [Inject] IPortingService portingService;
+        [SerializeField] ScriptableEventNoParam onSessionStarted;
 
         void Start()
         {
@@ -56,6 +57,12 @@ namespace Woi.DataHandler
             }
 
            HazardCsvExporter.Append(playerName, playerID, duration, hazardManagerService.HazardCheckResult);
+        }
+
+        [Button]
+        void RaiseOnSessesionStarted()
+        {
+           onSessionStarted.Raise();
         }
     }
 }
