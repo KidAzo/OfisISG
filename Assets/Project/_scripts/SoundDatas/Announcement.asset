@@ -13,13 +13,7 @@ MonoBehaviour:
   m_Name: Announcement
   m_EditorClassIdentifier: 
   selectionMode: 0
-  clips:
-  - clip: {fileID: 8300000, guid: 8f53771f5bc09ec4c9620ff55db35cad, type: 3}
-    weight: 0
-    delay: 0
-  - clip: {fileID: 8300000, guid: e1ab8b7721ba05d469dc0d05f4d31bd0, type: 3}
-    weight: 0
-    delay: 0
+  clips: []
   noImmediateRepeat: 1
   category: 0
   useCustomCategory: 0

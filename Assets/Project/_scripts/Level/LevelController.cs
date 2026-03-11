@@ -91,7 +91,7 @@ namespace Woi.Level
                 onEnSelected?.Invoke(); 
             }            
 
-             audioSystem.Play(anoncementSounds, ctx);
+             //audioSystem.Play(anoncementSounds, ctx);
         }
 
         public void PlayAnnouncementSoundXR()
@@ -108,7 +108,7 @@ namespace Woi.Level
                 onEnSelected?.Invoke(); 
             }            
 
-             audioSystem.Play(anoncementSounds, ctx);
+             //audioSystem.Play(anoncementSounds, ctx);
         }
 
         public void FinishLevel()
