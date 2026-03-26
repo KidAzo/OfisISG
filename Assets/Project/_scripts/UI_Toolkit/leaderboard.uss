@@ -24,17 +24,20 @@
 }
 
 .icon-container {
-    background-color: rgba(250, 204, 21, 0.2);
-    padding: 8px;
-    border-radius: 8px;
-    margin-right: 12px;
+    width: 44px;
+    height: 44px;
+    background-color: rgba(250, 204, 21, 0.18);
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: rgba(250, 204, 21, 0.25);
+    margin-right: 14px;
+    justify-content: center;
+    align-items: center;
 }
 
 .icon {
-    width: 28px;
-    height: 28px;
-    -unity-background-scale-mode: scale-to-fit;
-    tint-color: rgb(250, 204, 21);
+    width: 26px;
+    height: 26px;
 }
 
 .header-text-container {
