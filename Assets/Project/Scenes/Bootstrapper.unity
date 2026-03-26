@@ -314,7 +314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoUnparentOnAwake: 1
-  sceneName: Office
+  sceneName: LoginScreen
 --- !u!4 &344354780
 Transform:
   m_ObjectHideFlags: 0

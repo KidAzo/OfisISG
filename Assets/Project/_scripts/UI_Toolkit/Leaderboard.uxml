@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Project/_scripts/UI_Toolkit/leaderboard.uss" />
+
+    <ui:VisualElement name="leaderboard-container" class="leaderboard-container">
+
+        <!-- Header -->
+        <ui:VisualElement name="header" class="header">
+            <ui:VisualElement class="icon-container">
+                <ui:Image name="trophy-icon" class="icon" src="project://database/Assets/Project/_scripts/UI_Toolkit/trophy-icon.svg" />
+            </ui:VisualElement>
+            <ui:VisualElement class="header-text-container">
+                <ui:Label text="LEADERBOARD" class="header-title" />
+                <ui:Label name="header-subtitle" text="TOP 10 PLAYERS" class="header-subtitle" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Rows are injected here by LeaderboardUIController -->
+        <ui:ScrollView name="player-list" class="player-list" />
+
+    </ui:VisualElement>
+</ui:UXML>

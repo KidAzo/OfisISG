@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Woi.Events;
 using Woi.Porting;
+using Woi.Leaderboard;
 
 namespace Woi.HazardSystem
 {
@@ -45,7 +46,12 @@ namespace Woi.HazardSystem
             _sceneTimer.GetElapsedTime(),
             result,
             System.DateTime.Now);
-             
+
+            LeaderboardService.SubmitScore(gameManager.GetGameSettings().PlayerID.ToString(),
+            gameManager.GetGameSettings().PlayerName,
+            result.Score,
+            (float)_sceneTimer.GetElapsedTime().TotalSeconds);
+  
              await UniTask.NextFrame();
 
             _uiControllerCurrent.gameObject.SetActive(true);
