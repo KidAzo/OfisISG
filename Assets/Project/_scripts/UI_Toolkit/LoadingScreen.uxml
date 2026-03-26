@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/Project/_scripts/UI_Toolkit/loading-screen.uss?fileID=7433441132597879392&amp;guid=4ff56af340d681749abbaadf0c34f43a&amp;type=3#loading-screen" />
-    <ui:VisualElement class="root" style="background-image: url(&quot;project://database/Assets/Project/Sprites/lobi.png?fileID=2800000&amp;guid=34f486f43fbbb9f459147dcff5d50082&amp;type=3#lobi&quot;); -unity-background-image-tint-color: rgb(255, 255, 255);">
+    <ui:VisualElement class="root" style="background-image: url(&quot;project://database/Assets/Project/Sprites/lobiNEW.png?fileID=2800000&amp;guid=837e6861033e2404190f669aa13dc1c5&amp;type=3#lobiNEW&quot;); -unity-background-image-tint-color: rgb(255, 255, 255);">
         <ui:VisualElement class="card">
             <ui:Button name="CloseButton" text="✕" class="close-button" />
             <ui:Label name="NameLabel" text="OYUNCU ADI" class="label" />
