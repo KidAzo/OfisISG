@@ -1,4 +1,5 @@
 using System;
+using Obvious.Soap;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Sirenix.OdinInspector;
@@ -8,12 +9,21 @@ namespace Woi.Leaderboard
     /// <summary>
     /// Attach to a UIDocument GameObject in the Bootstrapper scene.
     /// Reads LeaderboardService.GetTop10() and populates the leaderboard panel.
+    /// Hides itself and activates the level start object when onSessionStarted fires.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public class LeaderboardUIController : MonoBehaviour
     {
         [Tooltip("How often (seconds) the leaderboard auto-refreshes. 0 = only on Start.")]
         [SerializeField] private float refreshInterval = 5f;
+
+        [Header("Session Events")]
+        [Tooltip("Raised by PlayerInfoUI when the player hits Start Game. " +
+                 "Hides the leaderboard and activates levelStartObject.")]
+        [SerializeField] private ScriptableEventNoParam onSessionStarted;
+
+        [Tooltip("The GameObject to activate when the session starts (e.g. level start screen).")]
+        [SerializeField] private GameObject levelStartObject;
 
         private UIDocument _document;
         private ScrollView _playerList;
@@ -24,6 +34,22 @@ namespace Woi.Leaderboard
         void Awake()
         {
             _document = GetComponent<UIDocument>();
+
+            // Always guarantee the panel is visible on wake —
+            // guards against stale SO state hiding it in Editor.
+            levelStartObject.SetActive(true);   
+        }
+
+        void OnEnable()
+        {
+            if (onSessionStarted != null)
+                onSessionStarted.OnRaised += OnSessionStarted;
+        }
+
+        void OnDisable()
+        {
+            if (onSessionStarted != null)
+                onSessionStarted.OnRaised -= OnSessionStarted;
         }
 
         void Start()
@@ -45,6 +71,12 @@ namespace Woi.Leaderboard
                 _refreshTimer = 0f;
                 Refresh();
             }
+        }
+
+        private void OnSessionStarted()
+        {
+            if (levelStartObject != null)
+                levelStartObject.SetActive(false);
         }
 
         // ─────────────────────────────────────────────────────
@@ -155,11 +187,28 @@ namespace Woi.Leaderboard
             _ => "rank-normal"
         };
 
-        [Button]
-            public void ResetLeaderboard()
-            {
-                LeaderboardService.ResetLeaderboard();
-                Debug.Log("Leaderboard resetted.");
-            }
+        // ─────────────────────────────────────────────────────
+        //  Editor debug buttons
+        // ─────────────────────────────────────────────────────
+        [Button("Show Panel"), PropertyOrder(99)]
+        public void ShowPanel()
+        {
+            gameObject.SetActive(true);
+            Refresh();
+        }
+
+        [Button("Hide Panel"), PropertyOrder(99)]
+        public void HidePanel()
+        {
+            gameObject.SetActive(false);
+        }
+
+        [Button("Reset Leaderboard"), PropertyOrder(99)]
+        public void ResetLeaderboard()
+        {
+            LeaderboardService.ResetLeaderboard();
+            Refresh();
+            Debug.Log("Leaderboard reset.");
+        }
     }
 }

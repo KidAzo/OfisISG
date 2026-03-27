@@ -97,4 +97,10 @@ namespace Woi.Events
             this.language = language;
         }
     }
+
+    /// <summary>
+    /// Published after a new score is submitted to LeaderboardService.
+    /// VR and PC leaderboard UIs listen to this to refresh and reveal themselves.
+    /// </summary>
+    public struct OnLeaderboardUpdated : IEvent { }
 }

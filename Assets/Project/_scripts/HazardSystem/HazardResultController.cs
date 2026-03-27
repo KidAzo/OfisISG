@@ -51,7 +51,9 @@ namespace Woi.HazardSystem
             gameManager.GetGameSettings().PlayerName,
             result.Score,
             (float)_sceneTimer.GetElapsedTime().TotalSeconds);
-  
+
+            EventBus.Publish(new OnLeaderboardUpdated());
+
              await UniTask.NextFrame();
 
             _uiControllerCurrent.gameObject.SetActive(true);

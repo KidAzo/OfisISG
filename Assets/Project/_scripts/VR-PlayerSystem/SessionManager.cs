@@ -9,6 +9,7 @@ using WoiUtils;
 using Woi.Events;
 using Obvious.Soap;
 using Woi.Porting;
+using Sirenix.OdinInspector;
 
 namespace Woi.DataHandler
 {
@@ -245,6 +246,7 @@ namespace Woi.DataHandler
             CurrentSession = null;
         }
 
+        [Button]
         public void CreateTestSession(string name, int id)
         {
             CurrentSession = new PlayerSession

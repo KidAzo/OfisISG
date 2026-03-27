@@ -1,3 +1,33 @@
+/* ══════════════════════════════════════════════
+   VR WORLD-SPACE OVERRIDES
+   Descendant selector (.lb-vr-root .leaderboard-container)
+   has higher specificity than .leaderboard-container alone,
+   so it correctly overrides position regardless of order.
+   ══════════════════════════════════════════════ */
+
+/* Fills the entire RenderTexture and flex-centers its child */
+.lb-vr-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Two-class specificity wins over .leaderboard-container alone */
+.lb-vr-root .leaderboard-container {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: auto;
+    width: 380px;
+}
+
+/* ══════════════════════════════════════════════ */
+
 /* ── Main Panel ── */
 .leaderboard-container {
     position: absolute;

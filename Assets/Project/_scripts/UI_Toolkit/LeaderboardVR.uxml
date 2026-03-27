@@ -1,0 +1,36 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Project/_scripts/UI_Toolkit/leaderboard.uss" />
+
+    <!--
+        VR world-space version.
+        The container is centered in the RenderTexture so the Quad's
+        transform pivot aligns with the visual center of the card.
+        Assign this UXML to the VR UIDocument, NOT the PC one.
+    -->
+    <ui:VisualElement class="lb-vr-root">
+
+        <ui:VisualElement name="leaderboard-container" class="leaderboard-container">
+
+            <!-- Frosted glass layers -->
+            <ui:VisualElement class="panel-blur-bg"      picking-mode="Ignore" />
+            <ui:VisualElement class="panel-border-overlay" picking-mode="Ignore" />
+
+            <!-- Header -->
+            <ui:VisualElement name="header" class="header">
+                <ui:VisualElement class="icon-container">
+                    <ui:Image name="trophy-icon" class="icon"
+                              src="project://database/Assets/Project/_scripts/Leaderboard/trophy.svg" />
+                </ui:VisualElement>
+                <ui:VisualElement class="header-text-container">
+                    <ui:Label text="LEADERBOARD" class="header-title" />
+                    <ui:Label name="header-subtitle" text="TOP 10 PLAYERS" class="header-subtitle" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- Rows injected by LeaderboardUIController -->
+            <ui:ScrollView name="player-list" class="player-list" />
+
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>
