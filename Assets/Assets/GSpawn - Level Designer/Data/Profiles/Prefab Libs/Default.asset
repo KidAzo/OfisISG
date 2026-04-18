@@ -5000,7 +5000,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
-  m_Name: Lobi
+  m_Name: lobi
   m_EditorClassIdentifier: 
   _guid:
     _guidString: 03cd34f3-37b0-4297-8d01-9273aff1fd88
@@ -17862,7 +17862,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bfdaf7f2c4c1d04580d676ed3717f21, type: 3}
-  m_Name: Lobi
+  m_Name: lobi
   m_EditorClassIdentifier: 
   _guid:
     _guidString: 9903276c-2898-4d52-bfbf-97e2c92dc033

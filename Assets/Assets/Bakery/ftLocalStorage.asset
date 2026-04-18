@@ -33,4 +33,5 @@ MonoBehaviour:
   - Assets/AssetSection/BKAsset/Mesh/NewAddLobby/LobiSecond.fbx
   - Assets/AssetSection/BKAsset/Mesh/StairLow.fbx
   - Assets/AssetSection/BKAsset/logo.fbx
-  modifiedAssetPaddingHash: d6a958ff52ad1b3b2ee0802045447b5a88cd6a7becc12491ed6a7abcc2fc00669b1d3466930b74321b3a80333f09ecc087430bca19b707053ec5d890b05c02fe80c5d8906d67e2a8035feb64be398033
+  - Assets/AssetSection/FireAdd_On/OfisAdd-On.fbx
+  modifiedAssetPaddingHash: d6a958ffc8d4cda12ee0802045447b5a88cd6a7becc12491ed6a7abcc2fc00669b1d3466930b74321b3a80333f09ecc087430bca19b707053ec5d890b05c02fe80c5d8906d67e2a8035feb64be3980338581da57
