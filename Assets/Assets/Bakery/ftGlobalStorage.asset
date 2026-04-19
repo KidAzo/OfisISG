@@ -34,7 +34,14 @@ MonoBehaviour:
   - Assets/AssetSection/BKAsset/Mesh/StairLow.fbx
   - Assets/AssetSection/BKAsset/logo.fbx
   - Assets/AssetSection/FireAdd_On/OfisAdd-On.fbx
-  modifiedAssetPaddingHash: d6a958ffc8d4cda12ee0802045447b5a88cd6a7becc12491ed6a7abcc2fc00669b1d3466930b74321b3a80333f09ecc087430bca19b707053ec5d890b05c02fe80c5d8906d67e2a8035feb64be3980338581da57
+  - Assets/AssetSection/PolygonCity/Models/SM_Env_Sidewalk_Dip_Corner_01.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Env_Sidewalk_Straight_01.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOctagon_01.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOld_Small_02.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOctagon_Base_01.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeSquare_Base_01.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOld_Large_02.fbx
+  modifiedAssetPaddingHash: d6a958ffc8d4cda12ee0802045447b5a88cd6a7becc12491ed6a7abcc2fc00669b1d3466930b74321b3a80333f09ecc087430bca19b707053ec5d890b05c02fe80c5d8906d67e2a8035feb64be3980338581da57d6318883cd31888327dc894bd9398033246250bde1db5432d7c2a693
   modifiedMeshList: []
   modifiedMeshPaddingList: 
   modifiedAssets:
@@ -618,6 +625,36 @@ MonoBehaviour:
     - BottomPart
     padding: 41000000450000006f000000270000002000000023000000120000001d0000000a0000000f0000000a000000
     unwrapper: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  - meshName:
+    - SM_Env_Sidewalk_Dip_Corner_01
+    padding: bc000000
+    unwrapper: 00000000
+  - meshName:
+    - SM_Env_Sidewalk_Straight_01
+    padding: bb000000
+    unwrapper: 00000000
+  - meshName:
+    - SM_Bld_OfficeOctagon_01
+    padding: 1a000000
+    unwrapper: 00000000
+  - meshName:
+    - SM_Bld_OfficeOld_Small_02
+    padding: 23000000
+    unwrapper: 00000000
+  - meshName:
+    - SM_Bld_OfficeOctagon_Base_01_Glass
+    - SM_Bld_OfficeOctagon_Base_01
+    padding: 5f00000014000000
+    unwrapper: 0000000000000000
+  - meshName:
+    - SM_Bld_OfficeSquare_Base_01
+    - SM_Bld_OfficeSquare_Base_01_Glass
+    padding: 1a00000055000000
+    unwrapper: 0000000000000000
+  - meshName:
+    - SM_Bld_OfficeOld_Large_02
+    padding: 13000000
+    unwrapper: 00000000
   assetList:
   - Assets/Bakery/examples/content/sponza/bush.FBX
   - Assets/Bakery/examples/content/floor_lamp.FBX
@@ -12582,7 +12619,7 @@ MonoBehaviour:
   runsOptix7: 1
   runsOIDN: 1
   runsOIDN2: 1
-  alwaysEnableRTX: 0
+  alwaysEnableRTX: 1
   checkerPreviewOn: 0
   rtSceneViewPreviewOn: 0
   renderSettingsBounces: 5
@@ -12672,5 +12709,5 @@ MonoBehaviour:
   renderSettingsRTPVExposure: 1
   renderSettingsRemoveDuplicateLightmaps: 0
   tagOverrides: []
-  modifiedMeshPaddingArray: 480000002c000000280000001b0000001d00000033000000180000001400000035000000140000002c0000003f0000001c000000150000001c0000002d000000
-  modifiedMeshUnwrapperArray: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  modifiedMeshPaddingArray: 13000000
+  modifiedMeshUnwrapperArray: 00000000

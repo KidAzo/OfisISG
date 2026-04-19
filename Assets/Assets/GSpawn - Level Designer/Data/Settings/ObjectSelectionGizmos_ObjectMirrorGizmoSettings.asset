@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ba495d8d523a74c868ec57a94dbca8, type: 3}
   m_Name: ObjectSelectionGizmos_ObjectMirrorGizmoSettings
   m_EditorClassIdentifier: 
-  _useXYPlane: 1
-  _useYZPlane: 0
+  _useXYPlane: 0
+  _useYZPlane: 1
   _useZXPlane: 0
   _mirrorRotation: 0
   _mirrorSpanning: 0
