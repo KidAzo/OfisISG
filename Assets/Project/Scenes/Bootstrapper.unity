@@ -369,7 +369,7 @@ MonoBehaviour:
   renderSettingsForceRebuildGeometry: 1
   renderSettingsPerformRendering: 1
   renderSettingsUserRenderMode: 0
-  renderSettingsDistanceShadowmask: 0
+  renderSettingsDistanceShadowmask: 1
   renderSettingsSettingsMode: 0
   renderSettingsFixSeams: 1
   renderSettingsDenoise: 1
@@ -389,7 +389,7 @@ MonoBehaviour:
   renderSettingsHackEmissiveBoost: 1
   renderSettingsHackIndirectBoost: 1
   renderSettingsTempPath: 
-  renderSettingsOutPath: 
+  renderSettingsOutPath: BakeryLightmaps
   renderSettingsUseScenePath: 0
   renderSettingsHackAOIntensity: 0
   renderSettingsHackAOSamples: 16
@@ -442,9 +442,9 @@ MonoBehaviour:
   renderSettingsAsset: {fileID: 0}
   renderSettingsRTPVExport: 1
   renderSettingsRTPVSceneView: 1
-  renderSettingsRTPVHDR: 1
+  renderSettingsRTPVHDR: 0
   renderSettingsRTPVWidth: 1072
-  renderSettingsRTPVHeight: 405
+  renderSettingsRTPVHeight: 534
   renderSettingsRTPVExposure: 0.99999994
   renderSettingsRemoveDuplicateLightmaps: 0
   lastBakeTime: 0

@@ -10706,3 +10706,207 @@ Running ftraceRTX arealightprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "
 Running ftraceRTX addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "probes" 4 0 4 comp_4.bin
 Running ftraceRTX texgiprobesh "C:\Users\ilhan\AppData\Local\Temp\frender" "probes_final" 1924 16 4 "gi_probes4.bin" "probes_lights_HDR.lz4" vbTraceTex.bin
 Running ftraceRTX addsh "C:\Users\ilhan\AppData\Local\Temp\frender" "probes_final_" 4 0 4 shcomp_4.bin
+2026-4-19
+Rendering UV GBuffer for FireStairsOfis_LM0 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Done
+Done
+Running ftraceRTX9 fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_FireStairsOfis_LM0.lz4" 2 0 0 0
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_0" 4 0 0 lights0.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_0" 4 0 0 lights1.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_0" 4 0 0 lights2.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_0" 4 0 0 lights3.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_0" 4 0 0 lights4.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_0" 4 0 0 lights5.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_0" 4 0 0 lights6.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_0" 4 0 0 lights7.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_0" 4 0 0 lights8.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_0" 4 0 0 lights9.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_0" 4 0 0 lights10.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_0" 4 0 0 lights11.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_0" 4 0 0 lights12.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_0" 4 0 0 lights13.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_0" 4 0 0 lights14.bin
+Running ftraceRTX9 addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0" 4 0 0 comp_0.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM00.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM01.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM02.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM03.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_final" 4 16 0 "gi_FireStairsOfis_LM04.bin" "FireStairsOfis_LM0_lights_HDR.lz4" vbTraceTex.bin
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/FireStairsOfis_LM0_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/FireStairsOfis_LM0_final_HDR.lz4" 4096 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "0" "FireStairsOfis_LM0_final_HDR.lz4"
+Loading geometry...
+Tris filtered by LMID: was 65448, left 16332
+Collecting edges...
+48996 edges
+Sorting...
+Finding seams...X
+876 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/FireStairsOfis_LM0_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/FireStairsOfis_LM0_final.hdr" 1024
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Initializing D3D...
+Done
+Loaded vertex shader: quad.vso
+Loaded pixel shader: skyOutput.pso
+Loaded pixel shader: cookieOutput.pso
+initShaders done
+initScene done
+Done
+Rendering UV GBuffer for FireStairsOfis_LM0 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Done
+Done
+Running ftraceRTX9 fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_FireStairsOfis_LM0.lz4" 2 0 0 0
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_0" 4 0 0 lights0.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_0" 4 0 0 lights1.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_0" 4 0 0 lights2.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_0" 4 0 0 lights3.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_0" 4 0 0 lights4.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_0" 4 0 0 lights5.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_0" 4 0 0 lights6.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_0" 4 0 0 lights7.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_0" 4 0 0 lights8.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_0" 4 0 0 lights9.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_0" 4 0 0 lights10.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_0" 4 0 0 lights11.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_0" 4 0 0 lights12.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_0" 4 0 0 lights13.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_0" 4 0 0 lights14.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_0" 4 0 0 lights15.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_0" 4 0 0 lights16.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_0" 4 0 0 lights17.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_0" 4 0 0 lights18.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_0" 4 0 0 lights19.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_0" 4 0 0 lights20.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_0" 4 0 0 lights21.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_0" 4 0 0 lights22.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_0" 4 0 0 lights23.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_0" 4 0 0 lights24.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_0" 4 0 0 lights25.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_0" 4 0 0 lights26.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_0" 4 0 0 lights27.bin
+Running ftraceRTX9 addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0" 4 0 0 comp_0.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM00.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM01.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM02.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM03.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_final" 4 16 0 "gi_FireStairsOfis_LM04.bin" "FireStairsOfis_LM0_lights_HDR.lz4" vbTraceTex.bin
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/FireStairsOfis_LM0_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/FireStairsOfis_LM0_final_HDR.lz4" 4096 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "0" "FireStairsOfis_LM0_final_HDR.lz4"
+Loading geometry...
+Tris filtered by LMID: was 66784, left 16696
+Collecting edges...
+50088 edges
+Sorting...
+Finding seams...X
+876 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/FireStairsOfis_LM0_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/FireStairsOfis_LM0_final.hdr" 1024
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Initializing D3D...
+Done
+Loaded vertex shader: quad.vso
+Loaded pixel shader: skyOutput.pso
+Loaded pixel shader: cookieOutput.pso
+initShaders done
+initScene done
+Done
+Running ftraceRTX9.exe interactive "C:\Users\ilhan\AppData\Local\Temp\frender" a 4 0 0 preview.bin
+Loaded vertex shader: quad.vso
+Loaded pixel shader: skyOutput.pso
+Loaded pixel shader: cookieOutput.pso
+initShaders done
+initScene done
+Done
+Rendering UV GBuffer for FireStairsOfis_LM0 51
+RGBA32F...RGBA8...R8...RGBA8_SRGB...RGBA16F...states...
+Rendering UV normal...
+Rendering faceted UV normal...
+Rendering UV pos...
+Rendering smooth UV pos...
+Done
+Done
+Running ftraceRTX9 fixpos12 "C:\Users\ilhan\AppData\Local\Temp\frender" "uvpos_FireStairsOfis_LM0.lz4" 2 0 0 0
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_1_0" 4 0 0 lights0.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_2_0" 4 0 0 lights1.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_3_0" 4 0 0 lights2.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_4_0" 4 0 0 lights3.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_5_0" 4 0 0 lights4.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_6_0" 4 0 0 lights5.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_7_0" 4 0 0 lights6.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_8_0" 4 0 0 lights7.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_9_0" 4 0 0 lights8.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_10_0" 4 0 0 lights9.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_11_0" 4 0 0 lights10.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_12_0" 4 0 0 lights11.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_13_0" 4 0 0 lights12.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_14_0" 4 0 0 lights13.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_15_0" 4 0 0 lights14.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_16_0" 4 0 0 lights15.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_17_0" 4 0 0 lights16.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_18_0" 4 0 0 lights17.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_19_0" 4 0 0 lights18.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_20_0" 4 0 0 lights19.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_21_0" 4 0 0 lights20.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_22_0" 4 0 0 lights21.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_23_0" 4 0 0 lights22.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_24_0" 4 0 0 lights23.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_25_0" 4 0 0 lights24.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_26_0" 4 0 0 lights25.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_27_0" 4 0 0 lights26.bin
+Running ftraceRTX9 arealight "C:\Users\ilhan\AppData\Local\Temp\frender" "light_28_0" 4 0 0 lights27.bin
+Running ftraceRTX9 addmul "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0" 4 0 0 comp_0.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM00.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM01.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM02.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_diffuse" 4 16 0 "gi_FireStairsOfis_LM03.bin" "FireStairsOfis_LM0_diffuse0_HDR.lz4" vbTraceTex.bin
+Running ftraceRTX9 texgi "C:\Users\ilhan\AppData\Local\Temp\frender" "FireStairsOfis_LM0_final" 4 16 0 "gi_FireStairsOfis_LM04.bin" "FireStairsOfis_LM0_lights_HDR.lz4" vbTraceTex.bin
+Running denoiserOIDN2 c "C:\Users\ilhan\AppData\Local\Temp\frender/FireStairsOfis_LM0_final_HDR.lz4" "C:\Users\ilhan\AppData\Local\Temp\frender/FireStairsOfis_LM0_final_HDR.lz4" 4096 0
+Running seamfixer "C:\Users\ilhan\AppData\Local\Temp\frender" "0" "FireStairsOfis_LM0_final_HDR.lz4"
+Loading geometry...
+Tris filtered by LMID: was 66784, left 16696
+Collecting edges...
+50088 edges
+Sorting...
+Finding seams...X
+876 seams
+Generating mesh...
+Initializing D3D...
+Selected device: NVIDIA GeForce RTX 3060 Ti
+Running halffloat2hdr "C:\Users\ilhan\AppData\Local\Temp\frender/FireStairsOfis_LM0_final_HDR.lz4" "C:/Users/ilhan/Documents/GitHub/OfisISG/Assets/BakeryLightmaps/FireStairsOfis_LM0_final.hdr" 1024
+Loaded vertex shader: seamfix.vso
+Loaded pixel shader: debugLines.pso
+Loading half-float lightmap...
+Rendering...
+Saving...
+Initializing D3D...
+Done
+abort_threads: Failed aborting id: 000000000001285C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000E674, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000001285C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000E674, mono_thread_manage will ignore it
+
