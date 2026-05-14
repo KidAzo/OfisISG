@@ -20,6 +20,8 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 
 		[HideInInspector][ToggleUI] _AddPrecomputedVelocity("Add Precomputed Velocity", Float) = 1
 		[HideInInspector][ToggleOff] _ReceiveShadows("Receive Shadows", Float) = 1.0
+
+		[HideInInspector] _XRMotionVectorsPass("_XRMotionVectorsPass", Float) = 1
 	}
 
 	SubShader
@@ -122,7 +124,9 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 				false:RemoveDefine:XRMotionVectors:pragma shader_feature_local_vertex _ADD_PRECOMPUTED_VELOCITY
 			Option:  XR Motion Vectors:false,true:false
 				true:IncludePass:XRMotionVectors
+				true:SetShaderProperty:_XRMotionVectorsPass,[HideInInspector] _XRMotionVectorsPass("_XRMotionVectorsPass", Float) = 1
 				false:ExcludePass:XRMotionVectors
+				false:SetShaderProperty:_XRMotionVectorsPass,//[HideInInspector] _XRMotionVectorsPass("_XRMotionVectorsPass", Float) = 1
 			Option:GPU Instancing:false,true:true
 				true:SetDefine:Forward:pragma multi_compile_instancing
 				true:SetDefine:ShadowCaster:pragma multi_compile_instancing
@@ -148,8 +152,6 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 				false:RemoveDefine:DepthOnly:pragma multi_compile _ LOD_FADE_CROSSFADE
 				false:RemoveDefine:DepthNormals:pragma multi_compile _ LOD_FADE_CROSSFADE
 			Option:Built-in Fog:false,true:true
-				true:SetDefine:Forward:pragma multi_compile_fog
-				false:RemoveDefine:Forward:pragma multi_compile_fog
 				true:SetDefine:ASE_FOG 1
 				false:RemoveDefine:ASE_FOG 1
 			Option:Meta Pass:false,true:false
@@ -651,6 +653,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 
 			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
 			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
+			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Fog.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Texture.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -836,7 +839,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 						,out float outputDepth : ASE_SV_DEPTH
 						#endif
 						#ifdef _WRITE_RENDERING_LAYERS
-						, out float4 outRenderingLayers : SV_Target1
+						, out uint outRenderingLayers : SV_Target1
 						#endif
 						/*ase_frag_input*/ ) : SV_Target
 			{
@@ -922,8 +925,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 				#endif
 
 				#ifdef _WRITE_RENDERING_LAYERS
-					uint renderingLayers = GetMeshRenderingLayer();
-					outRenderingLayers = float4( EncodeMeshRenderingLayer( renderingLayers ), 0, 0, 0 );
+					outRenderingLayers = EncodeMeshRenderingLayer();
 				#endif
 
 				#if defined( ASE_OPAQUE_KEEP_ALPHA )
@@ -2362,7 +2364,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 						,out float outputDepth : ASE_SV_DEPTH
 						#endif
 						#ifdef _WRITE_RENDERING_LAYERS
-						, out float4 outRenderingLayers : SV_Target1
+						, out uint outRenderingLayers : SV_Target1
 						#endif
 						/*ase_frag_input*/ )
 			{
@@ -2405,8 +2407,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 				#endif
 
 				#ifdef _WRITE_RENDERING_LAYERS
-					uint renderingLayers = GetMeshRenderingLayer();
-					outRenderingLayers = float4(EncodeMeshRenderingLayer(renderingLayers), 0, 0, 0);
+					outRenderingLayers = EncodeMeshRenderingLayer();
 				#endif
 			}
 			ENDHLSL
@@ -2762,7 +2763,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 
 				VertexPositionInputs vertexInput = GetVertexPositionInputs( input.positionOS.xyz );
 
-				#if defined(APLICATION_SPACE_WARP_MOTION)
+				#if defined(APPLICATION_SPACE_WARP_MOTION)
 					output.positionCSNoJitter = mul(_NonJitteredViewProjMatrix, mul(UNITY_MATRIX_M, input.positionOS));
 					output.positionCS = output.positionCSNoJitter;
 				#else
@@ -2828,7 +2829,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 					outputDepth = DeviceDepth;
 				#endif
 
-				#if defined(APLICATION_SPACE_WARP_MOTION)
+				#if defined(APPLICATION_SPACE_WARP_MOTION)
 					return float4( CalcAswNdcMotionVectorFromCsPositions( input.positionCSNoJitter, input.previousPositionCSNoJitter ), 1 );
 				#else
 					return float4( CalcNdcMotionVectorFromCsPositions( input.positionCSNoJitter, input.previousPositionCSNoJitter ), 0, 0 );
@@ -2862,7 +2863,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#define APLICATION_SPACE_WARP_MOTION 1
+			#define APPLICATION_SPACE_WARP_MOTION 1
 
 			#define SHADERPASS SHADERPASS_MOTION_VECTORS
 
@@ -2979,7 +2980,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 
 				VertexPositionInputs vertexInput = GetVertexPositionInputs( input.positionOS.xyz );
 
-				#if defined(APLICATION_SPACE_WARP_MOTION)
+				#if defined(APPLICATION_SPACE_WARP_MOTION)
 					output.positionCSNoJitter = mul(_NonJitteredViewProjMatrix, mul(UNITY_MATRIX_M, input.positionOS));
 					output.positionCS = output.positionCSNoJitter;
 				#else
@@ -3045,7 +3046,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 					outputDepth = DeviceDepth;
 				#endif
 
-				#if defined(APLICATION_SPACE_WARP_MOTION)
+				#if defined(APPLICATION_SPACE_WARP_MOTION)
 					return float4( CalcAswNdcMotionVectorFromCsPositions( input.positionCSNoJitter, input.previousPositionCSNoJitter ), 1 );
 				#else
 					return float4( CalcNdcMotionVectorFromCsPositions( input.positionCSNoJitter, input.previousPositionCSNoJitter ), 0, 0 );
@@ -3174,7 +3175,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 
 			/*ase_globals*/
 
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/UnityGBuffer.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/GBufferOutput.hlsl"
 
 			/*ase_funcs*/
 
@@ -3288,7 +3289,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 			}
 			#endif
 
-			FragmentOutput frag ( PackedVaryings input
+			GBufferFragOutput frag ( PackedVaryings input
 								#if defined( ASE_DEPTH_WRITE_ON )
 								,out float outputDepth : ASE_SV_DEPTH
 								#endif
@@ -3350,7 +3351,7 @@ Shader /*ase_name*/ "Hidden/Universal/Unlit" /*end*/
 				surfaceData.occlusion = 1;
 			#endif
 
-				return SurfaceDataToGbuffer( surfaceData, inputData, float3( 0, 0, 0 ), kLightingInvalid );
+				return PackGBuffersSurfaceData( surfaceData, inputData, float3( 0, 0, 0 ) );
 			}
 
 			ENDHLSL

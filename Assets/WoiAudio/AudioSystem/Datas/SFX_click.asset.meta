@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6e0bb10419eb5b24b8d23d5dd5acd399
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Datas/SFX_click.asset
+  uploadId: 886922

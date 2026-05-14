@@ -26,7 +26,7 @@ namespace WoiUtils.AudioSystem
         Coroutine followRoutine;
         Coroutine fadeRoutine;
 
-        // Pool reuse güvenliği için (handle ile kullanacağız)
+        // For pool reuse safety (we'll use this with handles)
         public int Generation { get; private set; }
 
         void Awake()
@@ -39,7 +39,7 @@ namespace WoiUtils.AudioSystem
             StopFollow();
         }
 
-        /// <summary> Pool'dan alındığında AudioSystem bunu çağırır. </summary>
+        /// <summary> Called by AudioSystem when retrieved from pool. </summary>
         public void Bind(SoundDefinition data, AudioSystem owner)
         {
             Data = data;
@@ -48,15 +48,14 @@ namespace WoiUtils.AudioSystem
             isReturning = false;
         }
 
-        /// <summary> SoundDefinition + seçilmiş clip + context'i AudioSource'a uygular. </summary>
+        /// <summary> Applies SoundDefinition + selected clip + context to AudioSource. </summary>
         public void Apply(SoundDefinition data, AudioClip clip, in PlayContext ctx)
         {
-            // Core: clip multi destek
             audioSource.clip = clip;
 
             audioSource.outputAudioMixerGroup = data.mixerGroup;
             audioSource.loop = data.loop;
-            audioSource.playOnAwake = false; // runtime voice için genelde false
+            audioSource.playOnAwake = false; // typically false for runtime voice
 
             audioSource.mute = data.mute;
             audioSource.bypassEffects = data.bypassEffects;
@@ -76,8 +75,6 @@ namespace WoiUtils.AudioSystem
             audioSource.panStereo = data.panStereo;
             audioSource.spatialBlend = data.spatialBlend;
 
-            Debug.Log($"[AudioVoice] Applying SoundDefinition settings to AudioSource for clip '{audioSource.spatialBlend}'");
-
             audioSource.reverbZoneMix = data.reverbZoneMix;
             audioSource.dopplerLevel = data.dopplerLevel;
             audioSource.spread = data.spread;
@@ -89,7 +86,7 @@ namespace WoiUtils.AudioSystem
             audioSource.ignoreListenerVolume = data.ignoreListenerVolume;
             audioSource.ignoreListenerPause = data.ignoreListenerPause;
 
-            // Position / Follow (senin isteğin 3D ise field açılacak -> ctx ile)
+            // Position / Follow (for 3D sounds, set via context)
             if (ctx.hasFollow && ctx.follow != null)
             {
                 transform.position = ctx.follow.position;
@@ -104,7 +101,7 @@ namespace WoiUtils.AudioSystem
 
         public void Play()
         {
-            // önceki rutinleri temizle
+            // clear previous routines
             if (endRoutine != null) StopCoroutine(endRoutine);
             endRoutine = null;
 
@@ -113,14 +110,14 @@ namespace WoiUtils.AudioSystem
 
             audioSource.Play();
 
-            // loop ise otomatik bitiş bekleme yok; dışarıdan Stop gelir
+            // if looping, no automatic end waiting; Stop is called externally
             if (!audioSource.loop)
                 endRoutine = StartCoroutine(WaitForEndCoroutine());
         }
 
         IEnumerator WaitForEndCoroutine()
         {
-            // Pause durumunda isPlaying false olur, o yüzden paused guard lazım.
+            // isPlaying becomes false when paused, so we need a paused guard.
             while (!isReturning && audioSource != null && (audioSource.isPlaying || isPaused))
                 yield return null;
 
@@ -165,7 +162,7 @@ namespace WoiUtils.AudioSystem
             if (AudioSystem.IsShuttingDown)
                 return;
 
-            // owner sahne unload sırasında "fake null" olabilir
+            // owner may become "fake null" during scene unload
             if (owner == null)
                 return;
 
@@ -194,13 +191,12 @@ namespace WoiUtils.AudioSystem
             }
         }
 
-        /// <summary> DOTween yok. Coroutine ile fade. </summary>
+        /// <summary> No DOTween. Fade with coroutine. </summary>
         public void SetVolume(float targetVolume, float duration, Action onComplete = null)
         {
             if (fadeRoutine != null) StopCoroutine(fadeRoutine);
             fadeRoutine = null;
 
-            // duration 0 ise direkt set
             if (duration <= 0f)
             {
                 if (audioSource != null) audioSource.volume = targetVolume;
@@ -236,7 +232,7 @@ namespace WoiUtils.AudioSystem
             audioSource.pitch += UnityEngine.Random.Range(min, max);
         }
 
-        // --- Pool hooks (senin istediğin gibi AudioVoice içinde) ---
+        // --- Pool hooks (as requested, inside AudioVoice) ---
         public void Get()
         {
             Generation++;
@@ -262,12 +258,7 @@ namespace WoiUtils.AudioSystem
             if (audioSource != null)
             {
                 audioSource.Stop();
-                audioSource.time = 0f;
-                // clip'i burada nulllama; Apply zaten clip set ediyor.
-                // ama safety istersen:
                 audioSource.clip = null;
-
-                // volume/pitch fade’den kalmış olabilir -> defaulta çek
                 audioSource.volume = 1f;
                 audioSource.pitch = 1f;
                 audioSource.mute = false;
@@ -280,7 +271,7 @@ namespace WoiUtils.AudioSystem
             if (fadeRoutine != null) StopCoroutine(fadeRoutine);
             fadeRoutine = null;
 
-            // güvenlik: coroutine ve state temizle
+            // safety: clear coroutine and state
             if (endRoutine != null) StopCoroutine(endRoutine);
             endRoutine = null;
 

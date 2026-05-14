@@ -61,10 +61,13 @@ Shader /*ase_name*/ "Hidden/Universal/2D Unlit" /*end*/
 
 			HLSLPROGRAM
 
+			#pragma multi_compile_instancing
+
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#pragma multi_compile _ DEBUG_DISPLAY SKINNED_SPRITE
+			#pragma multi_compile_fragment _ DEBUG_DISPLAY
+			#pragma multi_compile_vertex _ SKINNED_SPRITE
 
             #define _SURFACE_TYPE_TRANSPARENT 1
             #define ATTRIBUTES_NEED_NORMAL
@@ -80,6 +83,7 @@ Shader /*ase_name*/ "Hidden/Universal/2D Unlit" /*end*/
 
 			#define SHADERPASS SHADERPASS_SPRITEUNLIT
 
+			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Fog.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Texture.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -222,10 +226,13 @@ Shader /*ase_name*/ "Hidden/Universal/2D Unlit" /*end*/
 
 			HLSLPROGRAM
 
+			#pragma multi_compile_instancing
+
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#pragma multi_compile _ DEBUG_DISPLAY SKINNED_SPRITE
+			#pragma multi_compile_fragment _ DEBUG_DISPLAY
+			#pragma multi_compile_vertex _ SKINNED_SPRITE
 
             #define _SURFACE_TYPE_TRANSPARENT 1
             #define ATTRIBUTES_NEED_NORMAL
@@ -241,6 +248,7 @@ Shader /*ase_name*/ "Hidden/Universal/2D Unlit" /*end*/
 
 			#define SHADERPASS SHADERPASS_SPRITEFORWARD
 
+			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Fog.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Texture.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -378,6 +386,8 @@ Shader /*ase_name*/ "Hidden/Universal/2D Unlit" /*end*/
 
             HLSLPROGRAM
 
+			#pragma multi_compile_instancing
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -489,6 +499,8 @@ Shader /*ase_name*/ "Hidden/Universal/2D Unlit" /*end*/
 			Cull Off
 
             HLSLPROGRAM
+
+			#pragma multi_compile_instancing
 
 			#pragma vertex vert
 			#pragma fragment frag

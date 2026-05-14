@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 062b042b530a9234991838eef88444a8
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Utils/ObjectPooling/Abstracts/IClearable.cs
+  uploadId: 886922

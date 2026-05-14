@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: eaa0a76e95b664244b3ae42019626c92
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Runtime/Enums.cs
+  uploadId: 886922

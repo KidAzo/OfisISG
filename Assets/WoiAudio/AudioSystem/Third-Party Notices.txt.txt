@@ -1,0 +1,7 @@
+Third-Party Notices
+
+All content included in 'Woi Audio - Lightweight Audio Framework', including but not limited to scripts, UI elements, and audio assets, has been developed and authored by Woi Studio.
+
+No third-party software, libraries, or assets under external licenses are used in this package.
+
+License: Unity Asset Store EULA

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,9 +7,10 @@ namespace WoiUtils.AudioSystem
     /// <summary>
     /// Designer-friendly, zero-code audio trigger.
     /// Bridges scene events (OnEnable/Trigger/Collision/UI) to AudioSystem.Play().
+    /// Call <see cref="StopInstances"/> from UnityEvent / SOAP to stop all voices for this trigger's sound(s).
     /// All behavior rules (Queue, Cooldown, SingleGlobal, MaxVoices, etc.) are driven by SoundDefinition.
+    /// Multiple instances may exist on the same GameObject (e.g. different UnityEvent sources or sounds).
     /// </summary>
-    [DisallowMultipleComponent]
     public class AudioTrigger : MonoBehaviour
     {
         public enum FireMode
@@ -30,7 +32,12 @@ namespace WoiUtils.AudioSystem
         }
 
         [Header("Target")]
-        [Tooltip("SoundDefinition to play when this trigger fires.")]
+        [Tooltip("Optional: holds EN + TR SoundDefinitions; picks one from LocalizationService. When set, overrides single Sound below.")]
+        [SerializeField] private LocalizedSoundDefinition localizedSound;
+
+        [Tooltip(
+            "Single SoundDefinition, or fallback when Localized Sound is used but one language slot is empty. " +
+            "For overlapping / stacked playback of the same asset, set Instance Mode to Multiple on that SoundDefinition.")]
         [SerializeField] private SoundDefinition sound;
 
         [Header("Trigger")]
@@ -38,7 +45,8 @@ namespace WoiUtils.AudioSystem
         [SerializeField] private FireMode fireMode = FireMode.OnEnable;
 
         [Tooltip("Extra per-trigger anti-spam cooldown (in seconds). " +
-                 "This is independent from SoundDefinition.cooldown.")]
+                 "This is independent from SoundDefinition.cooldown. " +
+                 "Not applied to Play() / PlayWithNoCooldown (UnityEvent / UI).")]
         [SerializeField] private float triggerCooldown = 0f;
 
         [Header("Clip Override (Optional)")]
@@ -70,10 +78,6 @@ namespace WoiUtils.AudioSystem
         [Tooltip("Pitch multiplier applied via PlayContext. Set to 1 for no change.")]
         [SerializeField] private float pitchMul = 1f;
 
-        [Header("Audio System Reference")]
-        [Tooltip("If not assigned, the component will try to find an AudioSystem in the scene.")]
-        [SerializeField] private AudioSystem audioSystem;
-
         [Header("Events (Optional)")]
         [Tooltip("Invoked after a successful fire (a Play call is issued).")]
         public UnityEvent onPlayed;
@@ -84,21 +88,59 @@ namespace WoiUtils.AudioSystem
         private float lastTriggerTime = -999f;
         private int lastFrame = -1;
 
-        //public pro
-        public SoundDefinition Sound => sound;
-        public AudioSystem AudioSystem => audioSystem;
+        /// <summary>Cached instance from <see cref="AudioSystem.TryGetFromServiceLocator"/> (no scene reference).</summary>
+        private AudioSystem _cachedSystem;
+        private bool _loggedSceneAudioFallback;
 
-        private void Awake()
+        /// <summary>Serialized single sound (when <see cref="localizedSound"/> is null).</summary>
+        public SoundDefinition Sound => sound;
+
+        /// <summary><see cref="LocalizedSoundDefinition"/> when assigned.</summary>
+        public LocalizedSoundDefinition LocalizedSound => localizedSound;
+
+        /// <summary>Resolved <see cref="AudioSystem"/> from ServiceLocator, if any.</summary>
+        public AudioSystem AudioSystem => _cachedSystem;
+
+        /// <summary>Sound that will play for the current UI language (localized pair or single <see cref="sound"/>).</summary>
+        public SoundDefinition ResolvePlaySound() =>
+            localizedSound != null ? localizedSound.ResolveForCurrentLanguage() : sound;
+
+        private void Start()
         {
-            // Designer-friendly: auto-resolve if not assigned.
-            if (audioSystem == null)
-                audioSystem = FindFirstObjectByType<AudioSystem>();
+            ResolveAudioSystem();
+        }
+
+        private void ResolveAudioSystem()
+        {
+            if (_cachedSystem != null)
+                return;
+
+            if (AudioSystem.TryGetFromServiceLocator(out _cachedSystem) && _cachedSystem != null)
+                return;
+
+            // ServiceLocator registration happens in AudioSystem.Start — UI may fire earlier or bootstrap order may differ.
+            _cachedSystem = UnityEngine.Object.FindFirstObjectByType<AudioSystem>();
+
+            if (_cachedSystem != null && !_loggedSceneAudioFallback)
+            {
+                _loggedSceneAudioFallback = true;
+                Debug.LogWarning(
+                    "[AudioTrigger] AudioSystem was not on ServiceLocator; using first AudioSystem in loaded scenes. " +
+                    "Prefer registering AudioSystem on ServiceLocator (bootstrap / earlier scene).",
+                    this);
+            }
         }
 
         private void OnEnable()
         {
             if (fireMode == FireMode.OnEnable)
-                TryFire();
+                StartCoroutine(FireNextFrame());
+        }
+
+        private IEnumerator FireNextFrame()
+        {
+            yield return null;
+            TryFire();
         }
 
         private void OnDisable()
@@ -132,32 +174,89 @@ namespace WoiUtils.AudioSystem
         }
 
         /// <summary>
-        /// Manual fire entry point. Use this in UI Buttons or any UnityEvent.
+        /// Manual fire from UI / UnityEvent. Matches editor "Test Fire" behavior: bypasses sound cooldown and trigger anti-spam.
         /// </summary>
-        public void Play() => TryFire();
-        public void PlayWithNoCooldown() => TryFire(true);
+        public void Play() => TryFire(ignoreCooldowns: true, manualFromUnityEvent: true);
 
-        private void TryFire(bool ignoreCooldowns = false)
+        public void PlayWithNoCooldown() => TryFire(ignoreCooldowns: true, manualFromUnityEvent: true);
+
+        /// <summary>
+        /// Stops every active voice playing this trigger's <see cref="SoundDefinition"/>(s).
+        /// When <see cref="localizedSound"/> is set, stops both English and Turkish definitions so either slot cannot keep looping after a language switch.
+        /// Safe to wire from UnityEvent or SOAP (no trigger cooldown / same-frame blocking).
+        /// </summary>
+        public void StopInstances()
         {
-            if (AudioSystem.IsShuttingDown) { onBlocked?.Invoke(); return; }
-            if (sound == null) { onBlocked?.Invoke(); return; }
+            if (AudioSystem.IsShuttingDown)
+                return;
 
-            if (audioSystem == null)
-                audioSystem = FindFirstObjectByType<AudioSystem>();
+            ResolveAudioSystem();
 
-            if (audioSystem == null) { onBlocked?.Invoke(); return; }
-
-            // Trigger-level anti-spam (independent from SoundDefinition.cooldown).
-            float now = Time.unscaledTime;
-
-            if (blockSameFrame && Time.frameCount == lastFrame)
+            if (_cachedSystem == null)
             {
+                Debug.LogWarning(
+                    "[AudioTrigger:" + name + "] StopInstances: No AudioSystem — nothing registered on ServiceLocator and no instance found in loaded scenes.",
+                    this);
+                return;
+            }
+
+            if (localizedSound != null)
+            {
+                if (localizedSound.english != null)
+                    _cachedSystem.StopAllInstances(localizedSound.english);
+                if (localizedSound.turkish != null)
+                    _cachedSystem.StopAllInstances(localizedSound.turkish);
+                return;
+            }
+
+            if (sound != null)
+                _cachedSystem.StopAllInstances(sound);
+        }
+
+        private void TryFire(bool ignoreCooldowns = false, bool manualFromUnityEvent = false)
+        {
+            if (AudioSystem.IsShuttingDown)
+            {
+                LogBlocked("AudioSystem is shutting down.");
                 onBlocked?.Invoke();
                 return;
             }
 
-            if (triggerCooldown > 0f && (now - lastTriggerTime) < triggerCooldown)
+            SoundDefinition playSound = ResolvePlaySound();
+            if (playSound == null)
             {
+                LogBlocked(
+                    localizedSound != null
+                        ? "Localized Sound resolved to null — assign English and/or Turkish SoundDefinitions inside that asset."
+                        : "No SoundDefinition — assign Localized Sound or Sound Definition.");
+                onBlocked?.Invoke();
+                return;
+            }
+
+            ResolveAudioSystem();
+
+            if (_cachedSystem == null)
+            {
+                LogBlocked(
+                    "No AudioSystem — nothing registered on ServiceLocator and no instance found in loaded scenes. " +
+                    "Add AudioSystem (bootstrap), enable Register With Service Locator, or load it before this UI.");
+                onBlocked?.Invoke();
+                return;
+            }
+
+            // Trigger-level anti-spam (independent from SoundDefinition.cooldown).
+            float now = Time.unscaledTime;
+
+            if (!manualFromUnityEvent && blockSameFrame && Time.frameCount == lastFrame)
+            {
+                LogBlocked("Blocked: block same frame (two Play calls in one frame).");
+                onBlocked?.Invoke();
+                return;
+            }
+
+            if (!manualFromUnityEvent && triggerCooldown > 0f && (now - lastTriggerTime) < triggerCooldown)
+            {
+                LogBlocked("Blocked: trigger cooldown.");
                 onBlocked?.Invoke();
                 return;
             }
@@ -177,59 +276,41 @@ namespace WoiUtils.AudioSystem
                 case SpatialMode.WorldPosition:
                 {
                     var pos = positionSource != null ? positionSource.position : transform.position;
-                    audioSystem.PlayAt(sound, pos);
+
+                    //pass ctx so clipIndex/volume/pitch/ignoreCooldowns are preserved
+                    _cachedSystem.PlayAt(playSound, pos, ctx);
                     break;
                 }
                 case SpatialMode.FollowTransform:
                 {
                     var t = followTarget != null ? followTarget : transform;
-                    audioSystem.PlayFollow(sound, t);
+
+                    //pass ctx so clipIndex/volume/pitch/ignoreCooldowns are preserved
+                    _cachedSystem.PlayFollow(playSound, t, ctx);
                     break;
                 }
                 default:
-                    audioSystem.Play(sound, ctx);
+                    _cachedSystem.Play(playSound, ctx);
                     break;
             }
 
             onPlayed?.Invoke();
+        }
+
+        private void LogBlocked(string reason)
+        {
+            Debug.LogWarning($"[AudioTrigger:{name}] {reason}", this);
         }
  
         private PlayContext BuildContext()
         {
             var ctx = PlayContext.Default;
 
-            // Multipliers
             ctx.volumeMul = volumeMul;
-            ctx.pitchMul = pitchMul;
+            ctx.pitchMul  = pitchMul;
 
-            // Clip index override
-           if (overrideClipIndex)
+            if (overrideClipIndex)
                 ctx = ctx.SetClipIndex(clipIndex);
-
-            // Spatial override
-            switch (spatialMode)
-            {
-                case SpatialMode.UseSoundDefinition:
-                    ctx.hasPosition = false;
-                    ctx.hasFollow = false;
-                    ctx.follow = null;
-                    break;
-
-                case SpatialMode.WorldPosition:
-                    ctx.hasFollow = false;
-                    ctx.follow = null;
-
-                    ctx.hasPosition = true;
-                    ctx.position = positionSource != null ? positionSource.position : transform.position;
-                    break;
-
-                case SpatialMode.FollowTransform:
-                    ctx.hasPosition = false;
-
-                    ctx.hasFollow = true;
-                    ctx.follow = followTarget != null ? followTarget : transform;
-                    break;
-            }
 
             return ctx;
         }

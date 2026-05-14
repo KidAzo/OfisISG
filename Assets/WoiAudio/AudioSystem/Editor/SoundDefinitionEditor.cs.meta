@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 5ceb134d3240db74ba8e849a59ecd728
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Editor/SoundDefinitionEditor.cs
+  uploadId: 886922

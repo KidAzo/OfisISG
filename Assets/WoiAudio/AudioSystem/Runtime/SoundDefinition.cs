@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WoiUtils.AudioSystem
 {
-    [CreateAssetMenu(fileName = "Sound Definition", menuName = "Woi Audio/Audio/Sound Definition", order = 0)]
+    [CreateAssetMenu(fileName = "Sound Definition", menuName = "WoiAudio/Audio/Sound Definition", order = 0)]
     public class SoundDefinition : ScriptableObject
     {
         [Header("Clips")]

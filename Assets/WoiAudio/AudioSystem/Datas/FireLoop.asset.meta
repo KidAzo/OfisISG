@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d5563561918d26e47b507624fc9c2138
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Datas/FireLoop.asset
+  uploadId: 886922

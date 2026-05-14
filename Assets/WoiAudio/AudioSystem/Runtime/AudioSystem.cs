@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using WOI.Modules.SDK;
 
 namespace WoiUtils.AudioSystem
 {
@@ -30,13 +30,36 @@ namespace WoiUtils.AudioSystem
         public SoundDefinition Sound;
     }
 
+    [DefaultExecutionOrder(-8000)]
     public class AudioSystem : MonoBehaviour
     {
         [SerializeField] AudioSystemConfig config;
 
+        [Header("Service locator")]
+        [Tooltip("Registers this instance on ServiceLocator in Awake (early) so AudioTrigger/UI can resolve before Start.")]
+        [SerializeField]
+        private bool registerWithServiceLocator = true;
+
+        private bool _registeredWithServiceLocator;
+
+        /// <summary>The single persisted runtime instance after <see cref="DontDestroyOnLoad"/> (handles duplicate scene loads).</summary>
+        private static AudioSystem _persistedInstance;
+
         public static bool IsShuttingDown { get; private set; } = false;
 
+        /// <summary>
+        /// Returns the <see cref="AudioSystem"/> registered on <see cref="ServiceLocator"/> (registration runs in <see cref="Awake"/>).
+        /// </summary>
+        public static bool TryGetFromServiceLocator(out AudioSystem system) =>
+            ServiceLocator.TryGet<AudioSystem>(out system);
+
         AudioPoolAdapter adapter;
+
+        /// <summary>
+        /// Added only while no other enabled listener exists in the hierarchy (common gap during additive scene loads).
+        /// Removed when a scene listener (e.g. camera) becomes active again.
+        /// </summary>
+        AudioListener _fallbackAudioListener;
 
         // cooldown timestamps
         private readonly Dictionary<SoundDefinition, float> lastPlayTime = new();
@@ -47,9 +70,13 @@ namespace WoiUtils.AudioSystem
         // clip selection state
         private readonly Dictionary<SoundDefinition, int> lastRandomIndex = new();
         private readonly Dictionary<SoundDefinition, int> sequenceIndex = new();
+        
 
         // queue
         private readonly QueueController queue = new();
+
+        /// <summary>Play() / PlayImmediateFromQueue() delayed starts — must be cancelled when <see cref="StopAllInstances"/> runs before the clip begins.</summary>
+        private readonly Dictionary<int, Coroutine> _pendingDelayedPlayBySoundId = new();
 
         // active voice tracking (for steal + debug)
         private readonly LinkedList<AudioVoice> activeOrder = new(); // oldest -> newest
@@ -57,23 +84,39 @@ namespace WoiUtils.AudioSystem
 
         public int ActiveVoiceCount => activeOrder.Count;
 
-		public event System.Action<int> OnQueueIndexChanged {
-			add { queue.OnClipChanged += value; }
-			remove { queue.OnClipChanged -= value; }
-		}
+        /// <summary>Fired when a queue starts an item. Args: owning <see cref="SoundDefinition"/>, clip slot index on that sound.</summary>
+        public event System.Action<SoundDefinition, int> OnQueueIndexChanged
+        {
+            add { queue.OnClipChanged += value; }
+            remove { queue.OnClipChanged -= value; }
+        }
 
         // ---------------- Queue API ----------------
-       // ---------------- Queue API ----------------
-		public int GetQueueCount(SoundDefinition s) => queue.GetCount(s);
+        // ---------------- Queue API ----------------
+        public int GetQueueCount(SoundDefinition s) => queue.GetCount(s);
 
-		public void ClearQueue() => queue.Clear(this);
-		public void ClearQueue(SoundDefinition s) => queue.Clear(this, s);
+        public void ClearQueue()
+        {
+            CancelAllPendingDelayedPlays();
+            queue.Clear(this);
+        }
+        public void ClearQueue(SoundDefinition s)
+        {
+            CancelPendingDelayedPlayForSound(s);
+            queue.Clear(this, s);
+        }
 
-		public bool SkipQueueOne(SoundDefinition s) => queue.DropOne(s);
-		public bool QueueNext(SoundDefinition s) => queue.PlayNext(this, s);
-		public bool QueuePrev(SoundDefinition s) => queue.PlayPrev(this, s);
+        public bool SkipQueueOne(SoundDefinition s) => queue.DropOne(s);
+        public bool QueueNext(SoundDefinition s) => queue.PlayNext(this, s);
+        public bool QueuePrev(SoundDefinition s) => queue.PlayPrev(this, s);
 
-		public (int currentIndex, int totalCount) GetQueuePosition(SoundDefinition s) => queue.GetQueuePosition(s);
+        public (int currentIndex, int totalCount) GetQueuePosition(SoundDefinition s) => queue.GetQueuePosition(s);
+
+        /// <summary>
+        /// True while the internal queue runner coroutine is processing this sound (e.g. <see cref="ClipSelectionMode.QueueAll"/>).
+        /// Use this instead of estimating clip durations when <see cref="Play"/> returns null.
+        /// </summary>
+        public bool IsQueueRunnerActive(SoundDefinition s) => s != null && queue.IsRunning(s);
 
 
         // ---------------- Debug Snapshot API (Editor) ----------------
@@ -156,28 +199,81 @@ namespace WoiUtils.AudioSystem
         {
             IsShuttingDown = false;
 
+            if (_persistedInstance != null && !ReferenceEquals(_persistedInstance, this))
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            _persistedInstance = this;
+            DontDestroyOnLoad(gameObject);
+
             adapter = GetComponent<AudioPoolAdapter>();
             if (adapter == null)
+            {
                 Debug.LogError("AudioSystem requires AudioPoolAdapter on the same GameObject.");
+                return;
+            }
+
+            TryRegisterWithServiceLocator();
+        }
+
+        void TryRegisterWithServiceLocator()
+        {
+            if (!registerWithServiceLocator)
+                return;
+
+            if (_registeredWithServiceLocator)
+                return;
+
+            if (adapter == null)
+                return;
+
+            if (ServiceLocator.TryGet<AudioSystem>(out AudioSystem existing) && existing != null)
+            {
+                if (ReferenceEquals(existing, this))
+                {
+                    _registeredWithServiceLocator = true;
+                    return;
+                }
+
+                Debug.LogWarning("[AudioSystem] ServiceLocator already has an AudioSystem — this instance was not registered.", this);
+                return;
+            }
+
+            ServiceLocator.Register<AudioSystem>(this);
+            _registeredWithServiceLocator = true;
+        }
+
+        void TryUnregisterWithServiceLocator()
+        {
+            if (!_registeredWithServiceLocator)
+                return;
+
+            ServiceLocator.Unregister<AudioSystem>();
+            _registeredWithServiceLocator = false;
         }
 
         void OnApplicationPause(bool pause)
         {
+            // Do not set IsShuttingDown here — on some platforms pause can fire during loads; leaving it true blocks all Play() until an unpause that never comes.
             if (pause)
             {
-                IsShuttingDown = true;
+                CancelAllPendingDelayedPlays();
                 queue.Clear(this);
-            }
-            else
-            {
-                IsShuttingDown = false;
             }
         }
 
         void OnDestroy()
         {
+            if (ReferenceEquals(_persistedInstance, this))
+                _persistedInstance = null;
+
+            TryUnregisterWithServiceLocator();
+
             IsShuttingDown = true;
 
+            CancelAllPendingDelayedPlays();
             queue.Clear(this);
 
             if (activeNodes != null && activeNodes.Count > 0)
@@ -190,7 +286,7 @@ namespace WoiUtils.AudioSystem
 
         // ---------------- Internal register/unregister ----------------
 
-        bool RegisterVoice(AudioVoice voice)
+        bool RegisterVoice(AudioVoice voice, in PlayContext ctx)
         {
             if (voice == null) return false;
 
@@ -199,8 +295,21 @@ namespace WoiUtils.AudioSystem
 
             if (activeOrder.Count >= config.maxSoundInstances)
             {
-                var oldest = FindStealCandidate();
-                if (oldest != null) oldest.Stop();
+                AudioVoice oldest = null;
+                if (ctx.suppressSameCategorySteal && voice.Data != null)
+                {
+                    // Only recycle voices in the same *custom* category bucket. Broad enum categories (e.g. all SFX)
+                    // would otherwise steal unrelated gameplay sounds. If this sound has no custom key, skip stealing.
+                    if (voice.Data.useCustomCategory)
+                        oldest = FindStealCandidateMatchingCategory(voice.Data);
+                }
+                else
+                {
+                    oldest = FindStealCandidate();
+                }
+
+                if (oldest != null)
+                    oldest.Stop();
 
                 if (activeOrder.Count >= config.maxSoundInstances)
                     return false;
@@ -222,6 +331,46 @@ namespace WoiUtils.AudioSystem
             }
         }
 
+        /// <summary>Same mixer/category routing as <see cref="SoundDefinition.category"/> / custom key.</summary>
+        static bool CategoriesMatch(SoundDefinition a, SoundDefinition b)
+        {
+            if (a == null || b == null)
+                return false;
+
+            if (a.useCustomCategory != b.useCustomCategory)
+                return false;
+
+            if (a.useCustomCategory)
+                return string.Equals(a.customCategoryKey ?? "", b.customCategoryKey ?? "", System.StringComparison.Ordinal);
+
+            return a.category == b.category;
+        }
+
+        /// <summary>For <see cref="InstanceMode.SinglePerCategory"/> — stops other clips (any SoundDefinition) in the same category bucket.</summary>
+        void StopActiveVoicesInMatchingCategory(SoundDefinition incoming, in PlayContext ctx)
+        {
+            if (incoming == null || incoming.instanceMode != InstanceMode.SinglePerCategory)
+                return;
+
+            if (ctx.suppressSameCategorySteal)
+                return;
+
+            var snapshot = new List<AudioVoice>(activeOrder);
+
+            for (int i = 0; i < snapshot.Count; i++)
+            {
+                var voice = snapshot[i];
+                if (voice == null)
+                    continue;
+
+                var data = voice.Data;
+                if (data == null || !CategoriesMatch(incoming, data))
+                    continue;
+
+                voice.Stop();
+            }
+        }
+
         // ---------------- Public API ----------------
 
         public AudioVoice Play(SoundDefinition sound) => Play(sound, PlayContext.Default);
@@ -229,6 +378,7 @@ namespace WoiUtils.AudioSystem
         // ✅ IMPORTANT: keep ctx (multipliers/clipIndex/ignoreCooldowns) by using the overloads below
         public AudioVoice PlayAt(SoundDefinition sound, Vector3 position) => PlayAt(sound, position, PlayContext.At(position));
         public AudioVoice PlayFollow(SoundDefinition sound, Transform follow) => PlayFollow(sound, follow, PlayContext.Follow(follow));
+        public void PlayOrResumeQueue(SoundDefinition s) => queue.PlayOrResume(this, s);
 
         public AudioVoice PlayAt(SoundDefinition sound, Vector3 position, in PlayContext baseCtx)
         {
@@ -257,18 +407,35 @@ namespace WoiUtils.AudioSystem
             queue.Enqueue(this, sound, ctx);
         }
 
+        /// <summary>
+        /// Enqueues the sound’s default clip (slot 0) and starts the queue runner if idle.
+        /// For cross-sound sequential VO, use <see cref="InstanceMode.SingleGlobal"/> + same <see cref="QueueScope"/> / category on all involved <see cref="SoundDefinition"/> assets
+        /// (typically <see cref="QueueScope.PerCategory"/> + shared <see cref="SoundDefinition.customCategoryKey"/>), then call this from each SOAP handler instead of <see cref="Play"/>.
+        /// </summary>
+        public void EnqueueSequential(SoundDefinition sound, in PlayContext ctx)
+        {
+            if (sound == null)
+                return;
+
+            queue.Enqueue(this, sound, ctx);
+            queue.NotifyEnqueueCompleted(this, sound);
+        }
+
         /// <summary>Enqueues ALL clips from the SoundDefinition to play sequentially.</summary>
         public void EnqueueAllClips(SoundDefinition sound) => EnqueueAllClips(sound, PlayContext.Default);
 
         public void EnqueueAllClips(SoundDefinition sound, in PlayContext ctx)
         {
-                Debug.Log($"[EnqueueAllClips] {sound?.name} frame={Time.frameCount}\n{System.Environment.StackTrace}");
-
             if (sound == null || sound.clips == null) return;
 
             // prevent spam if requested
-            if (sound.suppressDuplicatesWhileQueued && queue.IsRunning(sound))
+            // Only suppress duplicates for SingleGlobal (resume use-case)
+            if (sound.suppressDuplicatesWhileQueued &&
+                sound.instanceMode == InstanceMode.SingleGlobal &&
+                queue.IsRunning(sound))
+            {
                 return;
+            }
 
             for (int i = 0; i < sound.clips.Count; i++)
             {
@@ -281,6 +448,8 @@ namespace WoiUtils.AudioSystem
         public void StopAll()
         {
             if (IsShuttingDown) return;
+
+            CancelAllPendingDelayedPlays();
 
             var temp = new List<AudioVoice>(activeOrder);
 
@@ -301,6 +470,8 @@ namespace WoiUtils.AudioSystem
         {
             if (sound == null) return;
 
+            CancelPendingDelayedPlayForSound(sound);
+
             var temp = new List<AudioVoice>(activeOrder);
             foreach (var v in temp)
             {
@@ -319,67 +490,152 @@ namespace WoiUtils.AudioSystem
             singleGlobals.Remove(sound);
         }
 
+        /// <summary>
+        /// Unity plays nothing when no <see cref="AudioListener"/> is active. Scene unloading often removes the only listener before the next scene’s camera is ready.
+        /// </summary>
+        void EnsureActiveAudioListenerPresent()
+        {
+            var listeners = FindObjectsByType<AudioListener>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            AudioListener firstActive = null;
+
+            for (int i = 0; i < listeners.Length; i++)
+            {
+                var l = listeners[i];
+                if (l == null || !l.enabled || !l.gameObject.activeInHierarchy)
+                    continue;
+
+                firstActive = l;
+                break;
+            }
+
+            if (firstActive != null)
+            {
+                if (_fallbackAudioListener != null && firstActive != _fallbackAudioListener)
+                {
+                    Destroy(_fallbackAudioListener);
+                    _fallbackAudioListener = null;
+                }
+
+                return;
+            }
+
+            if (_fallbackAudioListener == null)
+                _fallbackAudioListener = gameObject.AddComponent<AudioListener>();
+        }
+
         // --------------- Core play router ---------------
 
-  public AudioVoice Play(SoundDefinition sound, in PlayContext ctx)
-{
-    if (sound == null) return null;
+        public AudioVoice Play(SoundDefinition sound, in PlayContext ctx)
+        {
+            if (sound == null) return null;
 
-    //    if (sound.instanceMode == InstanceMode.SingleGlobal && IsAnyInstancePlaying(sound))
-    //         {
-    //           Debug.Log($"[Play] SingleGlobal instance already playing for {sound.name}, ignoring play request.");
-    //            return null;
-    //         }
+            // 1. DECISION LOGIC: Should this sound be added to the queue (playlist)?
+            // Both QueueAll mode and Queue scheduling mode are checked here.
+            bool isQueueRequest = !ctx.forceImmediatePlay &&
+                                  ((sound.selectionMode == ClipSelectionMode.QueueAll) ||
+                                   (!ctx.ignoreCooldowns && sound.scheduleMode == ScheduleMode.Queue));
 
+            if (isQueueRequest && !ctx.hasClipIndex)
+            {
+                // Call EnqueueAllClips and finish the operation here.
+                // This method should prevent duplicate entries using 'GetCount' or 'IsRunning'.
+                queue.PlayOrResume(this, sound);
 
-    // 1. KARAR MEKANİZMASI: Bu ses kuyruğa (playlist) mi girmeli?
-    // Hem QueueAll modu hem de Queue zamanlama modu burada kontrol edilir.
-    bool isQueueRequest = (sound.selectionMode == ClipSelectionMode.QueueAll) || 
-                          (!ctx.ignoreCooldowns && sound.scheduleMode == ScheduleMode.Queue);
+                return null;
+            }
 
-    if (isQueueRequest && !ctx.hasClipIndex)
-    {
-        // EnqueueAllClips metodunu çağır ve işlemi burada bitir.
-        // Bu metod kendi içinde 'GetCount' veya 'IsRunning' ile mükerrer kaydı engellemeli.
-        EnqueueAllClips(sound, ctx);
-        queue.PlayOrResume(this, sound);
+            // 2. SPECIAL CASE: Single clip resolution from queue
+            if (!ctx.forceImmediatePlay && !ctx.ignoreCooldowns && sound.scheduleMode == ScheduleMode.Queue && ctx.hasClipIndex)
+            {
+                queue.Enqueue(this, sound, ctx);
+                return null;
+            }
 
-        return null; 
-    }
+            // 3. NORMAL PLAY LOGIC (Immediate Play)
+            // First, clip selection is performed.
+            if (!TryResolveClipEntry(sound, ctx, out var clipEntry))
+                return null;
 
-    // 2. ÖZEL DURUM: Kuyruktan gelen tekil klip çözünürlüğü
-    if (!ctx.ignoreCooldowns && sound.scheduleMode == ScheduleMode.Queue && ctx.hasClipIndex)
-    {
-        queue.Enqueue(this, sound, ctx);
-        return null;
-    }
+            if (clipEntry.clip == null)
+                return null;
 
-    // 3. NORMAL ÇALMA MANTIĞI (Immediate Play)
-    // Önce klip seçimi yapılır.
-    if (!TryResolveClipEntry(sound, ctx, out var clipEntry))
-        return null;
+            float totalDelay = 0f;
 
-    if (clipEntry.clip == null)
-        return null;
+            // Cooldown and Delay calculations
+            if (!ctx.ignoreCooldowns)
+            {
+                totalDelay += ResolveSoundDelay(sound);
+                totalDelay += Mathf.Max(0f, clipEntry.delay);
+            }
 
-    float totalDelay = 0f;
+            // Delayed or immediate playback
+            if (totalDelay > 0f)
+            {
+                StartTrackedDelayedPlay(sound, ctx, clipEntry.clip, totalDelay);
+                return null;
+            }
 
-    // Cooldown ve Delay hesaplamaları
-    if (!ctx.ignoreCooldowns)
-    {
-        totalDelay += ResolveSoundDelay(sound);
-        totalDelay += Mathf.Max(0f, clipEntry.delay);
-    }
+            return PlayImmediateResolved(sound, ctx, clipEntry.clip);
+        }
 
-    // Gecikmeli veya anında çalma
-    if (totalDelay > 0f)
-    {
-        StartCoroutine(DelayedPlayResolved(sound, ctx, clipEntry.clip, totalDelay));
-        return null;
-    }
+        void CancelPendingDelayedPlayForSound(SoundDefinition sound)
+        {
+            if (sound == null)
+                return;
 
-    return PlayImmediateResolved(sound, ctx, clipEntry.clip);
-}
+            int id = sound.GetInstanceID();
+            if (_pendingDelayedPlayBySoundId.TryGetValue(id, out Coroutine co) && co != null)
+                StopCoroutine(co);
+
+            _pendingDelayedPlayBySoundId.Remove(id);
+        }
+
+        void CancelAllPendingDelayedPlays()
+        {
+            foreach (KeyValuePair<int, Coroutine> kv in _pendingDelayedPlayBySoundId)
+            {
+                if (kv.Value != null)
+                    StopCoroutine(kv.Value);
+            }
+
+            _pendingDelayedPlayBySoundId.Clear();
+        }
+
+        void StartTrackedDelayedPlay(SoundDefinition sound, PlayContext ctx, AudioClip clip, float delay)
+        {
+            if (sound == null || clip == null)
+                return;
+
+            int soundId = sound.GetInstanceID();
+            CancelPendingDelayedPlayForSound(sound);
+
+            Coroutine co = null;
+
+            IEnumerator Run()
+            {
+                try
+                {
+                    if (delay > 0f)
+                        yield return new WaitForSecondsRealtime(delay);
+
+                    if (IsShuttingDown)
+                        yield break;
+
+                    if (!_pendingDelayedPlayBySoundId.TryGetValue(soundId, out Coroutine reg) || !ReferenceEquals(reg, co))
+                        yield break;
+
+                    PlayImmediateResolved(sound, ctx, clip);
+                }
+                finally
+                {
+                    if (_pendingDelayedPlayBySoundId.TryGetValue(soundId, out Coroutine reg) && ReferenceEquals(reg, co))
+                        _pendingDelayedPlayBySoundId.Remove(soundId);
+                }
+            }
+
+            co = StartCoroutine(Run());
+            _pendingDelayedPlayBySoundId[soundId] = co;
+        }
 
         internal float ResolveSoundDelay(SoundDefinition sound)
         {
@@ -391,14 +647,6 @@ namespace WoiUtils.AudioSystem
                 DelayMode.RandomRange => Mathf.Max(0f, Random.Range(sound.delayRange.x, sound.delayRange.y)),
                 _ => 0f
             };
-        }
-
-        IEnumerator DelayedPlayResolved(SoundDefinition sound, PlayContext ctx, AudioClip clip, float delay)
-        {
-            if (delay > 0f)
-                yield return new WaitForSecondsRealtime(delay);
-
-            PlayImmediateResolved(sound, ctx, clip);
         }
 
         // QueueController calls these:
@@ -415,6 +663,8 @@ namespace WoiUtils.AudioSystem
                         return null;
                 }
             }
+
+            StopActiveVoicesInMatchingCategory(sound, in ctx);
 
             if (sound.instanceMode == InstanceMode.SingleGlobal)
             {
@@ -450,7 +700,7 @@ namespace WoiUtils.AudioSystem
 
             if (IsShuttingDown) { adapter.Return(voice); return null; }
 
-            if (!RegisterVoice(voice))
+            if (!RegisterVoice(voice, in ctx))
             {
                 adapter.Return(voice);
                 return null;
@@ -466,6 +716,8 @@ namespace WoiUtils.AudioSystem
 
         public AudioVoice PlayImmediateResolved(SoundDefinition sound, in PlayContext ctx, AudioClip clip)
         {
+            EnsureActiveAudioListenerPresent();
+
             if (adapter == null || sound == null || clip == null) return null;
 
             if (!ctx.ignoreCooldowns && sound.cooldown > 0f)
@@ -475,18 +727,20 @@ namespace WoiUtils.AudioSystem
                     return null;
             }
 
-         if (sound.instanceMode == InstanceMode.SingleGlobal)
+            StopActiveVoicesInMatchingCategory(sound, in ctx);
+
+            if (sound.instanceMode == InstanceMode.SingleGlobal)
             {
                 if (singleGlobals.TryGetValue(sound, out var existing) && existing != null)
                 {
-                    // stale: artık çalmıyorsa registry temizle
+                    // stale: if no longer playing, clean up registry
                     if (!existing.IsPlaying())
                     {
                         singleGlobals.Remove(sound);
                     }
                     else
                     {
-                        // çalıyorken ne yapacağız?
+                        // what to do if still playing?
                         if (!ctx.ignoreCooldowns && sound.reTriggerMode == ReTriggerMode.Ignore)
                             return existing;
 
@@ -505,7 +759,7 @@ namespace WoiUtils.AudioSystem
 
             if (IsShuttingDown) { adapter.Return(voice); return null; }
 
-            if (!RegisterVoice(voice))
+            if (!RegisterVoice(voice, in ctx))
             {
                 adapter.Return(voice);
                 return null;
@@ -530,7 +784,7 @@ namespace WoiUtils.AudioSystem
 
             if (totalDelay > 0f)
             {
-                StartCoroutine(DelayedPlayResolved(sound, ctx, entry.clip, totalDelay));
+                StartTrackedDelayedPlay(sound, ctx, entry.clip, totalDelay);
                 return null;
             }
 
@@ -697,6 +951,26 @@ namespace WoiUtils.AudioSystem
 
                 n = n.Next;
             }
+            return null;
+        }
+
+        /// <summary>
+        /// Oldest stealable voice whose category bucket matches <paramref name="incoming"/> (same rules as <see cref="CategoriesMatch"/>).
+        /// </summary>
+        AudioVoice FindStealCandidateMatchingCategory(SoundDefinition incoming)
+        {
+            if (incoming == null)
+                return null;
+
+            for (LinkedListNode<AudioVoice> n = activeOrder.First; n != null; n = n.Next)
+            {
+                AudioVoice v = n.Value;
+                SoundDefinition d = v != null ? v.Data : null;
+
+                if (v != null && d != null && !d.protectedFromSteal && CategoriesMatch(incoming, d))
+                    return v;
+            }
+
             return null;
         }
     }

@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 5ca85cfee8f80c940a9c52d5ea6f9f11
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Runtime/QueueController.cs
+  uploadId: 886922

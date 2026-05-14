@@ -54,7 +54,7 @@ namespace WoiUtils.AudioSystem.Editor
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
             EditorApplication.update += EditorTick;
 
-            wantsMouseMove = false; // Gereksiz mouse event'leri kapat
+            wantsMouseMove = false; // Disable unnecessary mouse events
             autoRepaintOnSceneChange = true;
             RefreshData();                    
         }

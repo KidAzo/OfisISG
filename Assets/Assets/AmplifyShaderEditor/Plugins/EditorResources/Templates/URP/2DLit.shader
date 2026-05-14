@@ -64,10 +64,13 @@ Shader /*ase_name*/ "Hidden/Universal/2D Lit" /*end*/
 
 			HLSLPROGRAM
 
+			#pragma multi_compile_instancing
+
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#pragma multi_compile _ DEBUG_DISPLAY SKINNED_SPRITE
+			#pragma multi_compile_fragment _ DEBUG_DISPLAY
+			#pragma multi_compile_vertex _ SKINNED_SPRITE
 
 			#pragma multi_compile _ USE_SHAPE_LIGHT_TYPE_0
 			#pragma multi_compile _ USE_SHAPE_LIGHT_TYPE_1
@@ -89,6 +92,7 @@ Shader /*ase_name*/ "Hidden/Universal/2D Lit" /*end*/
 
 			#define SHADERPASS SHADERPASS_SPRITELIT
 
+			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Fog.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Texture.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -100,27 +104,27 @@ Shader /*ase_name*/ "Hidden/Universal/2D Lit" /*end*/
 			#include_with_pragmas "Packages/com.unity.render-pipelines.core/ShaderLibrary/FoveatedRenderingKeywords.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/DebugMipmapStreamingMacros.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
-			#include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
+			//#include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/LightingUtility.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/ShaderPass.hlsl"
 
 			#include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/SurfaceData2D.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Debug/Debugging2D.hlsl"
 
-			#if USE_SHAPE_LIGHT_TYPE_0
-			SHAPE_LIGHT(0)
-			#endif
+			//#if USE_SHAPE_LIGHT_TYPE_0
+			//SHAPE_LIGHT(0)
+			//#endif
 
-			#if USE_SHAPE_LIGHT_TYPE_1
-			SHAPE_LIGHT(1)
-			#endif
+			//#if USE_SHAPE_LIGHT_TYPE_1
+			//SHAPE_LIGHT(1)
+			//#endif
 
-			#if USE_SHAPE_LIGHT_TYPE_2
-			SHAPE_LIGHT(2)
-			#endif
+			//#if USE_SHAPE_LIGHT_TYPE_2
+			//SHAPE_LIGHT(2)
+			//#endif
 
-			#if USE_SHAPE_LIGHT_TYPE_3
-			SHAPE_LIGHT(3)
-			#endif
+			//#if USE_SHAPE_LIGHT_TYPE_3
+			//SHAPE_LIGHT(3)
+			//#endif
 
 			#include "Packages/com.unity.render-pipelines.universal/Shaders/2D/Include/CombinedShapeLightShared.hlsl"
 
@@ -244,6 +248,8 @@ Shader /*ase_name*/ "Hidden/Universal/2D Lit" /*end*/
 			/*ase_stencil*/
 
 			HLSLPROGRAM
+
+			#pragma multi_compile_instancing
 
 			#pragma vertex vert
 			#pragma fragment frag
@@ -383,10 +389,13 @@ Shader /*ase_name*/ "Hidden/Universal/2D Lit" /*end*/
 
 			HLSLPROGRAM
 
+			#pragma multi_compile_instancing
+
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#pragma multi_compile _ SKINNED_SPRITE
+			#pragma multi_compile_fragment _ DEBUG_DISPLAY
+			#pragma multi_compile_vertex _ SKINNED_SPRITE
 
             #define _SURFACE_TYPE_TRANSPARENT 1
             #define ATTRIBUTES_NEED_NORMAL
@@ -402,6 +411,7 @@ Shader /*ase_name*/ "Hidden/Universal/2D Lit" /*end*/
 
 			#define SHADERPASS SHADERPASS_SPRITEFORWARD
 
+			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Fog.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Texture.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -538,6 +548,8 @@ Shader /*ase_name*/ "Hidden/Universal/2D Lit" /*end*/
 
             HLSLPROGRAM
 
+			#pragma multi_compile_instancing
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -649,6 +661,8 @@ Shader /*ase_name*/ "Hidden/Universal/2D Lit" /*end*/
 			Cull Off
 
             HLSLPROGRAM
+
+			#pragma multi_compile_instancing
 
 			#pragma vertex vert
 			#pragma fragment frag

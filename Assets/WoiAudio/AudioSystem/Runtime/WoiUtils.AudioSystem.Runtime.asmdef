@@ -2,7 +2,9 @@
     "name": "WoiUtils.AudioSystem.Runtime",
     "rootNamespace": "",
     "references": [
-        "GUID:86a80fba6882dad4b8847b7bc03b1a62"
+        "GUID:86a80fba6882dad4b8847b7bc03b1a62",
+        "GUID:3208c2213195a7c49ab7b32769623f29",
+        "GUID:e482584a5795fa4409047161cc21985d"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

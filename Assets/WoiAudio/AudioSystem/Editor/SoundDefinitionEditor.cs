@@ -246,6 +246,13 @@ void BuildClipsList()
             if (s.maxDistance < s.minDistance)
                 EditorGUILayout.HelpBox("Max Distance is smaller than Min Distance.", MessageType.Warning);
 
+            if (s.spatialBlend > 0.99f && s.maxDistance <= 10f)
+            {
+                EditorGUILayout.HelpBox(
+                    "Spatial Blend is full 3D and Max Distance is very small — the listener must be within a few world units or this sound is effectively silent.",
+                    MessageType.Info);
+            }
+
             if (s.loop && s.scheduleMode == ScheduleMode.Queue)
                 EditorGUILayout.HelpBox("Loop + Queue: queued loop sounds will never finish unless stopped. Ensure this is intended.", MessageType.Info);
 
@@ -380,8 +387,22 @@ void BuildClipsList()
                 var im = (InstanceMode)instanceMode.enumValueIndex;
                 if (im == InstanceMode.SingleGlobal)
                     EditorGUILayout.PropertyField(reTriggerMode);
+                else if (im == InstanceMode.SinglePerCategory)
+                    EditorGUILayout.HelpBox(
+                        "When this plays, any other active voice with the same Audio Category (or same Custom Category Key) is stopped — including voices from other Sound Definition assets.",
+                        MessageType.Info);
                 else
+                {
                     EditorGUILayout.HelpBox("Re-trigger Mode is only used for SingleGlobal sounds.", MessageType.None);
+                    if (loop.boolValue)
+                    {
+                        EditorGUILayout.HelpBox(
+                            "Loop + Multiple: each Play() starts another infinite loop until you stop that voice or the pool recycles it — " +
+                            "stacked layers often sound like one smear, not separate hits. For overlapping one-shots (UI, impacts), turn Loop off. " +
+                            "For continuous ambience, prefer one loop you start/stop from code instead of spamming Play().",
+                            MessageType.Info);
+                    }
+                }
 
                 EditorGUILayout.PropertyField(protectedFromSteal);
             }
@@ -527,7 +548,7 @@ void BuildClipsList()
             {
                 EditorGUILayout.LabelField("Category & Routing", EditorStyles.boldLabel);
 
-                // ✅ Custom açıkken enum'u kilitle
+                // Lock enum when custom category is enabled
                 using (new EditorGUI.DisabledScope(useCustomCategory.boolValue))
                 {
                     EditorGUILayout.PropertyField(category, new GUIContent("Category"));
@@ -545,7 +566,7 @@ void BuildClipsList()
                         new GUIContent("Custom Category Key")
                     );
 
-                    // küçük temizlik
+                    // minor cleanup
                     customCategoryKey.stringValue =
                         customCategoryKey.stringValue?.Trim();
                 }

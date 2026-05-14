@@ -1,3 +1,10 @@
 fileFormatVersion: 2
 guid: e902940668b34ab1a9cac6593a4d0739
 timeCreated: 1746106661
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Runtime/PlayContext.cs
+  uploadId: 886922

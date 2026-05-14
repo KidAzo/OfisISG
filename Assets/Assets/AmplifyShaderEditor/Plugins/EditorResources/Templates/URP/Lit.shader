@@ -33,6 +33,8 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
         [HideInInspector][NoScaleOffset] unity_ShadowMasks("unity_ShadowMasks", 2DArray) = "" {}
 
 		[HideInInspector][ToggleUI] _AddPrecomputedVelocity("Add Precomputed Velocity", Float) = 1
+
+		[HideInInspector] _XRMotionVectorsPass("_XRMotionVectorsPass", Float) = 1
 	}
 
 	SubShader
@@ -275,7 +277,9 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 				false:RemoveDefine:XRMotionVectors:pragma shader_feature_local_vertex _ADD_PRECOMPUTED_VELOCITY
 			Option:  XR Motion Vectors:false,true:false
 				true:IncludePass:XRMotionVectors
+				true:SetShaderProperty:_XRMotionVectorsPass,[HideInInspector] _XRMotionVectorsPass("_XRMotionVectorsPass", Float) = 1
 				false:ExcludePass:XRMotionVectors
+				false:SetShaderProperty:_XRMotionVectorsPass,//[HideInInspector] _XRMotionVectorsPass("_XRMotionVectorsPass", Float) = 1
 			Option:GPU Instancing:false,true:true
 				true:SetDefine:Forward:pragma multi_compile_instancing
 				true:SetDefine:GBuffer:pragma multi_compile_instancing
@@ -307,10 +311,6 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 				false:RemoveDefine:MotionVectors:pragma multi_compile _ LOD_FADE_CROSSFADE
 				false:RemoveDefine:XRMotionVectors:pragma multi_compile _ LOD_FADE_CROSSFADE
 			Option:Built-in Fog:false,true:true
-				true:SetDefine:Forward:pragma multi_compile_fog
-				true:SetDefine:GBuffer:pragma multi_compile_fog
-				false:RemoveDefine:Forward:pragma multi_compile_fog
-				false:RemoveDefine:GBuffer:pragma multi_compile_fog
 				true:SetDefine:ASE_FOG 1
 				false:RemoveDefine:ASE_FOG 1
 			Option,_FinalColorxAlpha:Final Color x Alpha:true,false:false
@@ -902,16 +902,20 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 			#pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
 			#pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
 			#pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
+			#pragma multi_compile_fragment _ _REFLECTION_PROBE_ATLAS
 			#pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
+			#pragma multi_compile_fragment _ _SCREEN_SPACE_IRRADIANCE
 			#pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
 			#pragma multi_compile _ _LIGHT_LAYERS
 			#pragma multi_compile_fragment _ _LIGHT_COOKIES
-			#pragma multi_compile _ _FORWARD_PLUS
+			#pragma multi_compile _ _CLUSTER_LIGHT_LOOP
 
 			#pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
 			#pragma multi_compile _ SHADOWS_SHADOWMASK
 			#pragma multi_compile _ DIRLIGHTMAP_COMBINED
 			#pragma multi_compile _ LIGHTMAP_ON
+			#pragma multi_compile_fragment _ LIGHTMAP_BICUBIC_SAMPLING
+			#pragma multi_compile_fragment _ REFLECTION_PROBE_ROTATION
 			#pragma multi_compile _ DYNAMICLIGHTMAP_ON
 			#pragma multi_compile _ USE_LEGACY_LIGHTMAPS
 
@@ -930,6 +934,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 
 			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
 			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
+			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Fog.hlsl"
 			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ProbeVolumeVariants.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Texture.hlsl"
@@ -1200,7 +1205,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 						,out float outputDepth : ASE_SV_DEPTH
 						#endif
 						#ifdef _WRITE_RENDERING_LAYERS
-						, out float4 outRenderingLayers : SV_Target1
+						, out uint outRenderingLayers : SV_Target1
 						#endif
 						/*ase_frag_input*/ ) : SV_Target
 			{
@@ -1312,7 +1317,9 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 					float3 SH = input.lightmapUVOrVertexSH.xyz;
 				#endif
 
-				#if defined(DYNAMICLIGHTMAP_ON)
+				#if defined(_SCREEN_SPACE_IRRADIANCE)
+					inputData.bakedGI = SAMPLE_GI(_ScreenSpaceIrradiance, input.positionCS.xy);
+				#elif defined(DYNAMICLIGHTMAP_ON)
 					inputData.bakedGI = SAMPLE_GI(input.lightmapUVOrVertexSH.xy, input.dynamicLightmapUV.xy, SH, inputData.normalWS);
 					inputData.shadowMask = SAMPLE_SHADOWMASK(input.lightmapUVOrVertexSH.xy);
 				#elif !defined(LIGHTMAP_ON) && (defined(PROBE_VOLUMES_L1) || defined(PROBE_VOLUMES_L2))
@@ -1387,10 +1394,10 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 					#if defined(_ADDITIONAL_LIGHTS)
 						uint meshRenderingLayers = GetMeshRenderingLayer();
 						uint pixelLightCount = GetAdditionalLightsCount();
-						#if USE_FORWARD_PLUS
+						#if USE_CLUSTER_LIGHT_LOOP
 							[loop] for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++)
 							{
-								FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
+								CLUSTER_LIGHT_LOOP_SUBTRACTIVE_LIGHT_CHECK
 
 								Light light = GetAdditionalLight(lightIndex, inputData.positionWS, inputData.shadowMask);
 								#ifdef _LIGHT_LAYERS
@@ -1436,10 +1443,10 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 					#if defined(_ADDITIONAL_LIGHTS)
 						uint meshRenderingLayers = GetMeshRenderingLayer();
 						uint pixelLightCount = GetAdditionalLightsCount();
-						#if USE_FORWARD_PLUS
+						#if USE_CLUSTER_LIGHT_LOOP
 							[loop] for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++)
 							{
-								FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
+								CLUSTER_LIGHT_LOOP_SUBTRACTIVE_LIGHT_CHECK
 
 								Light light = GetAdditionalLight(lightIndex, inputData.positionWS, inputData.shadowMask);
 								#ifdef _LIGHT_LAYERS
@@ -1489,8 +1496,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 				#endif
 
 				#ifdef _WRITE_RENDERING_LAYERS
-					uint renderingLayers = GetMeshRenderingLayer();
-					outRenderingLayers = float4( EncodeMeshRenderingLayer( renderingLayers ), 0, 0, 0 );
+					outRenderingLayers = EncodeMeshRenderingLayer();
 				#endif
 
 				#if defined( ASE_OPAQUE_KEEP_ALPHA )
@@ -2835,7 +2841,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 						,out float outputDepth : ASE_SV_DEPTH
 						#endif
 						#ifdef _WRITE_RENDERING_LAYERS
-						, out float4 outRenderingLayers : SV_Target1
+						, out uint outRenderingLayers : SV_Target1
 						#endif
 						/*ase_frag_input*/ )
 			{
@@ -2911,8 +2917,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 				#endif
 
 				#ifdef _WRITE_RENDERING_LAYERS
-					uint renderingLayers = GetMeshRenderingLayer();
-					outRenderingLayers = float4(EncodeMeshRenderingLayer(renderingLayers), 0, 0, 0);
+					outRenderingLayers = EncodeMeshRenderingLayer();
 				#endif
 			}
 			ENDHLSL
@@ -2942,15 +2947,15 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 			#pragma exclude_renderers gles3 glcore
 
 			#pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-			#if ( UNITY_VERSION >= 60000058 )
 			#pragma multi_compile _ EVALUATE_SH_MIXED EVALUATE_SH_VERTEX
-			#endif
 			#pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
 			#pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
 			#pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
+			#pragma multi_compile_fragment _ _SCREEN_SPACE_IRRADIANCE
 			#pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
 			#pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
 			#pragma multi_compile_fragment _ _RENDER_PASS_ENABLED
+			#pragma multi_compile _ _CLUSTER_LIGHT_LOOP
 
 			#pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
 			#pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
@@ -2958,6 +2963,8 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 			#pragma multi_compile _ DIRLIGHTMAP_COMBINED
 			#pragma multi_compile _ USE_LEGACY_LIGHTMAPS
 			#pragma multi_compile _ LIGHTMAP_ON
+			#pragma multi_compile_fragment _ LIGHTMAP_BICUBIC_SAMPLING
+			#pragma multi_compile_fragment _ REFLECTION_PROBE_ROTATION
 			#pragma multi_compile _ DYNAMICLIGHTMAP_ON
 
 			#pragma vertex vert
@@ -2974,6 +2981,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 			#define SHADERPASS SHADERPASS_GBUFFER
 
 			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
+			#include_with_pragmas "Packages/com.unity.render-pipelines.core/ShaderLibrary/FoveatedRenderingKeywords.hlsl"
 			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
 			#include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ProbeVolumeVariants.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
@@ -2982,7 +2990,6 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Input.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/TextureStack.hlsl"
-            #include_with_pragmas "Packages/com.unity.render-pipelines.core/ShaderLibrary/FoveatedRenderingKeywords.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/FoveatedRendering.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/DebugMipmapStreamingMacros.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
@@ -3078,7 +3085,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 
 			/*ase_globals*/
 
-			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/UnityGBuffer.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/GBufferOutput.hlsl"
 
 			/*ase_funcs*/
 
@@ -3242,7 +3249,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 			}
 			#endif
 
-			FragmentOutput frag ( PackedVaryings input
+			GBufferFragOutput frag ( PackedVaryings input
 								#if defined( ASE_DEPTH_WRITE_ON )
 								,out float outputDepth : ASE_SV_DEPTH
 								#endif
@@ -3346,7 +3353,9 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 					float3 SH = input.lightmapUVOrVertexSH.xyz;
 				#endif
 
-				#if defined(DYNAMICLIGHTMAP_ON)
+				#if defined(_SCREEN_SPACE_IRRADIANCE)
+					inputData.bakedGI = SAMPLE_GI(_ScreenSpaceIrradiance, input.positionCS.xy);
+				#elif defined(DYNAMICLIGHTMAP_ON)
 					inputData.bakedGI = SAMPLE_GI(input.lightmapUVOrVertexSH.xy, input.dynamicLightmapUV.xy, SH, inputData.normalWS);
 					inputData.shadowMask = SAMPLE_SHADOWMASK(input.lightmapUVOrVertexSH.xy);
 				#elif !defined(LIGHTMAP_ON) && (defined(PROBE_VOLUMES_L1) || defined(PROBE_VOLUMES_L2))
@@ -3396,7 +3405,11 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 				Light mainLight = GetMainLight(inputData.shadowCoord, inputData.positionWS, inputData.shadowMask);
 				half4 color;
 				MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, inputData.shadowMask);
-				color.rgb = GlobalIllumination(brdfData, inputData.bakedGI, Occlusion, inputData.positionWS, inputData.normalWS, inputData.viewDirectionWS);
+
+				color.rgb = GlobalIllumination(brdfData, (BRDFData)0, 0,
+                              inputData.bakedGI, Occlusion, inputData.positionWS,
+                              inputData.normalWS, inputData.viewDirectionWS, inputData.normalizedScreenSpaceUV);
+
 				color.a = Alpha;
 
 				#ifdef ASE_FINAL_COLOR_ALPHA_MULTIPLY
@@ -3407,7 +3420,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 					outputDepth = DeviceDepth;
 				#endif
 
-				return BRDFDataToGbuffer(brdfData, inputData, Smoothness, Emission + color.rgb, Occlusion);
+				return PackGBuffersBRDFData(brdfData, inputData, Smoothness, Emission + color.rgb, Occlusion);
 			}
 
 			ENDHLSL
@@ -4084,7 +4097,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 
 				VertexPositionInputs vertexInput = GetVertexPositionInputs( input.positionOS.xyz );
 
-				#if defined(APLICATION_SPACE_WARP_MOTION)
+				#if defined(APPLICATION_SPACE_WARP_MOTION)
 					output.positionCSNoJitter = mul(_NonJitteredViewProjMatrix, mul(UNITY_MATRIX_M, input.positionOS));
 					output.positionCS = output.positionCSNoJitter;
 				#else
@@ -4154,7 +4167,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 					outputDepth = DeviceDepth;
 				#endif
 
-				#if defined(APLICATION_SPACE_WARP_MOTION)
+				#if defined(APPLICATION_SPACE_WARP_MOTION)
 					return float4( CalcAswNdcMotionVectorFromCsPositions( input.positionCSNoJitter, input.previousPositionCSNoJitter ), 1 );
 				#else
 					return float4( CalcNdcMotionVectorFromCsPositions( input.positionCSNoJitter, input.previousPositionCSNoJitter ), 0, 0 );
@@ -4188,7 +4201,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#define APLICATION_SPACE_WARP_MOTION 1
+			#define APPLICATION_SPACE_WARP_MOTION 1
 
 			#if defined( _SPECULAR_SETUP ) && defined( ASE_LIGHTING_SIMPLE )
 				#if defined( _SPECULARHIGHLIGHTS_OFF )
@@ -4314,7 +4327,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 
 				VertexPositionInputs vertexInput = GetVertexPositionInputs( input.positionOS.xyz );
 
-				#if defined(APLICATION_SPACE_WARP_MOTION)
+				#if defined(APPLICATION_SPACE_WARP_MOTION)
 					output.positionCSNoJitter = mul(_NonJitteredViewProjMatrix, mul(UNITY_MATRIX_M, input.positionOS));;
 					output.positionCS = output.positionCSNoJitter;
 				#else
@@ -4384,7 +4397,7 @@ Shader /*ase_name*/ "Hidden/Universal/Lit" /*end*/
 					outputDepth = DeviceDepth;
 				#endif
 
-				#if defined(APLICATION_SPACE_WARP_MOTION)
+				#if defined(APPLICATION_SPACE_WARP_MOTION)
 					return float4( CalcAswNdcMotionVectorFromCsPositions( input.positionCSNoJitter, input.previousPositionCSNoJitter ), 1 );
 				#else
 					return float4( CalcNdcMotionVectorFromCsPositions( input.positionCSNoJitter, input.previousPositionCSNoJitter ), 0, 0 );

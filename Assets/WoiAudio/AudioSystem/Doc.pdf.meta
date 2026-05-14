@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 223a15d0be7e63d458ea5e77462c4c6a
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Doc.pdf
+  uploadId: 886922

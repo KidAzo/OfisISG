@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 7773ea8edb5e56e4680b97253ca1c05e
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Utils/Singleton/RegularSingleton.cs
+  uploadId: 886922

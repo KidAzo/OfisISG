@@ -27,7 +27,11 @@ namespace WoiUtils.AudioSystem
             public int clipIndex;
         }
 
-        public event System.Action<int> OnClipChanged; // index
+        /// <summary>
+        /// Invoked when the active queue item starts playing (autoplay or Next/Prev).
+        /// Args: owning sound, clip slot index on that sound (<see cref="Item.clipIndex"/>), not the playlist list position.
+        /// </summary>
+        public event System.Action<SoundDefinition, int> OnClipChanged;
 
         class ListQueue
         {
@@ -206,6 +210,25 @@ namespace WoiUtils.AudioSystem
             activeRunners.Remove(key);
         }
 
+        void CleanupKey(int key)
+        {
+            // remove queue itself
+            queues.Remove(key);
+
+            // remove runner references (safety)
+            runners.Remove(key);
+            activeRunners.Remove(key);
+
+            // clear activeKey mapping if it points to this key
+            var toRemove = new List<SoundDefinition>();
+            foreach (var kv in activeKeyBySound)
+                if (kv.Value == key)
+                    toRemove.Add(kv.Key);
+
+            foreach (var s in toRemove)
+                activeKeyBySound.Remove(s);
+        }
+
         // ---------- Public API ----------
 
         /// <summary>
@@ -220,70 +243,87 @@ namespace WoiUtils.AudioSystem
         /// SingleGlobal:
         /// - Uses baseKey always; does not create multiple sessions
         /// </summary>
- public void Enqueue(AudioSystem sys, SoundDefinition s, in PlayContext ctx)
-{
-    if (sys == null || s == null) return;
-    if (s.clips == null || s.clips.Count == 0) return;
-
-    int baseKey = BaseKeyFor(s);
-    int currentFrame = Time.frameCount;
-
-    int finalKey;
-
-    bool isSingleGlobal = s.instanceMode == InstanceMode.SingleGlobal;
-
-    if (isSingleGlobal)
-    {
-        finalKey = baseKey;
-    }
-    else
-    {
-        // MULTIPLE
-        if (ctx.hasClipIndex)
+        public void Enqueue(AudioSystem sys, SoundDefinition s, in PlayContext ctx)
         {
-            // ✅ EnqueueAllClips batching (same frame)
-            // Eğer aynı frame’de zaten bir batch başladıysa:
-            // - clipIndex 0 olsa bile YENİ queue açma, mevcut batch key'i kullan.
-            if (pendingFinalKeyByBaseKey.TryGetValue(baseKey, out int cachedKey) &&
-                lastEnqueueFrameByBaseKey.TryGetValue(baseKey, out int lastFrame) &&
-                lastFrame == currentFrame)
+            if (sys == null || s == null) return;
+            if (s.clips == null || s.clips.Count == 0) return;
+
+            int baseKey = BaseKeyFor(s);
+            int currentFrame = Time.frameCount;
+
+            int finalKey;
+
+            bool isSingleGlobal = s.instanceMode == InstanceMode.SingleGlobal;
+
+            if (isSingleGlobal)
             {
-                finalKey = cachedKey; // aynı frame = aynı queue
+                finalKey = baseKey;
             }
             else
             {
-                // Bu frame’de ilk kez görüyoruz => yeni queue session
-                finalKey = MakeUniqueKey(baseKey);
-                pendingFinalKeyByBaseKey[baseKey] = finalKey;
-                lastEnqueueFrameByBaseKey[baseKey] = currentFrame;
+                // MULTIPLE
+                if (ctx.hasClipIndex)
+                {
+                    // EnqueueAllClips batching (same frame)
+                    // If a batch already started in the same frame:
+                    // - even if clipIndex is 0, do NOT open a NEW queue, use the existing batch key.
+                    if (pendingFinalKeyByBaseKey.TryGetValue(baseKey, out int cachedKey) &&
+                        lastEnqueueFrameByBaseKey.TryGetValue(baseKey, out int lastFrame) &&
+                        lastFrame == currentFrame)
+                    {
+                        finalKey = cachedKey; // same frame = same queue
+                    }
+                    else
+                    {
+                        // First time seeing this in this frame => new queue session
+                        finalKey = MakeUniqueKey(baseKey);
+                        pendingFinalKeyByBaseKey[baseKey] = finalKey;
+                        lastEnqueueFrameByBaseKey[baseKey] = currentFrame;
+                    }
+                }
+                else
+                {
+                    // Normal Enqueue => always new session
+                    finalKey = MakeUniqueKey(baseKey);
+                }
+            }
+
+            activeKeyBySound[s] = finalKey;
+
+            var q = GetOrCreate(finalKey);
+
+            // IMPORTANT: keep -1 until started (autoplay will start at 0)
+            // (do not set q.index here)
+
+            int ci = ctx.hasClipIndex ? ctx.clipIndex : 0; 
+            if (ci >= 0 && ci < s.clips.Count)
+                q.items.Add(new Item { sound = s, ctx = ctx, clipIndex = ci });
+        }
+
+        /// <summary>
+        /// Stops runners and removes stale sessions for <paramref name="s"/> so overlapping QueueAll batches cannot emit duplicate callbacks (Multiple instance mode).
+        /// </summary>
+        public void AbortOtherSessionsForSound(AudioSystem sys, SoundDefinition s, int keepKey)
+        {
+            if (sys == null || s == null || keepKey == 0)
+                return;
+
+            var keys = new List<int>(queues.Keys);
+            foreach (int key in keys)
+            {
+                if (key == keepKey)
+                    continue;
+
+                if (!queues.TryGetValue(key, out ListQueue q) || q == null || q.Count == 0)
+                    continue;
+
+                if (q.items[0].sound != s)
+                    continue;
+
+                StopRunner(sys, key);
+                CleanupKey(key);
             }
         }
-        else
-        {
-            // Normal Enqueue => always new session
-            finalKey = MakeUniqueKey(baseKey);
-        }
-    }
-
-    activeKeyBySound[s] = finalKey;
-
-    var q = GetOrCreate(finalKey);
-
-    // IMPORTANT: keep -1 until started (autoplay will start at 0)
-    // (do not set q.index here)
-
-    if (ctx.hasClipIndex)
-    {
-        int ci = ctx.clipIndex;
-        if (ci >= 0 && ci < s.clips.Count)
-            q.items.Add(new Item { sound = s, ctx = ctx, clipIndex = ci });
-    }
-    else
-    {
-        for (int i = 0; i < s.clips.Count; i++)
-            q.items.Add(new Item { sound = s, ctx = ctx, clipIndex = i });
-    }
-}
 
         /// <summary>
         /// Play button behavior.
@@ -291,21 +331,35 @@ namespace WoiUtils.AudioSystem
         /// Multiple mode: ALWAYS starts a NEW session by calling sys.EnqueueAllClips().
         /// SingleGlobal: resumes existing session (does not create new queue).
         /// </summary>
-public void PlayOrResume(AudioSystem sys, SoundDefinition s)
-{
-    if (sys == null || s == null) return;
+        public void PlayOrResume(AudioSystem sys, SoundDefinition s)
+        {
+            if (sys == null || s == null) return;
+            if (s.clips == null || s.clips.Count == 0) return;
 
-    int key = GetActiveKeyFor(s);
-    if (key == 0) return;
+        if (s.instanceMode == InstanceMode.SingleGlobal)
+        {
+            sys.EnqueueAllClips(s, PlayContext.Default);
+            
+            int key = GetActiveKeyFor(s);
+            if (key == 0) return;
 
-    if (!queues.TryGetValue(key, out var q) || q.Count == 0)
-        return;
+            if (!queues.TryGetValue(key, out var q) || q.Count == 0) return;
+            StartRunnerIfNeeded(sys, key);
+            return;
+        }
 
-    // baştan başlatmak istiyorsan:
-    q.index = -1;
+            sys.EnqueueAllClips(s, PlayContext.Default);
 
-    StartRunnerIfNeeded(sys, key);
-}
+            int newKey = GetActiveKeyFor(s);
+            if (newKey == 0) return;
+
+            AbortOtherSessionsForSound(sys, s, newKey);
+
+            if (queues.TryGetValue(newKey, out var newQ))
+                newQ.index = -1;
+
+            StartRunnerIfNeeded(sys, newKey);
+        }
 
 
         /// <summary>
@@ -330,7 +384,7 @@ public void PlayOrResume(AudioSystem sys, SoundDefinition s)
                 return false;
 
             PlayItemBypassQueue(sys, item);
-            OnClipChanged?.Invoke(q.index);
+            OnClipChanged?.Invoke(item.sound, item.clipIndex);
             return true;
         }
 
@@ -355,7 +409,7 @@ public void PlayOrResume(AudioSystem sys, SoundDefinition s)
                 return false;
 
             PlayItemBypassQueue(sys, item);
-            OnClipChanged?.Invoke(q.index);
+            OnClipChanged?.Invoke(item.sound, item.clipIndex);
             return true;
         }
 
@@ -373,8 +427,15 @@ public void PlayOrResume(AudioSystem sys, SoundDefinition s)
             int removeIndex = (q.index >= 0 && q.index < q.Count) ? q.index : 0;
             q.items.RemoveAt(removeIndex);
 
-            if (q.Count == 0) q.index = -1;
-            else if (q.index >= q.Count) q.index = q.Count - 1;
+            if (q.Count == 0)
+            {
+                q.index = -1;
+                CleanupKey(key);
+            }
+            else if (q.index >= q.Count)
+            {
+                q.index = q.Count - 1;
+            }
 
             return true;
         }
@@ -499,107 +560,121 @@ public void PlayOrResume(AudioSystem sys, SoundDefinition s)
             sys.PlayImmediateFromQueue(item.sound, ctx);
         }
 
-IEnumerator Run(AudioSystem sys, int key)
-{
-    if (!queues.TryGetValue(key, out var q))
-        yield break;
-
-    // Autoplay ilk item'dan başlasın
-    if (q.index < 0) q.index = 0;
-
-    while (!AudioSystem.IsShuttingDown && sys != null)
-    {
-        if (!queues.TryGetValue(key, out q) || q.Count == 0)
-            break;
-
-        // index out of range guard
-        if (q.index < 0) q.index = 0;
-        if (q.index >= q.Count)
+        IEnumerator Run(AudioSystem sys, int key)
         {
-            if (q.autoplayWrap) q.index = 0;
-            else break;
+            if (!queues.TryGetValue(key, out var q))
+                yield break;
+
+            // Autoplay should start from the first item
+            if (q.index < 0) q.index = 0;
+
+            while (!AudioSystem.IsShuttingDown && sys != null)
+            {
+                if (!queues.TryGetValue(key, out q) || q.Count == 0)
+                    break;
+
+                // index out of range guard
+                if (q.index < 0) q.index = 0;
+                if (q.index >= q.Count)
+                {
+                    if (q.autoplayWrap) q.index = 0;
+                    else break;
+                }
+
+                var item = q.items[q.index];
+                if (item.sound == null)
+                {
+                    // bozuk item -> next
+                    if (!q.MoveNext(q.autoplayWrap)) break;
+                    continue;
+                }
+
+                // resolve clip
+                if (!sys.TryResolveClipEntry(item.sound, item.ctx, out var entry) || entry.clip == null)
+                {
+                    if (!q.MoveNext(q.autoplayWrap)) break;
+                    continue;
+                }
+
+                // delay
+                float totalDelay = sys.ResolveSoundDelay(item.sound) + Mathf.Max(0f, entry.delay);
+                if (totalDelay > 0f)
+                    yield return new WaitForSecondsRealtime(totalDelay);
+
+                // play
+                var voice = sys.PlayImmediateResolved(item.sound, item.ctx, entry.clip);
+
+                OnClipChanged?.Invoke(item.sound, item.clipIndex);
+
+                if (voice == null)
+                {
+                    // play failed -> wait one frame, then next
+                    yield return null;
+                    if (!q.MoveNext(q.autoplayWrap)) break;
+                    continue;
+                }
+
+                // FIX: AudioSource may have isPlaying=false on the first frame.
+                // Start grace: wait up to 0.15s for it to start.
+                float startGrace = 0.15f;
+                float sg = 0f;
+                while (!AudioSystem.IsShuttingDown && sg < startGrace)
+                {
+                    sg += Time.unscaledDeltaTime;
+                    if (voice != null && voice.IsPlaying())
+                        break;
+                    yield return null;
+                }
+
+                // If looping: the loop won't end, so don't continue autoplay (your preference)
+                // If you want autoplay to continue even on loop, remove this block.
+                if (item.sound.loop)
+                {
+                    // loop stays on "single item", don't move to next
+                    // You can stop the runner here if you want:
+                    break;
+                }
+
+                // Main wait: protect with timeout even if isPlaying returns false
+                float timeout = entry.clip.length + 0.25f;
+                float t = 0f;
+
+                while (!AudioSystem.IsShuttingDown && t < timeout)
+                {
+                    t += Time.unscaledDeltaTime;
+
+                    // If started, wait until finished
+                    if (voice == null) break;
+
+                    // Exit if isPlaying becomes false after starting
+                    if (t > 0.05f && !voice.IsPlaying())
+                        break;
+
+                    yield return null;
+                }
+
+                // move to next item
+                if (!q.MoveNext(q.autoplayWrap))
+                    break;
+            }
+
+            // At the end of Run coroutine, before CleanupKey:
+            CleanupKey(key);
         }
 
-        var item = q.items[q.index];
-        if (item.sound == null)
+        /// <summary>
+        /// After <see cref="Enqueue"/> appends item(s), starts the autoplay runner for that queue if it is not already running.
+        /// Use with <see cref="SoundDefinition.instanceMode"/> <see cref="InstanceMode.SingleGlobal"/> and shared
+        /// <see cref="QueueScope.PerCategory"/> so different sounds append to one sequential list.
+        /// </summary>
+        public void NotifyEnqueueCompleted(AudioSystem sys, SoundDefinition s)
         {
-            // bozuk item -> next
-            if (!q.MoveNext(q.autoplayWrap)) break;
-            continue;
+            if (sys == null || s == null)
+                return;
+
+            int key = GetActiveKeyFor(s);
+            if (key != 0)
+                StartRunnerIfNeeded(sys, key);
         }
-
-        // resolve clip
-        if (!sys.TryResolveClipEntry(item.sound, item.ctx, out var entry) || entry.clip == null)
-        {
-            if (!q.MoveNext(q.autoplayWrap)) break;
-            continue;
-        }
-
-        // delay
-        float totalDelay = sys.ResolveSoundDelay(item.sound) + Mathf.Max(0f, entry.delay);
-        if (totalDelay > 0f)
-            yield return new WaitForSecondsRealtime(totalDelay);
-
-        // play
-        var voice = sys.PlayImmediateResolved(item.sound, item.ctx, entry.clip);
-
-        OnClipChanged?.Invoke(q.index);
-
-        if (voice == null)
-        {
-            // play başarısız -> bir frame bekle, sonra next
-            yield return null;
-            if (!q.MoveNext(q.autoplayWrap)) break;
-            continue;
-        }
-
-        // ✅ FIX: AudioSource ilk frame'de isPlaying=false olabiliyor.
-        // Start grace: 0.15s içinde başlamasını bekle.
-        float startGrace = 0.15f;
-        float sg = 0f;
-        while (!AudioSystem.IsShuttingDown && sg < startGrace)
-        {
-            sg += Time.unscaledDeltaTime;
-            if (voice != null && voice.IsPlaying())
-                break;
-            yield return null;
-        }
-
-        // Loop ise: loop bitmeyecek, autoplay akmasın (senin tercihin)
-        // Eğer loop'ta da autoplay aksın istiyorsan bu bloğu kaldır.
-        if (item.sound.loop)
-        {
-            // loop'ta "tek item" kalsın, next'e geçme
-            // İstersen burada runner'ı durdur:
-            break;
-        }
-
-        // ✅ Asıl bekleme: isPlaying false dönerse bile timeout ile koru
-        float timeout = entry.clip.length + 0.25f;
-        float t = 0f;
-
-        while (!AudioSystem.IsShuttingDown && t < timeout)
-        {
-            t += Time.unscaledDeltaTime;
-
-            // Eğer başladıysa, bitene kadar bekle
-            if (voice == null) break;
-
-            // başladıktan sonra isPlaying false olduysa çık
-            if (t > 0.05f && !voice.IsPlaying())
-                break;
-
-            yield return null;
-        }
-
-        // bir sonraki item
-        if (!q.MoveNext(q.autoplayWrap))
-            break;
-    }
-
-    activeRunners.Remove(key);
-    runners.Remove(key);
-}
-
     }
 }

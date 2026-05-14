@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 009f8ff6b8351204ab07ccc4dbffff0d
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Utils/ObjectPooling/AutoReturnToPool.cs
+  uploadId: 886922

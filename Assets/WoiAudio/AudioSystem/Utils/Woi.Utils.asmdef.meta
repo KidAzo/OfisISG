@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 86a80fba6882dad4b8847b7bc03b1a62
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Utils/Woi.Utils.asmdef
+  uploadId: 886922

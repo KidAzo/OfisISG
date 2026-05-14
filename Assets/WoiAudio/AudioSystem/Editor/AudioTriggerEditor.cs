@@ -9,6 +9,8 @@ namespace WoiUtils.AudioSystem.Editor
     {
         SerializedProperty sound;
 
+        SerializedProperty localizedSound;
+
         SerializedProperty fireMode;
         SerializedProperty triggerCooldown;
         SerializedProperty blockSameFrame;
@@ -20,8 +22,6 @@ namespace WoiUtils.AudioSystem.Editor
         SerializedProperty volumeMul;
         SerializedProperty pitchMul;
 
-        SerializedProperty audioSystem;
-
         // Optional clip override (only if you added these fields)
         SerializedProperty overrideClipIndex;
         SerializedProperty clipIndex;
@@ -32,6 +32,7 @@ namespace WoiUtils.AudioSystem.Editor
         void OnEnable()
         {
             sound = serializedObject.FindProperty("sound");
+            localizedSound = serializedObject.FindProperty("localizedSound");
 
             fireMode = serializedObject.FindProperty("fireMode");
             triggerCooldown = serializedObject.FindProperty("triggerCooldown");
@@ -43,8 +44,6 @@ namespace WoiUtils.AudioSystem.Editor
 
             volumeMul = serializedObject.FindProperty("volumeMul");
             pitchMul = serializedObject.FindProperty("pitchMul");
-
-            audioSystem = serializedObject.FindProperty("audioSystem");
 
             // These two must exist if you implemented clip override in AudioTrigger
             overrideClipIndex = serializedObject.FindProperty("overrideClipIndex");
@@ -111,13 +110,18 @@ namespace WoiUtils.AudioSystem.Editor
                     {
                         t.Play();
                     }
+                    GUI.backgroundColor = new Color(0.85f, 0.45f, 0.35f);
+                    if (GUILayout.Button("Stop instances", GUILayout.Height(24)))
+                    {
+                        t.StopInstances();
+                    }
                     GUI.backgroundColor = originalColor;
                     GUI.enabled = true;
                 }
 
                 if (!Application.isPlaying)
                 {
-                    EditorGUILayout.HelpBox("Enter Play Mode to test the sound.", MessageType.Info);
+                    EditorGUILayout.HelpBox("Enter Play Mode to test Play / Stop instances.", MessageType.Info);
                 }
             }
         }
@@ -127,10 +131,24 @@ namespace WoiUtils.AudioSystem.Editor
             using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
             {
                 EditorGUILayout.LabelField("Target", EditorStyles.boldLabel);
-                EditorGUILayout.PropertyField(sound);
-                if (sound.objectReferenceValue == null)
+                EditorGUILayout.PropertyField(localizedSound);
+                EditorGUILayout.PropertyField(sound, new GUIContent("Sound Definition"));
+
+                bool hasLocalized = localizedSound.objectReferenceValue != null;
+                bool hasSingle = sound.objectReferenceValue != null;
+                if (!hasLocalized && !hasSingle)
+                    EditorGUILayout.HelpBox("Assign Localized Sound (EN+TR) or a single Sound Definition.", MessageType.Warning);
+                else if (hasLocalized)
+                    EditorGUILayout.HelpBox("Localized Sound picks EN vs TR from LocalizationService (same as UI language).", MessageType.None);
+
+                var def = hasLocalized ? null : sound.objectReferenceValue as SoundDefinition;
+                if (def != null && def.instanceMode != InstanceMode.Multiple)
                 {
-                    EditorGUILayout.HelpBox("Assign a SoundDefinition to play.", MessageType.Warning);
+                    EditorGUILayout.HelpBox(
+                        "Overlapping playback needs Instance Mode = Multiple on this SoundDefinition. " +
+                        "Single Global keeps only one voice (each new play stops the previous). " +
+                        "Single Per Category stops other sounds in the same category before each play.",
+                        MessageType.Warning);
                 }
             }
         }
@@ -171,7 +189,18 @@ namespace WoiUtils.AudioSystem.Editor
 
                 if (mode == AudioTrigger.FireMode.Manual)
                 {
-                    EditorGUILayout.HelpBox("Manual mode: call AudioTrigger.Play() from a UI Button or UnityEvent.", MessageType.None);
+                    EditorGUILayout.HelpBox(
+                        "Manual mode: call AudioTrigger.Play() from a UI Button or UnityEvent. " +
+                        "Wire AudioTrigger.StopInstances() to stop all voices for this trigger's SoundDefinition(s) (e.g. SOAP / fire extinguished).",
+                        MessageType.None);
+                }
+
+                if (mode == AudioTrigger.FireMode.OnEnable)
+                {
+                    EditorGUILayout.HelpBox(
+                        "On Enable fires when this object loads — not only when Login is clicked. " +
+                        "If you only want sound from the Login UnityEvent, set Fire Mode to Manual.",
+                        MessageType.Info);
                 }
             }
         }
@@ -230,15 +259,10 @@ namespace WoiUtils.AudioSystem.Editor
             using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
             {
                 EditorGUILayout.LabelField("Audio System", EditorStyles.boldLabel);
-                EditorGUILayout.PropertyField(audioSystem);
-
-                // In edit mode we can't reliably FindFirstObjectByType in all cases, but we can still hint.
-                if (audioSystem.objectReferenceValue == null)
-                {
-                    EditorGUILayout.HelpBox(
-                        "AudioSystem is not assigned. At runtime, this trigger will try to find an AudioSystem in the scene.",
-                        MessageType.Info);
-                }
+                EditorGUILayout.HelpBox(
+                    "Runtime: AudioSystem is resolved only via ServiceLocator (AudioSystem registers in Start). " +
+                    "Ensure bootstrap registers AudioSystem before triggers fire (or triggers retry on each Play until available).",
+                    MessageType.Info);
 
                 // Play mode test
                 using (new EditorGUI.DisabledScope(!Application.isPlaying))
@@ -264,5 +288,6 @@ namespace WoiUtils.AudioSystem.Editor
             }
         }
     }
+
 }
 #endif

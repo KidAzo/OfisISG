@@ -5,6 +5,21 @@ namespace WoiUtils.AudioSystem
     public partial struct PlayContext
     {
         public bool ignoreCooldowns;
+
+        /// <summary>
+        /// When true: (1) skips <see cref="InstanceMode.SinglePerCategory"/> pre-play category cull.
+        /// (2) When the voice pool is full, only steals voices whose <see cref="SoundDefinition"/> uses the same
+        /// <b>custom</b> category key as this sound. If this sound does not use a custom category, no pool steal runs
+        /// (avoids killing unrelated enum-category SFX). Prefer one shared custom key on start/loop/end assets.
+        /// </summary>
+        public bool suppressSameCategorySteal;
+
+        /// <summary>
+        /// When true, <see cref="AudioSystem.Play"/> routes to immediate clip resolution instead of queue-based routing
+        /// (e.g. <see cref="ClipSelectionMode.QueueAll"/> would otherwise return no voice).
+        /// </summary>
+        public bool forceImmediatePlay;
+
         public bool hasPosition;
         public Vector3 position;
 
@@ -16,8 +31,6 @@ namespace WoiUtils.AudioSystem
 
         public bool hasClipIndex;
         public int clipIndex;
-
-        public bool queued;
 
         public static PlayContext Default => new PlayContext
         {
@@ -33,7 +46,8 @@ namespace WoiUtils.AudioSystem
             hasClipIndex = false,
             clipIndex = -1,
 
-            queued = false
+            suppressSameCategorySteal = false,
+            forceImmediatePlay = false,
         };
 
         public static PlayContext DebugNoCooldown()
@@ -87,6 +101,18 @@ namespace WoiUtils.AudioSystem
         }
 
         // -------- Fluent modifiers (important for AudioTrigger without losing inspector data) --------
+        public PlayContext SetSuppressSameCategorySteal(bool suppress = true)
+        {
+            suppressSameCategorySteal = suppress;
+            return this;
+        }
+
+        public PlayContext SetForceImmediatePlay(bool force = true)
+        {
+            forceImmediatePlay = force;
+            return this;
+        }
+
         public PlayContext SetClipIndex(int index)
         {
             hasClipIndex = true;
@@ -125,8 +151,8 @@ namespace WoiUtils.AudioSystem
 
         public PlayContext SetVolumePitch(float volMul, float pitMul)
         {
-            volumeMul = volMul <= 0f ? 1f : volMul;
-            pitchMul = pitMul <= 0f ? 1f : pitMul;
+            volumeMul = volMul < 0f ? 1f : volMul;
+            pitchMul = pitMul < 0f ? 1f : pitMul;
             return this;
         }
     }

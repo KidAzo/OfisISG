@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 631d30e714266ad429b3d9f436cd34c8
+AssetOrigin:
+  serializedVersion: 1
+  productId: 357044
+  packageName: Woi Audio - Lightweight Audio Framework
+  packageVersion: 1.0.0
+  assetPath: Assets/WoiAudio/AudioSystem/Runtime/ClipEntry.cs
+  uploadId: 886922

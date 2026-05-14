@@ -48,7 +48,7 @@ namespace WoiUtils.AudioSystem.Editor
 
         void DrawConfigField()
         {
-            // ✅ Config verilince gizle (yalnızca null ise göster)
+            // Hide when config is assigned (only show when null)
             if (configProp.objectReferenceValue == null)
             {
                 using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
@@ -60,7 +60,7 @@ namespace WoiUtils.AudioSystem.Editor
             }
             else
             {
-                // İstersen çok küçük bir satırda referansı sadece bilgi olarak gösterebilirsin:
+                // Optionally show the reference in a small info line:
                 using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
                 {
                     EditorGUILayout.LabelField("Config assigned (hidden)", EditorStyles.boldLabel);
