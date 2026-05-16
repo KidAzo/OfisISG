@@ -1,0 +1,21 @@
+{
+    "name": "FireExtinguisher.PC",
+    "rootNamespace": "FireExtinguisher.PC",
+    "references": [
+        "GUID:ced88875c7215c94492d8bcadb805864",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:300ddb0b3e3cbe443b39a39c22fe8d86",
+        "Woi.Player",
+        "Woi.SceneGroup",
+        "GUID:e482584a5795fa4409047161cc21985d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

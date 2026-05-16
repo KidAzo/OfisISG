@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: F-Fire-Class-HoverInfo
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: 'F Class '
+    message: Class F fires involve burning cooking oils and fats, commonly found
+      in kitchens. Using water can cause the fire to spread rapidly. Class F extinguishers
+      or fire blankets should be used for safe intervention.
+    sound: {fileID: 11400000, guid: 6db6f8e6d462b30459ac099413eca75f, type: 2}
+  turkish:
+    title: F SINIFI
+    message: "F s\u0131n\u0131f\u0131 yang\u0131nlar, k\u0131zg\u0131n ya\u011Flar\u0131n
+      tutu\u015Fmas\u0131yla olu\u015Fur ve mutfaklarda s\u0131k g\xF6r\xFCl\xFCr.
+      Su ile m\xFCdahale edilmesi yang\u0131n\u0131 b\xFCy\xFCt\xFCr. Bu nedenle
+      F s\u0131n\u0131f\u0131 t\xFCpler veya yang\u0131n battaniyesi kullan\u0131lmal\u0131d\u0131r."
+    sound: {fileID: 11400000, guid: 646efff88e63cee449c047b7d5ed54c7, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.woi.module.fire/Runtime/UI/Result/ExitPanel.uss?fileID=7433441132597879392&amp;guid=4c5ec72247407614ca6d234d49491dfc&amp;type=3#ExitPanel" />
+    <ui:VisualElement name="MainContainer" class="exit-panel-container" style="flex-direction: column; flex-shrink: 0; align-self: flex-start;">
+        <ui:VisualElement name="Header" class="header-container">
+            <ui:VisualElement name="AlertIconContainer" class="alert-icon-container">
+                <ui:Image name="AlertIcon" class="alert-icon" />
+            </ui:VisualElement>
+            <ui:VisualElement name="HeaderTextContainer" class="header-text-container">
+                <ui:Label name="exit-lbl-attention" text="ATTENTION" class="text-danger-header" />
+                <ui:Label name="exit-lbl-subtitle" text="SIMULATION EXIT REQUESTED" class="text-sub-header" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="Body" class="body-container">
+            <ui:Label name="exit-lbl-body-title" text="EXIT GAME" class="text-body-title" />
+            <ui:VisualElement class="divider" />
+            <ui:Label name="exit-lbl-body-desc" text="Your current progress will be saved. Are you sure you want to leave the simulation?" class="text-body-desc" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="ActionButtons" class="action-buttons-container">
+            <ui:Button name="BtnYes" text="EVET" class="btn-action btn-danger" />
+            <ui:Button name="BtnNo" text="HAYIR" class="btn-action btn-safe" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: AB-Class-HoverInfo
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: AB Type Fire Estinguisher
+    message: AB-type fire extinguishers are suitable for both solid and liquid fires.
+      They are effective against Class A and Class B fires. The extinguishing agent
+      should be directed at the source of the flames to control surface spread.
+    sound: {fileID: 11400000, guid: 6f61f3ce734e044458a2f9237d8109a6, type: 2}
+  turkish:
+    title: "AB Tipi Yang\u0131n T\xFCp\xFC"
+    message: "AB tipi yang\u0131n t\xFCpleri, kat\u0131 ve s\u0131v\u0131 yang\u0131nlar\u0131nda
+      kullan\u0131labilir. Hem A s\u0131n\u0131f\u0131 hem de B s\u0131n\u0131f\u0131
+      yang\u0131nlara kar\u015F\u0131 etkilidir. M\xFCdahale s\u0131ras\u0131nda
+      alevin kayna\u011F\u0131na odaklan\u0131lmal\u0131 ve y\xFCzey yay\u0131l\u0131m\u0131
+      kontrol alt\u0131na al\u0131nmal\u0131d\u0131r."
+    sound: {fileID: 11400000, guid: ed5e393a414e00141b0099783fcd57df, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

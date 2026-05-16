@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: C-Fire-Class-HoverInfo
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: C Class
+    message: Class C fires involve flammable gases such as LPG and natural gas. The
+      most critical step is to stop the gas supply. Dry chemical extinguishers can
+      be used for intervention.
+    sound: {fileID: 11400000, guid: 21e92397c9e72f04cbf1cacfce87c4fc, type: 2}
+  turkish:
+    title: "C S\u0131n\u0131f\u0131"
+    message: "C s\u0131n\u0131f\u0131 yang\u0131nlar; LPG ve do\u011Falgaz gibi yan\u0131c\u0131
+      gazlar\u0131n tutu\u015Fmas\u0131yla olu\u015Fur. Bu yang\u0131nlarda en \xF6nemli
+      ad\u0131m gaz ak\u0131\u015F\u0131n\u0131 kesmektir. M\xFCdahalede kuru kimyevi
+      tozlu t\xFCpler kullan\u0131labilir."
+    sound: {fileID: 11400000, guid: f286bd6cb2753a4458da78c3fc575988, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

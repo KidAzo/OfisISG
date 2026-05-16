@@ -1,0 +1,8 @@
+{
+  "name": "com.woi.modules.sdk",
+  "version": "1.0.0",
+  "displayName": "WOI Modules SDK",
+  "description": "Shared SDK package establishing the underlying data contracts and execution boundaries between the Hub infrastructure and modular simulation instances.",
+  "unity": "2021.3",
+  "dependencies": {}
+}

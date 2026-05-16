@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="LoginScreen.uss" />
+    <Style src="LoginLeaderboard.uss" />
+
+    <ui:VisualElement name="leaderboard-doc-root" class="leaderboard-doc-root">
+        <ui:VisualElement name="leaderboard-panel" class="leaderboard-panel">
+            <ui:Label text="TOP SCORES" class="leaderboard-title" />
+            <ui:VisualElement name="leaderboard-rows" class="leaderboard-rows" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

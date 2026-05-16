@@ -1,0 +1,21 @@
+{
+    "name": "Woi.Fire.ServiceInstaller",
+    "rootNamespace": "WOI.Module.Fire.DI",
+    "references": [
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "Woi.SceneGroup",
+        "Woi.InputSystem",
+        "Woi.Player",
+        "WOI.Modules.SDK"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

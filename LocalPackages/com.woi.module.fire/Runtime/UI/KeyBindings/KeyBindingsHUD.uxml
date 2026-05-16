@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd"
+>
+    <!-- Stil Dosyası Bağlantısı -->
+    <engine:Style src="KeyBindingsHUD.uss" />
+
+    <!-- Ana Ekran Konteyneri (Root) -->
+    <engine:VisualElement style="flex-grow: 1; width: 100%; height: 100%;">
+        
+        <!-- HUD Konteyner -->
+        <engine:VisualElement class="hud-container">
+            
+            <!-- 1. Sol Kısım (Klavye Layout) -->
+            <engine:VisualElement>
+                
+                <!-- Row 1 -->
+                <engine:VisualElement class="keyboard-row">
+                    <engine:Label text="TAB" class="key-base key-special key-tab" />
+                    <engine:Label text="Q" class="key-base key-default" />
+                    <engine:Label text="W" class="key-base key-sky" />
+                    <engine:Label text="E" class="key-base key-emerald" />
+                    <engine:Label text="R" class="key-base key-rose" />
+                    <engine:Label text="T" class="key-base key-default" />
+                </engine:VisualElement>
+
+                <!-- Row 2 -->
+                <engine:VisualElement class="keyboard-row">
+                    <engine:Label text="CAPS" class="key-base key-special key-caps" />
+                    <engine:Label text="A" class="key-base key-sky" />
+                    <engine:Label text="S" class="key-base key-sky" />
+                    <engine:Label text="D" class="key-base key-sky" />
+                    <engine:Label text="F" class="key-base key-default" />
+                    <engine:Label text="G" class="key-base key-amber" />
+                </engine:VisualElement>
+
+                <!-- Row 3 -->
+                <engine:VisualElement class="keyboard-row" style="margin-bottom: 0;">
+                    <engine:Label text="SHIFT" class="key-base key-special key-shift" />
+                    <engine:Label text="Z" class="key-base key-default" />
+                    <engine:Label text="X" class="key-base key-default" />
+                    <engine:Label text="C" class="key-base key-default" />
+                    <engine:Label text="V" class="key-base key-default" />
+                    <engine:Label text="B" class="key-base key-default" />
+                </engine:VisualElement>
+
+            </engine:VisualElement>
+
+            <!-- 2. Orta Kısım (Divider) -->
+            <engine:VisualElement class="divider" />
+
+            <!-- 3. Sağ Kısım (Legend/Açıklamalar) -->
+            <engine:VisualElement>
+                <engine:Label text="KEY BINDINGS" class="legend-header" />
+                
+                <engine:VisualElement class="legend-row">
+                    <engine:VisualElement class="legend-icon bg-sky" />
+                    <engine:Label text="Locomotion (WASD)" class="legend-text" />
+                </engine:VisualElement>
+
+                <engine:VisualElement class="legend-row">
+                    <engine:VisualElement class="legend-icon bg-emerald" />
+                    <engine:Label text="Equip (E)" class="legend-text" />
+                </engine:VisualElement>
+
+                <engine:VisualElement class="legend-row">
+                    <engine:VisualElement class="legend-icon bg-rose" />
+                    <engine:Label text="Pin Pulling (R)" class="legend-text" />
+                </engine:VisualElement>
+
+                <engine:VisualElement class="legend-row" style="margin-bottom: 0;">
+                    <engine:VisualElement class="legend-icon bg-amber" />
+                    <engine:Label text="Drop (G)" class="legend-text" />
+                </engine:VisualElement>
+                
+            </engine:VisualElement>
+
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

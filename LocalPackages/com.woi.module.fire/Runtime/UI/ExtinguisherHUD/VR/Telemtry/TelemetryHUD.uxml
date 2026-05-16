@@ -1,0 +1,35 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <Style src="TelemetryHUD.uss" />
+    <ui:VisualElement class="hud-container">
+        
+        <!-- ÜST BİLGİ -->
+        <ui:VisualElement class="header">
+            <ui:Label text="CANLI TELEMETRİ" class="title-text color-cyan" />
+            <ui:Label text="CANLI" class="badge color-cyan" />
+        </ui:VisualElement>
+
+        <!-- MESAFE BÖLÜMÜ -->
+        <ui:Label text="YANGIN MESAFESİ" class="label-sub color-cyan" />
+        <ui:VisualElement class="distance-row">
+            <ui:Label name="distance-text" text="2,7" class="distance-value color-cyan" />
+            <ui:Label name="distance-unit" text="m" class="distance-unit color-cyan" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="progress-bar-bg">
+            <ui:VisualElement name="distance-bar-fill" class="progress-bar-fill bg-cyan" />
+        </ui:VisualElement>
+
+        <ui:Label name="distance-status" text="İDEAL MESAFE" class="label-sub color-cyan" style="-unity-font-style: bold; opacity: 1;" />
+
+        <!-- NİŞAN KONUMU BÖLÜMÜ -->
+        <ui:VisualElement class="bottom-section">
+            <ui:VisualElement>
+                <ui:Label text="NİŞAN KONUMU" class="label-sub color-cyan" />
+                <ui:Label name="target-zone-text" text="ALEV TABANI" class="zone-label color-cyan" />
+            </ui:VisualElement>
+            
+            <ui:Label name="target-status-badge" text="UYGUN" class="badge color-cyan" style="background-color: rgb(0, 245, 255); color: rgb(10, 10, 10);" />
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

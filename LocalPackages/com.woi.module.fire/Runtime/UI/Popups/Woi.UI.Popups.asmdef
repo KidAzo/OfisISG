@@ -1,0 +1,16 @@
+{
+    "name": "Woi.UI.Popups",
+    "rootNamespace": "Woi.UI.Popups",
+    "references": [
+        "GUID:e482584a5795fa4409047161cc21985d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

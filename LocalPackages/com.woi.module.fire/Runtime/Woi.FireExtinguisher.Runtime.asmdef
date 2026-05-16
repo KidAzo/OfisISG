@@ -1,0 +1,28 @@
+{
+    "name":  "Woi.FireExtinguisher.Runtime",
+    "rootNamespace":  "FireExtinguisher",
+    "references":  [
+                       "GUID:ced88875c7215c94492d8bcadb805864",
+                       "GUID:ee6baafdecd94804a8714654c4bd097f",
+                       "GUID:75469ad4d38634e559750d17036d5f7c"
+                   ],
+    "includePlatforms":  [
+
+                         ],
+    "excludePlatforms":  [
+
+                         ],
+    "allowUnsafeCode":  false,
+    "overrideReferences":  false,
+    "precompiledReferences":  [
+
+                              ],
+    "autoReferenced":  true,
+    "defineConstraints":  [
+
+                          ],
+    "versionDefines":  [
+
+                       ],
+    "noEngineReferences":  false
+}

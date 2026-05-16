@@ -1,0 +1,10 @@
+{
+  "name": "com.woi.module.fire",
+  "version": "1.0.7",
+  "displayName": "WOI Module Fire",
+  "unity": "2022.3",
+  "description": "Fire module service installation (Addressables + ServiceLocator).",
+  "dependencies": {
+    "com.woi.modules.sdk": "1.0.0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+    "name": "Woi.Player",
+    "rootNamespace": "",
+    "references": [
+        "Obvious.Soap",
+        "Unity.XR.Interaction.Toolkit",
+        "Unity.InputSystem",
+        "UniTask",
+        "WOI.Modules.SDK"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

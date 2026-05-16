@@ -1,0 +1,50 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.woi.module.fire/Runtime/UI/ExtinguisherHUD/VR/ExtinguisherHUDVR.uss?fileID=7433441132597879392&amp;guid=1d655b58874a1e24582c35d4a307b3f1&amp;type=3#ExtinguisherHUDVR"/>
+    <ui:VisualElement name="ExtinguisherHUDVR" class="ExtinguisherHUDVR hud-container">
+
+        <!-- Header: başlık solda, wind ikonu sağ üst -->
+        <ui:VisualElement class="header border-bottom">
+            <ui:Label text="ABCF Tipi Yangın Tüpü" class="title-text text-cyan" />
+            <ui:VisualElement name="wind-icon" class="icon-box icon-box-image"
+                style="background-image: url(&quot;project://database/Packages/com.woi.module.fire/Runtime/UI/wind.png?fileID=2800000&amp;guid=dc7665bfb3144c34f8d3bae5057e1203&amp;type=3#wind&quot;);" />
+        </ui:VisualElement>
+
+        <!-- Güvenlik İğnesi -->
+        <ui:VisualElement class="row-container margin-bottom">
+            <ui:VisualElement name="pin-bar" class="pin-bar bg-cyan" />
+            <ui:VisualElement class="row-space-between">
+                <ui:Label text="GÜVENLİK İĞNESİ" class="subtitle-text text-cyan border-opacity" />
+                <ui:Label name="pin-status-text" text="ÇEKİLDİ" class="bold-text text-cyan" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Kapasite -->
+        <ui:VisualElement class="margin-bottom">
+            <ui:VisualElement class="row-space-between">
+                <ui:Label text="KAPASİTE" class="subtitle-text text-cyan border-opacity" />
+                <ui:Label name="capacity-text" text="100,0%" class="capacity-val-text text-cyan" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="progress-bar-bg border-opacity-bg">
+                <ui:VisualElement name="progress-bar-fill" class="progress-bar-fill bg-cyan" style="width: 100%;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Kalan Süre -->
+        <ui:VisualElement class="time-container border-opacity-bg">
+            <ui:VisualElement name="droplets-icon" class="icon-box-small icon-box-image"
+                style="background-image: url(&quot;project://database/Packages/com.woi.module.fire/Runtime/UI/droplets.png?fileID=21300000&amp;guid=ac0f6a55a8a362f4b978e9884f0a587f&amp;type=3#droplets&quot;);" />
+
+            <ui:VisualElement class="column-center">
+                <ui:Label text="KALAN" class="subtitle-text text-cyan border-opacity" />
+                <ui:Label text="SÜRE" class="subtitle-text text-cyan border-opacity" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="row-end">
+                <ui:Label name="time-text" text="100,0" class="time-val text-cyan" />
+                <ui:Label text="sn" class="subtitle-text text-cyan border-opacity" style="margin-left: 5px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

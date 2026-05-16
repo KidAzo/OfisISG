@@ -1,0 +1,441 @@
+:root {
+    --bg-dark: #070913; 
+    --card-bg: #151822; 
+    --card-border: #232838; 
+    
+    --text-main: #ffffff;
+    --text-muted: #7b8599; 
+    
+    --color-orange: #ff5200;
+    /* ALL yalnızca tüm yangın türleri seçiliyken — turuncu marka renginden ayrı “tamam” vurgusu */
+    --color-all-complete: #2dd4bf;
+}
+
+/* Login-only root: centers the card; stacks above PC background when visible. */
+.login-screen-root {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    position: relative;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.login-shell {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* Full-bleed plate + glows for PC; hidden on VR via LoginScreenController. */
+.pc-background-layer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+.background-container {
+    flex-grow: 1;
+    background-color: var(--bg-dark);
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    position: relative;
+}
+
+/* Arka plan parlama efektleri */
+.glow-orange {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background-color: rgba(255, 82, 0, 0.15); /* fixed opacity */
+    border-radius: 300px;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+}
+
+.glow-rose {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background-color: rgba(255, 0, 100, 0.15); /* fixed opacity */
+    border-radius: 250px;
+    bottom: -100px;
+    right: -100px;
+}
+
+.leaderboard-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 280px;
+    max-height: 52%;
+    background-color: var(--card-bg);
+    border-width: 1px;
+    border-color: var(--card-border);
+    border-radius: 14px;
+    padding: 14px 12px 12px 12px;
+}
+
+.leaderboard-title {
+    color: var(--text-muted);
+    font-size: 10px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    -unity-text-align: middle-left;
+}
+
+.leaderboard-rows {
+    flex-direction: column;
+}
+
+.leaderboard-row {
+    font-size: 12px;
+    margin-bottom: 3px;
+    padding-left: 2px;
+    padding-right: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 4–10: dolu satırlar beyaz */
+.leaderboard-row.leaderboard-row--rank-plain {
+    color: #ffffff;
+}
+
+/* 1 — altın */
+.leaderboard-row.leaderboard-row--rank1 {
+    color: #ffc933;
+    -unity-font-style: bold;
+    font-size: 13px;
+}
+
+/* 2 — gümüş-mavi */
+.leaderboard-row.leaderboard-row--rank2 {
+    color: #7ddbff;
+    -unity-font-style: bold;
+    font-size: 13px;
+}
+
+/* 3 — bakır / turuncu */
+.leaderboard-row.leaderboard-row--rank3 {
+    color: #ff9f5a;
+    -unity-font-style: bold;
+    font-size: 13px;
+}
+
+.leaderboard-row--empty {
+    color: rgba(123, 133, 153, 0.55);
+    -unity-font-style: italic;
+}
+
+.main-card {
+    width: 440px;
+    background-color: var(--card-bg);
+    border-width: 1px;
+    border-color: var(--card-border);
+    border-radius: 20px;
+    padding: 36px 32px;
+    overflow: visible;
+}
+
+.header-container {
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.icon-container {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background-color: rgba(255, 82, 0, 0.08);
+    border-width: 1px;
+    border-color: rgba(255, 82, 0, 0.4);
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.flame-icon {
+    font-size: 24px;
+    color: var(--color-orange);
+    -unity-text-align: middle-center;
+    padding-bottom: 2px;
+}
+
+.title-sub {
+    color: var(--color-orange);
+    font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+}
+
+.title-main {
+    color: var(--text-main);
+    font-size: 24px;
+    -unity-font-style: bold;
+}
+
+.section-container {
+    margin-bottom: 20px;
+}
+
+.section-header {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.section-icon {
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-right: 6px;
+}
+
+.section-label {
+    color: var(--text-muted);
+    font-size: 10px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+}
+
+/* Dropdown (Language) */
+.custom-dropdown {
+    margin: 0;
+    padding: 0;
+}
+
+.custom-dropdown > .unity-base-field__input {
+    background-color: #1e2333;
+    border-width: 1px;
+    border-color: var(--card-border);
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 12px;
+    -unity-font-style: bold;
+    padding: 10px 14px;
+}
+
+.custom-dropdown > .unity-base-field__input:focus {
+    border-color: var(--color-orange);
+}
+
+/* Custom Text Fields (Profile) */
+.custom-textfield {
+    margin: 0;
+    margin-bottom: 8px;
+}
+
+.custom-textfield > .unity-label {
+    width: 80px;
+    min-width: 80px;
+    color: var(--text-muted);
+    font-size: 11px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+    padding-left: 2px;
+}
+
+.custom-textfield > .unity-base-text-field__input {
+    background-color: #1a1e2b;
+    border-width: 1px;
+    border-color: var(--card-border);
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 12px;
+    -unity-font-style: bold;
+    padding: 10px 14px;
+}
+
+.custom-textfield > .unity-base-text-field__input:focus {
+    border-color: var(--color-orange);
+}
+
+/* Checkbox Grid */
+.checkbox-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/* Custom Toggle */
+.custom-toggle {
+    width: 48%; /* Forces 2 items per row */
+    margin: 0;
+    margin-bottom: 10px;
+    padding: 16px 14px;
+    background-color: #1e2333;
+    border-width: 1px;
+    border-color: var(--card-border);
+    border-radius: 8px;
+    flex-direction: row-reverse; /* Puts checkbox on left */
+    justify-content: flex-end; /* Keep on the left side of the button */
+    align-items: center;
+    transition-duration: 0.2s;
+}
+
+.custom-toggle:hover {
+    background-color: #242a3d;
+}
+
+.custom-toggle:checked {
+    background-color: rgba(255, 82, 0, 0.15); /* deeper orange tint */
+    border-color: rgba(255, 82, 0, 0.8);
+}
+
+/* Checkbox Label */
+.custom-toggle .unity-toggle__label {
+    color: var(--text-muted);
+    font-size: 13px;
+    -unity-font-style: bold;
+    margin: 0;
+    margin-left: 12px;
+    flex-grow: 1;
+    -unity-text-align: middle-left; /* Align neatly beside the checkbox */
+}
+
+.custom-toggle:checked .unity-toggle__label {
+    color: var(--text-main);
+}
+
+/* Checkbox Visual Container */
+.custom-toggle .unity-toggle__input {
+    display: flex;
+    flex-grow: 0;
+    margin: 0;
+    min-width: 20px;
+    min-height: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The Box and Tick itself */
+.custom-toggle .unity-toggle__checkmark {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    min-height: 18px;
+    border-radius: 4px;
+    background-color: rgba(15, 23, 42, 0.7); /* dark empty box */
+    border-width: 1px;
+    border-color: rgba(71, 85, 105, 1);
+    -unity-background-image-tint-color: transparent; /* hide tick when unchecked */
+}
+
+.custom-toggle:checked .unity-toggle__checkmark {
+    background-color: var(--color-orange);
+    border-color: var(--color-orange);
+    -unity-background-image-tint-color: white; /* show tick securely */
+}
+
+/* Start Button */
+.start-button {
+    margin: 0;
+    margin-top: 10px;
+    padding: 16px;
+    background-color: #ff3344;
+    border-width: 2px;
+    border-color: rgba(255, 77, 90, 0.7); /* Glowing border effect */
+    border-radius: 10px;
+    color: var(--text-main);
+    font-size: 14px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    transition-duration: 0.1s;
+}
+
+.start-button:hover {
+    background-color: #ff4d5a;
+    border-color: rgba(255, 95, 110, 1.0); /* Brighter glow on hover */
+    scale: 1.02;
+}
+
+.start-button:active {
+    scale: 0.98;
+}
+
+/* All / None row */
+.select-row {
+    flex-direction: row;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    min-height: 38px;
+}
+
+.select-btn {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
+    min-height: 38px;
+    padding: 10px 0;
+    border-radius: 8px;
+    border-width: 1px;
+    font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    transition-duration: 0.1s;
+}
+
+.select-btn--all {
+    margin-right: 5px;
+    background-color: rgba(123, 133, 153, 0.08);
+    border-color: rgba(123, 133, 153, 0.3);
+    color: var(--text-muted);
+}
+
+.select-btn--all:hover {
+    background-color: rgba(123, 133, 153, 0.18);
+    border-color: rgba(123, 133, 153, 0.6);
+    scale: 1.02;
+}
+
+.select-btn--all:active {
+    scale: 0.97;
+}
+
+/* Hepsi seçili: ALL butonunda .select-btn--all ile birlikte kullanılır */
+.select-btn--all.select-btn--all-active {
+    background-color: rgba(45, 212, 191, 0.16);
+    border-color: rgba(45, 212, 191, 0.75);
+    color: var(--color-all-complete);
+}
+
+.select-btn--all.select-btn--all-active:hover {
+    background-color: rgba(45, 212, 191, 0.26);
+    border-color: rgba(45, 212, 191, 0.95);
+    scale: 1.02;
+}
+
+.select-btn--all.select-btn--all-active:active {
+    scale: 0.97;
+}
+
+.select-btn--none {
+    margin-left: 5px;
+    background-color: rgba(123, 133, 153, 0.08);
+    border-color: rgba(123, 133, 153, 0.3);
+    color: var(--text-muted);
+}
+
+.select-btn--none:hover {
+    background-color: rgba(123, 133, 153, 0.18);
+    border-color: rgba(123, 133, 153, 0.6);
+    scale: 1.02;
+}
+
+.select-btn--none:active {
+    scale: 0.97;
+}

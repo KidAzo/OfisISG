@@ -1,0 +1,129 @@
+.ExtinguisherHUDVR {
+    flex-shrink: 0;
+}
+
+.hud-container {
+    width: 340px;
+    background-color: #0A0A0A;
+    border-color: rgba(0, 245, 255, 0.3);
+    border-width: 1px;
+    padding: 32px;
+    flex-direction: column;
+}
+
+.text-cyan { color: #00F5FF; }
+.text-red { color: #FF4D4D; }
+.bg-cyan { background-color: #00F5FF; }
+.bg-red { background-color: #FF4D4D; }
+
+.header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+}
+
+.border-bottom {
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(0, 245, 255, 0.3);
+}
+
+.title-text {
+    font-size: 20px;
+    -unity-font-style: bold;
+    letter-spacing: -1px;
+}
+
+.icon-box {
+    width: 40px;
+    height: 40px;
+    border-width: 1px;
+    border-color: rgba(0, 245, 255, 0.4);
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-box-small {
+    width: 48px;
+    height: 48px;
+    border-width: 1px;
+    border-color: rgba(0, 245, 255, 0.4);
+    margin-right: 16px;
+}
+
+.icon-box-image {
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-scale-mode: scale-to-fit;
+    -unity-background-image-tint-color: rgb(0, 245, 255);
+}
+
+.row-container { padding-left: 16px; position: relative; }
+.margin-bottom { margin-bottom: 32px; }
+
+.pin-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+}
+
+.row-space-between {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.row-end {
+    flex-direction: row;
+    align-items: flex-end;
+    margin-left: auto;
+}
+
+.column-center {
+    flex-direction: column;
+    justify-content: center;
+}
+
+.subtitle-text {
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.border-opacity { opacity: 0.6; }
+.border-opacity-bg { background-color: rgba(0, 245, 255, 0.05); }
+
+.bold-text {
+    font-size: 14px;
+    -unity-font-style: bold;
+}
+
+.capacity-val-text {
+    font-size: 20px;
+    -unity-font-style: bold;
+}
+
+.progress-bar-bg {
+    height: 8px;
+    width: 100%;
+    margin-top: 8px;
+    flex-direction: row;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    transition: width 0.2s ease-out;
+}
+
+.time-container {
+    flex-direction: row;
+    align-items: center;
+    padding: 16px;
+    border-width: 1px;
+    border-color: rgba(0, 245, 255, 0.3);
+}
+
+.time-val {
+    font-size: 36px;
+    -unity-font-style: bold;
+    letter-spacing: -2px;
+}

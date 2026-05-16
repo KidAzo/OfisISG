@@ -1,0 +1,59 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.woi.module.fire/Runtime/UI/ExtinguisherHUD.uss?fileID=7433441132597879392&amp;guid=a040e193d6d87e24db12764b455e0c45&amp;type=3#ExtinguisherHUD"/>
+    <ui:VisualElement name="hud-container" class="hud-container">
+        <ui:VisualElement name="slots-container" class="slots-container">
+            <ui:VisualElement class="slot-badge"/>
+            <ui:VisualElement class="slot-badge"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="main-widget" class="main-widget">
+            <ui:VisualElement class="header-container">
+                <ui:VisualElement class="header-text-column">
+                    <ui:Label text="" name="extinguisher-title" class="title-text"/>
+                    <ui:Label text="" name="extinguisher-subtitle" class="subtitle-text"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="header-icon-bg">
+                    <ui:VisualElement name="wind-icon" class="header-icon-image" style="background-image: url(&quot;project://database/Packages/com.woi.module.fire/Runtime/UI/wind.png?fileID=2800000&amp;guid=dc7665bfb3144c34f8d3bae5057e1203&amp;type=3#wind&quot;); -unity-background-image-tint-color: rgb(171, 171, 171);"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="pin-section" class="pin-section" style="display: none;">
+                <ui:VisualElement class="row-between">
+                    <ui:Label name="pin-label" text="GÜVENLİK İĞNESİ" class="label-text"/>
+                    <ui:Label text="ÇEKİLMEDİ" name="pin-status-value" class="value-text text-amber"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="capacity-section">
+                <ui:VisualElement class="row-between">
+                    <ui:Label name="capacity-label" text="KAPASİTE" class="label-text"/>
+                    <ui:Label text="100%" name="capacity-value" class="value-text text-emerald"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="progress-bar-bg">
+                    <ui:VisualElement name="progress-bar-fill" class="progress-bar-fill bg-emerald" style="width: 100%;"/>
+                    <ui:VisualElement class="marker-container">
+                        <ui:VisualElement class="marker" style="left: 25%;"/>
+                        <ui:VisualElement class="marker" style="left: 50%;"/>
+                        <ui:VisualElement class="marker" style="left: 75%;"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="time-section">
+                <ui:VisualElement class="row-center">
+                    <ui:VisualElement name="spray-icon-bg" class="icon-bg icon-bg-idle" style="background-image: none;">
+                        <ui:VisualElement name="spray-icon" class="icon-image icon-tint-idle" style="opacity: 1; background-image: url(&quot;project://database/Packages/com.woi.module.fire/Runtime/UI/droplets.png?fileID=21300000&amp;guid=ac0f6a55a8a362f4b978e9884f0a587f&amp;type=3#droplets&quot;); background-color: rgba(0, 0, 0, 0);"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="label-stack">
+                        <ui:Label name="time-label-top" text="KALAN" class="label-text-multiline"/>
+                        <ui:Label name="time-label-bottom" text="SÜRE" class="label-text-multiline"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="row-baseline">
+                    <ui:Label text="15.0" name="time-value" class="big-time-text text-emerald"/>
+                    <ui:Label name="time-unit" text="sn" class="unit-text" style="-unity-background-image-tint-color: rgb(148, 163, 184);"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="empty-warning" class="empty-warning" style="display: none;">
+                <ui:VisualElement name="warning-icon" class="warning-icon" style="background-image: url(&quot;project://database/Packages/com.woi.module.fire/Runtime/UI/shield-alert.png?fileID=21300000&amp;guid=4830c46929ec5c149a07297778be67ad&amp;type=3#shield-alert&quot;); -unity-background-image-tint-color: rgb(255, 0, 0); background-color: rgba(0, 0, 0, 0);"/>
+                <ui:Label text="TÜP BOŞALDI" name="warning-text" class="warning-text"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: A-Class-HoverInfo
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: A Type Fire Estinguisher
+    message: A-type fire extinguishers are used for fires involving solid materials
+      such as wood, paper, and fabric. They should be applied by aiming at the base
+      of the fire in a controlled manner.
+    sound: {fileID: 11400000, guid: da309388d260717498ed39b79686fd45, type: 2}
+  turkish:
+    title: "A Tipi Yang\u0131n T\xFCp\xFC"
+    message: "A tipi yang\u0131n t\xFCpleri, kat\u0131 maddelerden kaynaklanan yang\u0131nlarda
+      kullan\u0131l\u0131r. Ah\u015Fap, k\xE2\u011F\u0131t ve kuma\u015F yang\u0131nlar\u0131nda
+      etkilidir. Yang\u0131n\u0131n taban\u0131na y\xF6neltilerek kontroll\xFC \u015Fekilde
+      uygulanmal\u0131d\u0131r."
+    sound: {fileID: 11400000, guid: 556ade5744b553740bf7c49ee9265659, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

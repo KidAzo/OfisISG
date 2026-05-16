@@ -1,0 +1,64 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="LoginScreen.uss" />
+
+    <!-- PC: pc-background-layer shown (glows + dark plate). VR: hidden — only main-card. Leaderboard → LoginLeaderboard.uxml + Leaderboard Ui Document on LoginScreenController. -->
+    <ui:VisualElement name="login-shell" class="login-shell" style="flex-grow: 1; width: 100%; height: 100%; position: relative;">
+        <ui:VisualElement name="pc-background-layer" class="background-container pc-background-layer" style="display: none;">
+            <ui:VisualElement class="glow-orange" />
+            <ui:VisualElement class="glow-rose" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="login-screen-root" class="login-screen-root">
+            <ui:VisualElement class="main-card">
+
+                <ui:VisualElement class="header-container">
+                    <ui:VisualElement class="icon-container">
+                        <ui:Label text="🔥" class="flame-icon" />
+                    </ui:VisualElement>
+                    <ui:Label text="FIRE SAFETY" class="title-sub" />
+                    <ui:Label text="TRAINING SIMULATOR" class="title-main" />
+                </ui:VisualElement>
+
+                <ui:VisualElement name="user-profile-section" class="section-container">
+                    <ui:VisualElement class="section-header">
+                        <ui:Label text="👤" class="section-icon" />
+                        <ui:Label text="USER PROFILE" class="section-label" />
+                    </ui:VisualElement>
+                    <ui:TextField name="input-name" label="Full Name" class="custom-textfield" />
+                    <ui:TextField name="input-userid" label="User ID" class="custom-textfield" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="section-container">
+                    <ui:VisualElement class="section-header">
+                        <ui:Label text="🌐" class="section-icon" />
+                        <ui:Label text="LANGUAGE" class="section-label" />
+                    </ui:VisualElement>
+                    <ui:DropdownField name="language-dropdown" choices="English,Türkçe" value="Türkçe" class="custom-dropdown" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="section-container">
+                    <ui:VisualElement class="section-header">
+                        <ui:Label text="⊞" class="section-icon" />
+                        <ui:Label text="SELECT FIRE TYPES" class="section-label" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="checkbox-grid">
+                        <ui:Toggle name="toggle-class-a" label="A-Woods" class="custom-toggle" />
+                        <ui:Toggle name="toggle-class-b" label="B-Oils" class="custom-toggle" />
+                        <ui:Toggle name="toggle-class-c" label="C-Gases" class="custom-toggle" />
+                        <ui:Toggle name="toggle-class-d" label="D-Metals" class="custom-toggle" />
+                        <ui:Toggle name="toggle-class-f" label="F-Cooking Oil" class="custom-toggle" />
+                        <ui:Toggle name="toggle-electrical" label="Electrical" class="custom-toggle" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="select-row">
+                        <ui:Button name="btn-select-all"  text="✔ ALL"  class="select-btn select-btn--all"  />
+                        <ui:Button name="btn-select-none" text="✖ NONE" class="select-btn select-btn--none" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:Button name="btn-start" text="▶ START SESSION" class="start-button" />
+
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

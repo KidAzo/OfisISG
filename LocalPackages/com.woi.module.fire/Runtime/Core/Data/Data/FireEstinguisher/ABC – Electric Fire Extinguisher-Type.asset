@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47253eeb0c172fe409d7bcc5ada05bd3, type: 3}
+  m_Name: "ABC \u2013 Electric Fire Extinguisher-Type"
+  m_EditorClassIdentifier: FireExtinguisher.Core::FireExtinguisher.Core.ExtinguisherData
+  _nameTr: "ABC \u2013 Elektrik Tipi Yang\u0131n T\xFCp\xFC"
+  _nameEn: "ABC \u2013 Electric Fire Extinguisher"
+  _extinguisherType: 2
+  _supportedFireClasses: 00000000010000000200000005000000
+  _maxRange: 4.25
+  _sprayRadius: 0.55
+  _coneAngleDegrees: 25
+  _extinguishPower: 0.2
+  _consumptionRate: 1
+  _optimalDistanceMin: 0.75
+  _optimalDistanceMax: 2.75
+  _rangeFalloffAmount: 0.1

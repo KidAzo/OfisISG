@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: F-Class-HoverInfo
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: F Type Fire Estinguisher
+    message: F-type fire extinguishers are used for cooking oil fires. They work
+      by forming a layer over the oil surface, preventing re-ignition. Water must
+      never be used, as it can intensify the fire.
+    sound: {fileID: 11400000, guid: 48503612e59634049b590cc66d1e00b1, type: 2}
+  turkish:
+    title: "F Tipi Yang\u0131n T\xFCp\xFC"
+    message: "F tipi yang\u0131n t\xFCpleri, k\u0131zg\u0131n ya\u011F yang\u0131nlar\u0131nda
+      kullan\u0131l\u0131r. Ya\u011F\u0131n \xFCzerini kaplayarak yang\u0131n\u0131
+      bo\u011Far ve yeniden alevlenmeyi \xF6nler. Su ile m\xFCdahale edilmesi yang\u0131n\u0131
+      b\xFCy\xFCtece\u011Finden kesinlikle kullan\u0131lmamal\u0131d\u0131r."
+    sound: {fileID: 11400000, guid: 0a57c50a0c83f8c469b01762d0a86fe4, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

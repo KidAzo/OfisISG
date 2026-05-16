@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: E-Fire-Fire-Class-PANO-HoverInfo
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: 'E Class '
+    message: Class E fires are electrical fires. In electrical panel fires, the power
+      supply must be cut off first. Dry chemical or carbon dioxide extinguishers
+      should be used. Water must never be used.
+    sound: {fileID: 11400000, guid: 6d6bbcdec187f8343a54b5a0beb66e58, type: 2}
+  turkish:
+    title: E SINIFI-Pano
+    message: "E s\u0131n\u0131f\u0131 yang\u0131nlar, elektrik kaynakl\u0131 yang\u0131nlard\u0131r.
+      Elektrik panolar\u0131nda olu\u015Fan bu yang\u0131nlarda \xF6ncelikle enerji
+      kesilmelidir. M\xFCdahalede kuru kimyevi tozlu veya karbondioksit t\xFCpler
+      kullan\u0131lmal\u0131, su kesinlikle kullan\u0131lmamal\u0131d\u0131r."
+    sound: {fileID: 11400000, guid: 02a130f0a11320a4e9c74be72ba6f853, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: D-Class-PANO-HoverInfo
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: D Type Fire Estinguisher
+    message: D-type fire extinguishers are used for fires involving combustible metals
+      such as magnesium and aluminum. Water must not be used in these fires. Special
+      extinguishing powders should be applied.
+    sound: {fileID: 11400000, guid: 07fac9ff56d5ce842bbe663c6e8ea073, type: 2}
+  turkish:
+    title: "D Tipi Yang\u0131n T\xFCp\xFC"
+    message: "D tipi yang\u0131n t\xFCpleri, yan\u0131c\u0131 metallerin olu\u015Fturdu\u011Fu
+      yang\u0131nlar i\xE7in kullan\u0131l\u0131r. Magnezyum ve al\xFCminyum gibi
+      metallerde etkilidir. Bu yang\u0131nlarda su kullan\u0131lmamal\u0131, \xF6zel
+      s\xF6nd\xFCrme tozu ile m\xFCdahale edilmelidir."
+    sound: {fileID: 11400000, guid: 924b4dc98bc9de2429353a17a6cc83a9, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

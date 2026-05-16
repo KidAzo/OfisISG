@@ -1,0 +1,30 @@
+{
+    "name": "Woi.Fire.Equipment",
+    "rootNamespace": "",
+    "references": [
+        "FireExtinguisher.Core",
+        "Woi.Fire.Events",
+        "Woi.Events",
+        "Obvious.Soap",
+        "Woi.InputSystem",
+        "FireExtinguisher.PC",
+        "WOI.Modules.SDK",
+        "Woi.UI.Popups",
+        "WoiUtils.AudioSystem.Runtime",
+        "Woi.Porting",
+        "PrimeTween.Runtime",
+        "FireExtinguisher.VR",
+        "Unity.InputSystem",
+        "Woi.Fire.EstinguisherHUD",
+        "QuickOutline"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

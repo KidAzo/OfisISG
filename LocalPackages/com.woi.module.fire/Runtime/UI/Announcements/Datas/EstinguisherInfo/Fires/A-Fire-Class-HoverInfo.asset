@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: A-Fire-Class-HoverInfo
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: A Class
+    message: A fires involve solid materials such as wood, paper, and fabric. These
+      fires can form embers and may reignite. Water or dry chemical extinguishers
+      should be used, and the base of the fire must be targeted.
+    sound: {fileID: 11400000, guid: f5d1d3c2bf092a341aed001f5b7b5194, type: 2}
+  turkish:
+    title: "A S\u0131n\u0131f\u0131"
+    message: "A s\u0131n\u0131f\u0131 yang\u0131nlar; ah\u015Fap, k\xE2\u011F\u0131t
+      ve kuma\u015F gibi kat\u0131 maddelerin yanmas\u0131yla olu\u015Fur. Bu yang\u0131nlar
+      kor olu\u015Fturarak tekrar alevlenebilir. M\xFCdahalede su veya kuru kimyevi
+      tozlu t\xFCpler kullan\u0131lmal\u0131 ve yang\u0131n\u0131n taban\u0131na
+      odaklan\u0131lmal\u0131d\u0131r."
+    sound: {fileID: 11400000, guid: 1f455b9fcfb118f4db6b0a71edd92cbe, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

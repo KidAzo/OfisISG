@@ -1,0 +1,33 @@
+/* Standalone leaderboard UIDocument: fills panel; no full-screen login background. */
+
+.leaderboard-doc-root {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.leaderboard-doc-root .leaderboard-panel {
+    position: relative;
+    top: auto;
+    right: auto;
+    align-self: flex-end;
+    margin-left: auto;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    max-height: 100%;
+}
+
+/* PC overlay: pin panel top-left (VR keeps flex-end / upper-right). */
+.leaderboard-doc-root.leaderboard-doc-root--pc .leaderboard-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: auto;
+    align-self: flex-start;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}

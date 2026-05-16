@@ -1,0 +1,20 @@
+{
+    "name": "Woi.Game.Viewmodel",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0e235b536c08cfe4a840b8c351280646",
+        "GUID:ced88875c7215c94492d8bcadb805864",
+        "GUID:6e3e8d4120e44a4498280af0a503d94d",
+        "Unity.Mathematics",
+        "Unity.Splines"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

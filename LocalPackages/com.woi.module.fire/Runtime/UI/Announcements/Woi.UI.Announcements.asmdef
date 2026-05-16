@@ -1,0 +1,22 @@
+{
+    "name": "Woi.UI.Announcements",
+    "rootNamespace": "Woi.UI.Announcements",
+    "references": [
+        "Woi.UI.Popups",
+        "WoiUtils.AudioSystem.Runtime",
+        "Obvious.Soap",
+        "Woi.Porting",
+        "Woi.Player",
+        "GUID:0e235b536c08cfe4a840b8c351280646",
+        "GUID:e482584a5795fa4409047161cc21985d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

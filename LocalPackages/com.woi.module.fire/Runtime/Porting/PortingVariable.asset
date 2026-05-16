@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d7c11c2d5f968b49b04405c7b82ef51, type: 3}
+  m_Name: PortingVariable
+  m_EditorClassIdentifier: WoiPortingChange::Woi.Porting.ScriptableEnumPortingVariable
+  serializationData:
+    SerializedFormat: 0
+    SerializedBytes: 2d010e000000520065007000610069006e0074005200650071007500650073007400
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  TagIndex: 0
+  Description: 
+  _currentValue: 0

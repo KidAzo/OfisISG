@@ -1,0 +1,21 @@
+{
+    "name": "Woi.Fire.LoginScreen",
+    "rootNamespace": "",
+    "references": [
+        "GUID:86a80fba6882dad4b8847b7bc03b1a62",
+        "GUID:fe1becd1c4247844ba74d544a869b97a",
+        "GUID:ced88875c7215c94492d8bcadb805864",
+        "Woi.SceneGroup",
+        "GUID:e984484bb6786cb4f9cc8f0f23933645",
+        "GUID:e482584a5795fa4409047161cc21985d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

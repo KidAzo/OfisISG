@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: ABC-Class-HoverInfo
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: ABC Type Fire Estinguisher
+    message: ABC-type fire extinguishers can be used for solid, liquid, and gas fires.
+      They are also suitable for electrical fires. They work by suppressing the fire,
+      and the application should be directed at the base of the flames.
+    sound: {fileID: 11400000, guid: 0656b90d7be8c01498a6b0fe4c388df1, type: 2}
+  turkish:
+    title: "ABC \u2013 Elektrik Tipi Yang\u0131n T\xFCp\xFC: "
+    message: "ABC tipi yang\u0131n t\xFCpleri; kat\u0131, s\u0131v\u0131 ve gaz yang\u0131nlar\u0131nda
+      kullan\u0131labilir. Elektrik yang\u0131nlar\u0131nda da g\xFCvenle tercih
+      edilir. Yang\u0131n\u0131 bo\u011Farak s\xF6nd\xFCr\xFCr, m\xFCdahale s\u0131ras\u0131nda
+      alevin taban\u0131na odaklan\u0131lmal\u0131d\u0131r."
+    sound: {fileID: 11400000, guid: cd1899f2d51037047a80d3f13b140228, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="EstinguisherHUDVR" class="EstinguisherHUDVR">
+        
+        <!-- Header -->
+        <ui:VisualElement class="header border-bottom">
+            <ui:Label name="extinguisher-title" text="ABCF Tipi Yangın Tüpü" class="title-text text-cyan" />
+            <ui:VisualElement class="icon-box" /> <!-- İkon için -->
+        </ui:VisualElement>
+
+        <!-- Güvenlik İğnesi -->
+        <ui:VisualElement class="row-container margin-bottom">
+            <ui:VisualElement name="pin-bar" class="pin-bar bg-cyan" />
+            <ui:VisualElement class="row-space-between">
+                <ui:Label text="GÜVENLİK İĞNESİ" class="subtitle-text text-cyan border-opacity" />
+                <ui:Label name="pin-status-text" text="ÇEKİLDİ" class="bold-text text-cyan" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Kapasite -->
+        <ui:VisualElement class="margin-bottom">
+            <ui:VisualElement class="row-space-between">
+                <ui:Label text="KAPASİTE" class="subtitle-text text-cyan border-opacity" />
+                <ui:Label name="capacity-text" text="100,0%" class="capacity-val-text text-cyan" />
+            </ui:VisualElement>
+            
+            <ui:VisualElement class="progress-bar-bg border-opacity-bg">
+                <ui:VisualElement name="progress-bar-fill" class="progress-bar-fill bg-cyan" style="width: 100%;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Kalan Süre -->
+        <ui:VisualElement class="time-container border-opacity-bg">
+            <ui:VisualElement class="icon-box-small" />
+            
+            <ui:VisualElement class="column-center">
+                <ui:Label text="KALAN" class="subtitle-text text-cyan border-opacity" />
+                <ui:Label text="SÜRE" class="subtitle-text text-cyan border-opacity" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="row-end">
+                <ui:Label name="time-text" text="100,0" class="time-val text-cyan" />
+                <ui:Label name="time-unit" text="sn" class="subtitle-text text-cyan border-opacity" style="margin-left: 5px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

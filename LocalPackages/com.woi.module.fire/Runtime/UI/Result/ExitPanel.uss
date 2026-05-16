@@ -1,0 +1,176 @@
+/* Exit panel — stiller UXML ile aynı klasörde; geçersiz font URL kullanılmıyor (theme / varsayılan font). */
+
+.exit-panel-container {
+    width: 380px;
+    flex-direction: column;
+    flex-shrink: 0;
+    background-color: rgba(10, 10, 10, 0.85);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: rgba(255, 77, 77, 0.5);
+    border-right-color: rgba(255, 77, 77, 0.5);
+    border-top-color: rgba(255, 77, 77, 0.5);
+    border-bottom-color: rgba(255, 77, 77, 0.5);
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.header-container {
+    flex-direction: row;
+    flex-shrink: 0;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.alert-icon-container {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.alert-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    /* Sprite atanmamış olsa bile uyarı alanı görünsün */
+    background-color: rgba(255, 77, 77, 0.35);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.header-text-container {
+    flex-grow: 1;
+    flex-direction: column;
+    flex-shrink: 1;
+}
+
+.text-danger-header {
+    font-size: 18px;
+    -unity-font-style: bold;
+    color: rgb(255, 77, 77);
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+    white-space: normal;
+}
+
+.text-sub-header {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 4px;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+    white-space: normal;
+}
+
+.body-container {
+    flex-direction: column;
+    flex-shrink: 0;
+    margin-bottom: 24px;
+}
+
+.text-body-title {
+    font-size: 16px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    margin: 0 0 12px 0;
+    padding: 0;
+    white-space: normal;
+}
+
+.text-body-desc {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 12px 0 0 0;
+    padding: 0;
+    white-space: normal;
+}
+
+.divider {
+    height: 1px;
+    flex-shrink: 0;
+    background-color: rgba(255, 255, 255, 0.15);
+    margin: 0;
+}
+
+.action-buttons-container {
+    flex-direction: row;
+    flex-shrink: 0;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.btn-action {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    height: 48px;
+    min-height: 48px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 0;
+    padding-bottom: 0;
+    -unity-text-align: middle-center;
+    font-size: 14px;
+    -unity-font-style: bold;
+}
+
+.btn-danger {
+    background-color: rgba(255, 77, 77, 0.12);
+    border-left-color: rgba(255, 77, 77, 0.55);
+    border-right-color: rgba(255, 77, 77, 0.55);
+    border-top-color: rgba(255, 77, 77, 0.55);
+    border-bottom-color: rgba(255, 77, 77, 0.55);
+    color: rgb(255, 120, 120);
+    margin-right: 8px;
+}
+
+.btn-danger:hover {
+    background-color: rgba(255, 77, 77, 0.28);
+}
+
+.btn-safe {
+    background-color: rgba(0, 200, 220, 0.12);
+    border-left-color: rgba(0, 245, 255, 0.5);
+    border-right-color: rgba(0, 245, 255, 0.5);
+    border-top-color: rgba(0, 245, 255, 0.5);
+    border-bottom-color: rgba(0, 245, 255, 0.5);
+    color: rgb(120, 245, 255);
+    margin-left: 8px;
+}
+
+.btn-safe:hover {
+    background-color: rgba(0, 245, 255, 0.22);
+}

@@ -1,0 +1,29 @@
+{
+    "name": "Woi.Fire.Training",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ced88875c7215c94492d8bcadb805864",
+        "GUID:e984484bb6786cb4f9cc8f0f23933645",
+        "GUID:ee6baafdecd94804a8714654c4bd097f",
+        "GUID:0e235b536c08cfe4a840b8c351280646",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "Woi.SceneGroup",
+        "GUID:a115a4c865666ac47b70044f91d4aea0",
+        "GUID:e482584a5795fa4409047161cc21985d",
+        "GUID:6e3e8d4120e44a4498280af0a503d94d",
+        "GUID:ef9f57010d297824bb7bb69c9e88a94f",
+        "GUID:3208c2213195a7c49ab7b32769623f29",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "Unity.XR.CoreUtils",
+        "Woi.Player"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

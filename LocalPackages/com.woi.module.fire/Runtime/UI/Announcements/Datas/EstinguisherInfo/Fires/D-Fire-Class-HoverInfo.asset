@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: D-Fire-Class-HoverInfo
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: D Class
+    message: Class D fires involve combustible metals such as magnesium, aluminum,
+      and titanium. These fires burn at extremely high temperatures and can react
+      violently with water. Special Class D extinguishing powders must be used, and
+      water must never be applied.
+    sound: {fileID: 11400000, guid: df36614c7c1077d40a38ee872613f4b7, type: 2}
+  turkish:
+    title: D SINIFI
+    message: "D s\u0131n\u0131f\u0131 yang\u0131nlar; magnezyum, al\xFCminyum ve
+      titanyum gibi yan\u0131c\u0131 metallerin tutu\u015Fmas\u0131yla olu\u015Fur.
+      Bu yang\u0131nlar \xE7ok y\xFCksek s\u0131cakl\u0131kta yanar ve su ile temas
+      etti\u011Finde \u015Fiddetli reaksiyon g\xF6sterebilir. M\xFCdahalede \xF6zel
+      D s\u0131n\u0131f\u0131 yang\u0131n s\xF6nd\xFCrme tozlar\u0131 kullan\u0131lmal\u0131,
+      su kesinlikle kullan\u0131lmamal\u0131d\u0131r."
+    sound: {fileID: 11400000, guid: a7760b49d60be374e8dff8555f197780, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

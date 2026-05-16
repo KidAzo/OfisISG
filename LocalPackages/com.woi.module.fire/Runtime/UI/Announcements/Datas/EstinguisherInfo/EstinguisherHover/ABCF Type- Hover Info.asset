@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: ABCF Type- Hover Info
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: ABCF Type Fire Estinguisher
+    message: ABCF-type fire extinguishers are suitable for solid, liquid, gas, and
+      cooking oil fires. They are especially effective in kitchen environments. Proper
+      distance and controlled application are essential to ensure safety.
+    sound: {fileID: 11400000, guid: 380201cd159c73042a1e054683254514, type: 2}
+  turkish:
+    title: "ABCF Tipi Yang\u0131n T\xFCp\xFC"
+    message: "ABCF tipi yang\u0131n t\xFCpleri, kat\u0131, s\u0131v\u0131, gaz ve
+      ya\u011F yang\u0131nlar\u0131nda kullan\u0131labilir. \xD6zellikle mutfaklarda
+      olu\u015Fan ya\u011F yang\u0131nlar\u0131na kar\u015F\u0131 etkilidir. Yanl\u0131\u015F
+      m\xFCdahale riskini azaltmak i\xE7in do\u011Fru mesafeden uygulanmal\u0131d\u0131r."
+    sound: {fileID: 11400000, guid: 02b88e74c06ebde4e83631c9e5329f2c, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

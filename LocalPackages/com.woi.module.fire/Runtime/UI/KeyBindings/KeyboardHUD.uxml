@@ -1,0 +1,70 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <Style src="ControlsHUD.uss" />
+    
+    <ui:VisualElement class="hud-container">
+        
+        <!-- SOL TARAF: KLAVYE -->
+        <ui:VisualElement class="keyboard-section">
+            
+            <!-- 1. Satır -->
+            <ui:VisualElement class="row">
+                <ui:Label text="TAB" class="key-special w-tab" />
+                <ui:Label text="Q" class="key-base key-default" />
+                <ui:Label text="W" class="key-base key-sky" />
+                <ui:Label text="E" class="key-base key-emerald" />
+                <ui:Label text="R" class="key-base key-rose" />
+                <ui:Label text="T" class="key-base key-default" />
+            </ui:VisualElement>
+            
+            <!-- 2. Satır -->
+            <ui:VisualElement class="row">
+                <ui:Label text="CAPS" class="key-special w-caps" />
+                <ui:Label text="A" class="key-base key-sky" />
+                <ui:Label text="S" class="key-base key-sky" />
+                <ui:Label text="D" class="key-base key-sky" />
+                <ui:Label text="F" class="key-base key-default" />
+                <ui:Label text="G" class="key-base key-amber" />
+            </ui:VisualElement>
+            
+            <!-- 3. Satır -->
+            <ui:VisualElement class="row">
+                <ui:Label text="SHIFT" class="key-special w-shift" />
+                <ui:Label text="Z" class="key-base key-default" />
+                <ui:Label text="X" class="key-base key-default" />
+                <ui:Label text="C" class="key-base key-default" />
+                <ui:Label text="V" class="key-base key-default" />
+                <ui:Label text="B" class="key-base key-default" />
+            </ui:VisualElement>
+            
+        </ui:VisualElement>
+
+        <!-- ORTA AYIRICI ÇİZGİ -->
+        <ui:VisualElement class="divider" />
+
+        <!-- SAĞ TARAF: GÖSTERGELER (LEGEND) -->
+        <ui:VisualElement class="legend-section">
+            <ui:Label text="KEY BINDINGS" class="legend-title" />
+            
+            <ui:VisualElement class="legend-row">
+                <ui:VisualElement class="legend-dot dot-sky" />
+                <ui:Label text="Locomotion (WASD)" class="legend-text" />
+            </ui:VisualElement>
+            
+            <ui:VisualElement class="legend-row">
+                <ui:VisualElement class="legend-dot dot-emerald" />
+                <ui:Label text="Equip (E)" class="legend-text" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="legend-row">
+                <ui:VisualElement class="legend-dot dot-rose" />
+                <ui:Label text="Pin Pulling (R)" class="legend-text" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="legend-row">
+                <ui:VisualElement class="legend-dot dot-amber" />
+                <ui:Label text="Drop (G)" class="legend-text" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        
+    </ui:VisualElement>
+</ui:UXML>

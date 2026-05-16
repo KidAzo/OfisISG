@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547fbf8b9001ada47beac8dffe0e0ebb, type: 3}
+  m_Name: B-Fire-Class-HoverInfo
+  m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.LocalizedHoverInfoDefinition
+  english:
+    title: 'B Class '
+    message: Class B fires are caused by flammable liquids such as gasoline, diesel,
+      and solvents. They spread rapidly across surfaces. Water should not be used,
+      as it can spread the fire. Dry chemical or foam extinguishers are recommended.
+    sound: {fileID: 11400000, guid: 812d721907cba2d408579a4da81d0738, type: 2}
+  turkish:
+    title: "B S\u0131n\u0131f\u0131"
+    message: "B s\u0131n\u0131f\u0131 yang\u0131nlar; benzin, mazot ve solvent gibi
+      yan\u0131c\u0131 s\u0131v\u0131lardan kaynaklan\u0131r. Y\xFCzeyde h\u0131zla
+      yay\u0131l\u0131r ve b\xFCy\xFCyebilir. Bu yang\u0131nlarda su kullan\u0131lmamal\u0131,
+      kuru kimyevi tozlu veya k\xF6p\xFCkl\xFC t\xFCpler tercih edilmelidir."
+    sound: {fileID: 11400000, guid: 3a976564ecd97af4897d92453fe26a93, type: 2}
+  extra:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  extraLanguageCode: de

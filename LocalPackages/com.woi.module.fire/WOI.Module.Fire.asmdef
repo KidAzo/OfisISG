@@ -1,0 +1,14 @@
+{
+    "name": "WOI.Module.Fire",
+    "rootNamespace": "WOI.Module.Fire",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
