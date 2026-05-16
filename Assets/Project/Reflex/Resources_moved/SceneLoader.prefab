@@ -188,16 +188,12 @@ MonoBehaviour:
   sceneGroups:
   - GroupName: LoginScreen
     Scenes:
-    - Reference:
-        asset: {fileID: 102900000, guid: 18149f31848f1a74db4823a16a2364dd, type: 3}
-        guid: 18149f31848f1a74db4823a16a2364dd
+    - SceneName: 
       AddressableKey: 
       SceneType: 0
   - GroupName: FireModule_Office
     Scenes:
-    - Reference:
-        asset: {fileID: 102900000, guid: 2a034a5d92c28e444a1e19d5ef67d9f3, type: 3}
-        guid: 2a034a5d92c28e444a1e19d5ef67d9f3
+    - SceneName: FireModule_Office
       AddressableKey: 
       SceneType: 0
   _runCatalogHealthBeforeSelectedGroups: 1

@@ -16,16 +16,6 @@
       },
       "hash": "fd8ff1fb700caf062eb5cce364c1d0a85f99ebe6"
     },
-    "com.eflatun.scenereference": {
-      "version": "git+https://github.com/starikcetin/Eflatun.SceneReference.git#5.0.0",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "com.unity.settings-manager": "2.0.1",
-        "com.unity.nuget.newtonsoft-json": "3.0.2"
-      },
-      "hash": "6821c571090fc0828accced5dbd7635152c23887"
-    },
     "com.kyrylokuzyk.primetween": {
       "version": "file:../Assets/Plugins/PrimeTween/internal/com.kyrylokuzyk.primetween.tgz",
       "depth": 0,
@@ -165,13 +155,6 @@
     },
     "com.unity.nuget.mono-cecil": {
       "version": "1.11.6",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.nuget.newtonsoft-json": {
-      "version": "3.2.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -417,7 +400,7 @@
       "url": "https://packages.unity.com"
     },
     "com.woi.module.fire": {
-      "version": "file:C:/Users/azoci/Desktop/UnityPackages/com.woi.module.fire",
+      "version": "file:../LocalPackages/com.woi.module.fire",
       "depth": 0,
       "source": "local",
       "dependencies": {
@@ -425,7 +408,7 @@
       }
     },
     "com.woi.modules.sdk": {
-      "version": "file:C:/Users/azoci/Desktop/UnityPackages/com.woi.modules.sdk",
+      "version": "file:../LocalPackages/com.woi.modules.sdk",
       "depth": 0,
       "source": "local",
       "dependencies": {}

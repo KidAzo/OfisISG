@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using Eflatun.SceneReference;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,19 +51,21 @@ namespace Systems.SceneManagement
 				var sceneData = group.Scenes[i];
 				if (reloadDupScenes == false && loadedScenes.Contains(sceneData.Name)) continue;
 
-				if (sceneData.Reference.State == SceneReferenceState.Regular)
+				if (!string.IsNullOrEmpty(sceneData.AddressableKey))
 				{
-					var operation = SceneManager.LoadSceneAsync(sceneData.Reference.Path, LoadSceneMode.Additive);
+					var sceneHandle = Addressables.LoadSceneAsync(sceneData.AddressableKey, LoadSceneMode.Additive);
+					handleGroup.Handles.Add(sceneHandle);
+				}
+				else if (!string.IsNullOrEmpty(sceneData.SceneName))
+				{
+					var operation = SceneManager.LoadSceneAsync(sceneData.SceneName, LoadSceneMode.Additive);
 					operationGroup.Operations.Add(operation);
 				}
-				else if (sceneData.Reference.State == SceneReferenceState.Addressable 
-						|| !string.IsNullOrEmpty(sceneData.AddressableKey))
+				else
 				{
-					string key = string.IsNullOrEmpty(sceneData.AddressableKey) 
-						? sceneData.Reference.Path 
-						: sceneData.AddressableKey;
-					var sceneHandle = Addressables.LoadSceneAsync(key, LoadSceneMode.Additive);
-					handleGroup.Handles.Add(sceneHandle);
+					Debug.LogWarning(
+						$"[SceneGroupManager] Scene entry {i} in group '{group.GroupName}' has no SceneName or AddressableKey — skipping.");
+					continue;
 				}
 
 				OnSceneLoaded.Invoke(group.sceneSettings, sceneData);
