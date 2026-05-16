@@ -1,7 +1,12 @@
 {
     "name": "Woi.OfficeFire.Editor",
     "rootNamespace": "Woi.OfficeFire.Editor",
-    "references": [],
+    "references": [
+        "GUID:f0e0f0e0f0e0401080a0b0c0d0e0f001",
+        "GUID:f0e0f0e0f0e0401080a0b0c0d0e0f002",
+        "GUID:f0e0f0e0f0e0401080a0b0c0d0e0f003",
+        "GUID:f0e0f0e0f0e0401080a0b0c0d0e0f006"
+    ],
     "includePlatforms": [
         "Editor"
     ],

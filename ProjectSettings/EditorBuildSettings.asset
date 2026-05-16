@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/OfficeStartScene/LoginScreen.unity
     guid: 18149f31848f1a74db4823a16a2364dd
+  - enabled: 1
+    path: Assets/Project/Scenes/FireModule/FireModule_Office.unity
+    guid: 2a034a5d92c28e444a1e19d5ef67d9f3
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 854e8bf763ca59e428d806bfd18e1002, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
