@@ -1,0 +1,16 @@
+{
+    "name": "Woi.OfficeFire.PCVR",
+    "rootNamespace": "Woi.OfficeFire",
+    "references": [
+        "GUID:f0e0f0e0f0e0401080a0b0c0d0e0f001"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

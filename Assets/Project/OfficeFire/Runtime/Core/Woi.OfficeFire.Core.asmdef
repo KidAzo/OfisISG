@@ -1,0 +1,14 @@
+{
+    "name": "Woi.OfficeFire.Core",
+    "rootNamespace": "Woi.OfficeFire",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
