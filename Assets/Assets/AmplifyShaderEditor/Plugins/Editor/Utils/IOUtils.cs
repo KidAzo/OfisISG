@@ -89,24 +89,7 @@ namespace AmplifyShaderEditor
 		public static readonly string InstancedPropertiesData = "UNITY_ACCESS_INSTANCED_PROP({0})";
 
 		public static readonly string DotsInstancedPropertiesData = "\tUNITY_DOTS_INSTANCED_PROP({0}, {1})";
-		public static string DotsInstancedDefinesData
-		{
-			get
-			{
-				if ( ASEPackageManagerHelper.PackageSRPVersion >= ( int )ASESRPBaseline.ASE_SRP_13_X )
-				{
-					return "#define {1} UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT({0} , {1})";
-				}
-				else if ( ASEPackageManagerHelper.PackageSRPVersion >= ( int )ASESRPBaseline.ASE_SRP_12_X )
-				{
-					return "#define {1} UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO({0} , Metadata{1})";
-				}
-				else
-				{
-					return "#define {1} UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO({0} , Metadata_{1})";
-				}
-			}
-		}
+		public static readonly string DotsInstancedDefinesData = "#define {1} UNITY_ACCESS_DOTS_INSTANCED_PROP_WITH_DEFAULT( {0}, {1} )";
 
 		public static readonly string LWSRPInstancedPropertiesBegin = "UNITY_INSTANCING_BUFFER_START({0})";
 		public static readonly string LWSRPInstancedPropertiesEnd = "UNITY_INSTANCING_BUFFER_END({0})";
@@ -381,21 +364,13 @@ namespace AmplifyShaderEditor
 		////////////////////////////////////////////////////////////////////////////
 		public static void SetAmplifyDefineSymbolOnBuildTargetGroup( BuildTargetGroup targetGroup )
 		{
-		#if UNITY_2021_2_OR_NEWER
 			var namedBuildTarget = NamedBuildTarget.FromBuildTargetGroup( targetGroup );
 			string currData = PlayerSettings.GetScriptingDefineSymbols( namedBuildTarget );
-		#else
-			string currData = PlayerSettings.GetScriptingDefineSymbolsForGroup( targetGroup );
-		#endif
 			if( !currData.Contains( AmplifyShaderEditorDefineSymbol ) )
 			{
 				if( string.IsNullOrEmpty( currData ) )
 				{
-				#if UNITY_2021_2_OR_NEWER
 					PlayerSettings.SetScriptingDefineSymbols( namedBuildTarget, AmplifyShaderEditorDefineSymbol );
-				#else
-					PlayerSettings.SetScriptingDefineSymbolsForGroup( targetGroup, AmplifyShaderEditorDefineSymbol );
-				#endif
 				}
 				else
 				{
@@ -405,34 +380,22 @@ namespace AmplifyShaderEditor
 					}
 					currData += AmplifyShaderEditorDefineSymbol;
 
-				#if UNITY_2021_2_OR_NEWER
 					PlayerSettings.SetScriptingDefineSymbols( namedBuildTarget, currData );
-				#else
-					PlayerSettings.SetScriptingDefineSymbolsForGroup( targetGroup, currData );
-				#endif
 				}
 			}
 		}
 
 		public static void RemoveAmplifyDefineSymbolOnBuildTargetGroup( BuildTargetGroup targetGroup )
 		{
-		#if UNITY_2021_2_OR_NEWER
 			var namedBuildTarget = NamedBuildTarget.FromBuildTargetGroup( targetGroup );
 			string currData = PlayerSettings.GetScriptingDefineSymbols( namedBuildTarget );
-		#else
-			string currData = PlayerSettings.GetScriptingDefineSymbolsForGroup( targetGroup );
-		#endif
 			if( currData.Contains( AmplifyShaderEditorDefineSymbol ) )
 			{
 				currData = currData.Replace( AmplifyShaderEditorDefineSymbol + ";" , "" );
 				currData = currData.Replace( ";" + AmplifyShaderEditorDefineSymbol , "" );
 				currData = currData.Replace( AmplifyShaderEditorDefineSymbol , "" );
 
-			#if UNITY_2021_2_OR_NEWER
 				PlayerSettings.SetScriptingDefineSymbols( namedBuildTarget, currData );
-			#else
-				PlayerSettings.SetScriptingDefineSymbolsForGroup( targetGroup, currData );
-			#endif
 			}
 		}
 
@@ -455,6 +418,7 @@ namespace AmplifyShaderEditor
 
 				ASEPackageManagerHelper.Initialize();
 				TemplatesManager.CheckCreateInstance();
+				TemplateTracker.Initialize();
 			}
 		}
 

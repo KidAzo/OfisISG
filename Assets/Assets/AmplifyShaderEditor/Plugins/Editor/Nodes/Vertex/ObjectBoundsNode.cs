@@ -55,9 +55,9 @@ namespace AmplifyShaderEditor
 
 		public override string GenerateShaderForOutput( int outputId, ref MasterNodeDataCollector dataCollector, bool ignoreLocalvar )
 		{
-			if ( m_showErrorMessage )
+			if ( !dataCollector.IsSRP || ASEPackageManagerHelper.PackageSRPVersion < 140004 )
 			{
-				UIUtils.ShowMessage( NodeMsg );
+				UIUtils.ShowMessage( NodeMsg , MessageSeverity.Error );
 				return GenerateErrorValue();
 			}
 

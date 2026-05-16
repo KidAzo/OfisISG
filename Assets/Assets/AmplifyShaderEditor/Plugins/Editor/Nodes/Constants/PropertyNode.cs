@@ -969,6 +969,7 @@ namespace AmplifyShaderEditor
 			m_propertyInspectorName = EditorGUILayoutTextField( PropertyInspectorStr, m_propertyInspectorName );
 			if( EditorGUI.EndChangeCheck() )
 			{
+				SetClippedTitle( m_propertyInspectorName, m_longNameSize );
 				if( m_propertyInspectorName.Length > 0 )
 				{
 					BeginPropertyFromInspectorCheck();
@@ -1524,6 +1525,7 @@ namespace AmplifyShaderEditor
 		public virtual void DrawMaterialProperties() { }
 
 		public virtual string GetPropertyValue() { return string.Empty; }
+		public virtual string GetDefaultValue() { return string.Empty; }
 
 		public string GetInstancedUniformValue( bool isTemplate, bool isSRP )
 		{

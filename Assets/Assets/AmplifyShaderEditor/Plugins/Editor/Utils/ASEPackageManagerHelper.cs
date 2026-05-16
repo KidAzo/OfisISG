@@ -8,10 +8,13 @@ using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AmplifyShaderEditor
 {
@@ -34,33 +37,31 @@ namespace AmplifyShaderEditor
 		}
 	}
 
-	public enum ASESRPBaseline
+	public enum SRPBaseline
 	{
 		ASE_SRP_INVALID = 0,
-		ASE_SRP_10_X = 100000,
-		ASE_SRP_11_X = 110000,
-		ASE_SRP_12_X = 120000,
-		ASE_SRP_13_X = 130000,
 		ASE_SRP_14_X = 140000,
 		ASE_SRP_15_X = 150000,
 		ASE_SRP_16_X = 160000,
 		ASE_SRP_17_0 = 170000,
 		ASE_SRP_17_1 = 170100,
 		ASE_SRP_17_2 = 170200,
-		ASE_SRP_17_3 = 170300
+		ASE_SRP_17_3 = 170300,
+		ASE_SRP_17_4 = 170400,
+		ASE_SRP_17_5 = 170500
 	}
 
-	public class ASESRPPackageDesc
+	public class SRPTemplateVersionDesc
 	{
-		public ASESRPBaseline baseline = ASESRPBaseline.ASE_SRP_INVALID;
-		public string guidURP = string.Empty;
-		public string guidHDRP = string.Empty;
+		public SRPBaseline baseline = SRPBaseline.ASE_SRP_INVALID;
+		public string folderURP = string.Empty;
+		public string folderHDRP = string.Empty;
 
-		public ASESRPPackageDesc( ASESRPBaseline baseline, string guidURP, string guidHDRP )
+		public SRPTemplateVersionDesc( SRPBaseline baseline, string folderURP, string folderHDRP )
 		{
 			this.baseline = baseline;
-			this.guidURP = guidURP;
-			this.guidHDRP = guidHDRP;
+			this.folderURP = folderURP;
+			this.folderHDRP = folderHDRP;
 		}
 	}
 
@@ -71,26 +72,23 @@ namespace AmplifyShaderEditor
 		public static readonly string URPPackageId  = "com.unity.render-pipelines.universal";
 		public static readonly string HDRPPackageId = "com.unity.render-pipelines.high-definition";
 
-		private static readonly string NewVersionDetectedFormat = "A new {0} version {1} was detected and new templates are being imported.\nPlease hit the Update button on your ASE canvas to recompile your shader under the newest version.";
-		private static readonly string PackageBaseFormat = "ASE_PkgBase_{0}_{1}";
-		private static readonly string PackageCRCFormat = "ASE_PkgCRC_{0}_{1}";
+		private static readonly string NewVersionDetectedFormat = "[AmplifyShaderEditor] A new {0} version {1} was detected and new templates are being installed.\n";
+		private static readonly string DefaultedTemplatesFormat = "[AmplifyShaderEditor] No {0} version was detected and templates were disabled.\n";
 
 		private static readonly string SRPKeywordFormat = "ASE_SRP_VERSION {0}";
 		private static readonly string ASEVersionKeywordFormat = "ASE_VERSION {0}";
 
-		public static readonly Dictionary<int, ASESRPPackageDesc> SRPPackageSupport = new Dictionary<int,ASESRPPackageDesc>()
+		public static readonly Dictionary<int, SRPTemplateVersionDesc> SRPPackageSupport = new Dictionary<int,SRPTemplateVersionDesc>()
 		{
-			{ ( int )ASESRPBaseline.ASE_SRP_10_X, new ASESRPPackageDesc( ASESRPBaseline.ASE_SRP_10_X, "b460b52e6c1feae45b70b7ddc2c45bd6", "2243c8b4e1ab6914995699133f67ab5a" ) },
-			{ ( int )ASESRPBaseline.ASE_SRP_11_X, new ASESRPPackageDesc( ASESRPBaseline.ASE_SRP_11_X, "b460b52e6c1feae45b70b7ddc2c45bd6", "2243c8b4e1ab6914995699133f67ab5a" ) },
-			{ ( int )ASESRPBaseline.ASE_SRP_12_X, new ASESRPPackageDesc( ASESRPBaseline.ASE_SRP_12_X, "57fcea0ed8b5eb347923c4c21fa31b57", "9a5e61a8b3421b944863d0946e32da0a" ) },
-			{ ( int )ASESRPBaseline.ASE_SRP_13_X, new ASESRPPackageDesc( ASESRPBaseline.ASE_SRP_13_X, "57fcea0ed8b5eb347923c4c21fa31b57", "9a5e61a8b3421b944863d0946e32da0a" ) },
-			{ ( int )ASESRPBaseline.ASE_SRP_14_X, new ASESRPPackageDesc( ASESRPBaseline.ASE_SRP_14_X, "2e9da72e7e3196146bf7d27450013734", "89f0b84148d149d4d96b838d7ef60e92" ) },
-			{ ( int )ASESRPBaseline.ASE_SRP_15_X, new ASESRPPackageDesc( ASESRPBaseline.ASE_SRP_15_X, "0904cdf24ddcd5042b024326476220d5", "19939ee2cdb76e0489b1b8cd4bed7f3d" ) },
-			{ ( int )ASESRPBaseline.ASE_SRP_16_X, new ASESRPPackageDesc( ASESRPBaseline.ASE_SRP_16_X, "929783250050f8a448821b6ca1f2c578", "70777e8ce9f3c8d4a8182ca2f965cdb2" ) },
-			{ ( int )ASESRPBaseline.ASE_SRP_17_0, new ASESRPPackageDesc( ASESRPBaseline.ASE_SRP_17_0, "fcc4d2eb0af82e546ae75506872cf092", "ba281a1a00c8ac54c914e0763299f637" ) },
-			{ ( int )ASESRPBaseline.ASE_SRP_17_1, new ASESRPPackageDesc( ASESRPBaseline.ASE_SRP_17_1, "cd0a0171c5157b748afe763b89f71211", "e6fc8948257acee42b666d0bfe1d782c" ) },
-			{ ( int )ASESRPBaseline.ASE_SRP_17_2, new ASESRPPackageDesc( ASESRPBaseline.ASE_SRP_17_2, "f4990f6ace6142c4bbbf41cdd80b0bd3", "4b5cb8698f2d9c14fadf8e2383441d37" ) },
-			{ ( int )ASESRPBaseline.ASE_SRP_17_3, new ASESRPPackageDesc( ASESRPBaseline.ASE_SRP_17_3, "b688bec486aafb24fa0e3dc57afaedb2", "5a07a5a188dd6fa42a63eb43dac1ad38" ) },
+			{ ( int )SRPBaseline.ASE_SRP_14_X, new SRPTemplateVersionDesc( SRPBaseline.ASE_SRP_14_X, "", "" ) },
+			{ ( int )SRPBaseline.ASE_SRP_15_X, new SRPTemplateVersionDesc( SRPBaseline.ASE_SRP_15_X, "", "" ) },
+			{ ( int )SRPBaseline.ASE_SRP_16_X, new SRPTemplateVersionDesc( SRPBaseline.ASE_SRP_16_X, "", "" ) },
+			{ ( int )SRPBaseline.ASE_SRP_17_0, new SRPTemplateVersionDesc( SRPBaseline.ASE_SRP_17_0, "", "" ) },
+			{ ( int )SRPBaseline.ASE_SRP_17_1, new SRPTemplateVersionDesc( SRPBaseline.ASE_SRP_17_1, "", "" ) },
+			{ ( int )SRPBaseline.ASE_SRP_17_2, new SRPTemplateVersionDesc( SRPBaseline.ASE_SRP_17_2, "", "" ) },
+			{ ( int )SRPBaseline.ASE_SRP_17_3, new SRPTemplateVersionDesc( SRPBaseline.ASE_SRP_17_3, "", "" ) },
+			{ ( int )SRPBaseline.ASE_SRP_17_4, new SRPTemplateVersionDesc( SRPBaseline.ASE_SRP_17_4, "", "" ) },
+			{ ( int )SRPBaseline.ASE_SRP_17_5, new SRPTemplateVersionDesc( SRPBaseline.ASE_SRP_17_5, "", "" ) },
 		};
 
 		private static Shader m_lateShader;
@@ -112,14 +110,16 @@ namespace AmplifyShaderEditor
 		public static bool CheckImporter { get { return m_importingPackage != ASEImportFlags.None; } }
 		public static bool IsProcessing { get { return m_requireUpdateList && m_importingPackage == ASEImportFlags.None; } }
 
-		private static ASESRPBaseline m_currentURPBaseline = ASESRPBaseline.ASE_SRP_INVALID;
-		private static ASESRPBaseline m_currentHDRPBaseline = ASESRPBaseline.ASE_SRP_INVALID;
+		private static SRPBaseline m_currentURPBaseline = SRPBaseline.ASE_SRP_INVALID;
+		private static SRPBaseline m_currentHDRPBaseline = SRPBaseline.ASE_SRP_INVALID;
 
-		public static ASESRPBaseline CurrentURPBaseline { get { return m_currentURPBaseline; } }
-		public static ASESRPBaseline CurrentHDRPBaseline { get { return m_currentHDRPBaseline; } }
+		public static SRPBaseline CurrentURPBaseline { get { return m_currentURPBaseline; } }
+		public static SRPBaseline CurrentHDRPBaseline { get { return m_currentHDRPBaseline; } }
 
 		private static int m_packageURPVersion = -1; // @diogo: starts as missing
 		private static int m_packageHDRPVersion = -1;
+
+		public const int MinimumSupportedSRPVersion = ( int )SRPBaseline.ASE_SRP_14_X;
 
 		public static int PackageSRPVersion { get { return ( m_packageHDRPVersion >= m_packageURPVersion ) ? m_packageHDRPVersion : m_packageURPVersion; } }
 		public static int CurrentSRPVersion { get { return UIUtils.CurrentWindow.MainGraphInstance.IsSRP ? PackageSRPVersion : -1; } }
@@ -148,7 +148,7 @@ namespace AmplifyShaderEditor
 
 		static void WaitForPackageListBeforeUpdating()
 		{
-			if ( m_packageListRequest.IsCompleted )
+			if ( !Application.isPlaying && m_packageListRequest.IsCompleted && m_packageListRequest.Status == StatusCode.Success )
 			{
 				Update();
 				EditorApplication.update -= WaitForPackageListBeforeUpdating;
@@ -157,7 +157,7 @@ namespace AmplifyShaderEditor
 
 		public static void RequestInfo( bool updateWhileWaiting = false )
 		{
-			if ( !m_requireUpdateList && m_importingPackage == ASEImportFlags.None )
+			if ( !Application.isPlaying && !m_requireUpdateList && m_importingPackage == ASEImportFlags.None )
 			{
 				m_requireUpdateList = true;
 				m_packageListRequest = UnityEditor.PackageManager.Client.List( true );
@@ -171,28 +171,14 @@ namespace AmplifyShaderEditor
 		public static bool RequestInfoNow()
 		{
 			UnityEditor.PackageManager.PackageInfo[] packages = null;
-			bool succeeded = true;
 
-		#if UNITY_2021_1_OR_NEWER
 			packages = UnityEditor.PackageManager.PackageInfo.GetAllRegisteredPackages();
-		#else
-			var request = UnityEditor.PackageManager.Client.List( true );
-			while ( !request.IsCompleted && request.Status == StatusCode.InProgress )
-			{
-			}
-			if ( request.Status == StatusCode.Success )
-			{
-				succeeded = ( request.Status == StatusCode.Success );
-				packages = request.Result.ToArray();
-			}
-		#endif
-
-			if ( succeeded )
+			if ( packages.Length > 0 )
 			{
 				UpdateNow( packages );
 			}
 
-			return succeeded;
+			return packages.Length > 0;
 		}
 
 		static void FailedPackageImport( string packageName, string errorMessage )
@@ -243,7 +229,6 @@ namespace AmplifyShaderEditor
 			AssetDatabase.importPackageCompleted += CompletedPackageImport;
 			AssetDatabase.importPackageFailed += FailedPackageImport;
 			AssetDatabase.ImportPackage( packagePath, false );
-
 			return true;
 		}
 
@@ -381,85 +366,154 @@ namespace AmplifyShaderEditor
 			return major * 10000 + minor * 100 + patch;
 		}
 
-		private static void CheckPackageImport( ASEImportFlags flag, ASESRPBaseline baseline, string guid, string version )
+		public static void CheckActivePackages( UnityEditor.PackageManager.PackageInfo[] packages, ConcurrentBag<string> updatedAssets )
 		{
-			Debug.Assert( flag == ASEImportFlags.HDRP || flag == ASEImportFlags.URP );
+			Debug.Assert( packages.Length > 0 );
 
-			string path = AssetDatabase.GUIDToAssetPath( guid );
-
-			if ( !string.IsNullOrEmpty( path ) && File.Exists( path ) )
+			foreach ( UnityEditor.PackageManager.PackageInfo package in packages )
 			{
-				uint currentCRC = IOUtils.CRC32( File.ReadAllBytes( path ) );
+				int versionCode = PackageVersionStringToCode( package.version, out int major, out int minor, out int patch );
 
-				string srpName = flag.ToString();
-				string packageBaseKey = string.Format( PackageBaseFormat, srpName, ProjectName );
-				string packageCRCKey = string.Format( PackageCRCFormat, srpName, ProjectName );
+				int baselineMajor = major;
+				int baselineMinor = ( major >= 17 ) ? minor : 0; // from 17+ baseline includes minor version
+				int baseline = PackageVersionElementsToCode( baselineMajor, baselineMinor, 0 );
 
-				ASESRPBaseline savedBaseline = ( ASESRPBaseline )EditorPrefs.GetInt( packageBaseKey );
-				uint savedCRC = ( uint )EditorPrefs.GetInt( packageCRCKey, 0 );
-
-				bool foundNewVersion = ( savedBaseline != baseline ) || ( savedCRC != currentCRC );
-
-				EditorPrefs.SetInt( packageBaseKey, ( int )baseline );
-				EditorPrefs.SetInt( packageCRCKey, ( int )currentCRC );
-
-				string testPath0 = string.Empty;
-				string testPath1 = string.Empty;
-
-				switch ( flag )
+				SRPTemplateVersionDesc match;
+				if ( SRPPackageSupport.TryGetValue( baseline, out match ) )
 				{
-					case ASEImportFlags.URP:
+					if ( package.name.Equals( URPPackageId ) )
 					{
-						testPath0 = AssetDatabase.GUIDToAssetPath( TemplatesManager.URPLitGUID );
-						testPath1 = AssetDatabase.GUIDToAssetPath( TemplatesManager.URPUnlitGUID );
-						break;
+						// Universal Rendering Pipeline
+						m_currentURPBaseline = match.baseline;
+						m_packageURPVersion = versionCode;
+						m_urpPackageInfo = package;
 					}
-					case ASEImportFlags.HDRP:
+					else if ( package.name.Equals( HDRPPackageId ) )
 					{
-						testPath0 = AssetDatabase.GUIDToAssetPath( TemplatesManager.HDRPLitGUID );
-						testPath1 = AssetDatabase.GUIDToAssetPath( TemplatesManager.HDRPUnlitGUID );
-						break;
+						// High-Definition Rendering Pipeline
+						m_currentHDRPBaseline = match.baseline;
+						m_packageHDRPVersion = versionCode;
+						m_hdrpPackageInfo = package;
 					}
 				}
 
-				if ( !File.Exists( testPath0 ) || !File.Exists( testPath1 ) || foundNewVersion )
+				var templateVersionMatch = new List<(string, string)>();
+
+				if ( TemplateTracker.KnownManifests.TryGetValue( package.name, out HashSet<TemplateManifest> manifestSet ) )
 				{
-					m_importingPackage |= flag;
-					if ( StartImporting( path ) && foundNewVersion )
+					bool foundNewVersion = false;
+
+					foreach ( var manifest in manifestSet )
 					{
-						Debug.Log( "[AmplifyShaderEditor] " + string.Format( NewVersionDetectedFormat, srpName, version ) );
+						foreach ( var template in manifest.Templates )
+						{
+							foreach ( var version in template.Versions )
+							{
+								if ( package.version.StartsWith( version.VersionRange.Min ) && !package.version.StartsWith( version.VersionRange.Max ) )
+								{
+									string templatePath = AssetDatabase.GetAssetPath( template.Template );
+									string overridePath = AssetDatabase.GetAssetPath( version.Override );
+
+									templateVersionMatch.Add( (templatePath, overridePath) );
+								}
+							}
+						}
+					}
+
+					Parallel.For( 0, templateVersionMatch.Count, i =>
+					{
+						string templatePath = templateVersionMatch[ i ].Item1;
+						string overridePath = templateVersionMatch[ i ].Item2;
+
+						byte[] templateData = File.ReadAllBytes( templatePath );
+						byte[] overrideData = File.ReadAllBytes( overridePath );
+
+						uint templateCRC = IOUtils.CRC32( templateData );
+						uint overrideCRC = IOUtils.CRC32( overrideData );
+
+						if ( templateCRC != overrideCRC )
+						{
+							File.WriteAllBytes( templatePath, overrideData );
+							updatedAssets.Add( templatePath );
+							foundNewVersion = true;
+						}
+					} );
+
+					if ( foundNewVersion )
+					{
+						string name = package.name;
+						if ( package.name.Equals( URPPackageId ) )
+						{
+							name = ASEImportFlags.URP.ToString();
+						}
+						else if ( package.name.Equals( HDRPPackageId ) )
+						{
+							name = ASEImportFlags.HDRP.ToString();
+						}
+						Debug.LogFormat( NewVersionDetectedFormat, name, package.version );
 					}
 				}
 			}
 		}
 
-		private static void CheckPackage( UnityEditor.PackageManager.PackageInfo package )
+		public static void CheckInactivePackages( UnityEditor.PackageManager.PackageInfo[] packages, ConcurrentBag<string> updatedAssets )
 		{
-			int version = PackageVersionStringToCode( package.version, out int major, out int minor, out int patch );
+			Debug.Assert( packages.Length > 0 );
 
-			int baselineMajor = major;
-			int baselineMinor = ( major >= 17 ) ? minor: 0; // from 17+ baseline includes minor version
-			int baseline = PackageVersionElementsToCode( baselineMajor, baselineMinor, 0 );
-
-			ASESRPPackageDesc match;
-
-			if ( package.name.Equals( URPPackageId ) && SRPPackageSupport.TryGetValue( baseline, out match ) )
+			var packageNames = packages.Select( p => p.name ).ToHashSet();
+			var templateMatch = new List<(string, string, string)>();
+			foreach ( var pair in TemplateTracker.KnownManifests )
 			{
-				// Universal Rendering Pipeline
-				m_currentURPBaseline = match.baseline;
-				m_packageURPVersion = version;
-				m_urpPackageInfo = package;
-
-				CheckPackageImport( ASEImportFlags.URP, match.baseline, match.guidURP, package.version );
+				if ( !packageNames.Contains( pair.Key ) )
+				{
+					// Package not found: reset all templates for manifests referencing this package
+					foreach ( var manifest in pair.Value )
+					{
+						foreach ( var template in manifest.Templates )
+						{
+							string path = AssetDatabase.GetAssetPath( template.Template );
+							if ( !string.IsNullOrEmpty( path ) )
+							{
+								string defaultBody = template.DefaultShaderBody();
+								templateMatch.Add( (path, defaultBody, pair.Key) );
+							}
+						}
+					}
+				}
 			}
-			else if ( package.name.Equals( HDRPPackageId ) && SRPPackageSupport.TryGetValue( baseline, out match ) )
-			{
-				// High-Definition Rendering Pipeline
-				m_currentHDRPBaseline = match.baseline;
-				m_packageHDRPVersion = version;
-				m_hdrpPackageInfo = package;
 
-				CheckPackageImport( ASEImportFlags.HDRP, match.baseline, match.guidHDRP, package.version );
+			var inactivePackages = new ConcurrentDictionary<string,int>();
+			Parallel.For( 0, templateMatch.Count, i =>
+			{
+				string templatePath = templateMatch[ i ].Item1;
+
+				byte[] templateData = File.ReadAllBytes( templatePath );
+				byte[] defaultData = System.Text.Encoding.UTF8.GetBytes( templateMatch[ i ].Item2 );
+
+				uint templateCRC = IOUtils.CRC32( templateData );
+				uint defaultCRC = IOUtils.CRC32( defaultData );
+
+				if ( templateCRC != defaultCRC )
+				{
+					File.WriteAllBytes( templatePath, defaultData );
+					updatedAssets.Add( templatePath );
+					inactivePackages[ templateMatch[ i ].Item3 ] = 1;
+				}
+			} );
+
+			foreach ( var pair in inactivePackages )
+			{
+				string packageName = pair.Key;
+				string name = packageName;
+				if ( packageName.Equals( URPPackageId ) )
+				{
+					name = ASEImportFlags.URP.ToString();
+				}
+				else if ( packageName.Equals( HDRPPackageId ) )
+				{
+					name = ASEImportFlags.HDRP.ToString();
+				}
+				Debug.LogFormat( DefaultedTemplatesFormat, name );
 			}
 		}
 
@@ -467,24 +521,44 @@ namespace AmplifyShaderEditor
 		{
 			CheckLatePackageImport();
 
-			if ( m_requireUpdateList && m_importingPackage == ASEImportFlags.None )
+			if ( !Application.isPlaying && m_requireUpdateList && m_importingPackage == ASEImportFlags.None )
 			{
-				if ( m_packageListRequest != null && m_packageListRequest.IsCompleted && m_packageListRequest.Result != null )
+				if ( m_packageListRequest != null && m_packageListRequest.IsCompleted && m_packageListRequest.Status == StatusCode.Success && m_packageListRequest.Result != null )
 				{
 					m_requireUpdateList = false;
-					foreach ( UnityEditor.PackageManager.PackageInfo package in m_packageListRequest.Result )
-					{
-						CheckPackage( package );
-					}
+					UpdateNow( m_packageListRequest.Result.ToArray() );
 				}
 			}
 		}
 
 		public static void UpdateNow( UnityEditor.PackageManager.PackageInfo[] packages )
 		{
-			foreach ( UnityEditor.PackageManager.PackageInfo package in packages )
+			TemplateTracker.ScanTemplateManifests();
+
+			var updatedAssets = new ConcurrentBag<string>();
+
+			CheckActivePackages( packages, updatedAssets );
+
+			CheckInactivePackages( packages, updatedAssets );
+
+			try
 			{
-				CheckPackage( package );
+				if ( updatedAssets.Count > 0 )
+				{
+					AssetDatabase.StartAssetEditing();
+					foreach ( var templatePath in updatedAssets )
+					{
+						AssetDatabase.ImportAsset( templatePath, ImportAssetOptions.ForceUpdate );
+					}
+				}
+			}
+			finally
+			{
+				if ( updatedAssets.Count > 0 )
+				{
+					AssetDatabase.StopAssetEditing();
+					AssetDatabase.Refresh( ImportAssetOptions.ForceUpdate );
+				}
 			}
 		}
 

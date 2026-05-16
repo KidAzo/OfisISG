@@ -195,9 +195,8 @@ namespace AmplifyShaderEditor
 
 			m_filterMode = (FilterMode)EditorGUILayoutEnumPopup( FilterModeStr, m_filterMode );
 
-#if UNITY_2021_2_OR_NEWER
 			m_anisoMode = (AnisoModes)EditorGUILayoutEnumPopup( AnisotropicFilteringStr , m_anisoMode );
-#endif
+
 			EditorGUI.EndDisabledGroup();
 
 			if( !UIUtils.CurrentWindow.OutsideGraph.SamplingMacros )
@@ -324,7 +323,7 @@ namespace AmplifyShaderEditor
 				}
 				break;
 			}
-#if UNITY_2021_2_OR_NEWER
+
 			switch( m_anisoMode )
 			{
 				default:
@@ -334,8 +333,6 @@ namespace AmplifyShaderEditor
 				case AnisoModes.X8: result += "_Aniso8"; break;
 				case AnisoModes.X16: result += "_Aniso16"; break;
 			}
-#endif
-
 			return result;
 		}
 

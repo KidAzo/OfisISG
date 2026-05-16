@@ -1058,7 +1058,11 @@ namespace AmplifyShaderEditor
 		}
 
 		[OnOpenAsset(0)]
-		static bool OnOpenAsset( int instanceID, int line )
+	#if UNITY_6000_4_OR_NEWER
+		static bool OnOpenAsset( EntityId entityId, int line )
+	#else
+		static bool OnOpenAsset( int entityId, int line )
+	#endif
 		{
 			// This test is needed since it is what is used when we both click the button to open generated code inside the canvas
 			// ( in there we call AssetDatabase.OpenAsset with line set to 1 to let ASE know that we want to ignore normal shader opening )
@@ -1070,11 +1074,7 @@ namespace AmplifyShaderEditor
 				return false;
 			}
 
-		#if UNITY_6000_3_OR_NEWER
-			UnityEngine.Object selection = EditorUtility.EntityIdToObject( instanceID );
-		#else
-			UnityEngine.Object selection = EditorUtility.InstanceIDToObject( instanceID );
-		#endif
+			UnityEngine.Object selection = AssetUtils.EntityIdToObject( new AssetUtils.EntityId( entityId ) );
 
 			ASEPackageManagerHelper.RequestInfo();
 			ASEPackageManagerHelper.Update();
@@ -1158,24 +1158,9 @@ namespace AmplifyShaderEditor
 		[MenuItem( "Assets/Create/Shader/Amplify Surface Shader" )]
 		static void CreateConfirmationStandardShader()
 		{
-			//string path = AssetDatabase.GetAssetPath( Selection.activeObject );
-			//if( path == "" )
-			//{
-			//	path = "Assets";
-			//}
-			//else if( System.IO.Path.GetExtension( path ) != "" )
-			//{
-			//	path = path.Replace( System.IO.Path.GetFileName( AssetDatabase.GetAssetPath( Selection.activeObject ) ), "" );
-			//}
-
-			//string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath( path + "/New Amplify Shader.shader" );
 			var endNameEditAction = ScriptableObject.CreateInstance<DoCreateStandardShader>();
-			ProjectWindowUtil.StartNameEditingIfProjectWindowExists( 0, endNameEditAction, "New Amplify Shader.shader"/*assetPathAndName*/, AssetPreview.GetMiniTypeThumbnail( typeof( Shader ) ), null );
+			ProjectWindowUtil.StartNameEditingIfProjectWindowExists( AssetUtils.EntityId.None, endNameEditAction, "New Amplify Shader.shader", AssetPreview.GetMiniTypeThumbnail( typeof( Shader ) ), null );
 		}
-		//static void CreateNewShader(  )
-		//{
-		//	CreateNewShader( null, null );
-		//}
 
 		static void CreateNewShader( string customPath , string customShaderName )
 		{
@@ -1234,19 +1219,8 @@ namespace AmplifyShaderEditor
 		public static void CreateConfirmationTemplateShader( string templateGuid )
 		{
 			UIUtils.NewTemplateGUID = templateGuid;
-			//string path = AssetDatabase.GetAssetPath( Selection.activeObject );
-			//if( path == "" )
-			//{
-			//	path = "Assets";
-			//}
-			//else if( System.IO.Path.GetExtension( path ) != "" )
-			//{
-			//	path = path.Replace( System.IO.Path.GetFileName( AssetDatabase.GetAssetPath( Selection.activeObject ) ), "" );
-			//}
-
-			//string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath( path + "/New Amplify Shader.shader" );
 			var endNameEditAction = ScriptableObject.CreateInstance<DoCreateTemplateShader>();
-			ProjectWindowUtil.StartNameEditingIfProjectWindowExists( 0, endNameEditAction, "New Amplify Shader.shader"/*assetPathAndName*/, AssetPreview.GetMiniTypeThumbnail( typeof( Shader ) ), null );
+			ProjectWindowUtil.StartNameEditingIfProjectWindowExists( AssetUtils.EntityId.None, endNameEditAction, "New Amplify Shader.shader", AssetPreview.GetMiniTypeThumbnail( typeof( Shader ) ), null );
 		}
 
 		public static Shader CreateNewTemplateShader( string templateGUID , string customPath = null, string customShaderName = null )
@@ -1292,21 +1266,8 @@ namespace AmplifyShaderEditor
 		static void CreateNewShaderFunction()
 		{
 			AmplifyShaderFunction asset = ScriptableObject.CreateInstance<AmplifyShaderFunction>();
-
-			//string path = AssetDatabase.GetAssetPath( Selection.activeObject );
-			//if( path == "" )
-			//{
-			//	path = "Assets";
-			//}
-			//else if( System.IO.Path.GetExtension( path ) != "" )
-			//{
-			//	path = path.Replace( System.IO.Path.GetFileName( AssetDatabase.GetAssetPath( Selection.activeObject ) ), "" );
-			//}
-
-			//string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath( path + "/New ShaderFunction.asset" );
-
 			var endNameEditAction = ScriptableObject.CreateInstance<DoCreateFunction>();
-			ProjectWindowUtil.StartNameEditingIfProjectWindowExists( asset.GetInstanceID(), endNameEditAction, "New ShaderFunction.asset"/*assetPathAndName*/, AssetPreview.GetMiniThumbnail( asset ), null );
+			ProjectWindowUtil.StartNameEditingIfProjectWindowExists( AssetUtils.GetEntityId( asset), endNameEditAction, "New Shader Function.asset", AssetPreview.GetMiniThumbnail( asset ), null );
 		}
 
 		public void UpdateTabTitle( string newTitle, bool modified )
@@ -3339,10 +3300,16 @@ namespace AmplifyShaderEditor
 			UndoUtils.RecordObjects( selectedNodes, Constants.UndoDeleteNodeId );
 			UndoUtils.RecordObjects( extraNodes.ToArray(), Constants.UndoDeleteNodeId );
 
-			//Record deleting connections
-			for( int i = 0; i < selectedNodes.Length; i++ )
+
+			// @diogo: unalive all selected nodes first, so we can check against that to prevent double-deleting nodes
+			for ( int i = 0; i < selectedNodes.Length; i++ )
 			{
 				selectedNodes[ i ].Alive = false;
+			}
+
+			//Record deleting connections
+			for ( int i = 0; i < selectedNodes.Length; i++ )
+			{
 				m_mainGraphInstance.DeleteAllConnectionFromNode( selectedNodes[ i ], false, true, true );
 			}
 			//Delete
@@ -3523,11 +3490,7 @@ namespace AmplifyShaderEditor
 				}
 				else
 				{
-				#if UNITY_2020_1_OR_NEWER
 					if( www.result == UnityWebRequest.Result.ConnectionError )
-				#else
-					if( www.isNetworkError )
-				#endif
 					{
 						Debug.Log( "[AmplifyShaderEditor]\n" + www.error );
 					}
@@ -3742,11 +3705,7 @@ namespace AmplifyShaderEditor
 				}
 				else
 				{
-				#if UNITY_2020_1_OR_NEWER
 					if( www.result == UnityWebRequest.Result.ConnectionError )
-				#else
-					if( www.isNetworkError )
-				#endif
 					{
 						Debug.Log( "[AmplifyShaderEditor]\n" + www.error );
 					}
@@ -4045,7 +4004,6 @@ namespace AmplifyShaderEditor
 												}
 												else
 													newNode.ReadFromString( ref parameters );
-
 
 												if( oldType == type )
 												{
@@ -4375,7 +4333,6 @@ namespace AmplifyShaderEditor
 												}
 												else
 													newNode.ReadFromString( ref parameters );
-
 
 												if( oldType == type )
 												{
@@ -5536,7 +5493,12 @@ namespace AmplifyShaderEditor
 
 		public void UpdateNodePreviewListAndTime()
 		{
-			if( UIUtils.CurrentWindow != this )
+#if UNITY_2020_1_OR_NEWER
+			bool hasFocus = UIUtils.CurrentWindow.hasFocus;
+#else
+			bool hasFocus = ( EditorWindow.focusedWindow == UIUtils.CurrentWindow );
+#endif
+			if( UIUtils.CurrentWindow != this || !hasFocus )
 				return;
 
 			double deltaTime = Time.realtimeSinceStartup - m_time;
@@ -5606,12 +5568,26 @@ namespace AmplifyShaderEditor
 			if( RenderSettings.sun != null )
 			{
 				Vector3 lightdir = -RenderSettings.sun.transform.forward;//.rotation.eulerAngles;
+				Color lightColor = RenderSettings.sun.color.linear;
+				float lightIntensity = RenderSettings.sun.intensity;
 
+				// Deprecated
 				Shader.SetGlobalVector( "_EditorWorldLightPos", new Vector4( lightdir.x, lightdir.y, lightdir.z, 0 ) );
-				Shader.SetGlobalColor( "_EditorLightColor", RenderSettings.sun.color.linear );
+				Shader.SetGlobalVector( "_EditorLightColor", new Vector4( lightColor.r, lightColor.g, lightColor.b, lightIntensity ) );
+
+				// New
+				Shader.SetGlobalVector( "preview_EditorLightDirection", lightdir.normalized );
+				Shader.SetGlobalVector( "preview_EditorLightColor", new Vector3( lightColor.r, lightColor.g, lightColor.b ) );
+				Shader.SetGlobalFloat( "preview_EditorLightIntensity", lightIntensity );
 			}
+
+			// Deprecated
 			Shader.SetGlobalFloat( "_EditorTime", (float)m_time );
 			Shader.SetGlobalFloat( "_EditorDeltaTime", (float)deltaTime );
+
+			// New
+			Shader.SetGlobalFloat( "preview_EditorTime", (float)m_time );
+			Shader.SetGlobalFloat( "preview_EditorDeltaTime", (float)deltaTime );
 
 			// @diogo: limit preview update frequency to keep the CPU usage under control
 			m_previewUpdateLimiterTime += deltaTime;
@@ -5621,27 +5597,30 @@ namespace AmplifyShaderEditor
 			}
 			m_previewUpdateLimiterTime = 0;
 
-			/////////// UPDATE PREVIEWS //////////////
-			UIUtils.CheckNullMaterials();
-			UIUtils.SetPreviewShaderConstants();
-			//CurrentGraph.AllNodes.Sort( ( x, y ) => { return x.Depth.CompareTo( y.Depth ); } );
-			int nodeCount = CurrentGraph.AllNodes.Count;
-			for( int i = nodeCount - 1; i >= 0; i-- )
+			if ( !Preferences.User.DisablePreviews )
 			{
-				ParentNode node = CurrentGraph.AllNodes[ i ];
-				if( node != null && !VisitedChanged.ContainsKey( node.OutputId ) )
+				/////////// UPDATE PREVIEWS //////////////
+				UIUtils.CheckNullMaterials();
+				UIUtils.SetPreviewShaderConstants();
+				//CurrentGraph.AllNodes.Sort( ( x, y ) => { return x.Depth.CompareTo( y.Depth ); } );
+				int nodeCount = CurrentGraph.AllNodes.Count;
+				for( int i = nodeCount - 1; i >= 0; i-- )
 				{
-					bool result = node.RecursivePreviewUpdate();
-					if( result )
-						m_repaintIsDirty = true;
+					ParentNode node = CurrentGraph.AllNodes[ i ];
+					if( node != null && !VisitedChanged.ContainsKey( node.OutputId ) )
+					{
+						bool result = node.RecursivePreviewUpdate();
+						if( result )
+							m_repaintIsDirty = true;
+					}
 				}
-			}
 
-			VisitedChanged.Clear();
-			if( m_repaintIsDirty )
-			{
-				m_repaintIsDirty = false;
-				Repaint();
+				VisitedChanged.Clear();
+				if( m_repaintIsDirty )
+				{
+					m_repaintIsDirty = false;
+					Repaint();
+				}
 			}
 		}
 
@@ -5774,6 +5753,11 @@ namespace AmplifyShaderEditor
 		public void SetOutdatedShaderFromTemplate()
 		{
 			m_outdatedShaderFromTemplateLoaded = true;
+		}
+
+		public void DelayedReplaceMasterNode( TemplateMultiPassMasterNode masterNode, string newTemplateGUID )
+		{
+			ReplaceMasterNode( new MasterNodeCategoriesData( AvailableShaderTypes.Template, newTemplateGUID ), false );
 		}
 
 		public void ReplaceMasterNode( MasterNodeCategoriesData data, bool cacheMasterNodes )

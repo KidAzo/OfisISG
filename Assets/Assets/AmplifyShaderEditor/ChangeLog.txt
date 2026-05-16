@@ -1,3 +1,140 @@
+v1.9.9.9
+
+   Highlights
+      * Raised minimum supported Unity version to 2022.3.22f1 LTS
+      * New Template system replacing packages with open, versioned templates (#553)
+      * New Template Manifest for third-party template versioning (#553)
+      * Added support for Unity 6000.4 (#562)
+      * Added preview support for Unity 6000.5 (#582,#590)
+      * Removed support for URP/HDRP 10x and 12x (#557)
+
+   Editor
+      * Added bridge template handling with comments explaining usage
+      * Removed checking/adding "_EmissionColor" property from shader gen (#580)
+      * Fixed template manager loading template data multiple times
+      * Fixed some nodes broken due to invalid SRP version
+      * Fixed template sorting by name/path to be deterministic
+      * Fixed restarting Unity while ASE open causing Shader Type reset (#592)
+
+   Templates
+      * Added "Transparent Dynamic Update" option to HDRP 17.x Decal template
+      * Updated "Built-in/Lit" template to make picking pass LightMode immutable (#559)
+      * Updated all URP/HDRP Lit+Unlit templates to ensure "LightMode"="Picking" (#559)
+      * Updated "Built-In/Lit" depth output code to match latest changes to URP/HDRP
+      * Updated all URP/HDRP templates to add PackageRequirements, LOD 0 after Tags
+      * Updated HDRP 14 to 17: merged all **SurfaceDescription to avoid errors (#579)
+      * Updated URP 2D templates 17.0 to 17.3 to fix duplicate DEBUG_DISPLAY
+      * Changed Decal Blending / SSAO defines to template options
+      * Removed conditional WebGL2/GLES3 error from URP templates; all versions (#583)
+      * Fixed foveated rendering conditional compilation guards for URP 14
+      * Fixed URP 14x 2D/Sprite template errors on versions below 14.0.12
+      * Fixed URP "2D Custom Lit" templates ase_pass definitions
+      * Fixed HDRP/Hair missing Geometry option when Mat Type is Approximate (#589)
+      * Fixed "Universal/2D Unlit" shaders not rendering on Unity 6+/SRP 17.x (#593)
+
+   Nodes
+      * Added "17.4" and "17.5" inputs to "Switch by SRP Version" node
+      * Updated "SRP Additional Light" SF to support Unity 6.4 and 6.5
+      * Exposed "HD Sample Buffer" node additional outputs starting in HDRP 15+
+      * Exposed all "HD Sample Buffer" outputs when using it on Shader Function
+      * Fixed CustomExpression allowing duplicated port names causing shader load errors
+      * Fixed "Object Bounds" node failing when used inside a Shader Function (#594)
+      * Fixed "HD Sample Buffer" IsUnderWater errors
+      * Fixed "Switch by Pipeline" node preview not working properly
+      * Fixed missing "Main Light" node when pasting to a Shader Function (#558)
+      * Fixed "Main Light" node shadow filter error on HDRP 10x to 15x (#560)
+
+v1.9.9.8
+
+   Editor
+      * Optimized node previews by skipping more work on "Disable Previews"
+      * Optimized node previews by skipping editor updates when canvas not focused
+      * Fixed TemplateMenuItems not always matching known templates
+      * Fixed Built-In example scenes missing prefab
+      * Fixed node error/warning/info labels turning black when hovering the mouse cursor
+      * Fixed package request error raised in Multiplayer PlayMode
+      * Fixed node error/warning/info labels still visible when maxing out zoom
+      * Fixed handling of platform enums throwing exceptions when not recognized
+      * Fixed unused _texcoord property being added to template-based shaders
+
+   Templates
+      * Updated URP Decal templates for Unity 6000.0.67+ and 6000.3.4+
+      * Renamed all "Universal/2D *" templates to "Universal/Sprite *"
+      * Fixed URP "2D Custom Lit" templates 14x to 17.3 (Please Re-save)
+      * Fixed URP 14x 2D template errors on versions below 14.0.12
+
+   Nodes
+      * Added warning using "Main Light Attenuation" with VertexToFrag (#571)
+      * Added warning using "Main Light" Shadow Att output with VertexToFrag (#571)
+      * Renamed "Switch by Pipeline" node to "Function Switch by Pipeline"
+      * Fixed "HD Sample Buffer" errors on HDRP/Unlit using NormalWS or Smoothness
+      * Fixed "Switch by Pipeline" node preview not working properly
+      * Fixed View Dir/Vector code generation for Orthographic cameras
+      * Fixed "Indirect Diffuse Light" code generation using VertexToFrag on BIRP (#572)
+      * Fixed "Indirect Diffuse Light" generating SampleBakedGI error on HDRP 14 to 16
+      * Fixed "HD Sample Buffer" node title label too large when zooming out
+      * Fixed "HD Sample Buffer" showing error when used inside a Shader Function
+
+v1.9.9.7
+
+   Editor
+      * Fixed missing "Main Light" node when pasting to a Shader Function (#558)
+
+   Nodes
+      * Fixed "Main Light" node shadow filter error on HDRP 10x to 15x (#560)
+
+v1.9.9.6
+
+   Editor
+      * Added ase_immutable to force template values, no override (only Tags for now)
+      * Added Sampler States input support for static switches (#413)
+      * Added support for ZClip in templates (#511)
+      * Improved template detection and menu updates (#539)
+      * Improved template extension filter UI in Project Preferences + now working
+      * Improved node property name editing; now updates title when editing
+      * Improved TextureArrayCreator to allow Build Texture on Assets + UI changes
+      * Improved Palette Window search box focus reliability and widened search box
+      * Fixed errors sometimes when deleting wire nodes (#478)
+      * Fixed additional directives sometimes being duplicated when mixing nodes
+      * Fixed multi-line drawer using 4-line output connection for Int nodes
+      * Fixed nodes using RGBA inputs have limited internal data (#509)
+      * Fixed const nodes bound to ShaderLab command refs used as properties (#513)
+      * Fixed Function Input Sample 2D breaking in SRP (#530)
+
+   Templates
+      * Added "Main Light" node with support for BiRP, URP and HDRP (#484)
+      * Added separate Alpha, Alpha Clipping, Cast Shadows and Write Depth to BIRP Unlit
+      * Added "Vertex Tangent" master node input to URP Unlit
+      * Added Alpha Cutoff controls in Material when not connected (URP)
+      * Added dynamic inputs to Min/Max nodes, similar to Add/Sub/Mul/Div
+      * Updated specular occlusion code in HDRP templates for 17.2 and 17.3
+      * Updated all templates from 10x to 17.3 to refresh and fix various issues
+      * Fixed _AlphaClip related URP Lit/Unlit issues and errors in 2D templates
+      * Fixed URP 15x 16x Decal Too few arguments to a macro call (#543)
+      * Fixed DebugDisplay mode and Mipmap streaming HDRP 17+ (#531)
+      * Fixed dither breaking HDRP Test (#541)
+      * Fixed no Alpha Clipping in URP baked shadows (#519)
+      * Fixed "Rendering Platforms" missing in BiRP Lit, Unlit and Wireframe templates
+      * Fixed "Built-In/Lit" shader scene Picking not working properly
+      * Fixed URP Fog, Receive Shadows broken in Deferred/+ or Forward+ (#540)
+
+   Nodes
+      * Added new, cleaner "Dither" node; old marked [Deprecated] but working fine
+      * Added "HD Sample Buffer" node (#544)
+      * Added Position+Normal WS node support to Custom RT templates
+      * Added "Main Texture" attribute to Texture Object and Sample nodes (#519)
+      * Added "Main Color" attribute to Color node (#519)
+      * Added support for Range (min/max) on "Int" node (#512)
+      * Added "Derivatives" (DDX/DDY) option to "Bicubic Sample" node (#529)
+      * Improved messaging in "Light Attenuation" node BIRP Custom Lighting (#437)
+      * Fixed "Dither" node tiling artifacts using Noise Texture pattern in URP (#556)
+      * Fixed "Static Switch" node code generation in Dynamic Branch mode (#523)
+      * Fixed "Parallax Occlusion Mapping" node in HDRP (#164)
+      * Fixed Parallax Occlusion Mapping node cbuffer error (#517)
+      * Fixed "Sampler State" nodes not working with static switches (#413)
+      * Fixed "Triplanar Sample" node "Unexpected token const" error in Surface shaders
+      * Fixed "SRP Additional Light" node returning black in URP 17.0 (#526)
+
 v1.9.9.5
 
    Editor

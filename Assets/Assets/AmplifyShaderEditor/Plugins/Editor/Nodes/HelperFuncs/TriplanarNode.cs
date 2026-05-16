@@ -1224,7 +1224,7 @@ namespace AmplifyShaderEditor
 			headerID += OutputId;
 			if( m_selectedTriplanarType == TriplanarType.Spherical )
 			{
-				samplers = GeneratorUtils.GetPropertyDeclaraction( "topTexMap", m_topTexPort.DataType, ", " ) + "const float4 topST, " + GeneratorUtils.GetSamplerDeclaraction( "samplertopTexMap", m_topTexPort.DataType, ", " );
+				samplers = GeneratorUtils.GetPropertyDeclaraction( "topTexMap", m_topTexPort.DataType, ", " ) + "float4 topST, " + GeneratorUtils.GetSamplerDeclaraction( "samplertopTexMap", m_topTexPort.DataType, ", " );
 
 				string xUV = "tiling * worldPos.zy * float2(  nsign.x, 1.0 )";
 				string yUV = "tiling * worldPos.xz * float2(  nsign.y, 1.0 )";
@@ -1266,9 +1266,9 @@ namespace AmplifyShaderEditor
 			}
 			else
 			{
-				string topArgs = GeneratorUtils.GetPropertyDeclaraction( "topTexMap", m_topTexPort.DataType, ", " ) + "const float4 topST, " + GeneratorUtils.GetSamplerDeclaraction( "samplertopTexMap", m_topTexPort.DataType, ", " );
-				string midArgs = GeneratorUtils.GetPropertyDeclaraction( "midTexMap", m_midTexPort.DataType, ", " ) + "const float4 midST, " + GeneratorUtils.GetSamplerDeclaraction( "samplermidTexMap", m_midTexPort.DataType, ", " );
-				string botArgs = GeneratorUtils.GetPropertyDeclaraction( "botTexMap", m_botTexPort.DataType, ", " ) + "const float4 botST, " + GeneratorUtils.GetSamplerDeclaraction( "samplerbotTexMap", m_botTexPort.DataType, ", " );
+				string topArgs = GeneratorUtils.GetPropertyDeclaraction( "topTexMap", m_topTexPort.DataType, ", " ) + "float4 topST, " + GeneratorUtils.GetSamplerDeclaraction( "samplertopTexMap", m_topTexPort.DataType, ", " );
+				string midArgs = GeneratorUtils.GetPropertyDeclaraction( "midTexMap", m_midTexPort.DataType, ", " ) + "float4 midST, " + GeneratorUtils.GetSamplerDeclaraction( "samplermidTexMap", m_midTexPort.DataType, ", " );
+				string botArgs = GeneratorUtils.GetPropertyDeclaraction( "botTexMap", m_botTexPort.DataType, ", " ) + "float4 botST, " + GeneratorUtils.GetSamplerDeclaraction( "samplerbotTexMap", m_botTexPort.DataType, ", " );
 
 				samplers = topArgs + midArgs + botArgs;
 

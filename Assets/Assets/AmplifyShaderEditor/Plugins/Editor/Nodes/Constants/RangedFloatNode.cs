@@ -450,6 +450,11 @@ namespace AmplifyShaderEditor
 			}
 		}
 
+		public override string GetDefaultValue()
+		{
+			return UIUtils.PropertyFloatToString( m_defaultValue );
+		}
+
 		public override void UpdateMaterial( Material mat )
 		{
 			base.UpdateMaterial( mat );

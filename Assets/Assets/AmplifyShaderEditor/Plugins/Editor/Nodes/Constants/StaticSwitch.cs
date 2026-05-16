@@ -249,8 +249,8 @@ namespace AmplifyShaderEditor
 		private void UpdateConnections()
 		{
 			WirePortDataType mainType = WirePortDataType.FLOAT;
+			int highest = -1;
 
-			int highest = UIUtils.GetPriority( mainType );
 			for( int i = 0; i < m_inputPorts.Count; i++ )
 			{
 				if( m_inputPorts[ i ].IsConnected )
@@ -1031,7 +1031,7 @@ namespace AmplifyShaderEditor
 						if ( i == 0 )
 							dataCollector.AddLocalVariable( UniqueId, "UNITY_BRANCH if ( " + keyword + " )", true );
 						else
-							dataCollector.AddLocalVariable( UniqueId, "else if ( " + keyword + " )", true );
+							dataCollector.AddLocalVariable( UniqueId, "else UNITY_BRANCH if ( " + keyword + " )", true );
 
 						dataCollector.AddLocalVariable( UniqueId, "{", true );
 

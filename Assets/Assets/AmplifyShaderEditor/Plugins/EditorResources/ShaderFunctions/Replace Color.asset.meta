@@ -10,7 +10,7 @@ AssetOrigin:
   serializedVersion: 1
   productId: 68570
   packageName: Amplify Shader Editor
-  packageVersion: 1.9.9.5
-  assetPath: Assets/AmplifyShaderEditor/Plugins/EditorResources/ShaderFunctions/Replace
+  packageVersion: 1.9.9.9
+  assetPath: Assets/Assets/AmplifyShaderEditor/Plugins/EditorResources/ShaderFunctions/Replace
     Color.asset
-  uploadId: 808914
+  uploadId: 896624

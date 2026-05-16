@@ -1066,12 +1066,15 @@ namespace AmplifyShaderEditor
 
 			BoldErrorStyle = new GUIStyle( (GUIStyle)"BoldLabel" );
 			BoldErrorStyle.normal.textColor = Color.red;
+			BoldErrorStyle.hover.textColor = Color.red;
 			BoldErrorStyle.alignment = TextAnchor.MiddleCenter;
 			BoldWarningStyle = new GUIStyle( (GUIStyle)"BoldLabel" );
 			BoldWarningStyle.normal.textColor = Color.yellow;
+			BoldWarningStyle.hover.textColor = Color.yellow;
 			BoldWarningStyle.alignment = TextAnchor.MiddleCenter;
 			BoldInfoStyle = new GUIStyle( (GUIStyle)"BoldLabel" );
 			BoldInfoStyle.normal.textColor = Color.white;
+			BoldInfoStyle.hover.textColor = Color.white;
 			BoldInfoStyle.alignment = TextAnchor.MiddleCenter;
 
 			ToolbarMainTitle = new GUIStyle( MainSkin.customStyles[ (int)CustomStyle.MainCanvasTitle ] );
@@ -2383,6 +2386,14 @@ namespace AmplifyShaderEditor
 			float labelWidth = EditorGUIUtility.labelWidth;
 			EditorGUIUtility.labelWidth = newLabelWidth;
 			value = owner.EditorGUIFloatField( propertyDrawPos , "  " , value , UIUtils.MainSkin.textField );
+			EditorGUIUtility.labelWidth = labelWidth;
+		}
+
+		public static void DrawInt( UndoParentNode owner , ref Rect propertyDrawPos , ref int value , float newLabelWidth = 8 )
+		{
+			float labelWidth = EditorGUIUtility.labelWidth;
+			EditorGUIUtility.labelWidth = newLabelWidth;
+			value = owner.EditorGUIIntField( propertyDrawPos , "  " , value , UIUtils.MainSkin.textField );
 			EditorGUIUtility.labelWidth = labelWidth;
 		}
 

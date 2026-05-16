@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -571,11 +572,14 @@ namespace AmplifyShaderEditor
 																//new TemplateTagData( TemplateColorMaskTag,false),
 																//new TemplateTagData( TemplateStencilOpTag,true),
 																};
+
 		public static string URPLitGUID = "94348b07e5e8bab40bd6c8a1e3df54cd";
 		public static string URPUnlitGUID = "2992e84f91cbeb14eab234972e07ea9d";
+		public static uint URPLitCRC = 4196295855;
 
 		public static string HDRPLitGUID = "53b46d85872c5b24c8f4f0a1c3fe4c87";
 		public static string HDRPUnlitGUID = "7f5cb9c3ea6481f469fdd856555439ef";
+		public static uint HDRPLitCRC = 596431725;
 
 		public static Dictionary<string, string> DeprecatedTemplates = new Dictionary<string, string>()
 		{
@@ -616,9 +620,6 @@ namespace AmplifyShaderEditor
 		public string[] AvailableTemplateNames;
 
 		[SerializeField]
-		public bool Initialized = false;
-
-		[SerializeField]
 		private string Timestamp;
 
 		private Dictionary<string, bool> m_optionsInitialSetup = new Dictionary<string, bool>();
@@ -627,6 +628,7 @@ namespace AmplifyShaderEditor
 
 		public static bool IsTestTemplate { get { return CurrTemplateGUIDLoaded.Equals( "a95a019bbc760714bb8228af04c291d1" ); } }
 		public static bool ShowDebugMessages = false;
+
 		public void RefreshAvailableTemplates()
 		{
 			if ( m_availableTemplates.Count != m_sortedTemplates.Count )
@@ -704,124 +706,15 @@ namespace AmplifyShaderEditor
 			}
 		}
 
-		public void Init()
+		public HashSet<string> ExtractTemplateMenuItems()
 		{
-			if ( !Initialized )
+			var regex = new Regex( @"\b[a-fA-F0-9]{32}\b" );
+			var set = new HashSet<string>();
+			foreach ( Match m in regex.Matches( File.ReadAllText( AssetDatabase.GUIDToAssetPath( TemplateMenuItemsFileGUID ) ) ) )
 			{
-				float startTime = Time.realtimeSinceStartup;
-
-				EditorUtility.DisplayProgressBar( "Amplify Shader Editor", "Importing Templates....", 0.0f );
-
-				string templateMenuItems = IOUtils.LoadTextFileFromDisk( AssetDatabase.GUIDToAssetPath( TemplateMenuItemsFileGUID ) );
-				bool refreshTemplateMenuItems = false;
-
-				string[] allShaders = AssetDatabase.FindAssets( "t:shader" );
-				var templates = new Dictionary<string, TemplateDescriptor>();
-
-				// Add official templates first
-				foreach ( KeyValuePair<string, string> kvp in OfficialTemplates )
-				{
-					string guid = kvp.Key;
-					string path = AssetDatabase.GUIDToAssetPath( guid );
-					if ( !string.IsNullOrEmpty( path ) && !templates.ContainsKey( guid ) )
-					{
-						var desc = new TemplateDescriptor();
-						desc.template = ScriptableObject.CreateInstance<TemplateMultiPass>();
-						desc.name = kvp.Value;
-						desc.guid = guid;
-						desc.path = path;
-						desc.isCommunity = false;
-						templates.Add( desc.guid, desc );
-					}
-				}
-
-				EditorUtility.DisplayProgressBar( "Amplify Shader Editor", "Importing Templates....", 0.125f );
-
-				// Search for other possible templates on the project
-				var candidates = new List<KeyValuePair<string, string>>( allShaders.Length );
-				var candidateBag = new ConcurrentBag<string>();
-
-				for ( int i = 0; i < allShaders.Length; i++ )
-				{
-					if ( !templates.ContainsKey( allShaders[ i ] ) )
-					{
-						candidates.Add( new KeyValuePair<string, string>( allShaders[ i ], AssetDatabase.GUIDToAssetPath( allShaders[ i ] ) ) );
-					}
-				}
-
-				Parallel.For( 0, candidates.Count, i =>
-				{
-					string body = File.ReadAllText( candidates[ i ].Value ); ;
-					if ( body.IndexOf( TemplatesManager.TemplateShaderNameBeginTag ) > -1 )
-					{
-						candidateBag.Add( candidates[ i ].Key );
-					}
-				} );
-
-				EditorUtility.DisplayProgressBar( "Amplify Shader Editor", "Importing Templates....", 0.25f );
-
-				foreach ( var guid in candidateBag )
-				{
-					TemplateDataParent template = GetTemplate( guid );
-					if ( template == null && !templates.ContainsKey( guid ) )
-					{
-						var desc = new TemplateDescriptor();
-						desc.template = ScriptableObject.CreateInstance<TemplateMultiPass>();
-						desc.name = string.Empty;
-						desc.guid = guid;
-						desc.path = AssetDatabase.GUIDToAssetPath( guid );
-						desc.isCommunity = true;
-						templates.Add( desc.guid, desc );
-					}
-				}
-
-				EditorUtility.DisplayProgressBar( "Amplify Shader Editor", "Importing Templates....", 0.5f );
-
-				var templateList = templates.Values.ToArray();
-				Parallel.For( 0, templateList.Length, i =>
-				{
-					TemplateDescriptor desc = templateList[ i ];
-					desc.template.Init( desc.name, desc.guid, desc.path, desc.isCommunity );
-				} );
-
-				foreach ( var pair in templates )
-				{
-					TemplateDescriptor desc = pair.Value;
-
-					if ( desc.template.IsValid )
-					{
-						AddTemplate( desc.template );
-					}
-
-					// @diogo: always refresh if there's a template missing from the current items
-					if ( templateMenuItems.IndexOf( desc.name ) < 0 )
-					{
-						refreshTemplateMenuItems = true;
-					}
-
-					DebugMessage( "  Found Template => " + desc.template.Name );
-				}
-
-				EditorUtility.DisplayProgressBar( "Amplify Shader Editor", "Importing Templates....", 0.75f );
-
-				AvailableTemplateNames = new string[ m_sortedTemplates.Count + 1 ];
-				AvailableTemplateNames[ 0 ] = "Custom";
-				for ( int i = 0; i < m_sortedTemplates.Count; i++ )
-				{
-					m_sortedTemplates[ i ].OrderId = i;
-					AvailableTemplateNames[ i + 1 ] = m_sortedTemplates[ i ].Name;
-				}
-
-				if ( refreshTemplateMenuItems )
-					CreateTemplateMenuItems();
-
-				EditorUtility.DisplayProgressBar( "Amplify Shader Editor", "Importing Templates....", 1.0f );
-
-				EditorUtility.ClearProgressBar();
-
-				Initialized = true;
-				DebugMessage( "Initialization took " + ( Time.realtimeSinceStartup - startTime ) + " seconds" );
+				set.Add( m.Value );
 			}
+			return set;
 		}
 
 		public void CreateTemplateMenuItems()
@@ -853,13 +746,6 @@ namespace AmplifyShaderEditor
 				}
 			}
 
-			// Sort templates by name
-			var sorted = new SortedDictionary<string, string>();
-			for ( int i = 0; i < m_sortedTemplates.Count; i++ )
-			{
-				sorted.Add( m_sortedTemplates[ i ].Name, m_sortedTemplates[ i ].GUID );
-			}
-
 			System.Text.StringBuilder fileContents = new System.Text.StringBuilder();
 			fileContents.Append( "// Amplify Shader Editor - Visual Shader Editing Tool\n" );
 			fileContents.Append( "// Copyright (c) Amplify Creations, Lda <info@amplify.pt>\n" );
@@ -870,22 +756,24 @@ namespace AmplifyShaderEditor
 			fileContents.Append( "\tpublic class TemplateMenuItems\n" );
 			fileContents.Append( "\t{\n" );
 			int fixedPriority = 85;
-			foreach ( var pair in sorted )
+			foreach ( var template in m_sortedTemplates )
 			{
-				fileContents.AppendFormat( "\t\t[MenuItem( \"Assets/Create/Amplify Shader/{0}\", false, {1} )]\n", pair.Key, fixedPriority );
-				string itemName = UIUtils.RemoveInvalidCharacters( pair.Key );
-				fileContents.AppendFormat( "\t\tpublic static void ApplyTemplate{0}()\n", itemName/*i*/ );
-				fileContents.Append( "\t\t{\n" );
-				//fileContents.AppendFormat( "\t\t\tAmplifyShaderEditorWindow.CreateNewTemplateShader( \"{0}\" );\n", m_sortedTemplates[ i ].GUID );
-				fileContents.AppendFormat( "\t\t\tAmplifyShaderEditorWindow.CreateConfirmationTemplateShader( \"{0}\" );\n", pair.Value );
-				fileContents.Append( "\t\t}\n" );
+				string itemName = UIUtils.RemoveInvalidCharacters( template.Name );
+
+				// Comment bridge templates as they're supposed to be invisible; however, ExtractTemplateMenuItems still needs to find it via regex
+				string comment = template.Name.Contains( "/ASEBridgeTemplates/" ) ? "//" : "";
+
+				fileContents.AppendFormat( "\t\t{0}[MenuItem( \"Assets/Create/Amplify Shader/{1}\", false, {2} )]\n", comment, template.Name, fixedPriority );
+				fileContents.AppendFormat( "\t\t{0}public static void ApplyTemplate{1}()\n", comment, itemName );
+				fileContents.AppendFormat( "\t\t{0}{{\n", comment );
+				fileContents.AppendFormat( "\t\t{0}\tAmplifyShaderEditorWindow.CreateConfirmationTemplateShader( \"{1}\" );\n", comment, template.GUID );
+				fileContents.AppendFormat( "\t\t{0}}}\n", comment );
 			}
 			fileContents.Append( "\t}\n" );
 			fileContents.Append( "}\n" );
 			string filePath = AssetDatabase.GUIDToAssetPath( TemplateMenuItemsFileGUID );
 			IOUtils.SaveTextfileToDisk( fileContents.ToString(), filePath, false );
 			m_filepath = filePath;
-			//AssetDatabase.ImportAsset( filePath );
 
 			DebugMessage( "Updated Template Menu Items" );
 		}
@@ -914,15 +802,103 @@ namespace AmplifyShaderEditor
 			return -1;
 		}
 
+		private List<TemplateDescriptor> m_registerTemplateQueue = new List<TemplateDescriptor>();
+
+		public bool IsTemplateRegistered( string guid )
+		{
+			return m_availableTemplates.ContainsKey( guid );
+		}
+
+		public void QueueRegisterTemplate( string guid, string path )
+		{
+			string name = string.Empty;
+			if ( OfficialTemplates.ContainsKey( guid ) )
+			{
+				name = OfficialTemplates[ guid ];
+			}
+
+			m_registerTemplateQueue.Add( new TemplateDescriptor()
+			{
+				template = ScriptableObject.CreateInstance<TemplateMultiPass>(),
+				name = name,
+				guid = guid,
+				path = AssetDatabase.GUIDToAssetPath( guid ),
+				isCommunity = string.IsNullOrEmpty( name )
+			} );
+		}
+
+		public void FlushRegisterTemplateQueue()
+		{
+			Exception error = null;
+			int count = m_registerTemplateQueue.Count;
+			int index = 0;
+
+			EditorUtility.DisplayProgressBar( "Amplify Shader Editor", "Parsing Templates....", 0.0f );
+
+			Task task = Task.Run( () =>
+			{
+				try
+				{
+					Parallel.For( 0, count, i =>
+					{
+						TemplateDescriptor desc = m_registerTemplateQueue[ i ];
+						desc.template.Init( desc.name, desc.guid, desc.path, desc.isCommunity );
+						Interlocked.Increment( ref index );
+					} );
+				}
+				catch ( Exception e )
+				{
+					error = e;
+				}
+			} );
+
+			try
+			{
+				while ( !task.IsCompleted )
+				{
+					EditorUtility.DisplayProgressBar( "Amplify Shader Editor", "Parsing Templates....", ++index / ( float )count );
+					Thread.Sleep( 10 );
+				}
+			}
+			finally
+			{
+				EditorUtility.ClearProgressBar();
+			}
+
+
+			task.GetAwaiter().GetResult();
+
+			if ( error != null )
+			{
+				throw error;
+			}
+
+			foreach ( var desc in m_registerTemplateQueue )
+			{
+				if ( desc.template.IsValid )
+				{
+					AddTemplate( desc.template );
+				}
+			}
+
+			m_registerTemplateQueue.Clear();
+		}
+
 		public void AddTemplate( TemplateDataParent templateData )
 		{
 			if ( templateData == null || !templateData.IsValid )
+			{
 				return;
+			}
+
 			RefreshAvailableTemplates();
+
 			if ( !m_availableTemplates.ContainsKey( templateData.GUID ) )
 			{
-				m_sortedTemplates.Add( templateData );
 				m_availableTemplates.Add( templateData.GUID, templateData );
+
+				m_sortedTemplates.Add( templateData );
+				m_sortedTemplates.Sort( ( a, b ) => string.Compare( a.Name, b.Name, StringComparison.Ordinal ) );
 			}
 		}
 
@@ -972,7 +948,6 @@ namespace AmplifyShaderEditor
 			m_sortedTemplates = null;
 
 			AvailableTemplateNames = null;
-			Initialized = false;
 		}
 
 		public TemplateDataParent GetTemplate( int id )
@@ -1055,12 +1030,7 @@ namespace AmplifyShaderEditor
 
 			m_instance = this;
 
-			if ( !Initialized )
-			{
-				DebugMessage( "Running TemplatesManager.Init" );
-				Init();
-			}
-			else if ( !EditorApplication.isPlayingOrWillChangePlaymode )
+			if ( !EditorApplication.isPlayingOrWillChangePlaymode )
 			{
 				DebugMessage( "Refreshing Available Templates" );
 				RefreshAvailableTemplates();

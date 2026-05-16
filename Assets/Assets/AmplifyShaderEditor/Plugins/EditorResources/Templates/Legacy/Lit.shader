@@ -32,9 +32,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 				Geometry:SetDefine:ASE_GEOMETRY
 				Terrain:SetDefine:ASE_TERRAIN
 				Terrain:ShowOption:  Instanced Terrain Normals
-				Terrain:SetPropertyOnPass:ScenePickingPass:ChangeTagValue,LightMode,Picking
 				Impostor:SetDefine:ASE_IMPOSTOR
-				Geometry,Impostor:SetPropertyOnPass:ScenePickingPass:ChangeTagValue,LightMode,ScenePickingPass
 			Option:  Instanced Terrain Normals,InvertActionOnDeselection:Force Vertex,Force Pixel,Material Option:Force Pixel
 				Force Vertex?Category=Terrain:SetShaderProperty:_InstancedTerrainNormals,//[KeywordEnum(Vertex, Pixel)] _InstancedTerrainNormals("Instanced Terrain Normals", Float) = 1.0
 				Force Pixel?Category=Terrain:SetDefine:_INSTANCEDTERRAINNORMALS_PIXEL
@@ -364,6 +362,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 
 		CGINCLUDE
 			#pragma target 3.5
+			#pragma exclude_renderers d3d9 // ensure rendering platforms toggle list is visible
 
 			float4 FixedTess( float tessValue )
 			{
@@ -729,7 +728,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					half AlphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;2;-1;_AlphaClipP*/0.5/*end*/;
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						float DeviceDepth = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
+						IN.pos.z = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
 					#endif
 
 					half4 c = half4( Color, Alpha );
@@ -739,7 +738,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					#endif
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						outputDepth = DeviceDepth;
+						outputDepth = IN.pos.z;
 					#endif
 
 					#if defined( ASE_FOG )
@@ -1074,7 +1073,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					half3 Translucency = /*ase_frag_out:Translucency;Float3;14;-1;_Translucency*/1/*end*/;
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						float DeviceDepth = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
+						IN.pos.z = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
 					#endif
 
 					#ifdef _ALPHATEST_ON
@@ -1101,7 +1100,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					#endif
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						outputDepth = DeviceDepth;
+						outputDepth = IN.pos.z;
 					#endif
 
 					#ifndef USING_DIRECTIONAL_LIGHT
@@ -1532,7 +1531,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					half3 Translucency = /*ase_frag_out:Translucency;Float3;14;-1;_Translucency*/1/*end*/;
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						float DeviceDepth = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
+						IN.pos.z = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
 					#endif
 
 					#ifdef _ALPHATEST_ON
@@ -1559,7 +1558,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					#endif
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						outputDepth = DeviceDepth;
+						outputDepth = IN.pos.z;
 					#endif
 
 					#ifndef USING_DIRECTIONAL_LIGHT
@@ -1936,7 +1935,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					half3 BakedGI = /*ase_frag_out:Baked GI;Float3;10;-1;_BakedGI*/0/*end*/;
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						float DeviceDepth = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
+						IN.pos.z = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
 					#endif
 
 					#if ( ASE_FRAGMENT_NORMAL == 0 )
@@ -1952,7 +1951,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					#endif
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						outputDepth = DeviceDepth;
+						outputDepth = IN.pos.z;
 					#endif
 
 					#ifndef USING_DIRECTIONAL_LIGHT
@@ -2517,7 +2516,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					half AlphaClipThresholdShadow = /*ase_frag_out:Alpha Clip Threshold Shadow;Float;9;-1;_AlphaClipShadow*/0.5/*end*/;
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						float DeviceDepth = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
+						IN.pos.z = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
 					#endif
 
 					#ifdef _ALPHATEST_SHADOW_ON
@@ -2539,7 +2538,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					#endif
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						outputDepth = DeviceDepth;
+						outputDepth = IN.pos.z;
 					#endif
 
 					SHADOW_CASTER_FRAGMENT(IN)
@@ -2751,7 +2750,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					half AlphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;8;-1;_AlphaClip*/0.5/*end*/;
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						float DeviceDepth = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
+						IN.pos.z = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
 					#endif
 
 					#ifdef _ALPHATEST_ON
@@ -2759,7 +2758,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					#endif
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						outputDepth = DeviceDepth;
+						outputDepth = IN.pos.z;
 					#endif
 
 					return float4( _ObjectId, _PassValue, 1.0, 1.0 );
@@ -2772,7 +2771,10 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 		{
 			/*ase_hide_pass*/
 			Name "ScenePickingPass"
-			Tags{ "LightMode" = "ScenePickingPass" }
+			Tags
+			{
+				/*ase_immutable*/ "LightMode" = "Picking"
+			}
 
 			ZWrite On
 
@@ -2970,7 +2972,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					half AlphaClipThreshold = /*ase_frag_out:Alpha Clip Threshold;Float;8;-1;_AlphaClip*/0.5/*end*/;
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						float DeviceDepth = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
+						IN.pos.z = /*ase_frag_out:Depth;Float;28;-1;_DeviceDepth*/IN.pos.z/*end*/;
 					#endif
 
 					#ifdef _ALPHATEST_ON
@@ -2978,7 +2980,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Lit" /*end*/
 					#endif
 
 					#if defined( ASE_DEPTH_WRITE_ON )
-						outputDepth = DeviceDepth;
+						outputDepth = IN.pos.z;
 					#endif
 
 					return _SelectionID;

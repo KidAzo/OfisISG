@@ -66,7 +66,7 @@ namespace AmplifyShaderEditor
 		{
 			OnPaletteNodeCreateEvt( type, name, function );
 		}
-		
+
 		public override void Draw( Rect parentPosition, Vector2 mousePosition, int mouseButtonId, bool hasKeyboadFocus )
 		{
 			base.Draw( parentPosition, mousePosition, mouseButtonId, hasKeyboadFocus );
@@ -212,16 +212,47 @@ namespace AmplifyShaderEditor
 				EditorGUIUtility.labelWidth = m_searchLabelSize;
 				EditorGUI.BeginChangeCheck();
 				{
-					GUI.SetNextControlName( m_searchFilterControl + m_resizable );
-					m_searchFilter = EditorGUILayout.TextField( m_searchFilterStr, m_searchFilter );
-					if( m_focusOnSearch )
+					var controlName = m_searchFilterControl + m_resizable;
+
+					EditorGUILayout.BeginHorizontal();
+					{
+						// @diogo: split between Label and TextField to ensure FocusTextInControl is reliable
+						Rect labelRect = EditorGUI.IndentedRect( EditorGUILayout.GetControlRect() );
+						Rect valueRect = EditorGUI.PrefixLabel( labelRect, GUIContent.none );
+
+						// @diogo: actual editable field
+						GUI.SetNextControlName( controlName );
+						m_searchFilter = EditorGUI.TextField( valueRect, m_searchFilter );
+
+						// @diogo: temporary "transparent" hint
+						{
+							bool hasFocus = GUI.GetNameOfFocusedControl() == "randomName";
+							if ( string.IsNullOrEmpty( m_searchFilter ) && Event.current.type == EventType.Repaint )
+							{
+								// Placeholder style (dim text)
+								var hintStyle = new GUIStyle( EditorStyles.label )
+								{
+									alignment = TextAnchor.MiddleLeft,
+									clipping = TextClipping.Clip,
+									normal = { textColor = EditorGUIUtility.isProSkin ? new Color( .55f, .55f, .55f, 1 ) : new Color( .45f, .45f, .45f, 1 ) }
+								};
+								Rect hintRect = new Rect( valueRect.x + 3, valueRect.y, valueRect.width - 6, valueRect.height );
+								GUI.Label( hintRect, "Search for nodes", hintStyle );
+							}
+						}
+					}
+					EditorGUILayout.EndHorizontal();
+
+					if ( m_focusOnSearch && Event.current.type == EventType.Repaint )
 					{
 						m_focusOnSearch = false;
-						EditorGUI.FocusTextInControl( m_searchFilterControl + m_resizable );
+						EditorGUI.FocusTextInControl( controlName );
 					}
 				}
-				if( EditorGUI.EndChangeCheck() )
+				if ( EditorGUI.EndChangeCheck() )
+				{
 					m_forceUpdate = true;
+				}
 
 				EditorGUIUtility.labelWidth = width;
 				bool usingSearchFilter = ( m_searchFilter.Length == 0 );
@@ -429,9 +460,9 @@ namespace AmplifyShaderEditor
 					int count = current.Value.Contents.Count;
 					for( int i = 0; i < count; i++ )
 					{
-						if( ( fromCommunity && current.Value.Contents[ i ].NodeAttributes.FromCommunity ) 
+						if( ( fromCommunity && current.Value.Contents[ i ].NodeAttributes.FromCommunity )
 							|| !fromCommunity
-							//|| ( !fromCommunity && !current.Value.Contents[ i ].NodeAttributes.FromCommunity ) 
+							//|| ( !fromCommunity && !current.Value.Contents[ i ].NodeAttributes.FromCommunity )
 							)
 						{
 							string nodeFullName = current.Value.Contents[ i ].Name;

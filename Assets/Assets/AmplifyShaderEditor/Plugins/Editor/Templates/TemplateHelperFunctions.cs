@@ -136,10 +136,12 @@ namespace AmplifyShaderEditor
 	{
 		public string Name;
 		public string Value;
-		public TemplatesTagData( string name, string value )
+		public bool Immutable;
+		public TemplatesTagData( string name, string value, bool immutable )
 		{
 			Name = name;
 			Value = value;
+			Immutable = immutable;
 		}
 	}
 
@@ -207,6 +209,11 @@ namespace AmplifyShaderEditor
 		public int ZWriteStartIndex;
 		public string ZWriteInlineValue;
 
+		public bool ValidZClip;
+		public string ZClipModeId;
+		public ZClipMode ZClipModeValue;
+		public int ZClipStartIndex;
+		public string ZClipInlineValue;
 
 		public bool ValidZTest;
 		public string ZTestModeId;
@@ -225,12 +232,18 @@ namespace AmplifyShaderEditor
 		public override void SetAllModulesDefault()
 		{
 			base.SetAllModulesDefault();
+
 			ValidZWrite = true;
 			ZWriteModeId = string.Empty;
 			ZWriteModeValue = ZWriteMode.On;
 			ZWriteStartIndex = -1;
 			ZWriteInlineValue = string.Empty;
 
+			ValidZClip = true;
+			ZClipModeId = string.Empty;
+			ZClipModeValue = ZClipMode.True;
+			ZClipStartIndex = -1;
+			ZClipInlineValue = string.Empty;
 
 			ValidZTest = true;
 			ZTestModeId = string.Empty;
@@ -249,7 +262,7 @@ namespace AmplifyShaderEditor
 
 		public void SetDataCheck()
 		{
-			DataCheck = ( ValidZWrite || ValidZTest || ValidOffset )?TemplateDataCheck.Valid:TemplateDataCheck.Invalid;
+			DataCheck = ( ValidZWrite || ValidZClip || ValidZTest || ValidOffset ) ? TemplateDataCheck.Valid : TemplateDataCheck.Invalid;
 		}
 	}
 
@@ -463,27 +476,7 @@ namespace AmplifyShaderEditor
 
 	public static class TemplateHelperFunctions
 	{
-		/*
-		struct DirectionalLightData
-		{
-			uint lightLayers;
-			float3 positionRWS;
-			float3 color;
-			int cookieIndex;
-			float volumetricDimmer;
-			float3 right;
-			float3 up;
-			float3 forward;
-			int tileCookie;
-			int shadowIndex;
-			int contactShadowIndex;
-			float4 shadowMaskSelector;
-			int nonLightmappedOnly;
-			float diffuseScale;
-			float specularScale;
-		};
-		*/
-		public static string HDLightInfoFormat = "_DirectionalLightDatas[{0}].{1}";
+		public static string LightDataFormatHDRP = "_DirectionalLightDatas[{0}].{1}";
 
 		public static string[] VectorSwizzle = { "x", "y", "z", "w" };
 		public static string[] ColorSwizzle = { "r", "g", "b", "a" };
@@ -990,6 +983,7 @@ namespace AmplifyShaderEditor
 		public static string ColorMaskWholeWordPattern = @"\bColorMask\b";
 		public static string StencilWholeWordPattern = @"\bStencil\b";
 		public static string ZWriteWholeWordPattern = @"\bZWrite\b";
+		public static string ZClipWholeWordPattern = @"\bZClip\b";
 		public static string ZTestWholeWordPattern = @"\bZTest\b";
 		public static string ZOffsetWholeWordPattern = @"\bOffset\b";
 		public static string TagsWholeWordPattern = @"\bTags\b";
@@ -1021,9 +1015,10 @@ namespace AmplifyShaderEditor
 
 		public static readonly string PassNamePattern = "Name\\s+\\\"([\\w\\+\\-\\*\\/\\(\\) ]*)\\\"";
 
-		public static readonly string TagsPattern = "\"(\\w+)\"\\s*=\\s*\"(\\w+\\+*\\w*)\"";
+		public static readonly string TagsPattern = @"(?:/\*\s*(ase_immutable)\s*\*/\s*)?""(\w+)""\s*=\s*""(\w+\+*\w*)""";
 		public static readonly string ZTestPattern = @"^\s*ZTest\s+(\[*\w+\]*)";
 		public static readonly string ZWritePattern = @"^\s*ZWrite\s+(\[*\w+\]*)";
+		public static readonly string ZClipPattern = @"^\s*ZClip\s+(\[*\w+\]*)";
 		//public static readonly string ZOffsetPattern = @"\s*Offset\s+([-+]?[0-9]*\.?[0-9]+)\s*,\s*([-+]?[0-9]*\.?[0-9]+)";
 		public static readonly string ZOffsetPattern = @"^\s*Offset\s+([-+]?[0-9]*\.?[0-9]+|\[*\w+\]*)\s*,\s*([-+]?[0-9]*\.?[0-9]+|\[*\w+\]*)\s*";
 		public static readonly string VertexDataPattern = @"([a-z0-9D_]+|samplerCUBE|sampler2DArray)\s+(\w+)\s*:\s*([A-Z0-9_]+);";
@@ -2034,14 +2029,18 @@ namespace AmplifyShaderEditor
 			{
 				for( int i = 0; i < count; i++ )
 				{
-					if( matchColl[ i ].Groups.Count == 3 )
+					if( matchColl[ i ].Groups.Count == 4 )
 					{
-						if( isSubShader && matchColl[ i ].Groups[ 1 ].Value.Equals( "RenderPipeline" ) )
+						string tagName = matchColl[ i ].Groups[ 2 ].Value;
+						string tagValue = matchColl[ i ].Groups[ 3 ].Value;
+						bool tagImmutable = !string.IsNullOrEmpty( matchColl[ i ].Groups[ 1 ].Value );
+
+						if( isSubShader && tagName.Equals( "RenderPipeline" ) )
 						{
-							if( TagToRenderPipeline.ContainsKey( matchColl[ i ].Groups[ 2 ].Value ) )
-								srpType = TagToRenderPipeline[ matchColl[ i ].Groups[ 2 ].Value ];
+							if( TagToRenderPipeline.ContainsKey( tagValue ) )
+								srpType = TagToRenderPipeline[ tagValue ];
 						}
-						tagsObj.Tags.Add( new TemplatesTagData( matchColl[ i ].Groups[ 1 ].Value, matchColl[ i ].Groups[ 2 ].Value ) );
+						tagsObj.Tags.Add( new TemplatesTagData( tagName, tagValue, tagImmutable ) );
 					}
 				}
 			}
@@ -2068,6 +2067,35 @@ namespace AmplifyShaderEditor
 						depthDataObj.ZWriteModeValue = (ZWriteMode)Enum.Parse( typeof( ZWriteMode ), match.Groups[ 1 ].Value );
 						depthDataObj.DataCheck = TemplateDataCheck.Valid;
 						depthDataObj.ValidZWrite = true;
+					}
+					catch
+					{
+						depthDataObj.DataCheck = TemplateDataCheck.Invalid;
+					}
+				}
+			}
+		}
+
+		public static void CreateZClipMode( string zClipData, ref TemplateDepthData depthDataObj )
+		{
+			depthDataObj.DataCheck = TemplateDataCheck.Invalid;
+			Match match = Regex.Match( zClipData, ZClipPattern );
+			if( match.Groups.Count == 2 )
+			{
+				string property = string.Empty;
+				if( match.Groups[ 1 ].Success && IsInlineProperty( match.Groups[ 1 ].Value, ref property ) )
+				{
+					depthDataObj.ZClipInlineValue = property;
+					depthDataObj.DataCheck = TemplateDataCheck.Valid;
+					depthDataObj.ValidZClip = true;
+				}
+				else
+				{
+					try
+					{
+						depthDataObj.ZClipModeValue = (ZClipMode)Enum.Parse( typeof( ZClipMode ), match.Groups[ 1 ].Value );
+						depthDataObj.DataCheck = TemplateDataCheck.Valid;
+						depthDataObj.ValidZClip = true;
 					}
 					catch
 					{
@@ -2519,15 +2547,36 @@ namespace AmplifyShaderEditor
 			return dataVar;
 		}
 
-		public static bool CheckIfTemplate( string assetPath )
+		public static bool CheckIfTemplate( string path )
 		{
-			if( assetPath.EndsWith( ".shader" ) )
+			try
 			{
-				if( File.Exists( assetPath ) )
+			#if true
+				string body = File.ReadAllText( path );
+				return ( body.IndexOf( TemplatesManager.TemplateShaderNameBeginTag ) > -1 );
+			#else
+				// TODO: faster alternative? problem with the following is it doesn't account for curly brackets inside comments
+				using ( var reader = new StreamReader( path ) )
 				{
-					string body = IOUtils.LoadTextFileFromDisk( assetPath );
-					return ( body.IndexOf( TemplatesManager.TemplateShaderNameBeginTag ) > -1 );
-				}
+					while ( !reader.EndOfStream )
+					{
+						string line = reader.ReadLine();
+						if ( line.IndexOf( TemplatesManager.TemplateShaderNameBeginTag ) > -1 )
+						{
+							return true;
+						}
+						else if ( line.IndexOf( '{' ) > -1 )
+						{
+							// tag not detected before the first curly bracket? not a template.
+							return false;
+						}
+					}	
+				}				
+			#endif
+			}
+			catch ( Exception )
+			{
+				// Template not detected. Not critical.
 			}
 			return false;
 		}

@@ -311,7 +311,7 @@ namespace AmplifyShaderEditor
 			{
 				dataCollector.AddToProperties( UniqueId, "[Header( Parallax Occlusion Mapping )]", 300 );
 				dataCollector.AddToProperties( UniqueId, "_CurvFix(\"Curvature Bias\", Range( 0, 1 ) ) = 1", 301 );
-				dataCollector.AddToUniforms( UniqueId, "uniform float _CurvFix;" );
+				dataCollector.AddToUniforms( UniqueId, "float _CurvFix;", true );
 
 				if ( m_curvaturePort.IsConnected )
 					curvature = m_curvaturePort.GeneratePortInstructions( ref dataCollector );
@@ -505,24 +505,33 @@ namespace AmplifyShaderEditor
 
 			if ( m_useCurvature )
 			{
-				IOUtils.AddFunctionLine( ref m_functionBody, "#ifdef UNITY_PASS_SHADOWCASTER" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "if ( unity_LightShadowBias.z == 0.0 )" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "{" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
+				if ( !dataCollector.IsSRP )
+				{
+					IOUtils.AddFunctionLine( ref m_functionBody, "#ifdef UNITY_PASS_SHADOWCASTER" );
+					IOUtils.AddFunctionLine( ref m_functionBody, "if ( unity_LightShadowBias.z == 0.0 )" );
+					IOUtils.AddFunctionLine( ref m_functionBody, "{" );
+					IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
+				}
 				IOUtils.AddFunctionLine( ref m_functionBody, " \tif ( result.z > 1 )" );
 				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tclip( -1 );" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "#ifdef UNITY_PASS_SHADOWCASTER" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "}" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
+				if ( !dataCollector.IsSRP )
+				{
+					IOUtils.AddFunctionLine( ref m_functionBody, "#ifdef UNITY_PASS_SHADOWCASTER" );
+					IOUtils.AddFunctionLine( ref m_functionBody, "}" );
+					IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
+				}
 			}
 
 			if ( m_clipEnds )
 			{
 				IOUtils.AddFunctionLine( ref m_functionBody, "result.xy = uvs.xy + finalTexOffset;" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "#ifdef UNITY_PASS_SHADOWCASTER" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "if ( unity_LightShadowBias.z == 0.0 )" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "{" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
+				if ( !dataCollector.IsSRP )
+				{
+					IOUtils.AddFunctionLine( ref m_functionBody, "#ifdef UNITY_PASS_SHADOWCASTER" );
+					IOUtils.AddFunctionLine( ref m_functionBody, "if ( unity_LightShadowBias.z == 0.0 )" );
+					IOUtils.AddFunctionLine( ref m_functionBody, "{" );
+					IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
+				}
 				IOUtils.AddFunctionLine( ref m_functionBody, " \tif ( result.x < 0 )" );
 				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tclip( -1 );" );
 				IOUtils.AddFunctionLine( ref m_functionBody, " \tif ( result.x > tilling.x )" );
@@ -531,9 +540,12 @@ namespace AmplifyShaderEditor
 				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tclip( -1 );" );
 				IOUtils.AddFunctionLine( ref m_functionBody, " \tif ( result.y > tilling.y )" );
 				IOUtils.AddFunctionLine( ref m_functionBody, " \t \tclip( -1 );" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "#ifdef UNITY_PASS_SHADOWCASTER" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "}" );
-				IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
+				if ( !dataCollector.IsSRP )
+				{
+					IOUtils.AddFunctionLine( ref m_functionBody, "#ifdef UNITY_PASS_SHADOWCASTER" );
+					IOUtils.AddFunctionLine( ref m_functionBody, "}" );
+					IOUtils.AddFunctionLine( ref m_functionBody, "#endif" );
+				}
 				IOUtils.AddFunctionLine( ref m_functionBody, "return result.xy;" );
 			}
 			else

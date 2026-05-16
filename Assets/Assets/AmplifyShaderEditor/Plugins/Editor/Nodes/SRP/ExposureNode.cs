@@ -23,7 +23,7 @@ namespace AmplifyShaderEditor
 				return m_outputPorts[ 0 ].LocalValue( dataCollector.PortCategory );
 			
 			bool isHDRP = ( dataCollector.CurrentSRPType == TemplateSRPType.HDRP );
-			bool isURP17xOrAbove = ( dataCollector.CurrentSRPType == TemplateSRPType.URP && ASEPackageManagerHelper.CurrentSRPVersion >= ( int )ASESRPBaseline.ASE_SRP_17_0 );
+			bool isURP17xOrAbove = ( dataCollector.CurrentSRPType == TemplateSRPType.URP && ASEPackageManagerHelper.CurrentSRPVersion >= ( int )SRPBaseline.ASE_SRP_17_0 );
 			string result;
 
 			if ( isHDRP || isURP17xOrAbove )

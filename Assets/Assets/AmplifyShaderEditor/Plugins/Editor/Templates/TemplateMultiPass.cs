@@ -70,7 +70,7 @@ namespace AmplifyShaderEditor
 		TemplateShaderModelData m_globalShaderModel = new TemplateShaderModelData();
 
 		private Dictionary<string, TemplateUniquePassData> m_passUniqueIdData = new Dictionary<string, TemplateUniquePassData>();
-		
+
 		[NonSerialized]
 		private List<TemplateShaderPropertyData> m_allShaderProperties;
 
@@ -103,7 +103,7 @@ namespace AmplifyShaderEditor
 		void LoadTemplateBody( string guid, string path )
 		{
 			m_passUniqueIdData.Clear();
-			m_guid = guid;			
+			m_guid = guid;
 
 			string shaderBody = IOUtils.LoadTextFileFromDisk( path );
 			if ( string.IsNullOrEmpty( shaderBody ) )
@@ -479,9 +479,14 @@ namespace AmplifyShaderEditor
 					m_templateIdManager.SetReplacementText( prefix + m_subShaders[ subShaderId ].Modules.StencilData.StencilBufferId, text );
 				}
 				break;
-				case TemplateModuleDataType.ModuleZwrite:
+				case TemplateModuleDataType.ModuleZWrite:
 				{
 					m_templateIdManager.SetReplacementText( prefix + m_subShaders[ subShaderId ].Modules.DepthData.ZWriteModeId, text );
+				}
+				break;
+				case TemplateModuleDataType.ModuleZClip:
+				{
+					m_templateIdManager.SetReplacementText( prefix + m_subShaders[ subShaderId ].Modules.DepthData.ZClipModeId, text );
 				}
 				break;
 				case TemplateModuleDataType.ModuleZTest:
@@ -646,10 +651,15 @@ namespace AmplifyShaderEditor
 					prefix = addPrefix ? m_subShaders[ subShaderId ].Modules.UniquePrefix : string.Empty;
 					return prefix + m_subShaders[ subShaderId ].Modules.StencilData.StencilBufferId;
 				}
-				case TemplateModuleDataType.ModuleZwrite:
+				case TemplateModuleDataType.ModuleZWrite:
 				{
 					prefix = addPrefix ? m_subShaders[ subShaderId ].Modules.UniquePrefix : string.Empty;
 					return prefix + m_subShaders[ subShaderId ].Modules.DepthData.ZWriteModeId;
+				}
+				case TemplateModuleDataType.ModuleZClip:
+				{
+					prefix = addPrefix ? m_subShaders[ subShaderId ].Modules.UniquePrefix : string.Empty;
+					return prefix + m_subShaders[ subShaderId ].Modules.DepthData.ZClipModeId;
 				}
 				case TemplateModuleDataType.ModuleZTest:
 				{
@@ -798,10 +808,15 @@ namespace AmplifyShaderEditor
 					prefix = addPrefix ? m_subShaders[ subShaderId ].Passes[ passId ].Modules.UniquePrefix : string.Empty;
 					return prefix + m_subShaders[ subShaderId ].Passes[ passId ].Modules.StencilData.StencilBufferId;
 				}
-				case TemplateModuleDataType.ModuleZwrite:
+				case TemplateModuleDataType.ModuleZWrite:
 				{
 					prefix = addPrefix ? m_subShaders[ subShaderId ].Passes[ passId ].Modules.UniquePrefix : string.Empty;
 					return prefix + m_subShaders[ subShaderId ].Passes[ passId ].Modules.DepthData.ZWriteModeId;
+				}
+				case TemplateModuleDataType.ModuleZClip:
+				{
+					prefix = addPrefix ? m_subShaders[ subShaderId ].Passes[ passId ].Modules.UniquePrefix : string.Empty;
+					return prefix + m_subShaders[ subShaderId ].Passes[ passId ].Modules.DepthData.ZClipModeId;
 				}
 				case TemplateModuleDataType.ModuleZTest:
 				{
@@ -1041,10 +1056,16 @@ namespace AmplifyShaderEditor
 					m_templateIdManager.SetReplacementText( prefix + m_subShaders[ subShaderId ].Passes[ passId ].Modules.StencilData.StencilBufferId, text );
 				}
 				break;
-				case TemplateModuleDataType.ModuleZwrite:
+				case TemplateModuleDataType.ModuleZWrite:
 				{
 					prefix = m_subShaders[ subShaderId ].Passes[ passId ].Modules.UniquePrefix;
 					m_templateIdManager.SetReplacementText( prefix + m_subShaders[ subShaderId ].Passes[ passId ].Modules.DepthData.ZWriteModeId, text );
+				}
+				break;
+				case TemplateModuleDataType.ModuleZClip:
+				{
+					prefix = m_subShaders[ subShaderId ].Passes[ passId ].Modules.UniquePrefix;
+					m_templateIdManager.SetReplacementText( prefix + m_subShaders[ subShaderId ].Passes[ passId ].Modules.DepthData.ZClipModeId, text );
 				}
 				break;
 				case TemplateModuleDataType.ModuleZTest:
@@ -1487,7 +1508,7 @@ namespace AmplifyShaderEditor
 		public List<TemplateSubShader> SubShaders { get { return m_subShaders; } }
 		public List<TemplateShaderPropertyData> AvailableShaderProperties { get { return m_availableShaderProperties; } }
 		public List<TemplateShaderPropertyData> AllShaderProperties
-		{ 
+		{
 			get
 			{
 				if( m_allShaderProperties == null )
@@ -1514,9 +1535,9 @@ namespace AmplifyShaderEditor
 						}
 					}
 				}
-				
-				
-				return m_allShaderProperties; 
+
+
+				return m_allShaderProperties;
 			}
 		}
 

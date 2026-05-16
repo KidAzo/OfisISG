@@ -1412,7 +1412,7 @@ namespace AmplifyShaderEditor
 
 				int coordSet = ( ( m_textureCoordSet < 0 ) ? 0 : m_textureCoordSet );
 				string uvName = IOUtils.GetUVChannelName( propertyName, coordSet );
-				string dummyPropUV = "_tex" /*+ ( coordSize != 2 ? "" + coordSize : "" )*/ + "coord" + ( coordSet > 0 ? ( coordSet + 1 ).ToString() : "" );
+				string dummyPropUV = "_texcoord" + ( coordSet > 0 ? ( coordSet + 1 ).ToString() : "" );
 				string dummyUV = "uv" + ( coordSet > 0 ? ( coordSet + 1 ).ToString() : "" ) + dummyPropUV;
 
 				string attr = GetPropertyValue();
@@ -1446,7 +1446,6 @@ namespace AmplifyShaderEditor
 				}
 				else
 				{
-					dataCollector.AddToProperties( UniqueId, "[HideInInspector] " + dummyPropUV + "( \"\", 2D ) = \"white\" {}", 9999 );
 					if( isVertex )
 					{
 						coordInput = Constants.VertexShaderInputStr + ".texcoord";
@@ -1472,6 +1471,10 @@ namespace AmplifyShaderEditor
 						coordInput = dataCollector.TemplateDataCollectorInstance.GetUVName( m_textureCoordSet, m_uvPort.DataType );
 					else
 						coordInput = dataCollector.TemplateDataCollectorInstance.RegisterUV( m_textureCoordSet, m_uvPort.DataType );
+				}
+				else
+				{
+					dataCollector.AddToProperties( UniqueId, "[HideInInspector] " + dummyPropUV + "( \"\", 2D ) = \"white\" {}", 9999 );
 				}
 
 				if( !scaleOffset )

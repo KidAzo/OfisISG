@@ -1979,7 +1979,7 @@ namespace AmplifyShaderEditor
 				DrawPreview( drawInfo, m_previewRect );
 
 			// Error and Warning bottom message
-			if( m_showErrorMessage )
+			if( m_showErrorMessage && ContainerGraph.LodLevel <= ParentGraph.NodeLOD.LOD3 )
 			{
 				GUI.color = new Color( 0.0f, 0.0f, 0.0f, 0.5f );
 				GUI.Label( m_errorBox, string.Empty, UIUtils.Separator );

@@ -1928,9 +1928,9 @@ namespace AmplifyShaderEditor
 					AddShaderLOD( ref ShaderBody, ShaderLOD );
 					AddRenderState( ref ShaderBody, "Cull", m_inlineCullMode.GetValueOrProperty( m_cullMode.ToString() ) );
 					m_customBlendAvailable = ( m_alphaMode == AlphaMode.Custom || m_alphaMode == AlphaMode.Opaque );
-					if( ( m_zBufferHelper.IsActive && m_customBlendAvailable ) || m_outlineHelper.UsingZWrite || m_outlineHelper.UsingZTest )
+					if( ( m_zBufferHelper.IsActive && m_customBlendAvailable ) || m_outlineHelper.UsingZWrite || m_outlineHelper.UsingZClip || m_outlineHelper.UsingZTest )
 					{
-						ShaderBody += m_zBufferHelper.CreateDepthInfo( m_outlineHelper.UsingZWrite, m_outlineHelper.UsingZTest );
+						ShaderBody += m_zBufferHelper.CreateDepthInfo( m_outlineHelper.UsingZWrite, m_outlineHelper.UsingZClip, m_outlineHelper.UsingZTest );
 					}
 					if( m_stencilBufferHelper.Active )
 					{

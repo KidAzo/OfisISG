@@ -2,6 +2,7 @@
 // Copyright (c) Amplify Creations, Lda <info@amplify.pt>
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -768,6 +769,38 @@ namespace AmplifyShaderEditor
 			}
 		}
 
+		bool ValidatePortName( string name )
+		{
+			return !m_usedNames.Any( p => p.Key == name ) && !string.IsNullOrEmpty( name );
+		}
+
+		string EnsureUniquePortName( string name )
+		{
+			if ( ValidatePortName( name ) )
+			{
+				return name;
+			}
+			else
+			{
+				if ( string.IsNullOrEmpty( name ) )
+				{
+					return GetFirstAvailableName();
+				}
+				else
+				{
+					int uniqueSuffix = 1;
+					string uniquePrefix = name;
+					string uniqueName = uniquePrefix + uniqueSuffix;
+					while ( !ValidatePortName( uniqueName ) )
+					{
+						uniqueSuffix++;
+						uniqueName = uniquePrefix + uniqueSuffix;
+					}
+					return uniqueName;
+				}
+			}
+		}
+
 		void DrawReordableInputs()
 		{
 			if( m_itemReordableList == null )
@@ -978,11 +1011,9 @@ namespace AmplifyShaderEditor
 								{
 									m_nameModified = true;
 									m_lastTimeNameModified = EditorApplication.timeSinceStartup;
+
 									m_inputPorts[ portIdx ].Name = UIUtils.RemoveInvalidCharacters( m_inputPorts[ portIdx ].Name );
-									if( string.IsNullOrEmpty( m_inputPorts[ portIdx ].Name ) )
-									{
-										m_inputPorts[ portIdx ].Name = DefaultInputNameStr + index;
-									}
+									m_inputPorts[ portIdx ].Name = EnsureUniquePortName( m_inputPorts[ portIdx ].Name );
 
 									if( m_items[ index ].Qualifier != VariableQualifiers.In )
 									{
@@ -1615,10 +1646,14 @@ namespace AmplifyShaderEditor
 			}
 			else
 			{
+				m_usedNames.Clear();
 				for( int i = 0 ; i < count ; i++ )
 				{
 					bool foldoutValue = Convert.ToBoolean( GetCurrentParam( ref nodeParams ) );
-					string name = GetCurrentParam( ref nodeParams );
+
+					string name = EnsureUniquePortName( GetCurrentParam( ref nodeParams ) );
+					m_usedNames.Add( name, i );
+
 					WirePortDataType type = (WirePortDataType)Enum.Parse( typeof( WirePortDataType ) , GetCurrentParam( ref nodeParams ) );
 					string internalData = GetCurrentParam( ref nodeParams );
 					VariableQualifiers qualifier = VariableQualifiers.In;

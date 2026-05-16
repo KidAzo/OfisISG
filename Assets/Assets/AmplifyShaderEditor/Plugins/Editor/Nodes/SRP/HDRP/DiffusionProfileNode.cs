@@ -1,6 +1,6 @@
 // Amplify Shader Editor - Visual Shader Editing Tool
 // Copyright (c) Amplify Creations, Lda <info@amplify.pt>
-#if UNITY_2019_1_OR_NEWER
+
 using UnityEditor;
 using UnityEngine;
 using System;
@@ -12,11 +12,7 @@ namespace AmplifyShaderEditor
 	public static class HDUtilsEx
 	{
 		private static System.Type type = null;
-#if UNITY_2019_3_OR_NEWER
 		public static System.Type Type { get { return ( type == null ) ? type = System.Type.GetType( "UnityEngine.Rendering.HighDefinition.HDUtils, Unity.RenderPipelines.HighDefinition.Runtime" ) : type; } }
-#else
-		public static System.Type Type { get { return ( type == null ) ? type = System.Type.GetType( "UnityEngine.Experimental.Rendering.HDPipeline.HDUtils, Unity.RenderPipelines.HighDefinition.Runtime" ) : type; } }
-#endif
 
 		public static string ConvertVector4ToGUID( Vector4 vector )
 		{
@@ -42,11 +38,7 @@ namespace AmplifyShaderEditor
 	public static class DiffusionProfileSettingsEx
 	{
 		private static System.Type type = null;
-#if UNITY_2019_3_OR_NEWER
 		public static System.Type Type { get { return ( type == null ) ? type = System.Type.GetType( "UnityEngine.Rendering.HighDefinition.DiffusionProfileSettings, Unity.RenderPipelines.HighDefinition.Runtime" ) : type; } }
-#else
-		public static System.Type Type { get { return ( type == null ) ? type = System.Type.GetType( "UnityEngine.Experimental.Rendering.HDPipeline.DiffusionProfileSettings, Unity.RenderPipelines.HighDefinition.Runtime" ) : type; } }
-#endif
 
 		public static uint Hash( UnityEngine.Object m_instance )
 		{
@@ -87,9 +79,7 @@ namespace AmplifyShaderEditor
 			m_currentPrecisionType = PrecisionType.Float;
 			m_srpBatcherCompatible = true;
 			m_freeType = false;
-#if UNITY_2019_3_OR_NEWER
 			m_freeType = true;
-#endif
 			m_errorMessageTypeIsError = NodeMessageType.Error;
 			m_errorMessageTooltip = NodeErrorMsg;
 		}
@@ -193,7 +183,7 @@ namespace AmplifyShaderEditor
 			if ( m_showErrorMessage )
 			{
 				EditorGUILayout.HelpBox(NodeErrorMsg, MessageType.Error );
-			}				
+			}
 		}
 
 		public override string GenerateShaderForOutput( int outputId, ref MasterNodeDataCollector dataCollector, bool ignoreLocalvar )
@@ -207,11 +197,7 @@ namespace AmplifyShaderEditor
 				return PropertyData( dataCollector.PortCategory );
 			}
 
-#if UNITY_2019_3_OR_NEWER
 			return RoundTrip.ToRoundTrip( HDShadowUtilsEx.Asfloat( DefaultHash ) );
-#else
-			return "asfloat(" + DefaultHash.ToString() + ")";
-#endif
 		}
 
 
@@ -248,13 +234,8 @@ namespace AmplifyShaderEditor
 			}
 			else
 			{
-#if UNITY_2020_2_OR_NEWER
 				lineOne = "\n[DiffusionProfile]" + m_propertyName + "(\"" + m_propertyInspectorName + "\", Float) = " + RoundTrip.ToRoundTrip( HDShadowUtilsEx.Asfloat( DefaultHash ) );
 				lineTwo = PropertyAttributes + "[HideInInspector]" + m_propertyName + "_Asset(\"" + m_propertyInspectorName + "\", Vector) = ( " + assetVec + " )";
-#else
-				lineOne = PropertyAttributes + "[ASEDiffusionProfile(" + m_propertyName + ")]" + m_propertyName + "_asset(\"" + m_propertyInspectorName + "\", Vector) = ( " + assetVec + " )";
-				lineTwo = "\n[HideInInspector]" + m_propertyName + "(\"" + m_propertyInspectorName + "\", Float) = " + RoundTrip.ToRoundTrip( HDShadowUtilsEx.Asfloat( DefaultHash ) );
-#endif
 			}
 
 			return lineOne + lineTwo;
@@ -273,7 +254,7 @@ namespace AmplifyShaderEditor
 					{
 						mat.SetVector( "_DiffusionProfileAsset", asset );
 						mat.SetFloat( "_DiffusionProfileHash", HDShadowUtilsEx.Asfloat( MaterialHash ) );
-					} 
+					}
 					else
 					{
 						mat.SetVector( m_propertyName + "_asset", asset );
@@ -359,25 +340,16 @@ namespace AmplifyShaderEditor
 
 			public static float Asfloat( uint val )
 			{
-#if UNITY_2019_3_OR_NEWER
 				object[] parameters = new object[] { val };
 				MethodInfo method = Type.GetMethod( "Asfloat", new Type[] { typeof( uint ) } );
 				return (float)method.Invoke( null, parameters );
-#else
-				return HDShadowUtils.Asfloat( val );
-#endif
 			}
 
 			public static uint Asuint( float val )
 			{
-#if UNITY_2019_3_OR_NEWER
-
 				object[] parameters = new object[] { val };
 				MethodInfo method = Type.GetMethod( "Asuint", new Type[] { typeof( float ) } );
 				return (uint)method.Invoke( null, parameters );
-#else
-				return HDShadowUtils.Asuint( val );
-#endif
 			}
 		}
 
@@ -463,4 +435,3 @@ namespace AmplifyShaderEditor
 		}
 	}
 }
-#endif

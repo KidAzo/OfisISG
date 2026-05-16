@@ -62,13 +62,11 @@ namespace AmplifyShaderEditor
 		private FieldInfo m_selectedField = null;
 		private FieldInfo m_infoField = null;
 
-	#if UNITY_2020_1_OR_NEWER
 		private Type m_previewSettingsType = null;
 		object m_previewSettingsInstance;
 		FieldInfo previewDirInfo;
 		FieldInfo shadedMaterialInfo;
 		FieldInfo activeMaterialInfo;
-	#endif
 
 		public override void OnClosed( Material material )
 		{
@@ -562,8 +560,6 @@ namespace AmplifyShaderEditor
 				m_renderMeshMethod = m_modelInspectorType.GetMethod( "RenderMeshPreview", BindingFlags.Static | BindingFlags.NonPublic );
 			}
 
-	#if UNITY_2020_1_OR_NEWER
-
 			m_previewDir = ( Vector2 )m_dragMethod.Invoke( m_previewGUIType, new object[] { m_previewDir, r } );
 
 			if ( m_previewSettingsType == null )
@@ -604,17 +600,6 @@ namespace AmplifyShaderEditor
 				m_renderMeshMethod.Invoke( m_modelInspectorType, new object[] { m_targetMesh, m_previewRenderUtility, m_previewSettingsInstance, -1 } );
 				m_previewRenderUtility.EndAndDrawPreview( r );
 			}
-
-	#else
-
-			if( Event.current.type == EventType.Repaint )
-			{
-				m_previewRenderUtility.BeginPreview( r, background );
-				m_renderMeshMethod.Invoke( m_modelInspectorType, new object[] { m_targetMesh, m_previewRenderUtility, mat, null, m_previewDir, -1 } );
-				m_previewRenderUtility.EndAndDrawPreview( r );
-			}
-
-	#endif
 		}
 
 		public static MaterialEditor Instance { get { return m_instance; } set { m_instance = value; } }

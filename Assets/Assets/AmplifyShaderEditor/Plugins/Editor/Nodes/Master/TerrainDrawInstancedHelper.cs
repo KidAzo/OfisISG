@@ -170,7 +170,7 @@ namespace AmplifyShaderEditor
 				if ( multiPassMasterNode != null && multiPassMasterNode.IsMainOutputNode )
 				{
 					// @diogo: add selection/picking passes ONLY if they don't already exist in the template
-					var pickingPass = multiPassMasterNode.ContainerGraph.GetPassWithTag( multiPassMasterNode.LODIndex, "LightMode", "ScenePickingPass" );
+					var pickingPass = multiPassMasterNode.ContainerGraph.GetPassWithTag( multiPassMasterNode.LODIndex, "LightMode", "Picking" );
 					var selectionPass = multiPassMasterNode.ContainerGraph.GetPassWithTag( multiPassMasterNode.LODIndex, "LightMode", "SceneSelectionPass" );
 
 					if ( pickingPass != null && !multiPassMasterNode.PassSelector.IsVisible( pickingPass.PassIdx ) )

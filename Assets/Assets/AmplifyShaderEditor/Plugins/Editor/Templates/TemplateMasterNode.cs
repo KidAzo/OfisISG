@@ -525,6 +525,11 @@ namespace AmplifyShaderEditor
 				validBody = m_currentTemplate.FillTemplateBody( m_currentTemplate.DepthData.ZWriteModeId, ref shaderBody, m_depthOphelper.CurrentZWriteMode ) && validBody;
 			}
 
+			if( m_currentTemplate.DepthData.ValidZClip )
+			{
+				validBody = m_currentTemplate.FillTemplateBody( m_currentTemplate.DepthData.ZClipModeId, ref shaderBody, m_depthOphelper.CurrentZClipMode ) && validBody;
+			}
+
 			if( m_currentTemplate.DepthData.ValidZTest )
 			{
 				validBody = m_currentTemplate.FillTemplateBody( m_currentTemplate.DepthData.ZTestModeId, ref shaderBody, m_depthOphelper.CurrentZTestMode ) && validBody;
@@ -679,6 +684,14 @@ namespace AmplifyShaderEditor
 					SamplingMacros = Convert.ToBoolean( GetCurrentParam( ref nodeParams ) );
 				else
 					SamplingMacros = false;
+
+				if( UIUtils.CurrentShaderVersion() >= 19906 )
+				{
+					if ( m_currentTemplate.DepthData.ValidZClip )
+					{
+						m_depthOphelper.ReadZClipFromString( ref m_currentReadParamIdx, ref nodeParams );
+					}
+				}
 			}
 			catch( Exception e )
 			{
@@ -747,6 +760,11 @@ namespace AmplifyShaderEditor
 			}
 
 			IOUtils.AddFieldValueToString( ref nodeInfo, m_samplingMacros );
+
+			if( m_currentTemplate.DepthData.ValidZClip )
+			{
+				m_depthOphelper.WriteZClipToString( ref nodeInfo );
+			}
 		}
 
 		public override void Destroy()

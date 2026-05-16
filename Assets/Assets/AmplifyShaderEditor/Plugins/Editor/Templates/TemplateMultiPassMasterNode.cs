@@ -217,6 +217,28 @@ namespace AmplifyShaderEditor
 		[NonSerialized]
 		private double m_refreshLODValueMasterNodesTimestamp;
 
+		// Template Bridges => Transition templates that are used to fix ase_pass or metadata issues
+		struct TemplateBridge
+		{
+			public string originalGUID; // original template we need to workaround
+			public string bridgeGUID;	// temporary template used for safe swap
+			public int versionMin;		// inclusive
+			public int versionMax;		// inclusive
+		};
+
+		private static TemplateBridge[] TemplateBriges = new[]
+		{
+			new TemplateBridge
+			{
+				// ** "Universal/2D Custom Lit" => Bridge1 **
+				// Workadround to solve errors in versions v1.9.9.6 to v1.9.9.7
+				originalGUID = "ece0159bad6633944bf6b818f4dd296c",
+				bridgeGUID = "25ed3094b38eca84ba6e6529789a1455",
+				versionMin = 19906,
+				versionMax = 19907
+			}
+		};
+
 		//////////////////////////////////////////////////////////////////////////
 		protected override void CommonInit( int uniqueId )
 		{
@@ -677,6 +699,23 @@ namespace AmplifyShaderEditor
 						{
 							module.DepthOphelper.CustomEdited = false;
 							module.DepthOphelper.ZWriteModeValue = item.ActionZWrite;
+						}
+					}
+				}
+				break;
+				case PropertyActionsEnum.ZClip:
+				{
+					if( item.CopyFromSubShader )
+					{
+						module.DepthOphelper.ZClipModeValue = subShaderModule.DepthOphelper.ZClipModeValue;
+					}
+					else
+					{
+						bool performAction = !ContainerGraph.IsLoading || !module.DepthOphelper.CustomEdited;
+						if( performAction )
+						{
+							module.DepthOphelper.CustomEdited = false;
+							module.DepthOphelper.ZClipModeValue = item.ActionZClip;
 						}
 					}
 				}
@@ -2465,38 +2504,31 @@ namespace AmplifyShaderEditor
 			if ( m_templateMultiPass.SRPtype != TemplateSRPType.BiRP )
 			{
 				var masterNode = ( m_mainMasterNodeRef != null ) ? m_mainMasterNodeRef : m_containerGraph.CurrentMasterNode as TemplateMultiPassMasterNode;
-
-				if ( m_templateMultiPass.SRPtype == TemplateSRPType.HDRP && masterNode != null )
+				if ( masterNode != null )
 				{
 					// @diogo: show Alpha Cutoff and/or Alpha Cutoff Shadow controls in Material when not connected
 					var alphaClipPort = masterNode.GetInputPortByExternalLinkId( "_AlphaClip" );
-					var alphaClipShadowPort = masterNode.GetInputPortByExternalLinkId( "_AlphaClipShadow" );
-
 					bool autoAlphaClip = ( alphaClipPort != null && alphaClipPort.Visible && !alphaClipPort.IsConnected );
-					bool autoAlphaClipShadow = ( alphaClipShadowPort != null && alphaClipShadowPort.Visible && !alphaClipShadowPort.IsConnected );
-
 					if ( autoAlphaClip && m_templateMultiPass.AvailableShaderProperties.Find( x => x.PropertyName.Equals( "_AlphaCutoff" ) ) == null )
 					{
-						if ( !currDataCollector.ContainsProperty( "_AlphaCutoff" ) )
+						string cutoffPropertyName = ( m_templateMultiPass.SRPtype == TemplateSRPType.HDRP ) ? "_AlphaCutoff" : "_Cutoff";
+						if ( !currDataCollector.ContainsProperty( cutoffPropertyName ) )
 						{
-							currDataCollector.AddToProperties( UniqueId, "[HideInInspector] _AlphaCutoff(\"Alpha Cutoff\", Range(0, 1)) = 0.5", -1 );
+							currDataCollector.AddToProperties( UniqueId, "[HideInInspector] " + cutoffPropertyName + "(\"Alpha Cutoff\", Range(0, 1)) = 0.5", -1 );
 						}
 					}
 
-					if ( autoAlphaClipShadow && m_templateMultiPass.AvailableShaderProperties.Find( x => x.PropertyName.Equals( "_AlphaCutoffShadow" ) ) == null )
+					if ( m_templateMultiPass.SRPtype == TemplateSRPType.HDRP )
 					{
-						if ( !currDataCollector.ContainsProperty( "_AlphaCutoffShadow" ) )
+						var alphaClipShadowPort = masterNode.GetInputPortByExternalLinkId( "_AlphaClipShadow" );
+						bool autoAlphaClipShadow = ( alphaClipShadowPort != null && alphaClipShadowPort.Visible && !alphaClipShadowPort.IsConnected );
+						if ( autoAlphaClipShadow && m_templateMultiPass.AvailableShaderProperties.Find( x => x.PropertyName.Equals( "_AlphaCutoffShadow" ) ) == null )
 						{
-							currDataCollector.AddToProperties( UniqueId, "[HideInInspector] _AlphaCutoffShadow(\"Alpha Cutoff Shadow\", Range(0, 1)) = 0.5", -1 );
+							if ( !currDataCollector.ContainsProperty( "_AlphaCutoffShadow" ) )
+							{
+								currDataCollector.AddToProperties( UniqueId, "[HideInInspector] _AlphaCutoffShadow(\"Alpha Cutoff Shadow\", Range(0, 1)) = 0.5", -1 );
+							}
 						}
-					}
-				}
-
-				if ( m_templateMultiPass.AvailableShaderProperties.Find( x => x.PropertyName.Equals( "_EmissionColor" ) ) == null )
-				{
-					if( !currDataCollector.ContainsProperty( "_EmissionColor" ) )
-					{
-						currDataCollector.AddToProperties( UniqueId, "[HideInInspector] _EmissionColor(\"Emission Color\", Color) = (1,1,1,1)", -1 );
 					}
 				}
 			}
@@ -2532,6 +2564,28 @@ namespace AmplifyShaderEditor
 				return !m_currentDataCollector.ContainsDefine( item.PropertyName );
 			}
 
+		}
+
+		private static List<string> FilterDirectiveListByPropertyName( List<PropertyDataCollector> list )
+		{
+			var uniqueList = new HashSet<string>();
+			var cleanList = new List<string>();
+			foreach ( var data in list )
+			{
+				if ( uniqueList.Add( data.PropertyName ) )
+				{
+					cleanList.Add( data.PropertyName );
+				}
+			}
+			return cleanList;
+		}
+
+		private static void RemoveSharedElementsFromSecondList( ref List<string> first, ref List<string> second )
+		{
+			var set1 = new HashSet<string>( first );
+			var set2 = new HashSet<string>( second );
+			set2.ExceptWith( set1 );
+			second = set2.ToList();
 		}
 
 		public void FillPassData( TemplateMultiPassMasterNode masterNode , TemplateDataCollector mainTemplateDataCollector )
@@ -2607,8 +2661,15 @@ namespace AmplifyShaderEditor
 
 				beforeNatives.AddRange( m_currentDataCollector.BeforeNativeDirectivesList );
 
-				m_templateMultiPass.SetPassData( TemplateModuleDataType.ModulePragmaBefore , m_subShaderIdx , m_passIdx , beforeNatives );
-				m_templateMultiPass.SetPassData( TemplateModuleDataType.ModulePragma , m_subShaderIdx , m_passIdx , afterNativesIncludePragmaDefineList );
+				// @diogo: cleanup directives to ensure unique elements; no duplicates
+				List<string> beforeNativesValues = FilterDirectiveListByPropertyName( beforeNatives );
+				List<string> afterNativesIncludePragmaDefineValues = FilterDirectiveListByPropertyName( afterNativesIncludePragmaDefineList );
+
+				/// @diogo: remove elements shared on both HashSets from afterNatives
+				RemoveSharedElementsFromSecondList( ref beforeNativesValues, ref afterNativesIncludePragmaDefineValues );
+
+				m_templateMultiPass.SetPassData( TemplateModuleDataType.ModulePragmaBefore , m_subShaderIdx , m_passIdx , beforeNativesValues.ToArray() );
+				m_templateMultiPass.SetPassData( TemplateModuleDataType.ModulePragma , m_subShaderIdx , m_passIdx , afterNativesIncludePragmaDefineValues.ToArray() );
 
 				m_currentDataCollector.TemplateDataCollectorInstance.CloseLateDirectives();
 
@@ -2831,7 +2892,12 @@ namespace AmplifyShaderEditor
 
 				if( module.DepthOphelper.IndependentModule && module.DepthOphelper.ValidZWrite )
 				{
-					m_templateMultiPass.SetSubShaderData( TemplateModuleDataType.ModuleZwrite , m_subShaderIdx , module.DepthOphelper.CurrentZWriteMode );
+					m_templateMultiPass.SetSubShaderData( TemplateModuleDataType.ModuleZWrite , m_subShaderIdx , module.DepthOphelper.CurrentZWriteMode );
+				}
+
+				if( module.DepthOphelper.IndependentModule && module.DepthOphelper.ValidZClip )
+				{
+					m_templateMultiPass.SetSubShaderData( TemplateModuleDataType.ModuleZClip , m_subShaderIdx , module.DepthOphelper.CurrentZClipMode );
 				}
 
 				if( module.DepthOphelper.IndependentModule && module.DepthOphelper.ValidOffset )
@@ -2979,7 +3045,12 @@ namespace AmplifyShaderEditor
 
 				if( module.DepthOphelper.IndependentModule && module.DepthOphelper.ValidZWrite )
 				{
-					m_templateMultiPass.SetPassData( TemplateModuleDataType.ModuleZwrite , m_subShaderIdx , m_passIdx , module.DepthOphelper.CurrentZWriteMode );
+					m_templateMultiPass.SetPassData( TemplateModuleDataType.ModuleZWrite , m_subShaderIdx , m_passIdx , module.DepthOphelper.CurrentZWriteMode );
+				}
+
+				if( module.DepthOphelper.IndependentModule && module.DepthOphelper.ValidZClip )
+				{
+					m_templateMultiPass.SetPassData( TemplateModuleDataType.ModuleZClip , m_subShaderIdx , m_passIdx , module.DepthOphelper.CurrentZClipMode );
 				}
 
 				if( module.DepthOphelper.IndependentModule && module.DepthOphelper.ValidOffset )
@@ -3054,9 +3125,9 @@ namespace AmplifyShaderEditor
 
 		public override void ReadFromString( ref string[] nodeParams )
 		{
-
 			base.ReadFromString( ref nodeParams );
 
+			string revertTemplate = string.Empty;
 			string currShaderName = string.Empty;
 			try
 			{
@@ -3065,6 +3136,18 @@ namespace AmplifyShaderEditor
 					currShaderName = UIUtils.RemoveShaderInvalidCharacters( currShaderName );
 
 				m_templateGUID = GetCurrentParam( ref nodeParams );
+
+				// Handle template bridges
+				int currentShaderVersion = UIUtils.CurrentShaderVersion();
+				foreach ( TemplateBridge bridge in TemplateBriges )
+				{
+					if ( m_templateGUID == bridge.originalGUID && currentShaderVersion >= bridge.versionMin && currentShaderVersion <= bridge.versionMax )
+					{
+						revertTemplate = m_templateGUID;
+						m_templateGUID = bridge.bridgeGUID;
+						break;
+					}
+				}
 
 				bool hasUniqueName = false;
 				if( UIUtils.CurrentShaderVersion() > PASS_UNIQUE_ID_VERSION )
@@ -3178,6 +3261,12 @@ namespace AmplifyShaderEditor
 				Debug.LogException( e , this );
 			}
 
+			if ( !string.IsNullOrEmpty( revertTemplate ) )
+			{
+				EditorApplication.delayCall += () => m_containerGraph.ParentWindow.DelayedReplaceMasterNode( this, revertTemplate );
+
+			}
+
 			m_containerGraph.CurrentCanvasMode = NodeAvailability.TemplateShader;
 			if ( m_isMainOutputNode )
 			{
@@ -3187,8 +3276,7 @@ namespace AmplifyShaderEditor
 
 		void CheckLegacyCustomInspectors()
 		{
-#if UNITY_2021_2_OR_NEWER
-			if( m_templateMultiPass.SubShaders[ 0 ].Modules.SRPType == TemplateSRPType.HDRP && ASEPackageManagerHelper.CurrentHDRPBaseline >= ASESRPBaseline.ASE_SRP_11_X )
+			if( m_templateMultiPass.SubShaders[ 0 ].Modules.SRPType == TemplateSRPType.HDRP )
 			{
 				if( Constants.CustomInspectorHDLegacyTo11.ContainsKey( m_customInspectorName ) )
 				{
@@ -3197,7 +3285,7 @@ namespace AmplifyShaderEditor
 				}
 			}
 
-			if( m_templateMultiPass.SubShaders[ 0 ].Modules.SRPType == TemplateSRPType.URP && ASEPackageManagerHelper.CurrentURPBaseline>= ASESRPBaseline.ASE_SRP_12_X )
+			if( m_templateMultiPass.SubShaders[ 0 ].Modules.SRPType == TemplateSRPType.URP )
 			{
 				if( Constants.CustomInspectorURP10To12.ContainsKey( m_customInspectorName ) )
 				{
@@ -3219,26 +3307,6 @@ namespace AmplifyShaderEditor
 				}
 
 			}
-
-#elif UNITY_2021_1_OR_NEWER
-			if( m_templateMultiPass.SubShaders[ 0 ].Modules.SRPType == TemplateSRPType.HDRP && ASEPackageManagerHelper.CurrentHDRPBaseline >= ASESRPBaseline.ASE_SRP_11_X )
-			{
-				if( Constants.CustomInspectorHDLegacyTo11.ContainsKey( m_customInspectorName ) )
-				{
-					UIUtils.ShowMessage( string.Format( "Detected obsolete custom inspector '{0}' in shader meta. Converting to new one '{1}'" , m_customInspectorName , Constants.CustomInspectorHDLegacyTo11[ m_customInspectorName ] ) , MessageSeverity.Warning );
-					m_customInspectorName = Constants.CustomInspectorHDLegacyTo11[ m_customInspectorName ];
-				}
-			}
-#elif UNITY_2020_2_OR_NEWER
-			if(  m_templateMultiPass.SubShaders[0].Modules.SRPType == TemplateSRPType.HDRP && ASEPackageManagerHelper.CurrentHDRPBaseline >= ASESRPBaseline.ASE_SRP_10_X )
-			{
-				if( Constants.CustomInspectorHD7To10.ContainsKey( m_customInspectorName ) )
-				{
-					UIUtils.ShowMessage( string.Format("Detected obsolete custom inspector '{0}' in shader meta. Converting to new one '{1}'", m_customInspectorName , Constants.CustomInspectorHD7To10[ m_customInspectorName ] ), MessageSeverity.Warning );
-					m_customInspectorName = Constants.CustomInspectorHD7To10[ m_customInspectorName ];
-				}
-			}
-#endif
 		}
 
 		public override void WriteToString( ref string nodeInfo , ref string connectionsInfo )

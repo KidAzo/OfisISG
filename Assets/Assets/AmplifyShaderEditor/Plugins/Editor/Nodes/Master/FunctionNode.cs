@@ -1199,6 +1199,8 @@ namespace AmplifyShaderEditor
 
 		public bool HasProperties { get { return m_reordenator != null; } }
 
+		public ParentGraph OutsideGraph { get { return m_outsideGraph; } }
+
 		public ParentGraph FunctionGraph
 		{
 			get { return m_functionGraph; }

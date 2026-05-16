@@ -1047,6 +1047,7 @@ namespace AmplifyShaderEditor
 				break;
 				default: return;
 			}
+			propertyNode.CurrentParameterType = data.PropertyType;
 
 			propertyNode.PropertyNameFromTemplate( data );
 
@@ -1686,9 +1687,9 @@ namespace AmplifyShaderEditor
 				GLDraw.MultiLine = true;
 				Shader.SetGlobalFloat( "_InvertedZoom", invertedZoom );
 
-				WirePortDataType smallest = ( (int)outputDataType < (int)inputDataType ? outputDataType : inputDataType );
-				smallest = ( (int)smallest < (int)outputVisualDataType ? smallest : outputVisualDataType );
-				smallest = ( (int)smallest < (int)inputVisualDataType ? smallest : inputVisualDataType );
+				WirePortDataType smallest = ( UIUtils.GetChannelsAmount( outputDataType ) < UIUtils.GetChannelsAmount( inputDataType ) ? outputDataType : inputDataType );
+				smallest = ( UIUtils.GetChannelsAmount( smallest ) < UIUtils.GetChannelsAmount( outputVisualDataType ) ? smallest : outputVisualDataType );
+				smallest = ( UIUtils.GetChannelsAmount( smallest ) < UIUtils.GetChannelsAmount( inputVisualDataType ) ? smallest : inputVisualDataType );
 
 				switch( smallest )
 				{
@@ -2160,7 +2161,11 @@ namespace AmplifyShaderEditor
 			if( m_markedForDeletion.Contains( node ) )
 				return;
 
-			m_markedForDeletion.Add( node );
+			// @diogo: check if they're alive - meaning they're already marked for deletion - before marking them for deletion again
+			if ( node.Alive )
+			{
+				m_markedForDeletion.Add( node );
+			}
 
 			if( isInput && node.InputPorts[ 0 ].IsConnected )
 			{
@@ -4088,7 +4093,7 @@ namespace AmplifyShaderEditor
 		public TemplateSRPType CurrentSRPType { get { return m_currentSRPType; }set { m_currentSRPType = value; } }
 		public bool IsSRP { get { return m_currentSRPType == TemplateSRPType.URP || m_currentSRPType == TemplateSRPType.HDRP; } }
 		public bool IsHDRP { get { return m_currentSRPType == TemplateSRPType.HDRP; } }
-		public bool IsLWRP { get { return m_currentSRPType == TemplateSRPType.URP; } }
+		public bool IsURP { get { return m_currentSRPType == TemplateSRPType.URP; } }
 		public bool IsStandardSurface { get { return GetNode( m_masterNodeId ) is StandardSurfaceOutputNode; } }
 
 		public bool SamplingMacros {

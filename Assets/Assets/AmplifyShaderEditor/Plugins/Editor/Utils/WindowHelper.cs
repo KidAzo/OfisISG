@@ -173,12 +173,7 @@ namespace AmplifyShaderEditor
 
 		public static bool IsDocked( this EditorWindow wnd )
 		{
-	#if UNITY_2020_2_OR_NEWER
 			return wnd.docked;
-	#else
-			var parent = new R_EditorWindow( wnd );
-			return (bool)parent.Docked;
-	#endif
 		}
 
 		public static void Undock( this EditorWindow wnd )

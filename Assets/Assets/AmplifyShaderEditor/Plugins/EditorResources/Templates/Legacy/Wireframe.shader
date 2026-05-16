@@ -42,6 +42,7 @@ Shader /*ase_name*/ "Hidden/Built-In/Wireframe" /*end*/
 
 		CGINCLUDE
 			#pragma target 3.5
+			#pragma exclude_renderers d3d9 // ensure rendering platforms toggle list is visible
 
 			float4 ComputeClipSpacePosition( float2 screenPosNorm, float deviceDepth )
 			{

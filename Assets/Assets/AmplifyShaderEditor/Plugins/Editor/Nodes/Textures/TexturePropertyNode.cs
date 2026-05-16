@@ -140,6 +140,7 @@ namespace AmplifyShaderEditor
 			m_availableAttribs.Add( new PropertyAttributes( "No Scale Offset", "[NoScaleOffset]" ) );
 			m_availableAttribs.Add( new PropertyAttributes( "Normal", "[Normal]" ) );
 			m_availableAttribs.Add( new PropertyAttributes( "Single Line Texture", "[SingleLineTexture]" ) );
+			m_availableAttribs.Add( new PropertyAttributes( "Main Texture", "[MainTexture]" ) );
 			m_showPreview = true;
 			m_drawPreviewExpander = false;
 			m_drawPreview = false;
