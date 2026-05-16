@@ -417,20 +417,18 @@
       "url": "https://packages.unity.com"
     },
     "com.woi.module.fire": {
-      "version": "https://github.com/WoiStudio/com.woi.module.fire.git#v1.0.7",
+      "version": "file:C:/Users/azoci/Desktop/UnityPackages/com.woi.module.fire",
       "depth": 0,
-      "source": "git",
+      "source": "local",
       "dependencies": {
         "com.woi.modules.sdk": "1.0.0"
-      },
-      "hash": "ddb12740fa84a0b9334fdc5c16c19b47403ba7dc"
+      }
     },
     "com.woi.modules.sdk": {
-      "version": "https://github.com/WoiStudio/com.woi.modules.sdk.git#v1.0.0",
+      "version": "file:C:/Users/azoci/Desktop/UnityPackages/com.woi.modules.sdk",
       "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "2bc3666227764d689588aeeafe7a7ac68b92dc90"
+      "source": "local",
+      "dependencies": {}
     },
     "dev.ameye.linework": {
       "version": "file:dev.ameye.linework",

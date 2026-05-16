@@ -3,20 +3,19 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Woi.Settings;
 using WOI.Modules.SDK;
+using WOI.Module.Fire.DI;
 
 namespace Woi.OfficeFire
 {
     /// <summary>
-    /// Requests gameplay (or other) loads through your <see cref="SceneLoader"/> (assigned or from <see cref="ServiceLocator"/>)
-    /// as <see cref="ISceneLoaderService"/> — does not call Unity <c>SceneManager</c> directly.
+    /// Requests loads through <see cref="ISceneLoaderService"/> from <see cref="ServiceLocator"/>.
+    /// When <see cref="loadAfterFireInstallerReady"/> is enabled, auto-load subscribes to the static
+    /// <see cref="FireServiceInstaller.OnServicesReady"/> event (fired from the Fire module after managers are registered,
+    /// including <see cref="SceneLoader"/>). This is not a ServiceLocator API — it is defined on <see cref="FireServiceInstaller"/>.
+    /// Does not call Unity <c>SceneManager</c> directly.
     /// </summary>
     public sealed class OfficeFireModuleBootstrapper : MonoBehaviour
     {
-        [Header("Scene Loader")]
-        [Tooltip("Assign your SceneLoader here to use it directly. If empty, ISceneLoaderService is resolved from ServiceLocator.")]
-        [SerializeField]
-        private SceneLoader sceneLoader;
-
         [Header("Scene")]
         [Tooltip("Must match a SceneGroup GroupName configured on the project's SceneLoader (same string passed to SceneLoader.LoadScene).")]
         [SerializeField]
@@ -24,6 +23,14 @@ namespace Woi.OfficeFire
 
         [SerializeField]
         private bool loadOnStart = true;
+
+        [Header("Timing (Fire module)")]
+        [Tooltip(
+            "When enabled with Load On Start: subscribes to the static event FireServiceInstaller.OnServicesReady " +
+            "(raised after FireServiceInstaller registers SceneLoader on ServiceLocator), then calls LoadDesiredScene once. " +
+            "Disable in scenes that do not run FireServiceInstaller.")]
+        [SerializeField]
+        private bool loadAfterFireInstallerReady = true;
 
         [SerializeField]
         private float loadDelay;
@@ -36,28 +43,79 @@ namespace Woi.OfficeFire
         private bool keepBootstrapperAlive = true;
 
         private bool isLoading;
+        private bool startupLoadIssued;
 
         public bool IsLoading => isLoading;
 
         private void Awake()
         {
-            if (sceneLoader == null)
-            {
-                sceneLoader = GetComponent<SceneLoader>();
-            }
-
             if (keepBootstrapperAlive)
             {
                 DontDestroyOnLoad(gameObject);
             }
         }
 
+        private void OnEnable()
+        {
+            if (!loadOnStart || !loadAfterFireInstallerReady)
+            {
+                return;
+            }
+
+            // FireServiceInstaller.OnServicesReady — static Action invoked after ServiceLocator.Register for SceneLoader (see com.woi.module.fire).
+            FireServiceInstaller.OnServicesReady += OnFireServicesReady;
+            if (IsSceneLoaderRegistered())
+            {
+                TryIssueStartupLoad("Scene loader already on ServiceLocator (installer finished before subscription)");
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (loadOnStart && loadAfterFireInstallerReady)
+            {
+                FireServiceInstaller.OnServicesReady -= OnFireServicesReady;
+            }
+        }
+
         private void Start()
         {
-            if (loadOnStart)
+            if (!loadOnStart)
             {
-                LoadDesiredScene();
+                return;
             }
+
+            if (!loadAfterFireInstallerReady)
+            {
+                TryIssueStartupLoad("Start()");
+            }
+        }
+
+        private void OnFireServicesReady()
+        {
+            TryIssueStartupLoad("FireServiceInstaller.OnServicesReady");
+        }
+
+        private void TryIssueStartupLoad(string reason)
+        {
+            if (startupLoadIssued)
+            {
+                return;
+            }
+
+            startupLoadIssued = true;
+            Debug.Log($"[OfficeFireModuleBootstrapper] Auto-load from {reason}.", this);
+            LoadDesiredScene();
+        }
+
+        private static bool IsSceneLoaderRegistered()
+        {
+            if (ServiceLocator.TryGet<ISceneLoaderService>(out ISceneLoaderService s) && s != null)
+            {
+                return true;
+            }
+
+            return ServiceLocator.TryGet<SceneLoader>(out SceneLoader c) && c != null;
         }
 
         /// <summary>
@@ -98,25 +156,26 @@ namespace Woi.OfficeFire
                 yield return new WaitForSecondsRealtime(loadDelay);
             }
 
-            ISceneLoaderService loader = sceneLoader;
-            if (loader == null)
+            if (!ServiceLocator.TryGet<ISceneLoaderService>(out ISceneLoaderService loader) || loader == null)
             {
-                if (!ServiceLocator.TryGet<ISceneLoaderService>(out ISceneLoaderService fromLocator) || fromLocator == null)
+                if (ServiceLocator.TryGet<SceneLoader>(out SceneLoader concreteLoader) && concreteLoader != null)
                 {
-                    Debug.LogError(
-                        "[OfficeFireModuleBootstrapper] No SceneLoader assigned and ISceneLoaderService is not registered in ServiceLocator. " +
-                        "Assign SceneLoader on this component, put SceneLoader on the same GameObject, or register ISceneLoaderService (e.g. OfficeFireSceneLoaderServiceBinder).",
-                        this);
-                    isLoading = false;
-                    yield break;
+                    loader = concreteLoader;
                 }
-
-                loader = fromLocator;
             }
 
-            string loaderSource = sceneLoader != null ? "assigned SceneLoader" : "ServiceLocator (ISceneLoaderService)";
+            if (loader == null)
+            {
+                Debug.LogError(
+                    "[OfficeFireModuleBootstrapper] No scene loader in ServiceLocator. " +
+                    "Register ISceneLoaderService or SceneLoader (e.g. FireServiceInstaller or OfficeFireSceneLoaderServiceBinder) before loading.",
+                    this);
+                isLoading = false;
+                yield break;
+            }
+
             Debug.Log(
-                $"[OfficeFireModuleBootstrapper] Requesting load for scene group '{sceneName}' via {loaderSource}.",
+                $"[OfficeFireModuleBootstrapper] Requesting load for scene group '{sceneName}' via ServiceLocator (scene loader).",
                 this);
 
             Task loadTask;

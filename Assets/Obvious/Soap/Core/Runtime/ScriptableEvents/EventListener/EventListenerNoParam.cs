@@ -37,7 +37,7 @@ namespace Obvious.Soap
             }
         }
 
-        internal void OnEventRaised(ScriptableEventNoParam eventRaised, bool debug = false)
+        internal virtual void OnEventRaised(ScriptableEventNoParam eventRaised, bool debug = false)
         {
             var eventResponse = _dictionary[eventRaised];
              if (eventResponse.Delay > 0)
@@ -51,7 +51,7 @@ namespace Obvious.Soap
                 InvokeResponse(eventRaised, eventResponse, debug);
         }
 
-        private IEnumerator Cr_DelayInvokeResponse(ScriptableEventNoParam eventRaised, EventResponse eventResponse,
+        protected virtual IEnumerator Cr_DelayInvokeResponse(ScriptableEventNoParam eventRaised, EventResponse eventResponse,
             bool debug)
         {
             yield return new WaitForSeconds(eventResponse.Delay);
@@ -71,7 +71,7 @@ namespace Obvious.Soap
             }
         }
 
-        private void InvokeResponse(ScriptableEventNoParam eventRaised, EventResponse eventResponse, bool debug)
+        protected virtual void InvokeResponse(ScriptableEventNoParam eventRaised, EventResponse eventResponse, bool debug)
         {
             eventResponse.Response?.Invoke();
             if (debug)
@@ -79,7 +79,7 @@ namespace Obvious.Soap
         }
         
         [System.Serializable]
-        internal class EventResponse : ISerializationCallbackReceiver
+        public class EventResponse : ISerializationCallbackReceiver
         {
             [Tooltip("Delay in seconds before invoking the response.")]
             public FloatReference Delay = new FloatReference(0,true);
