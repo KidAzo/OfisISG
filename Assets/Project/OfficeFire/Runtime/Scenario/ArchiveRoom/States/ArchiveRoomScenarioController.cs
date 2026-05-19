@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -20,6 +21,9 @@ namespace Woi.OfficeFire
 
         [Header("Archive — hooks")]
         [SerializeField]
+        private UnityEvent onIntroPhaseStarted = new UnityEvent();
+
+        [SerializeField]
         private UnityEvent onSmokeNoticed = new UnityEvent();
 
         [SerializeField]
@@ -40,11 +44,17 @@ namespace Woi.OfficeFire
         [SerializeField]
         private UnityEvent onEvacuationStarted = new UnityEvent();
 
+        [Header("Archive — timing")]
+        [SerializeField]
+        [Min(0f)]
+        private float delayBeforeSmokeNoticeSeconds = 3f;
+
         [Header("Archive — state machine")]
         [SerializeField]
         private ArchiveRoomStateChangedEvent onArchiveStateChanged = new ArchiveRoomStateChangedEvent();
 
         private ScenarioStateMachine<ArchiveRoomState> _stateMachine;
+        private Coroutine _smokeNoticeDelayRoutine;
 
         public override OfficeFireScenarioId ScenarioId => OfficeFireScenarioId.ArchiveRoom;
 
@@ -67,6 +77,7 @@ namespace Woi.OfficeFire
 
         private void OnDestroy()
         {
+            CancelSmokeNoticeDelay();
             if (_stateMachine != null)
             {
                 _stateMachine.StateChanged -= HandleArchiveStateChanged;
@@ -92,6 +103,14 @@ namespace Woi.OfficeFire
             Debug.LogWarning(
                 "[ArchiveRoomScenarioController] UseWater ignored: fire is not accessible from this state yet.",
                 this);
+        }
+
+        public void InvokeIntroPhaseStarted()
+        {
+            if (onIntroPhaseStarted != null)
+            {
+                onIntroPhaseStarted.Invoke();
+            }
         }
 
         public void InvokeSmokeNoticed()
@@ -153,11 +172,12 @@ namespace Woi.OfficeFire
         public override void StartScenario()
         {
             base.StartScenario();
-            ChangeState(ArchiveRoomState.WaitingForSmokeNotice);
+            BeginIntroThenSmokeNoticePhase();
         }
 
         public override void NotifyDeselected()
         {
+            CancelSmokeNoticeDelay();
             base.NotifyDeselected();
             if (_stateMachine != null)
             {
@@ -182,11 +202,75 @@ namespace Woi.OfficeFire
 
         protected override void ResetRuntimeState()
         {
+            CancelSmokeNoticeDelay();
             base.ResetRuntimeState();
             if (_stateMachine != null)
             {
                 _stateMachine.SnapTo(ArchiveRoomState.None);
             }
+        }
+
+        /// <summary>
+        /// Play intro at <see cref="ArchiveRoomState.None"/>, then after <see cref="delayBeforeSmokeNoticeSeconds"/>
+        /// enter <see cref="ArchiveRoomState.WaitingForSmokeNotice"/> (objective + first announcement).
+        /// </summary>
+        private void BeginIntroThenSmokeNoticePhase()
+        {
+            CancelSmokeNoticeDelay();
+            EnterNoneState();
+
+            if (delayBeforeSmokeNoticeSeconds <= 0f)
+            {
+                ChangeState(ArchiveRoomState.WaitingForSmokeNotice);
+                return;
+            }
+
+            _smokeNoticeDelayRoutine = StartCoroutine(SmokeNoticeDelayRoutine());
+        }
+
+        private void EnterNoneState()
+        {
+            if (_stateMachine == null)
+            {
+                return;
+            }
+
+            if (_stateMachine.CurrentStateId == ArchiveRoomState.None && _stateMachine.CurrentState != null)
+            {
+                _stateMachine.CurrentState.Enter();
+                return;
+            }
+
+            ChangeState(ArchiveRoomState.None);
+        }
+
+        private IEnumerator SmokeNoticeDelayRoutine()
+        {
+            yield return new WaitForSeconds(delayBeforeSmokeNoticeSeconds);
+            _smokeNoticeDelayRoutine = null;
+
+            if (!CanProcessActions())
+            {
+                yield break;
+            }
+
+            if (CurrentState != ArchiveRoomState.None)
+            {
+                yield break;
+            }
+
+            ChangeState(ArchiveRoomState.WaitingForSmokeNotice);
+        }
+
+        private void CancelSmokeNoticeDelay()
+        {
+            if (_smokeNoticeDelayRoutine == null)
+            {
+                return;
+            }
+
+            StopCoroutine(_smokeNoticeDelayRoutine);
+            _smokeNoticeDelayRoutine = null;
         }
 
         private void HandleArchiveStateChanged(ArchiveRoomState previous, ArchiveRoomState next)
@@ -200,12 +284,20 @@ namespace Woi.OfficeFire
 
         private sealed class ArchiveNoneState : ScenarioStateBase<ArchiveRoomState>
         {
+            private readonly ArchiveRoomScenarioController _archive;
+
             public ArchiveNoneState(ArchiveRoomScenarioController controller)
                 : base(controller)
             {
+                _archive = controller;
             }
 
             public override ArchiveRoomState StateId => ArchiveRoomState.None;
+
+            public override void Enter()
+            {
+                _archive.InvokeIntroPhaseStarted();
+            }
 
             public override void HandleAction(string actionId)
             {

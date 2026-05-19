@@ -36,20 +36,12 @@ namespace Woi.OfficeFire.Editor
             var componentsAlreadyPresent = new List<string>();
             var componentWarnings = new List<string>();
 
-            GameObject rootGo = FindSceneRootByName(scene, RootName);
-            if (rootGo == null)
+            Transform root = EnsureFireModulesRoot(scene, created, reused);
+            if (root == null)
             {
-                rootGo = new GameObject(RootName);
-                Undo.RegisterCreatedObjectUndo(rootGo, "Office Fire: Create module root");
-                created.Add(FullPath(rootGo.transform));
+                LogSummary(created, reused, componentsAdded, componentsAlreadyPresent, componentWarnings);
+                return;
             }
-            else
-            {
-                reused.Add(FullPath(rootGo.transform));
-            }
-
-            Transform root = rootGo.transform;
-            ResetLocalTransform(root);
 
             Transform t00 = EnsureChild(root, "00_Runtime", created, reused);
             Transform t01 = EnsureChild(root, "01_Player", created, reused);
@@ -131,17 +123,37 @@ namespace Woi.OfficeFire.Editor
                 componentWarnings);
 
             WireKitchenScenario(kitchenController, kitchenRoot, fireController, componentWarnings);
-            WirePlayerInitializer(tInit.gameObject, spawnKitchen, componentWarnings);
-            WireBootstrapper(
+            WireSpawnPoint(tInit.gameObject, spawnKitchen, OfficeFireScenarioId.KitchenCafe, componentWarnings);
+            WireBootstrapperController(
                 tBootstrap.gameObject,
                 tInit.gameObject,
                 kitchenController != null ? kitchenController.gameObject : null,
-                componentWarnings);
+                componentWarnings,
+                setStartScenario: OfficeFireScenarioId.KitchenCafe);
 
             EditorSceneManager.MarkSceneDirty(scene);
             Undo.CollapseUndoOperations(undoGroup);
 
             LogSummary(created, reused, componentsAdded, componentsAlreadyPresent, componentWarnings);
+        }
+
+        internal static Transform EnsureFireModulesRoot(Scene scene, List<string> created, List<string> reused)
+        {
+            GameObject rootGo = FindSceneRootByName(scene, RootName);
+            if (rootGo == null)
+            {
+                rootGo = new GameObject(RootName);
+                Undo.RegisterCreatedObjectUndo(rootGo, "Office Fire: Create module root");
+                created.Add(FullPath(rootGo.transform));
+            }
+            else
+            {
+                reused.Add(FullPath(rootGo.transform));
+            }
+
+            Transform root = rootGo.transform;
+            ResetLocalTransform(root);
+            return root;
         }
 
         private static GameObject FindSceneRootByName(Scene scene, string name)
@@ -158,7 +170,7 @@ namespace Woi.OfficeFire.Editor
             return null;
         }
 
-        private static Transform EnsureChild(Transform parent, string name, List<string> created, List<string> reused)
+        internal static Transform EnsureChild(Transform parent, string name, List<string> created, List<string> reused)
         {
             Transform existing = FindDirectChild(parent, name);
             if (existing != null)
@@ -207,7 +219,7 @@ namespace Woi.OfficeFire.Editor
             return null;
         }
 
-        private static string FullPath(Transform t)
+        internal static string FullPath(Transform t)
         {
             if (t == null)
             {
@@ -226,7 +238,7 @@ namespace Woi.OfficeFire.Editor
             return string.Join("/", parts);
         }
 
-        private static T TryAddComponent<T>(
+        internal static T TryAddComponent<T>(
             GameObject host,
             string label,
             List<string> componentsAdded,
@@ -297,9 +309,13 @@ namespace Woi.OfficeFire.Editor
             so.ApplyModifiedProperties();
         }
 
-        private static void WirePlayerInitializer(GameObject initializerGo, Transform spawnKitchen, List<string> componentWarnings)
+        internal static void WireSpawnPoint(
+            GameObject initializerGo,
+            Transform spawnPoint,
+            OfficeFireScenarioId scenarioId,
+            List<string> componentWarnings)
         {
-            if (initializerGo == null || spawnKitchen == null)
+            if (initializerGo == null || spawnPoint == null)
             {
                 return;
             }
@@ -320,14 +336,14 @@ namespace Woi.OfficeFire.Editor
                 return;
             }
 
-            int kitchenEnumIndex = (int)OfficeFireScenarioId.KitchenCafe;
+            int scenarioEnumIndex = (int)scenarioId;
             int index = -1;
             for (int i = 0; i < spawns.arraySize; i++)
             {
                 SerializedProperty el = spawns.GetArrayElementAtIndex(i);
                 SerializedProperty idProp = el.FindPropertyRelative("ScenarioId");
                 if (idProp != null && idProp.propertyType == SerializedPropertyType.Enum &&
-                    idProp.enumValueIndex == kitchenEnumIndex)
+                    idProp.enumValueIndex == scenarioEnumIndex)
                 {
                     index = i;
                     break;
@@ -345,12 +361,12 @@ namespace Woi.OfficeFire.Editor
             SerializedProperty spawnPointProp = entry.FindPropertyRelative("SpawnPoint");
             if (scenarioIdProp != null)
             {
-                scenarioIdProp.enumValueIndex = kitchenEnumIndex;
+                scenarioIdProp.enumValueIndex = scenarioEnumIndex;
             }
 
             if (spawnPointProp != null)
             {
-                spawnPointProp.objectReferenceValue = spawnKitchen;
+                spawnPointProp.objectReferenceValue = spawnPoint;
             }
             else
             {
@@ -360,11 +376,12 @@ namespace Woi.OfficeFire.Editor
             so.ApplyModifiedProperties();
         }
 
-        private static void WireBootstrapper(
+        internal static void WireBootstrapperController(
             GameObject bootstrapperGo,
             GameObject initializerGo,
-            GameObject kitchenControllerGo,
-            List<string> componentWarnings)
+            GameObject scenarioControllerGo,
+            List<string> componentWarnings,
+            OfficeFireScenarioId? setStartScenario = null)
         {
             if (bootstrapperGo == null)
             {
@@ -380,14 +397,17 @@ namespace Woi.OfficeFire.Editor
             Undo.RecordObject(bootstrapper, "Office Fire: Wire OfficeFireScenarioBootstrapper");
             SerializedObject so = new SerializedObject(bootstrapper);
 
-            SerializedProperty startProp = so.FindProperty("startScenario");
-            if (startProp != null)
+            if (setStartScenario.HasValue)
             {
-                startProp.enumValueIndex = (int)OfficeFireScenarioId.KitchenCafe;
-            }
-            else
-            {
-                componentWarnings.Add("OfficeFireScenarioBootstrapper: serialized field 'startScenario' not found.");
+                SerializedProperty startProp = so.FindProperty("startScenario");
+                if (startProp != null)
+                {
+                    startProp.enumValueIndex = (int)setStartScenario.Value;
+                }
+                else
+                {
+                    componentWarnings.Add("OfficeFireScenarioBootstrapper: serialized field 'startScenario' not found.");
+                }
             }
 
             SerializedProperty initProp = so.FindProperty("playerInitializer");
@@ -397,15 +417,15 @@ namespace Woi.OfficeFire.Editor
             }
 
             SerializedProperty listProp = so.FindProperty("scenarioControllers");
-            if (listProp != null && listProp.isArray && kitchenControllerGo != null)
+            if (listProp != null && listProp.isArray && scenarioControllerGo != null)
             {
-                KitchenCafeScenarioController kitchen = kitchenControllerGo.GetComponent<KitchenCafeScenarioController>();
-                if (kitchen != null)
+                OfficeFireScenarioController controller = scenarioControllerGo.GetComponent<OfficeFireScenarioController>();
+                if (controller != null)
                 {
                     bool already = false;
                     for (int i = 0; i < listProp.arraySize; i++)
                     {
-                        if (listProp.GetArrayElementAtIndex(i).objectReferenceValue == kitchen)
+                        if (listProp.GetArrayElementAtIndex(i).objectReferenceValue == controller)
                         {
                             already = true;
                             break;
@@ -416,7 +436,7 @@ namespace Woi.OfficeFire.Editor
                     {
                         int newIndex = listProp.arraySize;
                         listProp.arraySize++;
-                        listProp.GetArrayElementAtIndex(newIndex).objectReferenceValue = kitchen;
+                        listProp.GetArrayElementAtIndex(newIndex).objectReferenceValue = controller;
                     }
                 }
             }
@@ -457,7 +477,7 @@ namespace Woi.OfficeFire.Editor
             }
         }
 
-        private static void AppendLines(StringBuilder sb, List<string> lines)
+        internal static void AppendLines(StringBuilder sb, List<string> lines)
         {
             if (lines == null || lines.Count == 0)
             {
