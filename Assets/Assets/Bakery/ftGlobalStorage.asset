@@ -17,8 +17,9 @@ MonoBehaviour:
   modifiedMeshList: []
   modifiedMeshPaddingList: 
   modifiedAssets: []
-  assetList: []
-  uvOverlapAssetList: 
+  assetList:
+  - Assets/AssetSection/FireTool/FireBlanket.fbx
+  uvOverlapAssetList: 00000000
   xatlasWarningShown: 0
   foundCompatibleSetup: 0
   gpuName_2: 
