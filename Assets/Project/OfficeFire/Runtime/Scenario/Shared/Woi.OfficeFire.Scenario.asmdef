@@ -2,7 +2,8 @@
     "name": "Woi.OfficeFire.Scenario",
     "rootNamespace": "Woi.OfficeFire",
     "references": [
-        "GUID:f0e0f0e0f0e0401080a0b0c0d0e0f001"
+        "GUID:f0e0f0e0f0e0401080a0b0c0d0e0f001",
+        "GUID:f0e0f0e0f0e0401080a0b0c0d0e0f006"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

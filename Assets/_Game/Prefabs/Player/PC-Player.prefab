@@ -1211,6 +1211,7 @@ GameObject:
   - component: {fileID: 652043659684087567}
   - component: {fileID: 4523202643370052958}
   - component: {fileID: 4106631115544488786}
+  - component: {fileID: 5182947361052837461}
   m_Layer: 6
   m_Name: PC-Player
   m_TagString: Player
@@ -1284,6 +1285,26 @@ MonoBehaviour:
   moveInputEvent: {fileID: 11400000, guid: 45c0f4be073f3a44e9fb2926f4c8820c, type: 2}
   lookInputEvent: {fileID: 11400000, guid: 2e7d2e501845ae94f9b374a880868f7b, type: 2}
   sprintInputEvent: {fileID: 11400000, guid: acf8340f9c532a84a83ef13972d19be1, type: 2}
+--- !u!114 &5182947361052837461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6637072794676916678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a4f2c1e9b3d4a5f6e7d8c9b0a1f2e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Woi.Player::Woi.Player.PlayerLeanController
+  leanInputEvent: {fileID: 11400000, guid: 7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b, type: 2}
+  cameraPivot: {fileID: 5145498652422237221}
+  maxLateralOffset: 0.35
+  maxRollDegrees: 8
+  leanBlendSpeed: 10
+  bodyAnimator: {fileID: 0}
+  leanStateName: Leaning
+  leanLayer: 0
 --- !u!114 &2010990762849228806
 MonoBehaviour:
   m_ObjectHideFlags: 0

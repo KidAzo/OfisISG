@@ -237,6 +237,13 @@ namespace Woi.OfficeFire
         }
 
 #if UNITY_EDITOR
+        public void EditorEnsureAllDefaults()
+        {
+            FillDefaultKitchenPopupEntries();
+            FillMissingKitchenVoiceEntries();
+            FillMissingKitchenContentCueEntries();
+        }
+
         [ContextMenu("Fill Default Kitchen Popup Entries")]
         private void FillDefaultKitchenPopupEntries()
         {

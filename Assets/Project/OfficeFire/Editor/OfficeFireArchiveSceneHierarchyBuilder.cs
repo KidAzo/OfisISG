@@ -125,7 +125,7 @@ namespace Woi.OfficeFire.Editor
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
-            WireSelectable(
+            WireDoor(
                 OfficeFireSceneHierarchyBuilder.EnsureChild(interactables, "ArchiveDoor", created, reused),
                 null,
                 ArchiveRoomScenarioController.Actions.OpenArchiveDoor,
@@ -275,11 +275,104 @@ namespace Woi.OfficeFire.Editor
                 WireSelectableTarget(selectables[i], archiveController, componentWarnings);
             }
 
+            DoorScenarioAction[] doorActions = archiveRoot.GetComponentsInChildren<DoorScenarioAction>(true);
+            for (int i = 0; i < doorActions.Length; i++)
+            {
+                WireDoorTarget(doorActions[i], archiveController, componentWarnings);
+            }
+
             ScenarioTriggerVolume[] triggerVolumes = archiveRoot.GetComponentsInChildren<ScenarioTriggerVolume>(true);
             for (int i = 0; i < triggerVolumes.Length; i++)
             {
                 WireTriggerTarget(triggerVolumes[i], archiveController, componentWarnings);
             }
+        }
+
+        private static void WireDoor(
+            Transform host,
+            OfficeFireScenarioController controller,
+            string actionId,
+            List<string> componentsAdded,
+            List<string> componentsAlreadyPresent,
+            List<string> componentWarnings)
+        {
+            if (host == null)
+            {
+                return;
+            }
+
+            SelectableScenarioAction legacyClickAction = host.GetComponent<SelectableScenarioAction>();
+            if (legacyClickAction != null)
+            {
+                Undo.DestroyObjectImmediate(legacyClickAction);
+            }
+
+            OfficeFireSceneHierarchyBuilder.TryAddComponent<SelectableDoor>(
+                host.gameObject,
+                "SelectableDoor",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            DoorScenarioAction doorAction = OfficeFireSceneHierarchyBuilder.TryAddComponent<DoorScenarioAction>(
+                host.gameObject,
+                "DoorScenarioAction",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            if (doorAction == null)
+            {
+                return;
+            }
+
+            Undo.RecordObject(doorAction, "Office Fire: Wire DoorScenarioAction");
+            SerializedObject so = new SerializedObject(doorAction);
+            SerializedProperty actionIdProp = so.FindProperty("actionId");
+            if (actionIdProp != null)
+            {
+                actionIdProp.stringValue = actionId;
+            }
+            else
+            {
+                componentWarnings.Add("DoorScenarioAction: serialized field 'actionId' not found.");
+            }
+
+            if (controller != null)
+            {
+                SerializedProperty targetProp = so.FindProperty("targetScenario");
+                if (targetProp != null)
+                {
+                    targetProp.objectReferenceValue = controller;
+                }
+            }
+
+            so.ApplyModifiedProperties();
+        }
+
+        private static void WireDoorTarget(
+            DoorScenarioAction doorAction,
+            OfficeFireScenarioController controller,
+            List<string> componentWarnings)
+        {
+            if (doorAction == null || controller == null)
+            {
+                return;
+            }
+
+            Undo.RecordObject(doorAction, "Office Fire: Wire DoorScenarioAction target");
+            SerializedObject so = new SerializedObject(doorAction);
+            SerializedProperty targetProp = so.FindProperty("targetScenario");
+            if (targetProp != null)
+            {
+                targetProp.objectReferenceValue = controller;
+            }
+            else
+            {
+                componentWarnings.Add("DoorScenarioAction: serialized field 'targetScenario' not found.");
+            }
+
+            so.ApplyModifiedProperties();
         }
 
         private static void WireSelectable(
