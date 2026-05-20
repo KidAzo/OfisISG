@@ -19,7 +19,8 @@ MonoBehaviour:
   modifiedAssets: []
   assetList:
   - Assets/AssetSection/FireTool/FireBlanket.fbx
-  uvOverlapAssetList: 00000000
+  - Assets/watervFx/Carafe.fbx
+  uvOverlapAssetList: 0000000001010000
   xatlasWarningShown: 0
   foundCompatibleSetup: 0
   gpuName_2: 
