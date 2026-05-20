@@ -37,6 +37,7 @@ namespace Woi.OfficeFire
         private bool enableDebugLogs = true;
 
         private Camera _resolvedCamera;
+        private PCHoverInteractor _hoverInteractor;
 
         public void SetRayCamera(Camera camera)
         {
@@ -76,6 +77,11 @@ namespace Woi.OfficeFire
 
         public void TrySelect()
         {
+            if (TrySelectHoveredTarget())
+            {
+                return;
+            }
+
             Camera cam = ResolveCamera();
             if (cam == null)
             {
@@ -111,13 +117,13 @@ namespace Woi.OfficeFire
                     continue;
                 }
 
-                ISelectable selectable = hit.collider.GetComponentInParent<ISelectable>();
+                ISelectable selectable = FindSelectable(hit.collider);
                 if (selectable == null)
                 {
                     if (enableDebugLogs)
                     {
                         Debug.Log(
-                            $"[PCSelectableInteractor] Hit '{hit.collider.name}' (layer={LayerMask.LayerToName(hit.collider.gameObject.layer)}) but no ISelectable.",
+                            $"[PCSelectableInteractor] Hit '{hit.collider.name}' (layer={LayerMask.LayerToName(hit.collider.gameObject.layer)}) but no selectable ISelectable.",
                             hit.collider);
                     }
 
@@ -152,6 +158,133 @@ namespace Woi.OfficeFire
             {
                 Debug.Log("[PCSelectableInteractor] No ISelectable found along ray hits.", this);
             }
+        }
+
+        private bool TrySelectHoveredTarget()
+        {
+            PCHoverInteractor hoverInteractor = ResolveHoverInteractor();
+            if (hoverInteractor == null)
+            {
+                return false;
+            }
+
+            IHoverable hoverable = hoverInteractor.CurrentHoverable;
+            if (hoverable is not ISelectable selectable || !selectable.IsSelectable)
+            {
+                if (enableDebugLogs && hoverable != null)
+                {
+                    Debug.Log(
+                        $"[PCSelectableInteractor] Hovered '{GetDebugName(hoverable)}' is not selectable — E ignored.",
+                        this);
+                }
+
+                return false;
+            }
+
+            Camera cam = ResolveCamera();
+            if (cam == null)
+            {
+                return false;
+            }
+
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            RaycastHit hit = default;
+            if (hoverable is Component hoverComponent)
+            {
+                Collider[] colliders = hoverComponent.GetComponentsInParent<Collider>(true);
+                float bestDistance = float.MaxValue;
+                bool foundHit = false;
+
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    Collider collider = colliders[i];
+                    if (collider == null || !collider.Raycast(ray, out RaycastHit candidate, maxDistance))
+                    {
+                        continue;
+                    }
+
+                    if (candidate.distance >= bestDistance)
+                    {
+                        continue;
+                    }
+
+                    bestDistance = candidate.distance;
+                    hit = candidate;
+                    foundHit = true;
+                }
+
+                if (!foundHit)
+                {
+                    if (enableDebugLogs)
+                    {
+                        Debug.Log(
+                            $"[PCSelectableInteractor] Hovered '{hoverComponent.name}' has no ray hit — E ignored.",
+                            this);
+                    }
+
+                    return false;
+                }
+            }
+
+            SelectionContext context = new SelectionContext(SelectionSource.PC, cam.transform, ray, hit);
+            if (enableDebugLogs)
+            {
+                Debug.Log(
+                    $"[PCSelectableInteractor] Selected hovered '{GetDebugName(hoverable)}'.",
+                    hoverable as Component);
+            }
+
+            selectable.Select(context);
+            return true;
+        }
+
+        private static ISelectable FindSelectable(Collider collider)
+        {
+            if (collider == null)
+            {
+                return null;
+            }
+
+            ISelectable[] selectables = collider.GetComponentsInParent<ISelectable>(true);
+            if (selectables == null || selectables.Length == 0)
+            {
+                return null;
+            }
+
+            ISelectable fallback = null;
+            for (int i = 0; i < selectables.Length; i++)
+            {
+                ISelectable candidate = selectables[i];
+                if (candidate == null || !candidate.IsSelectable)
+                {
+                    continue;
+                }
+
+                if (candidate is IHoverable)
+                {
+                    return candidate;
+                }
+
+                fallback ??= candidate;
+            }
+
+            return fallback;
+        }
+
+        private PCHoverInteractor ResolveHoverInteractor()
+        {
+            if (_hoverInteractor != null)
+            {
+                return _hoverInteractor;
+            }
+
+            _hoverInteractor = FindFirstObjectByType<PCHoverInteractor>(FindObjectsInactive.Include);
+            return _hoverInteractor;
+        }
+
+        private static string GetDebugName(IHoverable hoverable)
+        {
+            return hoverable is Component component ? component.name : hoverable.ToString();
         }
 
         private Camera ResolveCamera()

@@ -69,6 +69,28 @@ namespace FireExtinguisher.Core
         // ── Public API ───────────────────────────────────────────────────────────
 
         /// <summary>
+        /// Registers a <see cref="FireSource"/> monitored by this controller.
+        /// Safe to call multiple times for the same source.
+        /// </summary>
+        public void RegisterFireSource(FireSource source)
+        {
+            if (source == null)
+            {
+                return;
+            }
+
+            if (_fireSources == null)
+            {
+                _fireSources = new List<FireSource>();
+            }
+
+            if (!_fireSources.Contains(source))
+            {
+                _fireSources.Add(source);
+            }
+        }
+
+        /// <summary>
         /// Call this from the breaker interactable when the breaker is flipped off.
         /// Idempotent — calling it a second time is a no-op.
         /// </summary>

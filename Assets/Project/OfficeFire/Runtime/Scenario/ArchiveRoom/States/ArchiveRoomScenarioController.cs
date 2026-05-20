@@ -1,4 +1,5 @@
 using System.Collections;
+using FireExtinguisher.Core;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -89,6 +90,9 @@ namespace Woi.OfficeFire
 
         private void Awake()
         {
+            EnsureFireExtinguishBridge();
+            DisableLegacyAlarmActions();
+
             _stateMachine = new ScenarioStateMachine<ArchiveRoomState>();
             _stateMachine.RegisterState(new ArchiveNoneState(this));
             _stateMachine.RegisterState(new ArchiveWaitingForSmokeNoticeState(this));
@@ -99,6 +103,59 @@ namespace Woi.OfficeFire
             _stateMachine.RegisterState(new ArchiveWaitingForAssemblyAreaState(this));
             _stateMachine.RegisterState(new ArchiveCompletedState(this));
             _stateMachine.StateChanged += HandleArchiveStateChanged;
+        }
+
+        private void EnsureFireExtinguishBridge()
+        {
+            if (GetComponent<OfficeFireArchiveFireExtinguishBridge>() != null)
+            {
+                return;
+            }
+
+            gameObject.AddComponent<OfficeFireArchiveFireExtinguishBridge>();
+        }
+
+        private static void DisableLegacyAlarmActions()
+        {
+            SelectableScenarioAction[] actions = FindObjectsByType<SelectableScenarioAction>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < actions.Length; i++)
+            {
+                SelectableScenarioAction action = actions[i];
+                if (action == null || action.ActionId != Actions.PressAlarm)
+                {
+                    continue;
+                }
+
+                if (HasHoverBasedSelectableOnSameObject(action))
+                {
+                    continue;
+                }
+
+                action.enabled = false;
+            }
+        }
+
+        private static bool HasHoverBasedSelectableOnSameObject(SelectableScenarioAction action)
+        {
+            MonoBehaviour[] behaviours = action.GetComponents<MonoBehaviour>();
+            for (int i = 0; i < behaviours.Length; i++)
+            {
+                MonoBehaviour behaviour = behaviours[i];
+                if (behaviour == null || behaviour == action)
+                {
+                    continue;
+                }
+
+                if (behaviour is IHoverable && behaviour is ISelectable)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void OnDestroy()
@@ -183,6 +240,31 @@ namespace Woi.OfficeFire
         private static bool IsExtinguisherRelatedAction(string actionId)
         {
             return actionId == Actions.UseExtinguisher || actionId == Actions.GrabExtinguisher;
+        }
+
+        public void AllowExtinguisherSpray()
+        {
+            OfficeFireArchiveFireExtinguishBridge bridge = GetComponent<OfficeFireArchiveFireExtinguishBridge>();
+            if (bridge != null)
+            {
+                bridge.AllowExtinguisherSpray();
+                return;
+            }
+
+            FireSource source = FindFirstObjectByType<FireSource>(FindObjectsInactive.Include);
+            if (source == null)
+            {
+                return;
+            }
+
+            FireExtinguishPrerequisiteGate gate = source.GetComponent<FireExtinguishPrerequisiteGate>();
+            if (gate == null)
+            {
+                gate = source.gameObject.AddComponent<FireExtinguishPrerequisiteGate>();
+                gate.ConfigureForManualOnly();
+            }
+
+            gate.ForceAllowExtinguisher();
         }
 
         public void InvokeIntroPhaseStarted()
@@ -621,6 +703,7 @@ namespace Woi.OfficeFire
                 {
                     case Actions.PressAlarm:
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
+                        _archive.AllowExtinguisherSpray();
                         _archive.InvokeAlarmActivated();
                         _archive.LogFireExtinguishStatus("Alarm basildi — sondurucu asamasina geciliyor");
                         _archive.ChangeState(ArchiveRoomState.WaitingForExtinguisherUse);
@@ -665,6 +748,7 @@ namespace Woi.OfficeFire
 
             public override void Enter()
             {
+                _archive.AllowExtinguisherSpray();
                 _archive.SetObjective(OfficeFireObjectiveId.UseArchiveExtinguisher);
                 _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveUseExtinguisherInstruction);
                 _archive.LogFireExtinguishStatus("Sondurucu kullanim asamasi basladi — yangin sondurulebilir");

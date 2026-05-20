@@ -29,22 +29,6 @@ MonoBehaviour:
       EnglishTitle: CrouchInSmoke
       EnglishBody: Assign audio clip and edit this text in the content database.
     Voice: {fileID: 11400000, guid: 1b683bcafd54ec449bd1539fc96a87ff, type: 2}
-  - Id: 309
-    Popup:
-      TurkishTitle: AlarmInstruction
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
-        \xFCzerinden d\xFCzenleyin."
-      EnglishTitle: AlarmInstruction
-      EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 11400000, guid: 09ba3fddf374edf43ba5277e2fe6198e, type: 2}
-  - Id: 103
-    Popup:
-      TurkishTitle: "Alarma Bas\u0131ld\u0131"
-      TurkishBody: "En yak\u0131n g\xFCvenli \xE7\u0131k\u0131\u015F\u0131 kullanarak
-        alan\u0131 terk edin."
-      EnglishTitle: Evacuate
-      EnglishBody: Leave the area using the nearest safe exit.
-    Voice: {fileID: 11400000, guid: 3aefa70408cdef04e9d5a7033d01135c, type: 2}
   - Id: 14
     Popup:
       TurkishTitle: DoNotUseElevator

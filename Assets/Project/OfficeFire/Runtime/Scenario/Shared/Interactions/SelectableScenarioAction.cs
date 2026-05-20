@@ -17,6 +17,8 @@ namespace Woi.OfficeFire
         [SerializeField]
         private UnityEvent onSelected = new UnityEvent();
 
+        public string ActionId => actionId;
+
         public bool IsSelectable => isSelectable;
 
         public void Select(SelectionContext context)

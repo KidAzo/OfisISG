@@ -39,6 +39,8 @@ namespace Woi.OfficeFire
         private IHoverable _currentHoverable;
         private bool _loggedMissingCamera;
 
+        public IHoverable CurrentHoverable => _currentHoverable;
+
         public void SetRayCamera(Camera camera)
         {
             rayCamera = camera;

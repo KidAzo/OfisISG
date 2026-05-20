@@ -6,6 +6,7 @@ namespace Woi.OfficeFire
 {
     /// <summary>
     /// Listens to <see cref="FireSource"/> and dispatches <c>use_extinguisher</c> when the fire is fully extinguished.
+    /// Blocks physical spray until the archive alarm is pressed.
     /// </summary>
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-50)]
@@ -39,6 +40,7 @@ namespace Woi.OfficeFire
 
         private float _nextProgressLogTime;
         private float _lastLoggedProgress = -1f;
+        private FireExtinguishPrerequisiteGate _alarmGate;
         private static FieldInfo s_evaluatorLayerMaskField;
 
         private void Awake()
@@ -51,6 +53,9 @@ namespace Woi.OfficeFire
 
         private void Start()
         {
+            EnsureAlarmPrerequisiteGate();
+            DisableLegacyElectricalSafety();
+
             if (autoFixEvaluatorFireZoneLayerMask)
             {
                 TryFixEvaluatorLayerMasks();
@@ -59,8 +64,78 @@ namespace Woi.OfficeFire
             LogProgress(force: true);
         }
 
+        /// <summary>
+        /// Alarm sonrasi sondurucu spreyinin yangina etki etmesini acar.
+        /// </summary>
+        public void AllowExtinguisherSpray()
+        {
+            EnsureAlarmPrerequisiteGate();
+            if (_alarmGate != null)
+            {
+                _alarmGate.ForceAllowExtinguisher();
+            }
+
+            Log("Sprey kilidi acildi — alarm sonrasi sondurme aktif.");
+            LogProgress(force: true);
+        }
+
+        private void EnsureAlarmPrerequisiteGate()
+        {
+            ResolveFireSource();
+            if (fireSource == null)
+            {
+                return;
+            }
+
+            GameObject fireObject = fireSource.gameObject;
+            FireExtinguishPrerequisiteGate[] gates = fireObject.GetComponents<FireExtinguishPrerequisiteGate>();
+            for (int i = 0; i < gates.Length; i++)
+            {
+                FireExtinguishPrerequisiteGate gate = gates[i];
+                if (gate == null)
+                {
+                    continue;
+                }
+
+                if (gate.Mode == FireExtinguishPrerequisiteGate.GateMode.ManualOnly)
+                {
+                    _alarmGate = gate;
+                    continue;
+                }
+
+                Destroy(gate);
+            }
+
+            if (_alarmGate == null)
+            {
+                _alarmGate = fireObject.AddComponent<FireExtinguishPrerequisiteGate>();
+            }
+
+            _alarmGate.ConfigureForManualOnly();
+            Log("Alarm on kosulu aktif — sprey alarm basilana kadar bloklu.");
+        }
+
+        private void DisableLegacyElectricalSafety()
+        {
+            OfficeFireArchiveElectricalSafetySetup legacySetup =
+                FindFirstObjectByType<OfficeFireArchiveElectricalSafetySetup>(FindObjectsInactive.Include);
+            if (legacySetup != null)
+            {
+                legacySetup.enabled = false;
+            }
+        }
+
+        private void ResolveFireSource()
+        {
+            if (fireSource == null)
+            {
+                fireSource = FindFirstObjectByType<FireSource>(FindObjectsInactive.Include);
+            }
+        }
+
         private void OnEnable()
         {
+            ResolveFireSource();
             if (fireSource == null)
             {
                 LogWarning("FireSource atanmadi — sprey ile sondurme senaryoya bildirilmeyecek.");
@@ -130,15 +205,21 @@ namespace Woi.OfficeFire
             LogProgress(force: true);
             Log("FireSource tamamen sonduruldu (OnFullyExtinguished).");
 
-            if (!dispatchOnFullyExtinguished)
-            {
-                Log("dispatchOnFullyExtinguished=false — use_extinguisher gonderilmiyor.");
-                return;
-            }
-
             if (scenario == null)
             {
                 LogWarning("ArchiveRoomScenarioController yok — use_extinguisher gonderilemedi.");
+                return;
+            }
+
+            if (!scenario.CanExtinguishFire(out string reason))
+            {
+                LogWarning($"Yangin sonduruldu ama senaryo kabul etmiyor — {reason}");
+                return;
+            }
+
+            if (!dispatchOnFullyExtinguished)
+            {
+                Log("dispatchOnFullyExtinguished=false — use_extinguisher gonderilmiyor.");
                 return;
             }
 
@@ -176,10 +257,16 @@ namespace Woi.OfficeFire
                 scenario.CanExtinguishFire(out canReason);
             }
 
+            string gateStatus = "yok";
+            if (_alarmGate != null)
+            {
+                gateStatus = _alarmGate.CanExtinguish ? "acik" : "kapali (alarm gerekli)";
+            }
+
             Debug.Log(
                 $"[ArchiveFireExtinguishBridge] {prefix} — sondurme: %{progressPercent:F0} | " +
                 $"kalan intensity={normalizedIntensity:F2} | fireState={fireSource.State} | " +
-                $"scenario={scenarioState} | {canReason}",
+                $"scenario={scenarioState} | gate={gateStatus} | {canReason}",
                 this);
         }
 

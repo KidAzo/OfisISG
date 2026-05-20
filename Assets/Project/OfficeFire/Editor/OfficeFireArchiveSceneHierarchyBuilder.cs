@@ -172,10 +172,9 @@ namespace Woi.OfficeFire.Editor
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
-            WireSelectable(
+            WirePowerCut(
                 OfficeFireSceneHierarchyBuilder.EnsureChild(interactables, "PowerPlug", created, reused),
                 null,
-                ArchiveRoomScenarioController.Actions.PullPowerPlug,
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
@@ -219,6 +218,8 @@ namespace Woi.OfficeFire.Editor
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
+
+            // Breaker gate is opt-in only (enableBreakerGate on the component). Archive flow uses alarm → extinguish.
 
             OfficeFireSceneHierarchyBuilder.TryAddComponent<OfficeFireScenarioBootstrapper>(
                 tBootstrap.gameObject,
@@ -383,6 +384,15 @@ namespace Woi.OfficeFire.Editor
             {
                 WireAlarmTarget(alarms[i], archiveController, componentWarnings);
             }
+
+            ArchivePowerCutInteractable[] powerCutInteractables =
+                archiveRoot.GetComponentsInChildren<ArchivePowerCutInteractable>(true);
+            OfficeFireArchiveElectricalSafetySetup electricalSafety =
+                archiveController.GetComponent<OfficeFireArchiveElectricalSafetySetup>();
+            for (int i = 0; i < powerCutInteractables.Length; i++)
+            {
+                WirePowerCutTarget(powerCutInteractables[i], archiveController, electricalSafety, componentWarnings);
+            }
         }
 
         private static void WireDoor(
@@ -527,6 +537,12 @@ namespace Woi.OfficeFire.Editor
                 return;
             }
 
+            SelectableScenarioAction legacyAction = host.GetComponent<SelectableScenarioAction>();
+            if (legacyAction != null)
+            {
+                Undo.DestroyObjectImmediate(legacyAction);
+            }
+
             OfficeFireSceneHierarchyBuilder.TryAddComponent<Outline>(
                 host.gameObject,
                 "Outline",
@@ -611,6 +627,75 @@ namespace Woi.OfficeFire.Editor
             else
             {
                 componentWarnings.Add("Alarm: serialized field 'targetScenario' not found.");
+            }
+
+            so.ApplyModifiedProperties();
+        }
+
+        private static void WirePowerCut(
+            Transform host,
+            ArchiveRoomScenarioController controller,
+            List<string> componentsAdded,
+            List<string> componentsAlreadyPresent,
+            List<string> componentWarnings)
+        {
+            if (host == null)
+            {
+                return;
+            }
+
+            SelectableScenarioAction legacyAction = host.GetComponent<SelectableScenarioAction>();
+            if (legacyAction != null)
+            {
+                Undo.DestroyObjectImmediate(legacyAction);
+            }
+
+            ArchivePowerCutInteractable powerCut = OfficeFireSceneHierarchyBuilder.TryAddComponent<ArchivePowerCutInteractable>(
+                host.gameObject,
+                "ArchivePowerCutInteractable",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            if (powerCut == null || controller == null)
+            {
+                return;
+            }
+
+            WirePowerCutTarget(
+                powerCut,
+                controller,
+                controller.GetComponent<OfficeFireArchiveElectricalSafetySetup>(),
+                componentWarnings);
+        }
+
+        private static void WirePowerCutTarget(
+            ArchivePowerCutInteractable powerCut,
+            ArchiveRoomScenarioController controller,
+            OfficeFireArchiveElectricalSafetySetup electricalSafety,
+            List<string> componentWarnings)
+        {
+            if (powerCut == null || controller == null)
+            {
+                return;
+            }
+
+            Undo.RecordObject(powerCut, "Office Fire: Wire ArchivePowerCutInteractable");
+            SerializedObject so = new SerializedObject(powerCut);
+            SerializedProperty scenarioProp = so.FindProperty("targetScenario");
+            if (scenarioProp != null)
+            {
+                scenarioProp.objectReferenceValue = controller;
+            }
+            else
+            {
+                componentWarnings.Add("ArchivePowerCutInteractable: serialized field 'targetScenario' not found.");
+            }
+
+            SerializedProperty safetyProp = so.FindProperty("electricalSafetySetup");
+            if (safetyProp != null)
+            {
+                safetyProp.objectReferenceValue = electricalSafety;
             }
 
             so.ApplyModifiedProperties();

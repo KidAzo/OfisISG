@@ -60,6 +60,11 @@ namespace FireExtinguisher.Core
             /// Class C: gate opens when <see cref="ClassCFireValveController"/> reports the pipe valve open.
             /// </summary>
             ValveOpenOnly,
+
+            /// <summary>
+            /// Blocked until <see cref="ForceAllowExtinguisher"/> is called (e.g. archive alarm pressed).
+            /// </summary>
+            ManualOnly,
         }
 
         // ── Inspector ────────────────────────────────────────────────────────────
@@ -93,6 +98,7 @@ namespace FireExtinguisher.Core
         [SerializeField, Min(0f)] private float _blockedAttemptCooldownSeconds = 0.6f;
 
         private float _lastBlockedAttemptEventTime = float.NegativeInfinity;
+        private bool _forceAllowExtinguish;
 
         // ── Public API ───────────────────────────────────────────────────────────
 
@@ -104,7 +110,9 @@ namespace FireExtinguisher.Core
         /// </summary>
         public bool ShouldSuppressTrainingSprayFeedback =>
             !CanExtinguish &&
-            (_mode == GateMode.ValveOpenOnly || _mode == GateMode.BreakerOffOnly);
+            (_mode == GateMode.ValveOpenOnly ||
+             _mode == GateMode.BreakerOffOnly ||
+             _mode == GateMode.ManualOnly);
 
         public UnityEvent OnValveClosedSprayAttempt => _onValveClosedSprayAttempt;
 
@@ -119,7 +127,9 @@ namespace FireExtinguisher.Core
             if (CanExtinguish)
                 return;
 
-            if (_mode != GateMode.ValveOpenOnly && _mode != GateMode.BreakerOffOnly)
+            if (_mode != GateMode.ValveOpenOnly &&
+                _mode != GateMode.BreakerOffOnly &&
+                _mode != GateMode.ManualOnly)
                 return;
 
             if (_blockedAttemptCooldownSeconds > 0f &&
@@ -137,6 +147,35 @@ namespace FireExtinguisher.Core
         }
 
         /// <summary>
+        /// Bypasses all prerequisite checks (e.g. alarm pressed — no breaker required).
+        /// Takes effect immediately; use instead of <see cref="Destroy"/> when spray must work same frame.
+        /// </summary>
+        public void ForceAllowExtinguisher()
+        {
+            _forceAllowExtinguish = true;
+        }
+
+        /// <summary>
+        /// Runtime wiring for archive/training cases: block spray until explicitly allowed.
+        /// </summary>
+        public void ConfigureForManualOnly()
+        {
+            _controller = null;
+            _valveController = null;
+            _mode = GateMode.ManualOnly;
+            _forceAllowExtinguish = false;
+        }
+
+        /// <summary>
+        /// Runtime wiring for electrical archive/server cases: block spray until the breaker is off.
+        /// </summary>
+        public void ConfigureForBreakerOnly(ElectricalFireSafetyController controller)
+        {
+            _controller = controller;
+            _mode = GateMode.BreakerOffOnly;
+        }
+
+        /// <summary>
         /// <c>true</c> when the prerequisite defined by <see cref="_mode"/> is satisfied
         /// and the <see cref="FireSource"/> may receive extinguisher spray.
         /// </summary>
@@ -144,6 +183,16 @@ namespace FireExtinguisher.Core
         {
             get
             {
+                if (_forceAllowExtinguish)
+                {
+                    return true;
+                }
+
+                if (_mode == GateMode.ManualOnly)
+                {
+                    return false;
+                }
+
                 if (_mode == GateMode.ValveOpenOnly)
                 {
                     if (_valveController == null)
@@ -153,7 +202,11 @@ namespace FireExtinguisher.Core
                 }
 
                 if (_controller == null)
-                    return true; // no controller = no restriction
+                {
+                    return _mode != GateMode.BreakerOffOnly
+                        && _mode != GateMode.FullSafetySequence
+                        && _mode != GateMode.ValveOpenOnly;
+                }
 
                 return _mode switch
                 {

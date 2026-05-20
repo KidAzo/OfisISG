@@ -43,8 +43,14 @@ namespace Woi.OfficeFire
         private float _defaultOutlineWidth;
         private bool _isHovered;
         private bool _loggedMissingOutline;
+        private bool _alarmTriggered;
 
-        public bool IsSelectable => isSelectable && (!requireHoverToPress || _isHovered);
+        public bool IsSelectable => isSelectable && (!_alarmTriggered) && (!requireHoverToPress || _isHovered);
+
+        private void Awake()
+        {
+            RemoveLegacySelectableAction();
+        }
 
         private void Start()
         {
@@ -67,6 +73,12 @@ namespace Woi.OfficeFire
 
         public void Hover(bool isHovered)
         {
+            if (_isHovered == isHovered)
+            {
+                return;
+            }
+
+            _isHovered = isHovered;
             EnsureOutline();
 
             if (outline == null)
@@ -74,7 +86,7 @@ namespace Woi.OfficeFire
                 if (!_loggedMissingOutline)
                 {
                     Debug.LogWarning(
-                        $"[Alarm] Hover({isHovered}) ignored — Quick Outline not found on '{name}' or children.",
+                        $"[Alarm] Hover({isHovered}) — Quick Outline not found on '{name}' or children (selection still uses hover state).",
                         this);
                     _loggedMissingOutline = true;
                 }
@@ -82,12 +94,6 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            if (_isHovered == isHovered)
-            {
-                return;
-            }
-
-            _isHovered = isHovered;
             ApplyHoverState(isHovered);
 
             if (enableDebugLogs)
@@ -115,6 +121,10 @@ namespace Woi.OfficeFire
                         $"[Alarm] E ignored on '{name}' — hover required but isHovered=false. Is PCHoverInteractor in scene?",
                         this);
                 }
+                else if (_alarmTriggered)
+                {
+                    Debug.Log($"[Alarm] E ignored on '{name}' — alarm already pressed.", this);
+                }
 
                 return;
             }
@@ -124,6 +134,13 @@ namespace Woi.OfficeFire
 
         public void PressAlarm()
         {
+            if (_alarmTriggered)
+            {
+                return;
+            }
+
+            _alarmTriggered = true;
+            isSelectable = false;
             if (enableDebugLogs)
             {
                 Debug.Log($"[Alarm] PressAlarm on '{name}'.", this);
@@ -202,6 +219,24 @@ namespace Woi.OfficeFire
             }
 
             outline.enabled = isHovered;
+        }
+
+        private void RemoveLegacySelectableAction()
+        {
+            SelectableScenarioAction legacyAction = GetComponent<SelectableScenarioAction>();
+            if (legacyAction == null)
+            {
+                return;
+            }
+
+            if (enableDebugLogs)
+            {
+                Debug.Log(
+                    $"[Alarm] Removing legacy SelectableScenarioAction on '{name}' — alarm uses hover + E only.",
+                    this);
+            }
+
+            Destroy(legacyAction);
         }
     }
 }
