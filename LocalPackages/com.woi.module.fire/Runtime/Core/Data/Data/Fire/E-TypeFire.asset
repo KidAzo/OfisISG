@@ -15,5 +15,5 @@ MonoBehaviour:
   _fireClass: 5
   _maxIntensity: 0.35
   _extinguishResistance: 1
-  _allowedExtinguisherTypes: 02000000
+  _allowedExtinguisherTypes: 020000000200000003000000
   _forbiddenExtinguisherTypes: 

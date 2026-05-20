@@ -1057,7 +1057,7 @@ PrefabInstance:
     - target: {fileID: 6139940467266574938, guid: b5369ccc56b81ea4f8b37fb4d4681120, type: 3}
       propertyPath: _extinguisherData
       value: 
-      objectReference: {fileID: 11400000, guid: 8dbe6212046c28a4d9288d9272947831, type: 2}
+      objectReference: {fileID: 11400000, guid: 9c972d9dfd017b6498477ef5a550c96d, type: 2}
     - target: {fileID: 6790651567439378037, guid: b5369ccc56b81ea4f8b37fb4d4681120, type: 3}
       propertyPath: fireMode
       value: 0

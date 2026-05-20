@@ -95,13 +95,23 @@ namespace Woi.OfficeFire.Editor
             Transform t05 = OfficeFireSceneHierarchyBuilder.EnsureChild(root, "05_UI", created, reused);
 
             Transform tPcInteractor = OfficeFireSceneHierarchyBuilder.EnsureChild(t04, "PCSelectableInteractor", created, reused);
+            Transform tPcHover = OfficeFireSceneHierarchyBuilder.EnsureChild(t04, "PCHoverInteractor", created, reused);
             OfficeFireSceneHierarchyBuilder.EnsureChild(t05, "Popup", created, reused);
             OfficeFireSceneHierarchyBuilder.EnsureChild(t05, "Objective", created, reused);
             OfficeFireSceneHierarchyBuilder.EnsureChild(t05, "Report", created, reused);
 
-            OfficeFireSceneHierarchyBuilder.TryAddComponent<PCSelectableInteractor>(
+            PCSelectableInteractor pcSelectable = OfficeFireSceneHierarchyBuilder.TryAddComponent<PCSelectableInteractor>(
                 tPcInteractor.gameObject,
                 "PCSelectableInteractor",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            WirePcSelectableInteractor(pcSelectable, componentWarnings);
+
+            OfficeFireSceneHierarchyBuilder.TryAddComponent<PCHoverInteractor>(
+                tPcHover.gameObject,
+                "PCHoverInteractor",
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
@@ -142,10 +152,9 @@ namespace Woi.OfficeFire.Editor
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
-            WireSelectable(
+            WireAlarm(
                 OfficeFireSceneHierarchyBuilder.EnsureChild(interactables, "AlarmButton", created, reused),
                 null,
-                ArchiveRoomScenarioController.Actions.PressAlarm,
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
@@ -200,6 +209,13 @@ namespace Woi.OfficeFire.Editor
             ArchiveRoomScenarioController archiveController = OfficeFireSceneHierarchyBuilder.TryAddComponent<ArchiveRoomScenarioController>(
                 tArchiveController.gameObject,
                 "ArchiveRoomScenarioController",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            OfficeFireSceneHierarchyBuilder.TryAddComponent<OfficeFireArchiveFireExtinguishBridge>(
+                tArchiveController.gameObject,
+                "OfficeFireArchiveFireExtinguishBridge",
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
@@ -361,6 +377,12 @@ namespace Woi.OfficeFire.Editor
             {
                 WireTriggerTarget(triggerVolumes[i], archiveController, componentWarnings);
             }
+
+            Alarm[] alarms = archiveRoot.GetComponentsInChildren<Alarm>(true);
+            for (int i = 0; i < alarms.Length; i++)
+            {
+                WireAlarmTarget(alarms[i], archiveController, componentWarnings);
+            }
         }
 
         private static void WireDoor(
@@ -445,6 +467,150 @@ namespace Woi.OfficeFire.Editor
             else
             {
                 componentWarnings.Add("DoorScenarioAction: serialized field 'targetScenario' not found.");
+            }
+
+            so.ApplyModifiedProperties();
+        }
+
+        private static void WirePcSelectableInteractor(
+            PCSelectableInteractor interactor,
+            List<string> componentWarnings)
+        {
+            if (interactor == null)
+            {
+                return;
+            }
+
+            Undo.RecordObject(interactor, "Office Fire: Wire PCSelectableInteractor");
+            SerializedObject so = new SerializedObject(interactor);
+
+            SerializedProperty interactProp = so.FindProperty("interactInputEvent");
+            if (interactProp != null)
+            {
+                const string interactInputAssetPath =
+                    "Assets/Project/OfficeFire/ScriptableObjects/Events/onInteractInput.asset";
+
+                ScriptableObject interactInput = AssetDatabase.LoadAssetAtPath<ScriptableObject>(interactInputAssetPath);
+                if (interactInput == null)
+                {
+                    const string packageInteractInputAssetPath =
+                        "Packages/com.woi.module.fire/Runtime/InputSystem/InputsSO/InputEvents/onInteractInput.asset";
+                    interactInput = AssetDatabase.LoadAssetAtPath<ScriptableObject>(packageInteractInputAssetPath);
+                }
+
+                if (interactInput != null)
+                {
+                    interactProp.objectReferenceValue = interactInput;
+                }
+                else
+                {
+                    componentWarnings.Add("PCSelectableInteractor: onInteractInput asset not found.");
+                }
+            }
+            else
+            {
+                componentWarnings.Add("PCSelectableInteractor: serialized field 'interactInputEvent' not found.");
+            }
+
+            so.ApplyModifiedProperties();
+        }
+
+        private static void WireAlarm(
+            Transform host,
+            ArchiveRoomScenarioController controller,
+            List<string> componentsAdded,
+            List<string> componentsAlreadyPresent,
+            List<string> componentWarnings)
+        {
+            if (host == null)
+            {
+                return;
+            }
+
+            OfficeFireSceneHierarchyBuilder.TryAddComponent<Outline>(
+                host.gameObject,
+                "Outline",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            Alarm alarm = OfficeFireSceneHierarchyBuilder.TryAddComponent<Alarm>(
+                host.gameObject,
+                "Alarm",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            if (alarm == null)
+            {
+                return;
+            }
+
+            Undo.RecordObject(alarm, "Office Fire: Wire Alarm");
+            SerializedObject so = new SerializedObject(alarm);
+
+            SerializedProperty actionIdProp = so.FindProperty("actionId");
+            if (actionIdProp != null)
+            {
+                actionIdProp.stringValue = ArchiveRoomScenarioController.Actions.PressAlarm;
+            }
+            else
+            {
+                componentWarnings.Add("Alarm: serialized field 'actionId' not found.");
+            }
+
+            SerializedProperty alarmPressedProp = so.FindProperty("alarmPressed");
+            if (alarmPressedProp != null)
+            {
+                const string alarmPressedAssetPath =
+                    "Assets/Project/OfficeFire/ScriptableObjects/Events/onAlarmPressed.asset";
+                ScriptableObject alarmPressed = AssetDatabase.LoadAssetAtPath<ScriptableObject>(alarmPressedAssetPath);
+                if (alarmPressed != null)
+                {
+                    alarmPressedProp.objectReferenceValue = alarmPressed;
+                }
+                else
+                {
+                    componentWarnings.Add("Alarm: onAlarmPressed asset not found at " + alarmPressedAssetPath);
+                }
+            }
+            else
+            {
+                componentWarnings.Add("Alarm: serialized field 'alarmPressed' not found.");
+            }
+
+            if (controller != null)
+            {
+                SerializedProperty targetProp = so.FindProperty("targetScenario");
+                if (targetProp != null)
+                {
+                    targetProp.objectReferenceValue = controller;
+                }
+            }
+
+            so.ApplyModifiedProperties();
+        }
+
+        private static void WireAlarmTarget(
+            Alarm alarm,
+            ArchiveRoomScenarioController controller,
+            List<string> componentWarnings)
+        {
+            if (alarm == null || controller == null)
+            {
+                return;
+            }
+
+            Undo.RecordObject(alarm, "Office Fire: Wire Alarm target");
+            SerializedObject so = new SerializedObject(alarm);
+            SerializedProperty targetProp = so.FindProperty("targetScenario");
+            if (targetProp != null)
+            {
+                targetProp.objectReferenceValue = controller;
+            }
+            else
+            {
+                componentWarnings.Add("Alarm: serialized field 'targetScenario' not found.");
             }
 
             so.ApplyModifiedProperties();

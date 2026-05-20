@@ -1,12 +1,25 @@
 using System;
+using Obvious.Soap;
 using UnityEngine;
 
 namespace Woi.OfficeFire
 {
     public sealed class PCSelectableInteractor : MonoBehaviour
     {
+        [Header("Input")]
+        [Tooltip("Raised when Gameplay/Interact is pressed (E in PlayerInputActions).")]
+        [SerializeField]
+        private ScriptableEventNoParam interactInputEvent;
+
+        [Header("Raycast")]
         [SerializeField]
         private Camera rayCamera;
+
+        [SerializeField]
+        private bool autoResolvePlayerCamera = true;
+
+        [SerializeField]
+        private string playerTag = "Player";
 
         [SerializeField]
         private float maxDistance = 5f;
@@ -15,35 +28,62 @@ namespace Woi.OfficeFire
         private LayerMask selectionMask = ~0;
 
         [SerializeField]
-        private KeyCode selectKey = KeyCode.E;
-
-        [SerializeField]
         private QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore;
 
         [SerializeField]
         private bool drawDebugRay = true;
 
         [SerializeField]
-        private bool enableDebugLogs;
+        private bool enableDebugLogs = true;
 
-        private void Update()
+        private Camera _resolvedCamera;
+
+        public void SetRayCamera(Camera camera)
         {
-            if (!Input.GetKeyDown(selectKey))
+            rayCamera = camera;
+            _resolvedCamera = camera;
+        }
+
+        private void OnEnable()
+        {
+            if (interactInputEvent == null)
             {
                 return;
+            }
+
+            interactInputEvent.OnRaised += OnInteractInput;
+        }
+
+        private void OnDisable()
+        {
+            if (interactInputEvent == null)
+            {
+                return;
+            }
+
+            interactInputEvent.OnRaised -= OnInteractInput;
+        }
+
+        private void OnInteractInput()
+        {
+            if (enableDebugLogs)
+            {
+                Debug.Log("[PCSelectableInteractor] Interact input received (E).", this);
             }
 
             TrySelect();
         }
 
-        private void TrySelect()
+        public void TrySelect()
         {
-            Camera cam = rayCamera != null ? rayCamera : Camera.main;
+            Camera cam = ResolveCamera();
             if (cam == null)
             {
                 if (enableDebugLogs)
                 {
-                    Debug.LogWarning("[PCSelectableInteractor] No camera assigned and Camera.main is null.", this);
+                    Debug.LogWarning(
+                        "[PCSelectableInteractor] No camera found. Assign Ray Camera, tag player camera as MainCamera, or enable Auto Resolve Player Camera.",
+                        this);
                 }
 
                 return;
@@ -74,6 +114,13 @@ namespace Woi.OfficeFire
                 ISelectable selectable = hit.collider.GetComponentInParent<ISelectable>();
                 if (selectable == null)
                 {
+                    if (enableDebugLogs)
+                    {
+                        Debug.Log(
+                            $"[PCSelectableInteractor] Hit '{hit.collider.name}' (layer={LayerMask.LayerToName(hit.collider.gameObject.layer)}) but no ISelectable.",
+                            hit.collider);
+                    }
+
                     continue;
                 }
 
@@ -107,6 +154,60 @@ namespace Woi.OfficeFire
             }
         }
 
+        private Camera ResolveCamera()
+        {
+            if (rayCamera != null)
+            {
+                _resolvedCamera = rayCamera;
+                return rayCamera;
+            }
+
+            if (_resolvedCamera != null && _resolvedCamera.isActiveAndEnabled)
+            {
+                return _resolvedCamera;
+            }
+
+            if (Camera.main != null)
+            {
+                _resolvedCamera = Camera.main;
+                return _resolvedCamera;
+            }
+
+            if (!autoResolvePlayerCamera)
+            {
+                return null;
+            }
+
+            if (!string.IsNullOrEmpty(playerTag))
+            {
+                GameObject player = GameObject.FindGameObjectWithTag(playerTag);
+                if (player != null)
+                {
+                    Camera playerCamera = player.GetComponentInChildren<Camera>(true);
+                    if (playerCamera != null)
+                    {
+                        _resolvedCamera = playerCamera;
+                        return _resolvedCamera;
+                    }
+                }
+            }
+
+            Camera[] cameras = FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                Camera candidate = cameras[i];
+                if (candidate == null || !candidate.isActiveAndEnabled)
+                {
+                    continue;
+                }
+
+                _resolvedCamera = candidate;
+                return _resolvedCamera;
+            }
+
+            return null;
+        }
+
         private void OnDrawGizmos()
         {
             if (!drawDebugRay)
@@ -114,7 +215,7 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            Camera cam = rayCamera != null ? rayCamera : Camera.main;
+            Camera cam = ResolveCamera();
             if (cam == null)
             {
                 return;

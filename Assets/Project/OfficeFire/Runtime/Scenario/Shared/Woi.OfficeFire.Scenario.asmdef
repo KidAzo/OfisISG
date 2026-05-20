@@ -4,8 +4,11 @@
     "references": [
         "GUID:f0e0f0e0f0e0401080a0b0c0d0e0f001",
         "GUID:f0e0f0e0f0e0401080a0b0c0d0e0f006",
-        "Unity.Mathematics",
-        "Unity.Splines"
+        "GUID:e482584a5795fa4409047161cc21985d",
+        "GUID:ee6baafdecd94804a8714654c4bd097f",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:21d1eb854b91ade49bc69a263d12bee2",
+        "GUID:bbeff2ded6f53664ea52441d80071b92"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -52,6 +52,7 @@ namespace Woi.OfficeFire
                 if (!isMatch)
                 {
                     controller.NotifyDeselected();
+                    OfficeFireActiveScenarioLocator.UnregisterIfActive(controller);
                 }
 
                 ApplyRootActive(controller, isMatch);
@@ -75,6 +76,7 @@ namespace Woi.OfficeFire
                 playerInitializer.InitializePlayer(scenarioId);
             }
 
+            OfficeFireActiveScenarioLocator.RegisterActive(active);
             active.StartScenario();
         }
 

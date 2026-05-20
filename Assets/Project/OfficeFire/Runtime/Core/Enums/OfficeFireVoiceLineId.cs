@@ -40,5 +40,6 @@ namespace Woi.OfficeFire
         KitchenBlanketSuccess = 306,
         KitchenTurnOffStoveInstruction = 307,
         KitchenFireGrowingEvacuate = 308,
+        LeanCorrectly = 309,
     }
 }

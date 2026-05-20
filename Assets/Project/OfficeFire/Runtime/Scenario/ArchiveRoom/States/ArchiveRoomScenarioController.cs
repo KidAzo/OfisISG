@@ -74,6 +74,10 @@ namespace Woi.OfficeFire
         [SerializeField]
         private ArchiveRoomStateChangedEvent onArchiveStateChanged = new ArchiveRoomStateChangedEvent();
 
+        [Header("Archive — debug")]
+        [SerializeField]
+        private bool enableFireExtinguishDebugLogs = true;
+
         private ScenarioStateMachine<ArchiveRoomState> _stateMachine;
         private Coroutine _smokeNoticeDelayRoutine;
         private Coroutine _smokeNoticeReminderRoutine;
@@ -126,6 +130,59 @@ namespace Woi.OfficeFire
             Debug.LogWarning(
                 "[ArchiveRoomScenarioController] UseWater ignored: fire is not accessible from this state yet.",
                 this);
+        }
+
+        /// <summary>
+        /// True when the scenario accepts a successful <see cref="Actions.UseExtinguisher"/> action.
+        /// </summary>
+        public bool CanExtinguishFire()
+        {
+            return CanExtinguishFire(out _);
+        }
+
+        public bool CanExtinguishFire(out string reason)
+        {
+            if (!CanProcessActions())
+            {
+                reason = "Senaryo aktif degil veya tamamlandi.";
+                return false;
+            }
+
+            switch (CurrentState)
+            {
+                case ArchiveRoomState.WaitingForExtinguisherUse:
+                    reason = "Evet — alarm basildi, yangin sondurulebilir.";
+                    return true;
+                case ArchiveRoomState.Intervention:
+                    reason = "Hayir — once alarm butonuna bas (E).";
+                    return false;
+                case ArchiveRoomState.WaitingForExitRoom:
+                case ArchiveRoomState.WaitingForAssemblyArea:
+                case ArchiveRoomState.Completed:
+                    reason = "Hayir — yangin zaten kontrol altinda veya tahliye asamasindasin.";
+                    return false;
+                default:
+                    reason = $"Hayir — su anki durum: {CurrentState}.";
+                    return false;
+            }
+        }
+
+        public void LogFireExtinguishStatus(string context)
+        {
+            if (!enableFireExtinguishDebugLogs)
+            {
+                return;
+            }
+
+            CanExtinguishFire(out string reason);
+            Debug.Log(
+                $"[ArchiveRoomScenarioController][FireExtinguish] {context} | state={CurrentState} | canExtinguish={reason}",
+                this);
+        }
+
+        private static bool IsExtinguisherRelatedAction(string actionId)
+        {
+            return actionId == Actions.UseExtinguisher || actionId == Actions.GrabExtinguisher;
         }
 
         public void InvokeIntroPhaseStarted()
@@ -232,8 +289,25 @@ namespace Woi.OfficeFire
 
         public override void HandleAction(string actionId)
         {
-            if (!CanProcessActions() || string.IsNullOrEmpty(actionId))
+            if (string.IsNullOrEmpty(actionId))
             {
+                return;
+            }
+
+            if (enableFireExtinguishDebugLogs && IsExtinguisherRelatedAction(actionId))
+            {
+                LogFireExtinguishStatus($"HandleAction('{actionId}') geldi");
+            }
+
+            if (!CanProcessActions())
+            {
+                if (enableFireExtinguishDebugLogs && IsExtinguisherRelatedAction(actionId))
+                {
+                    Debug.LogWarning(
+                        $"[ArchiveRoomScenarioController][FireExtinguish] '{actionId}' reddedildi: senaryo aktif degil.",
+                        this);
+                }
+
                 return;
             }
 
@@ -497,7 +571,7 @@ namespace Woi.OfficeFire
                 {
                     case Actions.EnteredArchiveRoom:
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.OpenedArchiveDoor);
-                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveElectricalFireWarning);
+                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.LeanCorrectly);
                         _archive.InvokeDoorOpened();
                         _archive.ChangeState(ArchiveRoomState.Intervention);
                         break;
@@ -547,8 +621,9 @@ namespace Woi.OfficeFire
                 {
                     case Actions.PressAlarm:
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
-                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
                         _archive.InvokeAlarmActivated();
+                        _archive.LogFireExtinguishStatus("Alarm basildi — sondurucu asamasina geciliyor");
+                        _archive.ChangeState(ArchiveRoomState.WaitingForExtinguisherUse);
                         break;
                     case Actions.PlayerLeaned:
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.LeanedCorrectly);
@@ -560,10 +635,12 @@ namespace Woi.OfficeFire
                         _archive.InvokeWaterMistake();
                         break;
                     case Actions.GrabExtinguisher:
+                        _archive.LogFireExtinguishStatus("Sondurucu alindi ama alarm henuz basilmadi — HATA");
                         _archive.RegisterMistake(OfficeFireMistakeId.UsedExtinguisherBeforeAlarm);
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
                         break;
                     case Actions.UseExtinguisher:
+                        _archive.LogFireExtinguishStatus("Sondurucu kullanildi ama alarm henuz basilmadi — HATA");
                         _archive.RegisterMistake(OfficeFireMistakeId.UsedExtinguisherBeforeAlarm);
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
                         break;
@@ -584,12 +661,13 @@ namespace Woi.OfficeFire
                 _archive = controller;
             }
 
-            public override ArchiveRoomState StateId => ArchiveRoomState.Completed;
+            public override ArchiveRoomState StateId => ArchiveRoomState.WaitingForExtinguisherUse;
 
             public override void Enter()
             {
                 _archive.SetObjective(OfficeFireObjectiveId.UseArchiveExtinguisher);
                 _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveUseExtinguisherInstruction);
+                _archive.LogFireExtinguishStatus("Sondurucu kullanim asamasi basladi — yangin sondurulebilir");
             }
 
             public override void HandleAction(string actionId)
@@ -597,6 +675,7 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.UseExtinguisher:
+                        _archive.LogFireExtinguishStatus("Sondurucu basarili — yangin kontrol altina alindi");
                         _archive.MarkFireControlled();
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.UsedExtinguisherCorrectly);
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.ControlledArchiveFire);

@@ -624,7 +624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: FireExtinguisher.Core::FireExtinguisher.Core.ExtinguishEvaluator
   _fireZoneLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 576
   _hitBufferSize: 8
   _applySuppressionOnEvaluate: 1
   _coneEffectivenessCurve:

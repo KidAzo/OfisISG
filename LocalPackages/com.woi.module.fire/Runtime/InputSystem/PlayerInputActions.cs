@@ -121,12 +121,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Lean"",
-                    ""type"": ""Value"",
+                    ""type"": ""Button"",
                     ""id"": ""c8e4f1a2-3b5d-4e6f-9a0c-1d2e3f4a5b6c"",
-                    ""expectedControlType"": ""Axis"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""Interact"",
@@ -307,37 +307,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""d4e5f6a7-b8c9-4d0e-9f1a-2b3c4d5e6f70"",
-                    ""path"": ""1DAxis"",
+                    ""name"": """",
+                    ""id"": ""b7c8d9e0-f1a2-4b3c-9d0e-1f2a3b4c5d6e7"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Lean"",
-                    ""isComposite"": true,
+                    ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""e5f6a7b8-c9d0-4e1f-8a2b-3c4d5e6f7081"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Lean"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""f6a7b8c9-d0e1-4f2a-9b3c-4d5e6f708192"",
-                    ""path"": ""<Keyboard>/c"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Lean"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": """",

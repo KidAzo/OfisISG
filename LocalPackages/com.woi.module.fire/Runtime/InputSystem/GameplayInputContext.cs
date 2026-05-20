@@ -58,12 +58,14 @@ namespace Woi.InputSystem
                 inputActions.Gameplay.Move.performed += OnMove;
                 inputActions.Gameplay.Move.canceled += OnMove;
                 
+                inputActions.Gameplay.Look.started += OnLook;
                 inputActions.Gameplay.Look.performed += OnLook;
                 inputActions.Gameplay.Look.canceled += OnLook;
                 
                 inputActions.Gameplay.Sprint.performed += ctx => OnSprint(true);
                 inputActions.Gameplay.Sprint.canceled += ctx => OnSprint(false);
 
+                inputActions.Gameplay.Lean.started += OnLean;
                 inputActions.Gameplay.Lean.performed += OnLean;
                 inputActions.Gameplay.Lean.canceled += OnLean;
                 
@@ -87,6 +89,7 @@ namespace Woi.InputSystem
                 
                 inputActions.Gameplay.Move.performed -= OnMove;
                 inputActions.Gameplay.Move.canceled -= OnMove;
+                inputActions.Gameplay.Look.started -= OnLook;
                 inputActions.Gameplay.Look.performed -= OnLook;
                 inputActions.Gameplay.Look.canceled -= OnLook;
                 inputActions.Gameplay.Interact.performed -= OnInteract;
@@ -95,6 +98,7 @@ namespace Woi.InputSystem
                 inputActions.Gameplay.Sprint.performed -= ctx => OnSprint(true);
                 inputActions.Gameplay.Sprint.canceled -= ctx => OnSprint(false);
 
+                inputActions.Gameplay.Lean.started -= OnLean;
                 inputActions.Gameplay.Lean.performed -= OnLean;
                 inputActions.Gameplay.Lean.canceled -= OnLean;
 
@@ -142,7 +146,13 @@ namespace Woi.InputSystem
                     return;
                 }
 
-                onLeanInput?.Raise(ctx.ReadValue<float>());
+                float value = 0f;
+                if (ctx.started || ctx.performed)
+                {
+                    value = ctx.ReadValueAsButton() ? 1f : ctx.ReadValue<float>();
+                }
+
+                onLeanInput?.Raise(value);
             }
             
             private void OnInteract(InputAction.CallbackContext ctx)

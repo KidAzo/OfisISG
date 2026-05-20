@@ -60,6 +60,13 @@ namespace Woi.OfficeFire
 
             targetScenario.HandleAction(actionId);
 
+            if (actionId == "use_extinguisher" || actionId == "grab_extinguisher")
+            {
+                Debug.Log(
+                    $"[SelectableScenarioAction] '{actionId}' -> '{targetScenario.name}' ({targetScenario.GetType().Name})",
+                    this);
+            }
+
             if (onSelected != null)
             {
                 onSelected.Invoke();

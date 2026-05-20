@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using WOI.Modules.SDK;
 using Woi.UI.Announcements;
@@ -37,9 +39,26 @@ namespace Woi.OfficeFire
         [Min(0.5f)]
         private float defaultPopupDurationSeconds = 5f;
 
+        [Tooltip("When queue is off: hide/replace the visible popup before showing the next one.")]
         [SerializeField]
         private bool replaceCurrentPopup = true;
 
+        [Header("Queue")]
+        [Tooltip("When enabled, PlayVoiceLine calls are played one after another (audio + popup must finish).")]
+        [SerializeField]
+        private bool queueAnnouncements = true;
+
+        private readonly Queue<OfficeFireVoiceLineId> _pendingVoiceLines = new Queue<OfficeFireVoiceLineId>();
+
+        private int _playSession;
+        private bool _isProcessingQueue;
+        private bool _awaitingAudio;
+        private bool _awaitingPopup;
+
+        private Action _audioFinishedHandler;
+        private Action _popupHiddenHandler;
+
+        /// <summary>Enqueues (or plays immediately when queue is disabled).</summary>
         public void PlayVoiceLine(OfficeFireVoiceLineId voiceLineId)
         {
             if (voiceLineId == OfficeFireVoiceLineId.None)
@@ -53,6 +72,62 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            if (!queueAnnouncements)
+            {
+                StopCurrentAnnouncementInternal();
+                PlayVoiceLineNow(voiceLineId);
+                return;
+            }
+
+            _pendingVoiceLines.Enqueue(voiceLineId);
+
+            if (!_isProcessingQueue)
+            {
+                ProcessNextQueuedVoiceLine();
+            }
+        }
+
+        /// <summary>Stops the current announcement, clears the queue, and plays immediately.</summary>
+        public void PlayVoiceLineImmediate(OfficeFireVoiceLineId voiceLineId)
+        {
+            if (voiceLineId == OfficeFireVoiceLineId.None)
+            {
+                return;
+            }
+
+            if (database == null)
+            {
+                Debug.LogWarning("[OfficeFireVoiceLineContentPresenter] database is not assigned.", this);
+                return;
+            }
+
+            _pendingVoiceLines.Clear();
+            StopCurrentAnnouncementInternal();
+            PlayVoiceLineNow(voiceLineId);
+        }
+
+        public void ClearAnnouncementQueue()
+        {
+            _pendingVoiceLines.Clear();
+        }
+
+        private void ProcessNextQueuedVoiceLine()
+        {
+            if (_pendingVoiceLines.Count == 0)
+            {
+                _isProcessingQueue = false;
+                return;
+            }
+
+            _isProcessingQueue = true;
+            PlayVoiceLineNow(_pendingVoiceLines.Dequeue());
+        }
+
+        private void PlayVoiceLineNow(OfficeFireVoiceLineId voiceLineId)
+        {
+            _playSession++;
+            int session = _playSession;
+
             database.TryGetLocalizedSound(voiceLineId, out LocalizedSoundDefinition localizedSound);
             float popupDuration = OfficeFireAnnouncementAudioPlayback.EstimateDuration(localizedSound);
             if (popupDuration <= 0f)
@@ -60,18 +135,164 @@ namespace Woi.OfficeFire
                 popupDuration = defaultPopupDurationSeconds;
             }
 
-            if (TryResolvePopupTexts(voiceLineId, out string titleTr, out string bodyTr, out string titleEn, out string bodyEn))
+            bool hasPopup = TryResolvePopupTexts(
+                voiceLineId,
+                out string titleTr,
+                out string bodyTr,
+                out string titleEn,
+                out string bodyEn);
+
+            if (hasPopup)
             {
-                ShowAnnouncementPopup(titleTr, bodyTr, titleEn, bodyEn, popupDuration);
+                ShowAnnouncementPopup(titleTr, bodyTr, titleEn, bodyEn, popupDuration, replacePopup: !queueAnnouncements);
             }
 
-            if (localizedSound == null)
+            bool hasAudio = localizedSound != null;
+            if (hasAudio)
+            {
+                OfficeFireAnnouncementAudioPlayback.Play(announcementAudioAdapter, localizedSound);
+                Debug.Log($"[OfficeFire Voice] {voiceLineId}", this);
+            }
+
+            BeginCompletionTracking(session, hasAudio, hasPopup);
+        }
+
+        private void BeginCompletionTracking(int session, bool trackAudio, bool trackPopup)
+        {
+            ClearCompletionHandlers();
+
+            _awaitingAudio = trackAudio;
+            _awaitingPopup = trackPopup;
+
+            if (!_awaitingAudio && !_awaitingPopup)
+            {
+                OnCurrentVoiceLineFinished(session);
+                return;
+            }
+
+            if (_awaitingAudio)
+            {
+                WoiAnnouncementAudioAdapter adapter = OfficeFireAnnouncementAudioPlayback.ResolveAdapter(announcementAudioAdapter);
+                if (adapter == null)
+                {
+                    _awaitingAudio = false;
+                }
+                else
+                {
+                    _audioFinishedHandler = () =>
+                    {
+                        if (session != _playSession)
+                        {
+                            return;
+                        }
+
+                        _awaitingAudio = false;
+                        TryCompleteVoiceLine(session);
+                    };
+
+                    adapter.OnAnnouncementAudioFinished += _audioFinishedHandler;
+                }
+            }
+
+            if (_awaitingPopup)
+            {
+                ResolvePopupService();
+                if (popupService == null)
+                {
+                    _awaitingPopup = false;
+                }
+                else
+                {
+                    _popupHiddenHandler = () =>
+                    {
+                        if (session != _playSession)
+                        {
+                            return;
+                        }
+
+                        _awaitingPopup = false;
+                        TryCompleteVoiceLine(session);
+                    };
+
+                    popupService.OnPopupHidden += _popupHiddenHandler;
+                }
+            }
+
+            TryCompleteVoiceLine(session);
+        }
+
+        private void TryCompleteVoiceLine(int session)
+        {
+            if (session != _playSession)
             {
                 return;
             }
 
-            OfficeFireAnnouncementAudioPlayback.Play(announcementAudioAdapter, localizedSound);
-            Debug.Log($"[OfficeFire Voice] {voiceLineId}", this);
+            if (_awaitingAudio || _awaitingPopup)
+            {
+                return;
+            }
+
+            OnCurrentVoiceLineFinished(session);
+        }
+
+        private void OnCurrentVoiceLineFinished(int session)
+        {
+            if (session != _playSession)
+            {
+                return;
+            }
+
+            ClearCompletionHandlers();
+
+            if (!queueAnnouncements)
+            {
+                _isProcessingQueue = false;
+                return;
+            }
+
+            ProcessNextQueuedVoiceLine();
+        }
+
+        private void StopCurrentAnnouncementInternal()
+        {
+            _playSession++;
+            ClearCompletionHandlers();
+            OfficeFireAnnouncementAudioPlayback.Stop(announcementAudioAdapter);
+
+            ResolvePopupService();
+            if (popupService != null && popupService.IsVisible)
+            {
+                popupService.Hide();
+            }
+        }
+
+        private void ClearCompletionHandlers()
+        {
+            if (_audioFinishedHandler != null)
+            {
+                WoiAnnouncementAudioAdapter adapter = OfficeFireAnnouncementAudioPlayback.ResolveAdapter(announcementAudioAdapter);
+                if (adapter != null)
+                {
+                    adapter.OnAnnouncementAudioFinished -= _audioFinishedHandler;
+                }
+
+                _audioFinishedHandler = null;
+            }
+
+            if (_popupHiddenHandler != null)
+            {
+                ResolvePopupService();
+                if (popupService != null)
+                {
+                    popupService.OnPopupHidden -= _popupHiddenHandler;
+                }
+
+                _popupHiddenHandler = null;
+            }
+
+            _awaitingAudio = false;
+            _awaitingPopup = false;
         }
 
         private void ShowAnnouncementPopup(
@@ -79,7 +300,8 @@ namespace Woi.OfficeFire
             string bodyTr,
             string titleEn,
             string bodyEn,
-            float durationSeconds)
+            float durationSeconds,
+            bool replacePopup)
         {
             ResolvePopupService();
             if (popupService == null)
@@ -90,7 +312,7 @@ namespace Woi.OfficeFire
 
             float duration = Mathf.Max(0.5f, durationSeconds);
 
-            if (replaceCurrentPopup && popupService.IsVisible)
+            if (replacePopup && popupService.IsVisible)
             {
                 popupService.Hide();
             }
@@ -146,6 +368,13 @@ namespace Woi.OfficeFire
             bool hasTurkish = database.TryGetPopupTurkish(id, out titleTr, out bodyTr);
             bool hasEnglish = database.TryGetPopupEnglish(id, out titleEn, out bodyEn);
             return hasTurkish || hasEnglish;
+        }
+
+        private void OnDisable()
+        {
+            _pendingVoiceLines.Clear();
+            StopCurrentAnnouncementInternal();
+            _isProcessingQueue = false;
         }
     }
 }
