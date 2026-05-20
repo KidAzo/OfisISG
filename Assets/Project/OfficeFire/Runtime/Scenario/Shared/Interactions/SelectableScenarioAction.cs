@@ -38,6 +38,26 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            DispatchScenarioAction();
+        }
+
+        /// <summary>
+        /// Invokes <see cref="OfficeFireScenarioController.HandleAction"/> (e.g. from <see cref="SelectableDoor"/> onOpened).
+        /// </summary>
+        public void DispatchScenarioAction()
+        {
+            if (targetScenario == null)
+            {
+                Debug.LogWarning("[SelectableScenarioAction] targetScenario is not assigned.", this);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(actionId))
+            {
+                Debug.LogWarning("[SelectableScenarioAction] actionId is empty.", this);
+                return;
+            }
+
             targetScenario.HandleAction(actionId);
 
             if (onSelected != null)

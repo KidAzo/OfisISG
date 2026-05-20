@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using WoiUtils.AudioSystem;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -77,9 +78,9 @@ namespace Woi.OfficeFire
             return true;
         }
 
-        public bool TryGetVoiceClipTurkish(KitchenCafeVoiceId id, out AudioClip clip)
+        public bool TryGetLocalizedSound(KitchenCafeVoiceId id, out LocalizedSoundDefinition sound)
         {
-            clip = null;
+            sound = null;
             if (id == KitchenCafeVoiceId.None)
             {
                 return false;
@@ -91,49 +92,13 @@ namespace Woi.OfficeFire
                 return false;
             }
 
-            if (entry.Clip == null)
+            if (entry.Sound == null)
             {
-                Debug.LogWarning($"[KitchenCafeScenarioContentDatabase] Voice '{id}' has no LocalizedVoiceClip.", this);
+                Debug.LogWarning($"[KitchenCafeScenarioContentDatabase] Voice '{id}' has no LocalizedSoundDefinition.", this);
                 return false;
             }
 
-            clip = entry.Clip.GetTurkishClip();
-            if (clip == null)
-            {
-                Debug.LogWarning($"[KitchenCafeScenarioContentDatabase] Voice '{id}' has no Turkish AudioClip.", this);
-                return false;
-            }
-
-            return true;
-        }
-
-        public bool TryGetVoiceClipEnglish(KitchenCafeVoiceId id, out AudioClip clip)
-        {
-            clip = null;
-            if (id == KitchenCafeVoiceId.None)
-            {
-                return false;
-            }
-
-            if (!TryFindVoiceEntry(id, out KitchenCafeVoiceEntry entry))
-            {
-                Debug.LogWarning($"[KitchenCafeScenarioContentDatabase] Missing voice entry for id '{id}'.", this);
-                return false;
-            }
-
-            if (entry.Clip == null)
-            {
-                Debug.LogWarning($"[KitchenCafeScenarioContentDatabase] Voice '{id}' has no LocalizedVoiceClip.", this);
-                return false;
-            }
-
-            clip = entry.Clip.GetEnglishClip();
-            if (clip == null)
-            {
-                Debug.LogWarning($"[KitchenCafeScenarioContentDatabase] Voice '{id}' has no English AudioClip.", this);
-                return false;
-            }
-
+            sound = entry.Sound;
             return true;
         }
 
@@ -237,6 +202,13 @@ namespace Woi.OfficeFire
         }
 
 #if UNITY_EDITOR
+        public void EditorEnsureAllDefaults()
+        {
+            FillDefaultKitchenPopupEntries();
+            FillMissingKitchenVoiceEntries();
+            FillMissingKitchenContentCueEntries();
+        }
+
         [ContextMenu("Fill Default Kitchen Popup Entries")]
         private void FillDefaultKitchenPopupEntries()
         {
@@ -294,7 +266,7 @@ namespace Woi.OfficeFire
                 }
 
                 voiceEntries.Add(
-                    new KitchenCafeVoiceEntry { Id = id, Clip = new LocalizedVoiceClip() });
+                    new KitchenCafeVoiceEntry { Id = id });
             }
 
             EditorUtility.SetDirty(this);

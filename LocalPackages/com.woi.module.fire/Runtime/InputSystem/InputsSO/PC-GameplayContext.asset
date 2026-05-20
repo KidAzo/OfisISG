@@ -20,6 +20,7 @@ MonoBehaviour:
   onJumpInput: {fileID: 11400000, guid: 2871ad1e0407772429d48be0cf5ba53d, type: 2}
   onFireInput: {fileID: 11400000, guid: 6ff6c6115bd7b30498180dfaa9c38922, type: 2}
   onSprintInput: {fileID: 11400000, guid: acf8340f9c532a84a83ef13972d19be1, type: 2}
+  onLeanInput: {fileID: 11400000, guid: 7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b, type: 2}
   onInteractInput: {fileID: 11400000, guid: 1d9a287af48119a45888db3e7bba417a, type: 2}
   onGameplayFinishedInput: {fileID: 11400000, guid: 85edb64f0104e784c8466e114b2e0ba1, type: 2}
   preOnGameplayFinishedInput: {fileID: 11400000, guid: d646fcbe570b51a45b5a96283989d63c, type: 2}

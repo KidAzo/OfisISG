@@ -10,6 +10,7 @@ namespace Woi.OfficeFire
         {
             public const string NoticeSmoke = "notice_smoke";
             public const string OpenArchiveDoor = "open_archive_door";
+            public const string EnteredArchiveRoom = "entered_archive_room";
             public const string UseWater = "use_water";
             public const string PressAlarm = "press_alarm";
             public const string GrabExtinguisher = "grab_extinguisher";
@@ -17,6 +18,8 @@ namespace Woi.OfficeFire
             public const string UseExtinguisher = "use_extinguisher";
             public const string ExitArchiveRoom = "exit_archive_room";
             public const string ReachAssemblyArea = "reach_assembly_area";
+            public const string PlayerLeaned = "player_leaned";
+            public const string ElevatorProximity = "elevator_proximity";
         }
 
         [Header("Archive — hooks")]
@@ -49,12 +52,32 @@ namespace Woi.OfficeFire
         [Min(0f)]
         private float delayBeforeSmokeNoticeSeconds = 3f;
 
+        [Header("Archive — smoke notice reminders")]
+        [Tooltip("After entering WaitingForSmokeNotice, wait this long before the first reminder if NoticeSmoke was not performed.")]
+        [SerializeField]
+        [Min(0f)]
+        private float delayBeforeSmokeNoticeReminderSeconds = 30f;
+
+        [Tooltip("Seconds between reminders while still waiting for NoticeSmoke.")]
+        [SerializeField]
+        [Min(0.1f)]
+        private float smokeNoticeReminderIntervalSeconds = 15f;
+
+        [SerializeField]
+        private OfficeFireVoiceLineId smokeNoticeReminderVoiceLine = OfficeFireVoiceLineId.ArchiveIncidentDetected;
+
+        [Header("Archive — evacuation NPCs")]
+        [SerializeField]
+        private EvacuationNpcDirector evacuationNpcDirector;
+
         [Header("Archive — state machine")]
         [SerializeField]
         private ArchiveRoomStateChangedEvent onArchiveStateChanged = new ArchiveRoomStateChangedEvent();
 
         private ScenarioStateMachine<ArchiveRoomState> _stateMachine;
         private Coroutine _smokeNoticeDelayRoutine;
+        private Coroutine _smokeNoticeReminderRoutine;
+        private bool _isWaitingForNoticeSmokeAction;
 
         public override OfficeFireScenarioId ScenarioId => OfficeFireScenarioId.ArchiveRoom;
 
@@ -66,8 +89,7 @@ namespace Woi.OfficeFire
             _stateMachine.RegisterState(new ArchiveNoneState(this));
             _stateMachine.RegisterState(new ArchiveWaitingForSmokeNoticeState(this));
             _stateMachine.RegisterState(new ArchiveWaitingForDoorOpenState(this));
-            _stateMachine.RegisterState(new ArchiveWaitingForAlarmState(this));
-            _stateMachine.RegisterState(new ArchiveWaitingForPowerCutState(this));
+            _stateMachine.RegisterState(new ArchiveInterventionState(this));
             _stateMachine.RegisterState(new ArchiveWaitingForExtinguisherUseState(this));
             _stateMachine.RegisterState(new ArchiveWaitingForExitRoomState(this));
             _stateMachine.RegisterState(new ArchiveWaitingForAssemblyAreaState(this));
@@ -78,6 +100,7 @@ namespace Woi.OfficeFire
         private void OnDestroy()
         {
             CancelSmokeNoticeDelay();
+            CancelSmokeNoticeReminder();
             if (_stateMachine != null)
             {
                 _stateMachine.StateChanged -= HandleArchiveStateChanged;
@@ -169,6 +192,26 @@ namespace Woi.OfficeFire
             }
         }
 
+        public void StartEvacuationNpcs()
+        {
+            if (evacuationNpcDirector == null)
+            {
+                return;
+            }
+
+            evacuationNpcDirector.StartEvacuation();
+        }
+
+        public void StopEvacuationNpcs()
+        {
+            if (evacuationNpcDirector == null)
+            {
+                return;
+            }
+
+            evacuationNpcDirector.StopEvacuation();
+        }
+
         public override void StartScenario()
         {
             base.StartScenario();
@@ -178,6 +221,8 @@ namespace Woi.OfficeFire
         public override void NotifyDeselected()
         {
             CancelSmokeNoticeDelay();
+            CancelSmokeNoticeReminder();
+            StopEvacuationNpcs();
             base.NotifyDeselected();
             if (_stateMachine != null)
             {
@@ -203,6 +248,8 @@ namespace Woi.OfficeFire
         protected override void ResetRuntimeState()
         {
             CancelSmokeNoticeDelay();
+            CancelSmokeNoticeReminder();
+            StopEvacuationNpcs();
             base.ResetRuntimeState();
             if (_stateMachine != null)
             {
@@ -273,6 +320,74 @@ namespace Woi.OfficeFire
             _smokeNoticeDelayRoutine = null;
         }
 
+        /// <summary>
+        /// True while <see cref="ArchiveRoomState.WaitingForSmokeNotice"/> is active and
+        /// <see cref="Actions.NoticeSmoke"/> has not been handled yet.
+        /// </summary>
+        public bool IsWaitingForNoticeSmokeAction()
+        {
+            return _isWaitingForNoticeSmokeAction;
+        }
+
+        public void BeginSmokeNoticeReminder()
+        {
+            CancelSmokeNoticeReminder();
+            _isWaitingForNoticeSmokeAction = true;
+            _smokeNoticeReminderRoutine = StartCoroutine(SmokeNoticeReminderRoutine());
+        }
+
+        public void CancelSmokeNoticeReminder()
+        {
+            _isWaitingForNoticeSmokeAction = false;
+
+            if (_smokeNoticeReminderRoutine == null)
+            {
+                return;
+            }
+
+            StopCoroutine(_smokeNoticeReminderRoutine);
+            _smokeNoticeReminderRoutine = null;
+        }
+
+        public void RemindNoticeSmoke()
+        {
+            if (!_isWaitingForNoticeSmokeAction)
+            {
+                return;
+            }
+
+            if (smokeNoticeReminderVoiceLine != OfficeFireVoiceLineId.None)
+            {
+                PlayAnnouncement(smokeNoticeReminderVoiceLine);
+            }
+
+            Debug.Log("[ArchiveRoomScenarioController] NoticeSmoke reminder.", this);
+        }
+
+        private IEnumerator SmokeNoticeReminderRoutine()
+        {
+            if (delayBeforeSmokeNoticeReminderSeconds > 0f)
+            {
+                yield return new WaitForSeconds(delayBeforeSmokeNoticeReminderSeconds);
+            }
+
+            while (_isWaitingForNoticeSmokeAction)
+            {
+                if (!CanProcessActions() || CurrentState != ArchiveRoomState.WaitingForSmokeNotice)
+                {
+                    yield break;
+                }
+
+                if (!_isWaitingForNoticeSmokeAction)
+                {
+                    yield break;
+                }
+
+                RemindNoticeSmoke();
+                yield return new WaitForSeconds(smokeNoticeReminderIntervalSeconds);
+            }
+        }
+
         private void HandleArchiveStateChanged(ArchiveRoomState previous, ArchiveRoomState next)
         {
             Debug.Log($"[ArchiveRoomScenarioController] State {previous} -> {next}.", this);
@@ -320,6 +435,12 @@ namespace Woi.OfficeFire
             {
                 _archive.SetObjective(OfficeFireObjectiveId.CheckArchiveRoom);
                 _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveIncidentDetected);
+                _archive.BeginSmokeNoticeReminder();
+            }
+
+            public override void Exit()
+            {
+                _archive.CancelSmokeNoticeReminder();
             }
 
             public override void HandleAction(string actionId)
@@ -327,20 +448,24 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.NoticeSmoke:
+                        if (!_archive.IsWaitingForNoticeSmokeAction())
+                        {
+                            LogUnknownAction(actionId);
+                            return;
+                        }
+
+                        _archive.CancelSmokeNoticeReminder();
                         _archive.MarkReactionIfNeeded();
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.NoticedSmoke);
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.SmokeWarning);
                         _archive.InvokeSmokeNoticed();
                         _archive.ChangeState(ArchiveRoomState.WaitingForDoorOpen);
                         break;
-                    case Actions.OpenArchiveDoor:
-                        _archive.MarkReactionIfNeeded();
-                        _archive.RegisterCorrectAction(OfficeFireCorrectActionId.NoticedSmoke);
+                    case Actions.EnteredArchiveRoom:
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.OpenedArchiveDoor);
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveElectricalFireWarning);
-                        _archive.InvokeSmokeNoticed();
                         _archive.InvokeDoorOpened();
-                        _archive.ChangeState(ArchiveRoomState.WaitingForAlarm);
+                        _archive.ChangeState(ArchiveRoomState.Intervention);
                         break;
                     default:
                         LogUnknownAction(actionId);
@@ -370,11 +495,11 @@ namespace Woi.OfficeFire
             {
                 switch (actionId)
                 {
-                    case Actions.OpenArchiveDoor:
+                    case Actions.EnteredArchiveRoom:
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.OpenedArchiveDoor);
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveElectricalFireWarning);
                         _archive.InvokeDoorOpened();
-                        _archive.ChangeState(ArchiveRoomState.WaitingForAlarm);
+                        _archive.ChangeState(ArchiveRoomState.Intervention);
                         break;
                     case Actions.UseWater:
                         _archive.LogWaterIgnoredFireNotAccessible();
@@ -386,22 +511,34 @@ namespace Woi.OfficeFire
             }
         }
 
-        private sealed class ArchiveWaitingForAlarmState : ScenarioStateBase<ArchiveRoomState>
+        private sealed class ArchiveInterventionState : ScenarioStateBase<ArchiveRoomState>
         {
             private readonly ArchiveRoomScenarioController _archive;
+            bool _isLeaned = false;
 
-            public ArchiveWaitingForAlarmState(ArchiveRoomScenarioController controller)
+            public ArchiveInterventionState(ArchiveRoomScenarioController controller)
                 : base(controller)
             {
                 _archive = controller;
             }
 
-            public override ArchiveRoomState StateId => ArchiveRoomState.WaitingForAlarm;
+            public override ArchiveRoomState StateId => ArchiveRoomState.Intervention;
 
             public override void Enter()
             {
                 _archive.SetObjective(OfficeFireObjectiveId.PressArchiveAlarm);
                 _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
+                NotLeaned();
+            }
+
+            void NotLeaned()
+            {
+               //Do something
+            }
+
+            void Leaned()
+            {
+                //Do something
             }
 
             public override void HandleAction(string actionId)
@@ -410,8 +547,12 @@ namespace Woi.OfficeFire
                 {
                     case Actions.PressAlarm:
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
+                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
                         _archive.InvokeAlarmActivated();
-                        _archive.ChangeState(ArchiveRoomState.WaitingForPowerCut);
+                        break;
+                    case Actions.PlayerLeaned:
+                        _archive.RegisterCorrectAction(OfficeFireCorrectActionId.LeanedCorrectly);
+                        Leaned();
                         break;
                     case Actions.UseWater:
                         _archive.RegisterMistake(OfficeFireMistakeId.UsedWaterOnElectricalFire);
@@ -425,51 +566,6 @@ namespace Woi.OfficeFire
                     case Actions.UseExtinguisher:
                         _archive.RegisterMistake(OfficeFireMistakeId.UsedExtinguisherBeforeAlarm);
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
-                        break;
-                    default:
-                        LogUnknownAction(actionId);
-                        break;
-                }
-            }
-        }
-
-        private sealed class ArchiveWaitingForPowerCutState : ScenarioStateBase<ArchiveRoomState>
-        {
-            private readonly ArchiveRoomScenarioController _archive;
-
-            public ArchiveWaitingForPowerCutState(ArchiveRoomScenarioController controller)
-                : base(controller)
-            {
-                _archive = controller;
-            }
-
-            public override ArchiveRoomState StateId => ArchiveRoomState.WaitingForPowerCut;
-
-            public override void Enter()
-            {
-                _archive.SetObjective(OfficeFireObjectiveId.CutArchivePower);
-                _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveCutPowerInstruction);
-            }
-
-            public override void HandleAction(string actionId)
-            {
-                switch (actionId)
-                {
-                    case Actions.PullPowerPlug:
-                        _archive.RegisterCorrectAction(OfficeFireCorrectActionId.CutPower);
-                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePowerCutSuccess);
-                        _archive.InvokePowerCut();
-                        _archive.ChangeState(ArchiveRoomState.WaitingForExtinguisherUse);
-                        break;
-                    case Actions.UseWater:
-                        _archive.RegisterMistake(OfficeFireMistakeId.UsedWaterOnElectricalFire);
-                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveWaterMistake);
-                        _archive.InvokeWaterMistake();
-                        break;
-                    case Actions.GrabExtinguisher:
-                    case Actions.UseExtinguisher:
-                        _archive.RegisterMistake(OfficeFireMistakeId.UsedExtinguisherBeforePowerCut);
-                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveCutPowerInstruction);
                         break;
                     default:
                         LogUnknownAction(actionId);
@@ -488,7 +584,7 @@ namespace Woi.OfficeFire
                 _archive = controller;
             }
 
-            public override ArchiveRoomState StateId => ArchiveRoomState.WaitingForExtinguisherUse;
+            public override ArchiveRoomState StateId => ArchiveRoomState.Completed;
 
             public override void Enter()
             {
@@ -544,6 +640,9 @@ namespace Woi.OfficeFire
                     case Actions.ExitArchiveRoom:
                         _archive.ChangeState(ArchiveRoomState.WaitingForAssemblyArea);
                         break;
+                    case Actions.ElevatorProximity:
+                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.DoNotUseElevator);
+                        break;
                     default:
                         LogUnknownAction(actionId);
                         break;
@@ -568,6 +667,12 @@ namespace Woi.OfficeFire
                 _archive.SetObjective(OfficeFireObjectiveId.GoToAssemblyArea);
                 _archive.PlayAnnouncement(OfficeFireVoiceLineId.EvacuationInstruction);
                 _archive.InvokeEvacuationStarted();
+                _archive.StartEvacuationNpcs();
+            }
+
+            public override void Exit()
+            {
+                _archive.StopEvacuationNpcs();
             }
 
             public override void HandleAction(string actionId)

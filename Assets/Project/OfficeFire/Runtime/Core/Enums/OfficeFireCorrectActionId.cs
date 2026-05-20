@@ -24,5 +24,6 @@ namespace Woi.OfficeFire
         TurnedOffStove = 302,
         ControlledKitchenFire = 303,
         UsedExtinguisherControlled = 304,
+        LeanedCorrectly = 305,
     }
 }

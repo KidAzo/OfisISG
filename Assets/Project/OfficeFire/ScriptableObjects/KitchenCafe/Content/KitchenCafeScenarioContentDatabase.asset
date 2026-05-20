@@ -1,0 +1,316 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 874aaba05806a514fbb622fab6a31414, type: 3}
+  m_Name: KitchenCafeScenarioContentDatabase
+  m_EditorClassIdentifier: Woi.OfficeFire.KitchenCafe::Woi.OfficeFire.KitchenCafeScenarioContentDatabase
+  popupEntries:
+  - Id: 1
+    Text:
+      TurkishTitle: "Yang\u0131n Riski Alg\u0131land\u0131"
+      TurkishBody: "Mutfak alan\u0131nda ola\u011Fand\u0131\u015F\u0131 duman ve
+        alev belirtileri var. Alan\u0131 kontrol edin."
+      EnglishTitle: Fire Risk Detected
+      EnglishBody: Unusual smoke and flame signs were detected in the kitchen area.
+        Check the area.
+  - Id: 2
+    Text:
+      TurkishTitle: "Mutfak Alan\u0131n\u0131 Kontrol Et"
+      TurkishBody: "Mutfakta yang\u0131n riski alg\u0131land\u0131. G\xFCvenli \u015Fekilde
+        mutfak alan\u0131na ilerleyin."
+      EnglishTitle: Check the Kitchen Area
+      EnglishBody: A fire risk was detected in the kitchen. Move to the kitchen area
+        safely.
+  - Id: 3
+    Text:
+      TurkishTitle: "Do\u011Fru M\xFCdahaleyi Se\xE7"
+      TurkishBody: "Ya\u011F yang\u0131nlar\u0131nda yanl\u0131\u015F m\xFCdahale
+        yang\u0131n\u0131 b\xFCy\xFCtebilir. Uygun ekipman\u0131 se\xE7in."
+      EnglishTitle: Choose the Correct Response
+      EnglishBody: Wrong actions can make oil fires worse. Choose the proper equipment.
+  - Id: 4
+    Text:
+      TurkishTitle: "Hatal\u0131 M\xFCdahale"
+      TurkishBody: "Ya\u011F yang\u0131nlar\u0131nda su kullan\u0131lmaz. Su, yanan
+        ya\u011F\u0131n s\u0131\xE7ramas\u0131na ve yang\u0131n\u0131n b\xFCy\xFCmesine
+        neden olabilir."
+      EnglishTitle: Wrong Action
+      EnglishBody: Do not use water on oil fires. Water can spread burning oil and
+        intensify the fire.
+  - Id: 5
+    Text:
+      TurkishTitle: "Hatal\u0131 M\xFCdahale"
+      TurkishBody: "Yanan tavay\u0131 ta\u015F\u0131mak ya\u011F\u0131n d\xF6k\xFClmesine
+        ve yang\u0131n\u0131n yay\u0131lmas\u0131na neden olabilir."
+      EnglishTitle: Wrong Action
+      EnglishBody: Moving a burning pan can spill hot oil and spread the fire.
+  - Id: 6
+    Text:
+      TurkishTitle: Dikkat
+      TurkishBody: "K\xFC\xE7\xFCk ya\u011F yang\u0131nlar\u0131nda \xF6ncelikli
+        y\xF6ntem yang\u0131n battaniyesiyle oksijen temas\u0131n\u0131 kesmektir."
+      EnglishTitle: Warning
+      EnglishBody: For small oil fires, the preferred method is to cut off oxygen
+        using a fire blanket.
+  - Id: 7
+    Text:
+      TurkishTitle: "Yang\u0131n Battaniyesi"
+      TurkishBody: "Battaniyeyi dikkatlice a\xE7\u0131n ve tavay\u0131 tamamen \xF6rtecek
+        \u015Fekilde yerle\u015Ftirin."
+      EnglishTitle: Fire Blanket
+      EnglishBody: Open the blanket carefully and place it so it fully covers the
+        pan.
+  - Id: 8
+    Text:
+      TurkishTitle: "Battaniye Ba\u015Far\u0131s\u0131z"
+      TurkishBody: "Battaniye tavay\u0131 tamamen kapatmad\u0131. Yang\u0131n b\xFCy\xFCyor."
+      EnglishTitle: Blanket Failed
+      EnglishBody: The blanket did not fully cover the pan. The fire is growing.
+  - Id: 9
+    Text:
+      TurkishTitle: "Do\u011Fru M\xFCdahale"
+      TurkishBody: "Battaniye alevin oksijenle temas\u0131n\u0131 kesti. Yang\u0131n
+        kontrol alt\u0131na al\u0131n\u0131yor."
+      EnglishTitle: Correct Response
+      EnglishBody: The blanket cut off the oxygen supply. The fire is being controlled.
+  - Id: 10
+    Text:
+      TurkishTitle: "Oca\u011F\u0131 Kapat"
+      TurkishBody: "Yang\u0131n kontrol alt\u0131na al\u0131nd\u0131. \u015Eimdi
+        oca\u011F\u0131n enerji kayna\u011F\u0131n\u0131 kapat\u0131n."
+      EnglishTitle: Turn Off the Stove
+      EnglishBody: The fire is under control. Now turn off the stove's energy source.
+  - Id: 11
+    Text:
+      TurkishTitle: "Yang\u0131n Kontrol Alt\u0131nda"
+      TurkishBody: "Do\u011Fru m\xFCdahale sayesinde yang\u0131n kontrol alt\u0131na
+        al\u0131nd\u0131."
+      EnglishTitle: Fire Controlled
+      EnglishBody: The fire was controlled thanks to the correct response.
+  - Id: 12
+    Text:
+      TurkishTitle: "Yang\u0131n B\xFCy\xFCyor"
+      TurkishBody: "Yang\u0131n kontrol alt\u0131na al\u0131namad\u0131. Alarm\u0131
+        aktive edin ve alan\u0131 tahliye edin."
+      EnglishTitle: Fire Is Spreading
+      EnglishBody: The fire could not be controlled. Activate the alarm and evacuate
+        the area.
+  - Id: 13
+    Text:
+      TurkishTitle: "Alarm\u0131 Aktive Et"
+      TurkishBody: "Yang\u0131n b\xFCy\xFCyor. \xC7\u0131k\u0131\u015Fa yak\u0131n
+        alarm butonunu kullan\u0131n."
+      EnglishTitle: Activate the Alarm
+      EnglishBody: The fire is spreading. Use the alarm button near the exit.
+  - Id: 14
+    Text:
+      TurkishTitle: Tahliye Et
+      TurkishBody: "Sakin olun ve en yak\u0131n g\xFCvenli \xE7\u0131k\u0131\u015Fa
+        ilerleyin."
+      EnglishTitle: Evacuate
+      EnglishBody: Stay calm and move toward the nearest safe exit.
+  - Id: 15
+    Text:
+      TurkishTitle: "Toplanma Alan\u0131na Git"
+      TurkishBody: "Binadan \xE7\u0131kt\u0131ktan sonra belirlenen toplanma alan\u0131na
+        ilerleyin."
+      EnglishTitle: Go to the Assembly Area
+      EnglishBody: After leaving the building, proceed to the designated assembly
+        area.
+  voiceEntries:
+  - Id: 1
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 2
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 3
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 4
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 5
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 6
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 7
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 8
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 9
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 10
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 11
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 12
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 13
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 14
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 15
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 16
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  - Id: 17
+    Clip:
+      TurkishClip: {fileID: 0}
+      EnglishClip: {fileID: 0}
+  cueEntries:
+  - Id: 1
+    PopupId: 1
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 1
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 2
+    PopupId: 2
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 2
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 3
+    PopupId: 0
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 3
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 4
+    PopupId: 3
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 4
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 5
+    PopupId: 4
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 5
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 6
+    PopupId: 5
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 6
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 7
+    PopupId: 6
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 7
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 8
+    PopupId: 7
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 8
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 9
+    PopupId: 8
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 9
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 10
+    PopupId: 9
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 10
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 11
+    PopupId: 10
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 11
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 12
+    PopupId: 11
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 12
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 13
+    PopupId: 12
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 13
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 14
+    PopupId: 13
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 14
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 15
+    PopupId: 14
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 15
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 16
+    PopupId: 15
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 16
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1
+  - Id: 17
+    PopupId: 0
+    PopupDurationMode: 0
+    CustomPopupDuration: 3
+    VoiceId: 17
+    StopPreviousVoice: 1
+    ClosePreviousPopup: 1

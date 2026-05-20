@@ -15,6 +15,7 @@ namespace Woi.InputSystem
             [SerializeField] private ScriptableEventBool onJumpInput;
             [SerializeField] private ScriptableEventBool onFireInput;
             [SerializeField] private ScriptableEventBool onSprintInput;
+            [SerializeField] private ScriptableEventFloat onLeanInput;
             [SerializeField] private ScriptableEventNoParam onInteractInput;
             [SerializeField] private ScriptableEventNoParam onGameplayFinishedInput;
             [SerializeField] private ScriptableEventNoParam preOnGameplayFinishedInput;
@@ -34,6 +35,7 @@ namespace Woi.InputSystem
             private bool jumpEnabled = true;
             private bool fireEnabled = true;
             private bool sprintEnabled = true;
+            private bool leanEnabled = true;
             private bool interactEnabled = true;
             private bool equipEnabled = true;
             private bool dropEnabled = true;
@@ -61,6 +63,9 @@ namespace Woi.InputSystem
                 
                 inputActions.Gameplay.Sprint.performed += ctx => OnSprint(true);
                 inputActions.Gameplay.Sprint.canceled += ctx => OnSprint(false);
+
+                inputActions.Gameplay.Lean.performed += OnLean;
+                inputActions.Gameplay.Lean.canceled += OnLean;
                 
                 inputActions.Gameplay.Interact.performed += OnInteract;
                 
@@ -89,6 +94,9 @@ namespace Woi.InputSystem
 
                 inputActions.Gameplay.Sprint.performed -= ctx => OnSprint(true);
                 inputActions.Gameplay.Sprint.canceled -= ctx => OnSprint(false);
+
+                inputActions.Gameplay.Lean.performed -= OnLean;
+                inputActions.Gameplay.Lean.canceled -= OnLean;
 
                 inputActions.Gameplay.Fire.performed -= ctx => OnFire(true);
                 inputActions.Gameplay.Fire.canceled -= ctx => OnFire(false);
@@ -124,6 +132,17 @@ namespace Woi.InputSystem
             private void OnSprint(bool isPressed)
             {
                 if (sprintEnabled) onSprintInput?.Raise(isPressed);
+            }
+
+            private void OnLean(InputAction.CallbackContext ctx)
+            {
+                if (!leanEnabled)
+                {
+                    onLeanInput?.Raise(0f);
+                    return;
+                }
+
+                onLeanInput?.Raise(ctx.ReadValue<float>());
             }
             
             private void OnInteract(InputAction.CallbackContext ctx)
@@ -173,6 +192,15 @@ namespace Woi.InputSystem
             public void SetJumpEnabled(bool enabled) => jumpEnabled = enabled;
             public void SetFireEnabled(bool enabled) => fireEnabled = enabled;
             public void SetSprintEnabled(bool enabled) => sprintEnabled = enabled;
+            public void SetLeanEnabled(bool enabled)
+            {
+                leanEnabled = enabled;
+                if (!enabled)
+                {
+                    onLeanInput?.Raise(0f);
+                }
+            }
+
             public void SetInteractEnabled(bool enabled) => interactEnabled = enabled;
             public void SetEquipEnabled(bool enabled) => equipEnabled = enabled;
             public void SetDropEnabled(bool enabled) => dropEnabled = enabled;
@@ -185,6 +213,7 @@ namespace Woi.InputSystem
                 jumpEnabled = true;
                 fireEnabled = true;
                 sprintEnabled = true;
+                leanEnabled = true;
                 interactEnabled = true;
                 equipEnabled = true;
                 dropEnabled = true;
@@ -198,12 +227,14 @@ namespace Woi.InputSystem
                 jumpEnabled = false;
                 fireEnabled = false;
                 sprintEnabled = false;
+                leanEnabled = false;
                 interactEnabled = false;
                 equipEnabled = false;
                 dropEnabled = false;
                 pinPullingEnabled = false;
                 onMoveInput?.Raise(Vector2.zero);
                 onLookInput?.Raise(Vector2.zero);
+                onLeanInput?.Raise(0f);
             }
         }
 

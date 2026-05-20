@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="AnnouncementPopup.uss" />
+    <!-- Names must stay in sync with PopupService.TryBind -->
+    <ui:VisualElement name="popup-service-root" picking-mode="Ignore" class="popup-service-root screen-container">
+        <ui:VisualElement name="popup-backdrop" class="popup-backdrop" picking-mode="Position" />
+        <ui:VisualElement name="popup-anchor-wrap" class="popup-anchor-wrap anchor-top-right notification-container">
+            <ui:VisualElement name="popup-panel" class="popup-panel frosted-glass-card popup--info">
+                <ui:VisualElement class="popup-main-row">
+                    <ui:VisualElement name="popup-icon-wrap" class="popup-icon-wrap icon-wrapper" style="display: none;">
+                        <ui:Image name="popup-icon" class="popup-icon" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="popup-text-stack text-content">
+                        <ui:Label name="popup-title" class="popup-title notification-title text-white" text="Title" />
+                        <ui:Label name="popup-message" class="popup-message notification-message text-gray" text="Message" />
+                    </ui:VisualElement>
+                    <ui:Button name="popup-close" class="popup-close" text="✕" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

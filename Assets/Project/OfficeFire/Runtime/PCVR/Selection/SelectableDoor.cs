@@ -100,6 +100,26 @@ namespace Woi.OfficeFire
             }
         }
 
+        public void AddOpenedListener(UnityAction listener)
+        {
+            if (listener == null || onOpened == null)
+            {
+                return;
+            }
+
+            onOpened.AddListener(listener);
+        }
+
+        public void RemoveOpenedListener(UnityAction listener)
+        {
+            if (listener == null || onOpened == null)
+            {
+                return;
+            }
+
+            onOpened.RemoveListener(listener);
+        }
+
         public void Select(SelectionContext context)
         {
             if (!isSelectable)

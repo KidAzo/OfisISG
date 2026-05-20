@@ -1,0 +1,225 @@
+/* Frosted-glass notification card + PopupService hooks (AnnouncementPopup.uxml) */
+
+/* ── Full-screen pickup root ─────────────────────────────────────────── */
+
+.popup-service-root.screen-container {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* World-space VR hover (ExtinguisherHoverVrWorldPopupHost): tight panel — only frosted card area, centered on UIDocument pivot. */
+.popup-service-root.vr-world-compact {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* Override PC absolute corner layout: card sits in normal flow, centered in the (small) world panel. */
+.popup-service-root.vr-world-compact > .popup-anchor-wrap.vr-world-anchor {
+    position: relative;
+    left: auto;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    translate: none;
+}
+
+.popup-backdrop {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(8, 10, 14, 0.55);
+}
+
+/* Sağ üst bildirim alanı */
+.notification-container {
+    width: 320px;
+    flex-direction: column;
+}
+
+.popup-anchor-wrap {
+    position: absolute;
+}
+
+.anchor-top-right {
+    top: 32px;
+    right: 32px;
+}
+
+.anchor-top-center {
+    top: 32px;
+    left: 50%;
+    translate: -50% 0;
+}
+
+.anchor-bottom-center {
+    bottom: 36px;
+    left: 50%;
+    translate: -50% 0;
+}
+
+.anchor-center {
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+}
+
+/* ── Panel: same family as LIVE TELEMETRY — dark charcoal / brown glass ─── */
+
+.popup-panel.frosted-glass-card {
+    /* Dark semi-transparent panel (warm charcoal); reads like telemetry HUD over gameplay */
+    background-color: rgba(32, 28, 26, 0.78);
+    border-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    min-width: 0;
+    max-width: 100%;
+    flex-direction: column;
+}
+
+/* Hata / yanlış tüp — kart gövdesi kırmızı tonlu (ikon sınıfları ayrıca eklenir) */
+.popup-panel.frosted-glass-card.popup--error {
+    background-color: rgba(72, 18, 22, 0.92);
+    border-color: rgba(252, 165, 165, 0.5);
+}
+
+/* Başarı / yangın söndü — kart gövdesi yeşil tonlu */
+.popup-panel.frosted-glass-card.popup--success {
+    background-color: rgba(14, 52, 38, 0.92);
+    border-color: rgba(52, 211, 153, 0.48);
+}
+
+.popup-main-row {
+    flex-direction: row;
+    align-items: flex-start;
+    flex-grow: 1;
+}
+
+.popup-text-stack.text-content {
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    margin-right: 8px;
+    white-space: normal;
+}
+
+/* İkon kutusu — sprite yokken gizlenir (PopupService). Tür renği panel sınıfından gelir */
+.popup-icon-wrap.icon-wrapper {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    justify-content: center;
+    align-items: center;
+    margin-right: 16px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    border-width: 1px;
+    background-color: rgba(0, 0, 0, 0.22);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.popup-icon {
+    width: 18px;
+    height: 18px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* Tür renkleri (tik grafiği gerekmez — atanan sprite veya boş kutu tonu) */
+.popup--info .popup-icon-wrap.icon-wrapper {
+    background-color: rgba(59, 130, 246, 0.18);
+    border-color: rgba(59, 130, 246, 0.35);
+}
+
+.popup--warning .popup-icon-wrap.icon-wrapper {
+    background-color: rgba(245, 158, 11, 0.2);
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
+.popup--error .popup-icon-wrap.icon-wrapper {
+    background-color: rgba(239, 68, 68, 0.18);
+    border-color: rgba(239, 68, 68, 0.35);
+}
+
+.popup--success .popup-icon-wrap.icon-wrapper {
+    background-color: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.popup--training .popup-icon-wrap.icon-wrapper {
+    background-color: rgba(168, 85, 247, 0.2);
+    border-color: rgba(168, 85, 247, 0.35);
+}
+
+.popup--success .popup-icon {
+    -unity-background-image-tint-color: rgb(74, 222, 128);
+}
+
+.popup--info .popup-icon {
+    -unity-background-image-tint-color: rgb(147, 197, 253);
+}
+
+.popup--warning .popup-icon {
+    -unity-background-image-tint-color: rgb(251, 191, 36);
+}
+
+.popup--error .popup-icon {
+    -unity-background-image-tint-color: rgb(252, 165, 165);
+}
+
+.popup--training .popup-icon {
+    -unity-background-image-tint-color: rgb(216, 180, 254);
+}
+
+/* Metin */
+.popup-title.notification-title {
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-bottom: 4px;
+    padding: 0;
+    letter-spacing: -0.5px;
+    white-space: normal;
+}
+
+.popup-message.notification-message {
+    font-size: 12px;
+    white-space: normal;
+    padding: 0;
+    -unity-line-height: 16px;
+}
+
+.text-white {
+    color: rgb(255, 255, 255);
+}
+
+.text-gray {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.popup-close {
+    min-width: 28px;
+    height: 28px;
+    padding: 0;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-left: 4px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.28);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 13px;
+}

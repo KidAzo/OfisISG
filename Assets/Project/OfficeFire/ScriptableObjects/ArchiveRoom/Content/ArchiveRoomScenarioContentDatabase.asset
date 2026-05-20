@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93967ea0d7a94f409e961fbac1a4caf5, type: 3}
+  m_Name: ArchiveRoomScenarioContentDatabase
+  m_EditorClassIdentifier: Woi.OfficeFire.Core::Woi.OfficeFire.OfficeFireVoiceLineContentDatabase
+  scenarioId: 1
+  entries:
+  - Id: 10
+    Popup:
+      TurkishTitle: "Duman alg\u0131land\u0131"
+      TurkishBody: "Alan\u0131 kontrol edin ve g\xFCvenlik talimatlar\u0131n\u0131
+        uygulay\u0131n."
+      EnglishTitle: Smoke detected
+      EnglishBody: Check the area and follow safety instructions.
+    Voice: {fileID: 11400000, guid: 7700df6ac45f878438502b0e29521b07, type: 2}
+  - Id: 11
+    Popup:
+      TurkishTitle: CrouchInSmoke
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: CrouchInSmoke
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}
+  - Id: 12
+    Popup:
+      TurkishTitle: AlarmInstruction
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: AlarmInstruction
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}
+  - Id: 13
+    Popup:
+      TurkishTitle: Tahliye
+      TurkishBody: "En yak\u0131n g\xFCvenli \xE7\u0131k\u0131\u015F\u0131 kullanarak
+        alan\u0131 terk edin."
+      EnglishTitle: Evacuate
+      EnglishBody: Leave the area using the nearest safe exit.
+    Voice: {fileID: 0}
+  - Id: 14
+    Popup:
+      TurkishTitle: DoNotUseElevator
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: DoNotUseElevator
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}
+  - Id: 15
+    Popup:
+      TurkishTitle: GoToAssemblyArea
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: GoToAssemblyArea
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}
+  - Id: 16
+    Popup:
+      TurkishTitle: ScenarioCompleted
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ScenarioCompleted
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}
+  - Id: 100
+    Popup:
+      TurkishTitle: "Ar\u015Fiv olay\u0131"
+      TurkishBody: "Ar\u015Fiv odas\u0131n\u0131 kontrol edin."
+      EnglishTitle: Archive incident
+      EnglishBody: Inspect the archive room.
+    Voice: {fileID: 0}
+  - Id: 101
+    Popup:
+      TurkishTitle: ArchiveElectricalFireWarning
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveElectricalFireWarning
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}
+  - Id: 102
+    Popup:
+      TurkishTitle: ArchiveWaterMistake
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveWaterMistake
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}
+  - Id: 103
+    Popup:
+      TurkishTitle: "Alarm\u0131 \xE7al\u0131\u015Ft\u0131r\u0131n"
+      TurkishBody: "Di\u011Fer i\u015Flemlerden \xF6nce yang\u0131n alarm\u0131n\u0131
+        devreye al\u0131n."
+      EnglishTitle: Press the alarm
+      EnglishBody: Activate the fire alarm before other actions.
+    Voice: {fileID: 0}
+  - Id: 104
+    Popup:
+      TurkishTitle: ArchiveCutPowerInstruction
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveCutPowerInstruction
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}
+  - Id: 105
+    Popup:
+      TurkishTitle: ArchivePowerCutSuccess
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchivePowerCutSuccess
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}
+  - Id: 106
+    Popup:
+      TurkishTitle: ArchiveUseExtinguisherInstruction
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveUseExtinguisherInstruction
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}
+  - Id: 107
+    Popup:
+      TurkishTitle: ArchiveFireControlled
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveFireControlled
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}
+  - Id: 108
+    Popup:
+      TurkishTitle: ArchiveFireNotControlledEvacuate
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveFireNotControlledEvacuate
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 0}

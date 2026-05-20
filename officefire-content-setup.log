@@ -1,0 +1,23 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-azoci" at "2026-05-19T22:02:53.9276651Z"
+Built from '6000.3/staging' branch; Version is '6000.3.11f1 (3000ef702840) revision 3145967'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26200) Professional' Language: 'tr' Physical Memory: 32652 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-05-19T22:02:53Z
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\6000.3.11f1\Editor\Unity.exe
+-batchmode
+-nographics
+-quit
+-projectPath
+C:\Users\azoci\Desktop\UnityProjects\OfisISG
+-executeMethod
+Woi.OfficeFire.Editor.OfficeFireScenarioContentSetup.CreateAndWireAll
+-logFile
+C:\Users\azoci\Desktop\UnityProjects\OfisISG\officefire-content-setup.log
+Successfully changed project path to: C:\Users\azoci\Desktop\UnityProjects\OfisISG
+C:/Users/azoci/Desktop/UnityProjects/OfisISG
+Exiting without the bug reporter. Application will terminate with return code 1
