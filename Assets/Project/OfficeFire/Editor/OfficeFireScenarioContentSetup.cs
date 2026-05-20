@@ -3,6 +3,7 @@ using UnityEditor.Events;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Woi.UI.Announcements;
 
 namespace Woi.OfficeFire.Editor
 {
@@ -145,7 +146,7 @@ namespace Woi.OfficeFire.Editor
             Undo.RecordObject(presenter, "Wire Kitchen Content Presenter");
             SerializedObject presenterSo = new SerializedObject(presenter);
             presenterSo.FindProperty("database").objectReferenceValue = kitchenDb;
-            EnsureAudioSource(presenter.gameObject, presenterSo.FindProperty("voiceAudioSource"));
+            EnsureAnnouncementAudioAdapter(presenter.gameObject, presenterSo.FindProperty("announcementAudioAdapter"));
             presenterSo.ApplyModifiedProperties();
 
             KitchenCafeScenarioController kitchenController = FindController<KitchenCafeScenarioController>(
@@ -155,9 +156,13 @@ namespace Woi.OfficeFire.Editor
                 return;
             }
 
-            UnityEventTools.AddPersistentListener(
-                kitchenController.OnContentCueRequested,
-                presenter.PlayContentCue);
+            if (!HasPersistentListener(kitchenController.OnContentCueRequested, presenter, nameof(KitchenCafeContentPresenter.PlayContentCue)))
+            {
+                UnityEventTools.AddPersistentListener(
+                    kitchenController.OnContentCueRequested,
+                    presenter.PlayContentCue);
+            }
+
             EditorUtility.SetDirty(kitchenController);
         }
 
@@ -184,7 +189,7 @@ namespace Woi.OfficeFire.Editor
             Undo.RecordObject(presenter, "Wire Voice Line Content Presenter");
             SerializedObject presenterSo = new SerializedObject(presenter);
             presenterSo.FindProperty("database").objectReferenceValue = database;
-            EnsureAudioSource(presenter.gameObject, presenterSo.FindProperty("voiceAudioSource"));
+            EnsureAnnouncementAudioAdapter(presenter.gameObject, presenterSo.FindProperty("announcementAudioAdapter"));
             presenterSo.ApplyModifiedProperties();
 
             if (controller == null)
@@ -192,28 +197,50 @@ namespace Woi.OfficeFire.Editor
                 return;
             }
 
-            UnityEventTools.AddPersistentListener(
-                controller.OnAnnouncementRequested,
-                presenter.PlayVoiceLine);
+            if (!HasPersistentListener(controller.OnAnnouncementRequested, presenter, nameof(OfficeFireVoiceLineContentPresenter.PlayVoiceLine)))
+            {
+                UnityEventTools.AddPersistentListener(
+                    controller.OnAnnouncementRequested,
+                    presenter.PlayVoiceLine);
+            }
+
             EditorUtility.SetDirty(controller);
         }
 
-        static void EnsureAudioSource(GameObject host, SerializedProperty audioProp)
+        static bool HasPersistentListener(UnityEngine.Events.UnityEventBase unityEvent, Object target, string methodName)
         {
-            if (audioProp == null || audioProp.objectReferenceValue != null)
+            if (unityEvent == null || target == null || string.IsNullOrEmpty(methodName))
+            {
+                return false;
+            }
+
+            int count = unityEvent.GetPersistentEventCount();
+            for (int i = 0; i < count; i++)
+            {
+                if (unityEvent.GetPersistentTarget(i) == target &&
+                    unityEvent.GetPersistentMethodName(i) == methodName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        static void EnsureAnnouncementAudioAdapter(GameObject host, SerializedProperty adapterProp)
+        {
+            if (adapterProp == null || adapterProp.objectReferenceValue != null)
             {
                 return;
             }
 
-            AudioSource source = host.GetComponent<AudioSource>();
-            if (source == null)
+            WoiAnnouncementAudioAdapter adapter = host.GetComponent<WoiAnnouncementAudioAdapter>();
+            if (adapter == null)
             {
-                source = Undo.AddComponent<AudioSource>(host);
-                source.playOnAwake = false;
-                source.spatialBlend = 0f;
+                adapter = Undo.AddComponent<WoiAnnouncementAudioAdapter>(host);
             }
 
-            audioProp.objectReferenceValue = source;
+            adapterProp.objectReferenceValue = adapter;
         }
 
         static TPresenter FindOrCreatePresenter<TPresenter>(Transform contentRoot, string objectName)

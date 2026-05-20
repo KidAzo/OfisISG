@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using WoiUtils.AudioSystem;
 
 namespace Woi.OfficeFire
 {
@@ -20,17 +21,12 @@ namespace Woi.OfficeFire
     }
 
     [Serializable]
-    public sealed class OfficeFireVoiceLineAudioClip
-    {
-        public AudioClip TurkishClip;
-        public AudioClip EnglishClip;
-    }
-
-    [Serializable]
     public sealed class OfficeFireVoiceLineEntry
     {
         public OfficeFireVoiceLineId Id;
         public OfficeFireVoiceLinePopupText Popup;
-        public OfficeFireVoiceLineAudioClip Voice;
+
+        [Tooltip("Woi Audio localized sound (EN + TR SoundDefinitions in one asset).")]
+        public LocalizedSoundDefinition Voice;
     }
 }

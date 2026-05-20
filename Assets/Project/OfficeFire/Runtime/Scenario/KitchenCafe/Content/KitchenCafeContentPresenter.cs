@@ -1,10 +1,12 @@
 using UnityEngine;
+using Woi.UI.Announcements;
+using WoiUtils.AudioSystem;
 
 namespace Woi.OfficeFire
 {
     /// <summary>
     /// Resolves kitchen/cafe scenario content from <see cref="KitchenCafeScenarioContentDatabase"/>
-    /// using <see cref="OfficeFireLanguageResolver"/> so this assembly does not reference localization SDK types.
+    /// using Woi Audio + popup placeholders.
     /// </summary>
     public sealed class KitchenCafeContentPresenter : MonoBehaviour
     {
@@ -17,9 +19,10 @@ namespace Woi.OfficeFire
         [SerializeField]
         private OfficeFireLanguageResolver languageResolver;
 
-        [Header("Audio Output")]
+        [Header("Woi Audio")]
+        [Tooltip("Optional. If empty, resolved from scene or added on this GameObject.")]
         [SerializeField]
-        private AudioSource voiceAudioSource;
+        private WoiAnnouncementAudioAdapter announcementAudioAdapter;
 
         private OfficeFireLanguageResolver ResolveLanguage()
         {
@@ -59,9 +62,9 @@ namespace Woi.OfficeFire
                 CloseCurrentPopupPlaceholder();
             }
 
-            if (cue.StopPreviousVoice && voiceAudioSource != null && voiceAudioSource.isPlaying)
+            if (cue.StopPreviousVoice)
             {
-                voiceAudioSource.Stop();
+                OfficeFireAnnouncementAudioPlayback.Stop(announcementAudioAdapter);
             }
 
             string title = string.Empty;
@@ -72,17 +75,17 @@ namespace Woi.OfficeFire
                 hasPopupText = TryResolvePopupText(cue.PopupId, out title, out body);
             }
 
-            AudioClip clip = null;
-            if (cue.VoiceId != KitchenCafeVoiceId.None)
-            {
-                TryResolveVoiceClip(cue.VoiceId, out clip);
-            }
-
+            database.TryGetLocalizedSound(cue.VoiceId, out LocalizedSoundDefinition localizedSound);
             float duration;
             switch (cue.PopupDurationMode)
             {
                 case PopupDurationMode.UseVoiceClipLength:
-                    duration = clip != null ? clip.length : Mathf.Max(0f, cue.CustomPopupDuration);
+                    duration = OfficeFireAnnouncementAudioPlayback.EstimateDuration(localizedSound);
+                    if (duration <= 0f)
+                    {
+                        duration = Mathf.Max(0f, cue.CustomPopupDuration);
+                    }
+
                     break;
                 case PopupDurationMode.CustomDuration:
                     duration = Mathf.Max(0f, cue.CustomPopupDuration);
@@ -97,10 +100,9 @@ namespace Woi.OfficeFire
                 ShowPopupPlaceholder(title, body, duration);
             }
 
-            if (voiceAudioSource != null && clip != null)
+            if (localizedSound != null)
             {
-                voiceAudioSource.clip = clip;
-                voiceAudioSource.Play();
+                OfficeFireAnnouncementAudioPlayback.Play(announcementAudioAdapter, localizedSound);
             }
 
             Debug.Log(
@@ -127,7 +129,6 @@ namespace Woi.OfficeFire
             }
 
             Debug.Log($"[Kitchen Popup] {title}\n{body}", this);
-            // TODO: Forward title/body to the existing project popup system here.
         }
 
         public void PlayVoice(KitchenCafeVoiceId voiceId)
@@ -143,24 +144,13 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            if (voiceAudioSource == null)
-            {
-                Debug.LogWarning("[KitchenCafeContentPresenter] voiceAudioSource is missing.", this);
-                return;
-            }
-
-            if (!TryResolveVoiceClip(voiceId, out AudioClip clip) || clip == null)
+            if (!database.TryGetLocalizedSound(voiceId, out LocalizedSoundDefinition localizedSound))
             {
                 return;
             }
 
-            if (voiceAudioSource.isPlaying)
-            {
-                voiceAudioSource.Stop();
-            }
-
-            voiceAudioSource.clip = clip;
-            voiceAudioSource.Play();
+            OfficeFireAnnouncementAudioPlayback.Stop(announcementAudioAdapter);
+            OfficeFireAnnouncementAudioPlayback.Play(announcementAudioAdapter, localizedSound);
             Debug.Log($"[Kitchen Voice] Playing: {voiceId}", this);
         }
 
@@ -195,27 +185,6 @@ namespace Woi.OfficeFire
             }
 
             return database.TryGetPopupTurkish(popupId, out title, out body);
-        }
-
-        private bool TryResolveVoiceClip(KitchenCafeVoiceId voiceId, out AudioClip clip)
-        {
-            clip = null;
-            if (database == null)
-            {
-                return false;
-            }
-
-            if (IsEnglish())
-            {
-                return database.TryGetVoiceClipEnglish(voiceId, out clip);
-            }
-
-            if (IsTurkish())
-            {
-                return database.TryGetVoiceClipTurkish(voiceId, out clip);
-            }
-
-            return database.TryGetVoiceClipTurkish(voiceId, out clip);
         }
 
         private bool IsTurkish()

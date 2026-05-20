@@ -21,9 +21,7 @@ MonoBehaviour:
         uygulay\u0131n."
       EnglishTitle: Smoke detected
       EnglishBody: Check the area and follow safety instructions.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 11400000, guid: 7700df6ac45f878438502b0e29521b07, type: 2}
   - Id: 11
     Popup:
       TurkishTitle: CrouchInSmoke
@@ -31,9 +29,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: CrouchInSmoke
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 12
     Popup:
       TurkishTitle: AlarmInstruction
@@ -41,9 +37,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: AlarmInstruction
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 13
     Popup:
       TurkishTitle: Tahliye
@@ -51,9 +45,7 @@ MonoBehaviour:
         alan\u0131 terk edin."
       EnglishTitle: Evacuate
       EnglishBody: Leave the area using the nearest safe exit.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 14
     Popup:
       TurkishTitle: DoNotUseElevator
@@ -61,9 +53,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: DoNotUseElevator
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 15
     Popup:
       TurkishTitle: GoToAssemblyArea
@@ -71,9 +61,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: GoToAssemblyArea
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 16
     Popup:
       TurkishTitle: ScenarioCompleted
@@ -81,18 +69,14 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ScenarioCompleted
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 100
     Popup:
       TurkishTitle: "Ar\u015Fiv olay\u0131"
       TurkishBody: "Ar\u015Fiv odas\u0131n\u0131 kontrol edin."
       EnglishTitle: Archive incident
       EnglishBody: Inspect the archive room.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 101
     Popup:
       TurkishTitle: ArchiveElectricalFireWarning
@@ -100,9 +84,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveElectricalFireWarning
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 102
     Popup:
       TurkishTitle: ArchiveWaterMistake
@@ -110,9 +92,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveWaterMistake
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 103
     Popup:
       TurkishTitle: "Alarm\u0131 \xE7al\u0131\u015Ft\u0131r\u0131n"
@@ -120,9 +100,7 @@ MonoBehaviour:
         devreye al\u0131n."
       EnglishTitle: Press the alarm
       EnglishBody: Activate the fire alarm before other actions.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 104
     Popup:
       TurkishTitle: ArchiveCutPowerInstruction
@@ -130,9 +108,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveCutPowerInstruction
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 105
     Popup:
       TurkishTitle: ArchivePowerCutSuccess
@@ -140,9 +116,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchivePowerCutSuccess
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 106
     Popup:
       TurkishTitle: ArchiveUseExtinguisherInstruction
@@ -150,9 +124,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveUseExtinguisherInstruction
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 107
     Popup:
       TurkishTitle: ArchiveFireControlled
@@ -160,9 +132,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveFireControlled
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 108
     Popup:
       TurkishTitle: ArchiveFireNotControlledEvacuate
@@ -170,6 +140,4 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveFireNotControlledEvacuate
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}

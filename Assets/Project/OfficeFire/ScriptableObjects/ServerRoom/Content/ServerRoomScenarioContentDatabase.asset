@@ -21,9 +21,7 @@ MonoBehaviour:
         uygulay\u0131n."
       EnglishTitle: Smoke detected
       EnglishBody: Check the area and follow safety instructions.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 11400000, guid: 7700df6ac45f878438502b0e29521b07, type: 2}
   - Id: 11
     Popup:
       TurkishTitle: CrouchInSmoke
@@ -31,9 +29,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: CrouchInSmoke
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 12
     Popup:
       TurkishTitle: AlarmInstruction
@@ -41,9 +37,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: AlarmInstruction
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 13
     Popup:
       TurkishTitle: Tahliye
@@ -51,9 +45,7 @@ MonoBehaviour:
         alan\u0131 terk edin."
       EnglishTitle: Evacuate
       EnglishBody: Leave the area using the nearest safe exit.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 14
     Popup:
       TurkishTitle: DoNotUseElevator
@@ -61,9 +53,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: DoNotUseElevator
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 15
     Popup:
       TurkishTitle: GoToAssemblyArea
@@ -71,9 +61,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: GoToAssemblyArea
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 16
     Popup:
       TurkishTitle: ScenarioCompleted
@@ -81,9 +69,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ScenarioCompleted
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 200
     Popup:
       TurkishTitle: ServerIncidentDetected
@@ -91,9 +77,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ServerIncidentDetected
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 201
     Popup:
       TurkishTitle: ServerElectronicFireWarning
@@ -101,27 +85,21 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ServerElectronicFireWarning
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 202
     Popup:
       TurkishTitle: "Su kullanmay\u0131n"
       TurkishBody: "Bu yang\u0131n t\xFCr\xFCnde su kullanmak g\xFCvenli de\u011Fildir."
       EnglishTitle: Do not use water
       EnglishBody: Water is not safe on this type of fire.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 203
     Popup:
       TurkishTitle: "Hen\xFCz s\xF6nd\xFCr\xFCc\xFC kullanmay\u0131n"
       TurkishBody: "\xD6nce bask\u0131lama sistemini devreye al\u0131n."
       EnglishTitle: Do not use extinguisher yet
       EnglishBody: Activate the suppression system first.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 204
     Popup:
       TurkishTitle: ServerSuppressionInstruction
@@ -129,9 +107,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ServerSuppressionInstruction
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 205
     Popup:
       TurkishTitle: ServerSuppressionCountdown
@@ -139,9 +115,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ServerSuppressionCountdown
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 206
     Popup:
       TurkishTitle: ServerGasActiveLeaveArea
@@ -149,9 +123,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ServerGasActiveLeaveArea
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}
   - Id: 207
     Popup:
       TurkishTitle: ServerFireControlled
@@ -159,6 +131,4 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ServerFireControlled
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Voice: {fileID: 0}

@@ -1,9 +1,13 @@
 using UnityEngine;
+using WOI.Modules.SDK;
+using Woi.UI.Announcements;
+using Woi.UI.Popups;
+using WoiUtils.AudioSystem;
 
 namespace Woi.OfficeFire
 {
     /// <summary>
-    /// Plays popup text + voice from <see cref="OfficeFireVoiceLineContentDatabase"/> for Archive / Server scenarios.
+    /// Plays popup text + Woi Audio voice from <see cref="OfficeFireVoiceLineContentDatabase"/> for Archive / Server scenarios.
     /// Wire <see cref="OfficeFireScenarioController.OnAnnouncementRequested"/> to <see cref="PlayVoiceLine"/>.
     /// </summary>
     [DisallowMultipleComponent]
@@ -16,8 +20,25 @@ namespace Woi.OfficeFire
         [SerializeField]
         private OfficeFireLanguageResolver languageResolver;
 
+        [Header("Woi Audio")]
+        [Tooltip("Optional. If empty, resolved from scene or added on this GameObject.")]
         [SerializeField]
-        private AudioSource voiceAudioSource;
+        private WoiAnnouncementAudioAdapter announcementAudioAdapter;
+
+        [Header("Popup")]
+        [Tooltip("Optional. If empty, resolved from ServiceLocator / scene PopupService.")]
+        [SerializeField]
+        private PopupService popupService;
+
+        [SerializeField]
+        private PopupType popupType = PopupType.Training;
+
+        [SerializeField]
+        [Min(0.5f)]
+        private float defaultPopupDurationSeconds = 5f;
+
+        [SerializeField]
+        private bool replaceCurrentPopup = true;
 
         public void PlayVoiceLine(OfficeFireVoiceLineId voiceLineId)
         {
@@ -32,78 +53,99 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            if (TryResolvePopupText(voiceLineId, out string title, out string body))
+            database.TryGetLocalizedSound(voiceLineId, out LocalizedSoundDefinition localizedSound);
+            float popupDuration = OfficeFireAnnouncementAudioPlayback.EstimateDuration(localizedSound);
+            if (popupDuration <= 0f)
             {
-                Debug.Log($"[OfficeFire Popup] {title}\n{body}", this);
+                popupDuration = defaultPopupDurationSeconds;
             }
 
-            if (voiceAudioSource == null)
+            if (TryResolvePopupTexts(voiceLineId, out string titleTr, out string bodyTr, out string titleEn, out string bodyEn))
             {
-                Debug.LogWarning("[OfficeFireVoiceLineContentPresenter] voiceAudioSource is not assigned.", this);
+                ShowAnnouncementPopup(titleTr, bodyTr, titleEn, bodyEn, popupDuration);
+            }
+
+            if (localizedSound == null)
+            {
                 return;
             }
 
-            if (!TryResolveVoiceClip(voiceLineId, out AudioClip clip) || clip == null)
-            {
-                return;
-            }
-
-            if (voiceAudioSource.isPlaying)
-            {
-                voiceAudioSource.Stop();
-            }
-
-            voiceAudioSource.clip = clip;
-            voiceAudioSource.Play();
+            OfficeFireAnnouncementAudioPlayback.Play(announcementAudioAdapter, localizedSound);
             Debug.Log($"[OfficeFire Voice] {voiceLineId}", this);
         }
 
-        private OfficeFireLanguageResolver ResolveLanguage()
+        private void ShowAnnouncementPopup(
+            string titleTr,
+            string bodyTr,
+            string titleEn,
+            string bodyEn,
+            float durationSeconds)
         {
-            if (languageResolver == null)
+            ResolvePopupService();
+            if (popupService == null)
             {
-                languageResolver = GetComponent<OfficeFireLanguageResolver>();
+                Debug.LogWarning("[OfficeFireVoiceLineContentPresenter] PopupService not found — popup skipped.", this);
+                return;
             }
 
-            if (languageResolver == null)
+            float duration = Mathf.Max(0.5f, durationSeconds);
+
+            if (replaceCurrentPopup && popupService.IsVisible)
             {
-                languageResolver = gameObject.AddComponent<OfficeFireLanguageResolver>();
+                popupService.Hide();
             }
 
-            return languageResolver;
+            popupService.ShowLocalizedText(
+                titleTr ?? string.Empty,
+                bodyTr ?? string.Empty,
+                titleEn ?? string.Empty,
+                bodyEn ?? string.Empty,
+                popupType,
+                duration);
         }
 
-        private bool TryResolvePopupText(OfficeFireVoiceLineId id, out string title, out string body)
+        private void ResolvePopupService()
         {
-            title = string.Empty;
-            body = string.Empty;
+            if (popupService != null)
+            {
+                return;
+            }
+
+            if (ServiceLocator.TryGet<PopupService>(out PopupService concrete) && concrete != null)
+            {
+                popupService = concrete;
+                return;
+            }
+
+            if (ServiceLocator.TryGet<IPopupService>(out IPopupService service) && service is PopupService resolved)
+            {
+                popupService = resolved;
+                return;
+            }
+
+            popupService = FindFirstObjectByType<PopupService>();
+        }
+
+        private bool TryResolvePopupTexts(
+            OfficeFireVoiceLineId id,
+            out string titleTr,
+            out string bodyTr,
+            out string titleEn,
+            out string bodyEn)
+        {
+            titleTr = string.Empty;
+            bodyTr = string.Empty;
+            titleEn = string.Empty;
+            bodyEn = string.Empty;
+
             if (database == null)
             {
                 return false;
             }
 
-            if (ResolveLanguage().IsEnglish())
-            {
-                return database.TryGetPopupEnglish(id, out title, out body);
-            }
-
-            return database.TryGetPopupTurkish(id, out title, out body);
-        }
-
-        private bool TryResolveVoiceClip(OfficeFireVoiceLineId id, out AudioClip clip)
-        {
-            clip = null;
-            if (database == null)
-            {
-                return false;
-            }
-
-            if (ResolveLanguage().IsEnglish())
-            {
-                return database.TryGetVoiceClipEnglish(id, out clip);
-            }
-
-            return database.TryGetVoiceClipTurkish(id, out clip);
+            bool hasTurkish = database.TryGetPopupTurkish(id, out titleTr, out bodyTr);
+            bool hasEnglish = database.TryGetPopupEnglish(id, out titleEn, out bodyEn);
+            return hasTurkish || hasEnglish;
         }
     }
 }

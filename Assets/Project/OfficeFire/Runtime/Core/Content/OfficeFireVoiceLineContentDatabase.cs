@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using WoiUtils.AudioSystem;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -49,28 +50,16 @@ namespace Woi.OfficeFire
             return !string.IsNullOrWhiteSpace(title) || !string.IsNullOrWhiteSpace(body);
         }
 
-        public bool TryGetVoiceClipTurkish(OfficeFireVoiceLineId id, out AudioClip clip)
+        public bool TryGetLocalizedSound(OfficeFireVoiceLineId id, out LocalizedSoundDefinition sound)
         {
-            clip = null;
+            sound = null;
             if (!TryFindEntry(id, out OfficeFireVoiceLineEntry entry) || entry.Voice == null)
             {
                 return false;
             }
 
-            clip = entry.Voice.TurkishClip;
-            return clip != null;
-        }
-
-        public bool TryGetVoiceClipEnglish(OfficeFireVoiceLineId id, out AudioClip clip)
-        {
-            clip = null;
-            if (!TryFindEntry(id, out OfficeFireVoiceLineEntry entry) || entry.Voice == null)
-            {
-                return false;
-            }
-
-            clip = entry.Voice.EnglishClip;
-            return clip != null;
+            sound = entry.Voice;
+            return true;
         }
 
         private bool TryFindEntry(OfficeFireVoiceLineId id, out OfficeFireVoiceLineEntry entry)
@@ -155,7 +144,6 @@ namespace Woi.OfficeFire
                     {
                         Id = id,
                         Popup = BuildDefaultPopupText(id),
-                        Voice = new OfficeFireVoiceLineAudioClip(),
                     });
             }
 
@@ -166,8 +154,8 @@ namespace Woi.OfficeFire
         {
             string enTitle = id.ToString();
             string trTitle = enTitle;
-            string enBody = "Assign audio clip and edit this text in the content database.";
-            string trBody = "Ses dosyasını atayıp bu metni content database üzerinden düzenleyin.";
+            string enBody = "Assign a Localized Sound Definition and edit this text in the content database.";
+            string trBody = "Localized Sound Definition atayıp bu metni content database üzerinden düzenleyin.";
 
             switch (id)
             {

@@ -66,6 +66,10 @@ namespace Woi.OfficeFire
         [SerializeField]
         private OfficeFireVoiceLineId smokeNoticeReminderVoiceLine = OfficeFireVoiceLineId.ArchiveIncidentDetected;
 
+        [Header("Archive — evacuation NPCs")]
+        [SerializeField]
+        private EvacuationNpcDirector evacuationNpcDirector;
+
         [Header("Archive — state machine")]
         [SerializeField]
         private ArchiveRoomStateChangedEvent onArchiveStateChanged = new ArchiveRoomStateChangedEvent();
@@ -188,6 +192,26 @@ namespace Woi.OfficeFire
             }
         }
 
+        public void StartEvacuationNpcs()
+        {
+            if (evacuationNpcDirector == null)
+            {
+                return;
+            }
+
+            evacuationNpcDirector.StartEvacuation();
+        }
+
+        public void StopEvacuationNpcs()
+        {
+            if (evacuationNpcDirector == null)
+            {
+                return;
+            }
+
+            evacuationNpcDirector.StopEvacuation();
+        }
+
         public override void StartScenario()
         {
             base.StartScenario();
@@ -198,6 +222,7 @@ namespace Woi.OfficeFire
         {
             CancelSmokeNoticeDelay();
             CancelSmokeNoticeReminder();
+            StopEvacuationNpcs();
             base.NotifyDeselected();
             if (_stateMachine != null)
             {
@@ -224,6 +249,7 @@ namespace Woi.OfficeFire
         {
             CancelSmokeNoticeDelay();
             CancelSmokeNoticeReminder();
+            StopEvacuationNpcs();
             base.ResetRuntimeState();
             if (_stateMachine != null)
             {
@@ -641,6 +667,12 @@ namespace Woi.OfficeFire
                 _archive.SetObjective(OfficeFireObjectiveId.GoToAssemblyArea);
                 _archive.PlayAnnouncement(OfficeFireVoiceLineId.EvacuationInstruction);
                 _archive.InvokeEvacuationStarted();
+                _archive.StartEvacuationNpcs();
+            }
+
+            public override void Exit()
+            {
+                _archive.StopEvacuationNpcs();
             }
 
             public override void HandleAction(string actionId)

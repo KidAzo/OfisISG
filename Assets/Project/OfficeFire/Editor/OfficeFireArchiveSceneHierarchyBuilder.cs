@@ -115,6 +115,9 @@ namespace Woi.OfficeFire.Editor
             Transform interactables = OfficeFireSceneHierarchyBuilder.EnsureChild(archiveRoot, "Interactables", created, reused);
             Transform triggers = OfficeFireSceneHierarchyBuilder.EnsureChild(archiveRoot, "Triggers", created, reused);
             Transform guidance = OfficeFireSceneHierarchyBuilder.EnsureChild(archiveRoot, "Guidance", created, reused);
+            Transform evacuationFolder = OfficeFireSceneHierarchyBuilder.EnsureChild(archiveRoot, "Evacuation", created, reused);
+            Transform evacuationPaths = OfficeFireSceneHierarchyBuilder.EnsureChild(evacuationFolder, "Paths", created, reused);
+            Transform evacuationNpcs = OfficeFireSceneHierarchyBuilder.EnsureChild(evacuationFolder, "Npcs", created, reused);
 
             OfficeFireSceneHierarchyBuilder.EnsureChild(effectsFolder, "Smoke", created, reused);
 
@@ -214,7 +217,17 @@ namespace Woi.OfficeFire.Editor
                 componentsAlreadyPresent,
                 componentWarnings);
 
-            WireArchiveScenario(archiveController, archiveRoot, componentWarnings);
+            EvacuationNpcDirector evacuationDirector = WireEvacuation(
+                evacuationFolder,
+                evacuationPaths,
+                evacuationNpcs,
+                created,
+                reused,
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            WireArchiveScenario(archiveController, archiveRoot, evacuationDirector, componentWarnings);
             RewireArchiveInteractions(archiveRoot, archiveController, componentWarnings);
 
             OfficeFireSceneHierarchyBuilder.WireSpawnPoint(
@@ -234,9 +247,61 @@ namespace Woi.OfficeFire.Editor
             LogSummary(scene.path, created, reused, componentsAdded, componentsAlreadyPresent, componentWarnings);
         }
 
+        private static EvacuationNpcDirector WireEvacuation(
+            Transform evacuationRoot,
+            Transform pathsFolder,
+            Transform npcsFolder,
+            List<string> created,
+            List<string> reused,
+            List<string> componentsAdded,
+            List<string> componentsAlreadyPresent,
+            List<string> componentWarnings)
+        {
+            if (evacuationRoot == null)
+            {
+                return null;
+            }
+
+            EvacuationNpcDirector director = OfficeFireSceneHierarchyBuilder.TryAddComponent<EvacuationNpcDirector>(
+                evacuationRoot.gameObject,
+                "EvacuationNpcDirector",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            Transform samplePath = pathsFolder != null
+                ? OfficeFireSceneHierarchyBuilder.EnsureChild(
+                    pathsFolder,
+                    "Path_AssemblyArea_01",
+                    created,
+                    reused)
+                : null;
+
+            if (samplePath == null)
+            {
+                return director;
+            }
+
+            OfficeFireSceneHierarchyBuilder.TryAddComponent<EvacuationPath>(
+                samplePath.gameObject,
+                "EvacuationPath",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            if (npcsFolder != null)
+            {
+                componentWarnings.Add(
+                    "Evacuation: Move scene NPCs under 'ArchiveRoom/Evacuation/Npcs', add EvacuationPathFollower per character, assign Path and Animator.");
+            }
+
+            return director;
+        }
+
         private static void WireArchiveScenario(
             ArchiveRoomScenarioController archiveController,
             Transform archiveRoot,
+            EvacuationNpcDirector evacuationDirector,
             List<string> componentWarnings)
         {
             if (archiveController == null || archiveRoot == null)
@@ -254,6 +319,16 @@ namespace Woi.OfficeFire.Editor
             else
             {
                 componentWarnings.Add("ArchiveRoomScenarioController: serialized field 'scenarioRoot' not found.");
+            }
+
+            SerializedProperty evacuationDirectorProp = so.FindProperty("evacuationNpcDirector");
+            if (evacuationDirectorProp != null && evacuationDirector != null)
+            {
+                evacuationDirectorProp.objectReferenceValue = evacuationDirector;
+            }
+            else if (evacuationDirectorProp == null)
+            {
+                componentWarnings.Add("ArchiveRoomScenarioController: serialized field 'evacuationNpcDirector' not found.");
             }
 
             so.ApplyModifiedProperties();
