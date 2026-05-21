@@ -75,6 +75,10 @@ namespace Woi.OfficeFire
         [SerializeField]
         private ArchiveRoomStateChangedEvent onArchiveStateChanged = new ArchiveRoomStateChangedEvent();
 
+        [Header("Archive — fire growth")]
+        [SerializeField]
+        private ArchiveRoomFireGrowthController fireGrowthController;
+
         [Header("Archive — debug")]
         [SerializeField]
         private bool enableFireExtinguishDebugLogs = true;
@@ -165,6 +169,17 @@ namespace Woi.OfficeFire
             if (_stateMachine != null)
             {
                 _stateMachine.StateChanged -= HandleArchiveStateChanged;
+            }
+
+            ArchiveRoomFireGrowthController growth = fireGrowthController;
+            if (growth == null && ScenarioRoot != null)
+            {
+                growth = ScenarioRoot.GetComponentInChildren<ArchiveRoomFireGrowthController>(true);
+            }
+
+            if (growth != null)
+            {
+                growth.AllStagesCompleted -= HandleFireGrowthCompleted;
             }
         }
 
@@ -265,6 +280,57 @@ namespace Woi.OfficeFire
             }
 
             gate.ForceAllowExtinguisher();
+        }
+
+        public void BeginArchiveFireGrowth()
+        {
+            ArchiveRoomFireGrowthController growth = ResolveFireGrowthController();
+            if (growth == null)
+            {
+                if (enableFireExtinguishDebugLogs)
+                {
+                    Debug.LogWarning(
+                        "[ArchiveRoomScenarioController] Fire growth controller not found — growth skipped.",
+                        this);
+                }
+
+                return;
+            }
+
+            growth.AllStagesCompleted -= HandleFireGrowthCompleted;
+            growth.AllStagesCompleted += HandleFireGrowthCompleted;
+            growth.BeginGrowth();
+        }
+
+        private void HandleFireGrowthCompleted()
+        {
+            if (CurrentState == ArchiveRoomState.WaitingForExitRoom ||
+                CurrentState == ArchiveRoomState.WaitingForAssemblyArea ||
+                CurrentState == ArchiveRoomState.Completed)
+            {
+                return;
+            }
+
+            Debug.Log(
+                "[ArchiveRoomScenarioController] Fire growth completed — transitioning to WaitingForExitRoom.",
+                this);
+            ChangeState(ArchiveRoomState.WaitingForExitRoom);
+        }
+
+        private ArchiveRoomFireGrowthController ResolveFireGrowthController()
+        {
+            if (fireGrowthController != null)
+            {
+                return fireGrowthController;
+            }
+
+            if (ScenarioRoot == null)
+            {
+                return null;
+            }
+
+            fireGrowthController = ScenarioRoot.GetComponentInChildren<ArchiveRoomFireGrowthController>(true);
+            return fireGrowthController;
         }
 
         public void InvokeIntroPhaseStarted()
@@ -684,6 +750,7 @@ namespace Woi.OfficeFire
             {
                 _archive.SetObjective(OfficeFireObjectiveId.PressArchiveAlarm);
                 _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
+                _archive.BeginArchiveFireGrowth();
                 NotLeaned();
             }
 
@@ -801,6 +868,9 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.ExitArchiveRoom:
+                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveFireNotControlledEvacuate);
+                        _archive.InvokeEvacuationStarted();
+                        _archive.StartEvacuationNpcs();
                         _archive.ChangeState(ArchiveRoomState.WaitingForAssemblyArea);
                         break;
                     case Actions.ElevatorProximity:

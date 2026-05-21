@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: E-TypeFire
   m_EditorClassIdentifier: FireExtinguisher.Core::FireExtinguisher.Core.FireData
   _fireClass: 5
-  _maxIntensity: 0.35
-  _extinguishResistance: 1
+  _maxIntensity: 2
+  _extinguishResistance: 3
   _allowedExtinguisherTypes: 020000000200000003000000
   _forbiddenExtinguisherTypes: 
