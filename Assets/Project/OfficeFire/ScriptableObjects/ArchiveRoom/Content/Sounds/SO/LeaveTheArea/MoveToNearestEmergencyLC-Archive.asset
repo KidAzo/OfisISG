@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 50147cf09dbd8b447938a05c73c5c4d9, type: 3}
-  m_Name: LeaveTheAreaLC-Archive
+  m_Name: MoveToNearestEmergencyLC-Archive
   m_EditorClassIdentifier: WoiUtils.AudioSystem.Runtime::WoiUtils.AudioSystem.LocalizedSoundDefinition
   english: {fileID: 11400000, guid: 242b848ba5e2462b826bb62c6c2064a4, type: 2}
   turkish: {fileID: 11400000, guid: a2750183222644acbda9a0836961fec0, type: 2}

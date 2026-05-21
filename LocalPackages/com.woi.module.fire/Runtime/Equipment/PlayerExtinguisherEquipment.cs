@@ -75,8 +75,11 @@ namespace Woi.Equipment
         [SerializeField] private bool _suppressOnDropEventDuringSwap = true;
 
         [Header("Slot Controller")]
-        [Tooltip("Central controller that owns all extinguisher slots, used areas, and replacement spawning.")]
+        [Tooltip("Optional in scenario-only scenes. When empty, drops use each item's Drop Anchor, Home Point, or Used Extinguisher Area.")]
         [SerializeField] private ExtinguisherSlotController _slotController;
+
+        [Tooltip("Fallback for used (pin-pulled) drops when Slot Controller is not assigned.")]
+        [SerializeField] private UsedExtinguisherArea _usedExtinguisherArea;
 
         /// <summary>Slotta yedek tüp spawn (PC drop / VR pim) için; boşsa VR pim sonrası yeni tüp oluşturulamaz.</summary>
         public ExtinguisherSlotController SlotController => _slotController;
@@ -329,9 +332,12 @@ namespace Woi.Equipment
 
             if (_slotController == null)
             {
-                Debug.LogWarning(
-                    "[PlayerExtinguisherEquipment] No ExtinguisherSlotController assigned — cannot drop.",
-                    this);
+                CurrentItem = null;
+                DropWithoutSlotController(item, isUsed);
+                OnExtinguisherChanged?.Invoke(null);
+                RaiseChangedEvent(null);
+                if (!suppressOnDropEvent)
+                    _onDropEvent?.Raise();
                 return;
             }
 
@@ -351,6 +357,51 @@ namespace Woi.Equipment
             RaiseChangedEvent(null);
             if (!suppressOnDropEvent)
                 _onDropEvent?.Raise();
+        }
+
+        private void DropWithoutSlotController(ExtinguisherPickupItem item, bool isUsed)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            if (isUsed)
+            {
+                UsedExtinguisherArea usedArea = ResolveUsedExtinguisherArea();
+                if (usedArea != null)
+                {
+                    Debug.Log(
+                        $"[PlayerExtinguisherEquipment] Used extinguisher '{item.name}' dropped — placing in Used Extinguisher Area.",
+                        item);
+                    usedArea.PlaceUsedExtinguisher(item);
+                    return;
+                }
+            }
+
+            if (!isUsed && item.HomePoint != null)
+            {
+                Debug.Log(
+                    $"[PlayerExtinguisherEquipment] Unused extinguisher '{item.name}' dropped — returning to home point.",
+                    item);
+                item.ReturnUnusedToHome();
+                return;
+            }
+
+            Debug.Log(
+                $"[PlayerExtinguisherEquipment] Extinguisher '{item.name}' dropped without slot controller — using drop anchor or current pose.",
+                item);
+            item.DropFromPlayer();
+        }
+
+        private UsedExtinguisherArea ResolveUsedExtinguisherArea()
+        {
+            if (_usedExtinguisherArea != null)
+            {
+                return _usedExtinguisherArea;
+            }
+
+            return FindFirstObjectByType<UsedExtinguisherArea>(FindObjectsInactive.Include);
         }
 
         // ── SO event helper ───────────────────────────────────────────────────────

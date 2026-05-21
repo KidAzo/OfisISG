@@ -42,5 +42,8 @@ namespace Woi.OfficeFire
         KitchenFireGrowingEvacuate = 308,
         LeanCorrectly = 309,
         EstinguisherHandled = 310,
+        EstinguishingStarted = 311,
+        ArchiveFireGrowth = 312,
+        ExittedArchiveRoom = 313,
     }
 }

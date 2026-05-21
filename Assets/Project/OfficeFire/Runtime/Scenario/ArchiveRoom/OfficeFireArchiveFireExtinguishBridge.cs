@@ -1,18 +1,22 @@
+using System.Collections.Generic;
 using System.Reflection;
 using FireExtinguisher.Core;
 using UnityEngine;
+using Woi.Equipment;
 
 namespace Woi.OfficeFire
 {
     /// <summary>
-    /// Listens to <see cref="FireSource"/> and dispatches <c>use_extinguisher</c> when the fire is fully extinguished.
-    /// Blocks physical spray until the archive alarm is pressed.
+    /// Dispatches <c>use_extinguisher</c> when archive fire suppression actually begins,
+    /// and notifies the scenario when the fire is fully out.
     /// </summary>
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(-50)]
     [AddComponentMenu("Woi/Office Fire/Archive Fire Extinguish Bridge")]
     public sealed class OfficeFireArchiveFireExtinguishBridge : MonoBehaviour
     {
+        private const float IntensityDecreaseEpsilon = 0.0001f;
+
         [SerializeField]
         private ArchiveRoomScenarioController scenario;
 
@@ -20,7 +24,16 @@ namespace Woi.OfficeFire
         private FireSource fireSource;
 
         [SerializeField]
-        private bool dispatchOnFullyExtinguished = true;
+        private PlayerExtinguisherEquipment extinguisherEquipment;
+
+        [SerializeField]
+        private PlayerExtinguisherEquipment xrExtinguisherEquipment;
+
+        [SerializeField]
+        private bool dispatchUseExtinguisherOnExtinguishingStarted = true;
+
+        [SerializeField]
+        private bool notifyScenarioOnFullyExtinguished = true;
 
         [Header("Layer fix")]
         [Tooltip("Archive fire zones use layer 9, but extinguisher prefabs often mask layer 6 only. Merge this mask at runtime.")]
@@ -40,7 +53,11 @@ namespace Woi.OfficeFire
 
         private float _nextProgressLogTime;
         private float _lastLoggedProgress = -1f;
-        private FireExtinguishPrerequisiteGate _alarmGate;
+        private float _baselineIntensity = -1f;
+        private float _peakIntensity = -1f;
+        private ExtinguisherController _subscribedController;
+        private bool _useExtinguisherDispatched;
+        private readonly List<PlayerExtinguisherEquipment> _boundEquipments = new(2);
         private static FieldInfo s_evaluatorLayerMaskField;
 
         private void Awake()
@@ -53,7 +70,7 @@ namespace Woi.OfficeFire
 
         private void Start()
         {
-            EnsureAlarmPrerequisiteGate();
+            RemoveArchiveAlarmGates();
             DisableLegacyElectricalSafety();
 
             if (autoFixEvaluatorFireZoneLayerMask)
@@ -61,25 +78,24 @@ namespace Woi.OfficeFire
                 TryFixEvaluatorLayerMasks();
             }
 
+            BindEquipmentListeners();
+            SnapshotIntensityBaseline();
             LogProgress(force: true);
         }
 
         /// <summary>
-        /// Alarm sonrasi sondurucu spreyinin yangina etki etmesini acar.
+        /// Resets extinguish-action tracking baseline (e.g. when intervention phase starts).
         /// </summary>
         public void AllowExtinguisherSpray()
         {
-            EnsureAlarmPrerequisiteGate();
-            if (_alarmGate != null)
-            {
-                _alarmGate.ForceAllowExtinguisher();
-            }
-
-            Log("Sprey kilidi acildi — alarm sonrasi sondurme aktif.");
+            RemoveArchiveAlarmGates();
+            _useExtinguisherDispatched = false;
+            SnapshotIntensityBaseline();
+            Log("Sondurme izleme sifirlandi — yangin her zaman sondurulebilir.");
             LogProgress(force: true);
         }
 
-        private void EnsureAlarmPrerequisiteGate()
+        private void RemoveArchiveAlarmGates()
         {
             ResolveFireSource();
             if (fireSource == null)
@@ -87,32 +103,18 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            GameObject fireObject = fireSource.gameObject;
-            FireExtinguishPrerequisiteGate[] gates = fireObject.GetComponents<FireExtinguishPrerequisiteGate>();
+            FireExtinguishPrerequisiteGate[] gates =
+                fireSource.GetComponents<FireExtinguishPrerequisiteGate>();
             for (int i = 0; i < gates.Length; i++)
             {
                 FireExtinguishPrerequisiteGate gate = gates[i];
-                if (gate == null)
+                if (gate != null)
                 {
-                    continue;
+                    Destroy(gate);
                 }
-
-                if (gate.Mode == FireExtinguishPrerequisiteGate.GateMode.ManualOnly)
-                {
-                    _alarmGate = gate;
-                    continue;
-                }
-
-                Destroy(gate);
             }
 
-            if (_alarmGate == null)
-            {
-                _alarmGate = fireObject.AddComponent<FireExtinguishPrerequisiteGate>();
-            }
-
-            _alarmGate.ConfigureForManualOnly();
-            Log("Alarm on kosulu aktif — sprey alarm basilana kadar bloklu.");
+            Log("Alarm on kosulu kaldirildi — sprey bloklanmiyor.");
         }
 
         private void DisableLegacyElectricalSafety()
@@ -136,12 +138,15 @@ namespace Woi.OfficeFire
         private void OnEnable()
         {
             ResolveFireSource();
+            BindEquipmentListeners();
+
             if (fireSource == null)
             {
-                LogWarning("FireSource atanmadi — sprey ile sondurme senaryoya bildirilmeyecek.");
+                LogWarning("FireSource atanmadi — sondurme olaylari senaryoya bildirilmeyecek.");
                 return;
             }
 
+            SnapshotIntensityBaseline();
             fireSource.OnFullyExtinguished += HandleFullyExtinguished;
             fireSource.OnIntensityChanged += HandleIntensityChanged;
             fireSource.OnStateChanged += HandleStateChanged;
@@ -154,6 +159,12 @@ namespace Woi.OfficeFire
 
         private void OnDisable()
         {
+            UnbindEquipmentListeners();
+            UnsubscribeController(_subscribedController);
+            _useExtinguisherDispatched = false;
+            _baselineIntensity = -1f;
+            _peakIntensity = -1f;
+
             if (fireSource == null)
             {
                 return;
@@ -164,8 +175,157 @@ namespace Woi.OfficeFire
             fireSource.OnStateChanged -= HandleStateChanged;
         }
 
+        private void BindEquipmentListeners()
+        {
+            UnbindEquipmentListeners();
+
+            TryBindEquipment(extinguisherEquipment);
+            TryBindEquipment(xrExtinguisherEquipment);
+
+            if (_boundEquipments.Count == 0)
+            {
+                PlayerExtinguisherEquipment[] found = FindObjectsByType<PlayerExtinguisherEquipment>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None);
+
+                for (int i = 0; i < found.Length; i++)
+                {
+                    TryBindEquipment(found[i]);
+                }
+            }
+
+            RebindSprayController();
+        }
+
+        private void TryBindEquipment(PlayerExtinguisherEquipment equipment)
+        {
+            if (equipment == null || _boundEquipments.Contains(equipment))
+            {
+                return;
+            }
+
+            equipment.OnExtinguisherChanged += HandleEquipmentChanged;
+            _boundEquipments.Add(equipment);
+        }
+
+        private void UnbindEquipmentListeners()
+        {
+            for (int i = 0; i < _boundEquipments.Count; i++)
+            {
+                PlayerExtinguisherEquipment equipment = _boundEquipments[i];
+                if (equipment != null)
+                {
+                    equipment.OnExtinguisherChanged -= HandleEquipmentChanged;
+                }
+            }
+
+            _boundEquipments.Clear();
+        }
+
+        private void HandleEquipmentChanged(ExtinguisherPickupItem item)
+        {
+            RebindSprayController();
+        }
+
+        private void RebindSprayController()
+        {
+            ExtinguisherPickupItem equippedItem = ResolveEquippedItem();
+            SubscribeController(equippedItem != null ? equippedItem.Controller : null);
+        }
+
+        private ExtinguisherPickupItem ResolveEquippedItem()
+        {
+            for (int i = 0; i < _boundEquipments.Count; i++)
+            {
+                PlayerExtinguisherEquipment equipment = _boundEquipments[i];
+                if (equipment?.CurrentItem != null)
+                {
+                    return equipment.CurrentItem;
+                }
+            }
+
+            return null;
+        }
+
+        private void SubscribeController(ExtinguisherController next)
+        {
+            if (next == _subscribedController)
+            {
+                return;
+            }
+
+            UnsubscribeController(_subscribedController);
+            _subscribedController = next;
+
+            if (_subscribedController == null)
+            {
+                return;
+            }
+
+            _subscribedController.OnSprayEvaluated += HandleSprayEvaluated;
+        }
+
+        private void UnsubscribeController(ExtinguisherController controller)
+        {
+            if (controller == null)
+            {
+                return;
+            }
+
+            controller.OnSprayEvaluated -= HandleSprayEvaluated;
+
+            if (_subscribedController == controller)
+            {
+                _subscribedController = null;
+            }
+        }
+
+        private void HandleSprayEvaluated(ExtinguishResult result)
+        {
+            if (!ShouldDispatchUseExtinguisher())
+            {
+                return;
+            }
+
+            ResolveFireSource();
+            if (fireSource == null || result.Source != fireSource)
+            {
+                return;
+            }
+
+            if (!result.DidHitZone || result.ExtinguishAmountCalculated <= 0f)
+            {
+                return;
+            }
+
+            if (result.Compatibility != CompatibilityResult.Effective)
+            {
+                return;
+            }
+
+            Log(
+                $"Effective spray hit archive fire — amount={result.ExtinguishAmountCalculated:F5}, " +
+                $"intensity={fireSource.CurrentNormalizedIntensity:F3}");
+            DispatchUseExtinguisher();
+        }
+
+        private void SnapshotIntensityBaseline()
+        {
+            if (fireSource == null)
+            {
+                _baselineIntensity = -1f;
+                _peakIntensity = -1f;
+                return;
+            }
+
+            _baselineIntensity = fireSource.CurrentNormalizedIntensity;
+            _peakIntensity = _baselineIntensity;
+        }
+
         private void Update()
         {
+            TryDispatchFromIntensityPolling();
+
             if (!enableDebugLogs || fireSource == null)
             {
                 return;
@@ -177,6 +337,32 @@ namespace Woi.OfficeFire
             }
         }
 
+        private void TryDispatchFromIntensityPolling()
+        {
+            if (!ShouldDispatchUseExtinguisher() || fireSource == null || _baselineIntensity < 0f)
+            {
+                return;
+            }
+
+            float current = fireSource.CurrentNormalizedIntensity;
+            if (current > _peakIntensity)
+            {
+                _peakIntensity = current;
+            }
+
+            if (current < _peakIntensity - IntensityDecreaseEpsilon)
+            {
+                Log(
+                    $"Archive fire intensity dropped (poll) — peak={_peakIntensity:F4}, current={current:F4}");
+                DispatchUseExtinguisher();
+            }
+        }
+
+        private bool ShouldDispatchUseExtinguisher()
+        {
+            return dispatchUseExtinguisherOnExtinguishingStarted && !_useExtinguisherDispatched;
+        }
+
         private void HandleStateChanged(FireSourceState state)
         {
             Log($"FireSource state -> {state} (intensity={fireSource.CurrentNormalizedIntensity:F2})");
@@ -185,6 +371,20 @@ namespace Woi.OfficeFire
 
         private void HandleIntensityChanged(float normalizedIntensity)
         {
+            if (normalizedIntensity > _peakIntensity)
+            {
+                _peakIntensity = normalizedIntensity;
+            }
+
+            if (ShouldDispatchUseExtinguisher()
+                && _peakIntensity >= 0f
+                && normalizedIntensity < _peakIntensity - IntensityDecreaseEpsilon)
+            {
+                Log(
+                    $"Archive fire intensity dropped (event) — peak={_peakIntensity:F4}, current={normalizedIntensity:F4}");
+                DispatchUseExtinguisher();
+            }
+
             float progress = GetExtinguishProgressPercent(normalizedIntensity);
             if (!enableDebugLogs)
             {
@@ -200,6 +400,20 @@ namespace Woi.OfficeFire
             LogIntensitySnapshot(normalizedIntensity, progress, "Sprey etkisi");
         }
 
+        private void DispatchUseExtinguisher()
+        {
+            if (scenario == null)
+            {
+                LogWarning("ArchiveRoomScenarioController yok — use_extinguisher gonderilemedi.");
+                return;
+            }
+
+            _useExtinguisherDispatched = true;
+            scenario.LogFireExtinguishStatus("Yangin sondurulmeye basladi — use_extinguisher gonderiliyor");
+            Log("Dispatching use_extinguisher.");
+            scenario.HandleAction(ArchiveRoomScenarioController.Actions.UseExtinguisher);
+        }
+
         private void HandleFullyExtinguished()
         {
             LogProgress(force: true);
@@ -207,7 +421,13 @@ namespace Woi.OfficeFire
 
             if (scenario == null)
             {
-                LogWarning("ArchiveRoomScenarioController yok — use_extinguisher gonderilemedi.");
+                LogWarning("ArchiveRoomScenarioController yok — tam sondurme bildirilemedi.");
+                return;
+            }
+
+            if (!notifyScenarioOnFullyExtinguished)
+            {
+                Log("notifyScenarioOnFullyExtinguished=false — tam sondurme bildirilmiyor.");
                 return;
             }
 
@@ -217,14 +437,7 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            if (!dispatchOnFullyExtinguished)
-            {
-                Log("dispatchOnFullyExtinguished=false — use_extinguisher gonderilmiyor.");
-                return;
-            }
-
-            scenario.LogFireExtinguishStatus("FireSource sonduruldu — use_extinguisher gonderiliyor");
-            scenario.HandleAction(ArchiveRoomScenarioController.Actions.UseExtinguisher);
+            scenario.NotifyFireFullyExtinguished();
         }
 
         private void LogProgress(bool force)
@@ -257,11 +470,7 @@ namespace Woi.OfficeFire
                 scenario.CanExtinguishFire(out canReason);
             }
 
-            string gateStatus = "yok";
-            if (_alarmGate != null)
-            {
-                gateStatus = _alarmGate.CanExtinguish ? "acik" : "kapali (alarm gerekli)";
-            }
+            string gateStatus = "yok (alarm kilidi kapali)";
 
             Debug.Log(
                 $"[ArchiveFireExtinguishBridge] {prefix} — sondurme: %{progressPercent:F0} | " +

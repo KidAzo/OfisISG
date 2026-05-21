@@ -21,6 +21,7 @@ namespace Woi.OfficeFire
             public const string ReachAssemblyArea = "reach_assembly_area";
             public const string PlayerLeaned = "player_leaned";
             public const string ElevatorProximity = "elevator_proximity";
+            public const string FireGrowth = "fire_growth";
         }
 
         [Header("Archive — hooks")]
@@ -79,6 +80,11 @@ namespace Woi.OfficeFire
         [SerializeField]
         private ArchiveRoomFireGrowthController fireGrowthController;
 
+        [Tooltip("Seconds between ArchiveFireGrowth reminders while in WaitingForExitRoom after all growth stages complete.")]
+        [SerializeField]
+        [Min(0.1f)]
+        private float fireGrowthReminderIntervalSeconds = 15f;
+
         [Header("Archive — debug")]
         [SerializeField]
         private bool enableFireExtinguishDebugLogs = true;
@@ -86,7 +92,10 @@ namespace Woi.OfficeFire
         private ScenarioStateMachine<ArchiveRoomState> _stateMachine;
         private Coroutine _smokeNoticeDelayRoutine;
         private Coroutine _smokeNoticeReminderRoutine;
+        private Coroutine _fireGrowthReminderRoutine;
         private bool _isWaitingForNoticeSmokeAction;
+        private bool _extinguishingStarted;
+        private bool _fireGrowthCompleted;
 
         public override OfficeFireScenarioId ScenarioId => OfficeFireScenarioId.ArchiveRoom;
 
@@ -166,6 +175,7 @@ namespace Woi.OfficeFire
         {
             CancelSmokeNoticeDelay();
             CancelSmokeNoticeReminder();
+            CancelFireGrowthReminderLoop();
             if (_stateMachine != null)
             {
                 _stateMachine.StateChanged -= HandleArchiveStateChanged;
@@ -205,7 +215,7 @@ namespace Woi.OfficeFire
         }
 
         /// <summary>
-        /// True when the scenario accepts a successful <see cref="Actions.UseExtinguisher"/> action.
+        /// True when the scenario accepts extinguisher success (e.g. full extinguish notification).
         /// </summary>
         public bool CanExtinguishFire()
         {
@@ -222,12 +232,10 @@ namespace Woi.OfficeFire
 
             switch (CurrentState)
             {
-                case ArchiveRoomState.WaitingForExtinguisherUse:
-                    reason = "Evet — alarm basildi, yangin sondurulebilir.";
-                    return true;
                 case ArchiveRoomState.Intervention:
-                    reason = "Hayir — once alarm butonuna bas (E).";
-                    return false;
+                case ArchiveRoomState.WaitingForExtinguisherUse:
+                    reason = "Evet — yangin sondurulebilir.";
+                    return true;
                 case ArchiveRoomState.WaitingForExitRoom:
                 case ArchiveRoomState.WaitingForAssemblyArea:
                 case ArchiveRoomState.Completed:
@@ -266,20 +274,52 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            RemoveArchiveAlarmGatesFromFireSource();
+        }
+
+        private static void RemoveArchiveAlarmGatesFromFireSource()
+        {
             FireSource source = FindFirstObjectByType<FireSource>(FindObjectsInactive.Include);
             if (source == null)
             {
                 return;
             }
 
-            FireExtinguishPrerequisiteGate gate = source.GetComponent<FireExtinguishPrerequisiteGate>();
-            if (gate == null)
+            FireExtinguishPrerequisiteGate[] gates = source.GetComponents<FireExtinguishPrerequisiteGate>();
+            for (int i = 0; i < gates.Length; i++)
             {
-                gate = source.gameObject.AddComponent<FireExtinguishPrerequisiteGate>();
-                gate.ConfigureForManualOnly();
+                if (gates[i] != null)
+                {
+                    Destroy(gates[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called when archive fire is fully extinguished during intervention or extinguisher use.
+        /// </summary>
+        public void NotifyFireFullyExtinguished()
+        {
+            if (CurrentState != ArchiveRoomState.Intervention &&
+                CurrentState != ArchiveRoomState.WaitingForExtinguisherUse)
+            {
+                if (enableFireExtinguishDebugLogs)
+                {
+                    Debug.LogWarning(
+                        $"[ArchiveRoomScenarioController] Fire fully extinguished ignored — state={CurrentState}.",
+                        this);
+                }
+
+                return;
             }
 
-            gate.ForceAllowExtinguisher();
+            LogFireExtinguishStatus("Yangin tamamen sonduruldu — tahliye asamasina geciliyor");
+            MarkFireControlled();
+            RegisterCorrectAction(OfficeFireCorrectActionId.UsedExtinguisherCorrectly);
+            RegisterCorrectAction(OfficeFireCorrectActionId.ControlledArchiveFire);
+            PlayAnnouncement(OfficeFireVoiceLineId.ArchiveFireControlled);
+            InvokeFireControlled();
+            ChangeState(ArchiveRoomState.WaitingForExitRoom);
         }
 
         public void BeginArchiveFireGrowth()
@@ -304,21 +344,67 @@ namespace Woi.OfficeFire
 
         private void HandleFireGrowthCompleted()
         {
-            if (CurrentState == ArchiveRoomState.WaitingForExitRoom ||
-                CurrentState == ArchiveRoomState.WaitingForAssemblyArea ||
+            _fireGrowthCompleted = true;
+
+            if (CurrentState == ArchiveRoomState.WaitingForAssemblyArea ||
                 CurrentState == ArchiveRoomState.Completed)
             {
                 return;
             }
 
+            if (CurrentState == ArchiveRoomState.WaitingForExitRoom)
+            {
+                BeginFireGrowthReminderLoop();
+                return;
+            }
+
             Debug.Log(
-                "[ArchiveRoomScenarioController] Fire growth completed — transitioning to WaitingForExitRoom.",
+                "[ArchiveRoomScenarioController] Fire growth completed — dispatching fire_growth.",
                 this);
-            ChangeState(ArchiveRoomState.WaitingForExitRoom);
+            HandleAction(Actions.FireGrowth);
+        }
+
+        public void BeginFireGrowthReminderLoop()
+        {
+            if (!_fireGrowthCompleted || CurrentState != ArchiveRoomState.WaitingForExitRoom)
+            {
+                return;
+            }
+
+            CancelFireGrowthReminderLoop();
+            _fireGrowthReminderRoutine = StartCoroutine(FireGrowthReminderRoutine());
+        }
+
+        public void CancelFireGrowthReminderLoop()
+        {
+            if (_fireGrowthReminderRoutine == null)
+            {
+                return;
+            }
+
+            StopCoroutine(_fireGrowthReminderRoutine);
+            _fireGrowthReminderRoutine = null;
+        }
+
+        private IEnumerator FireGrowthReminderRoutine()
+        {
+            while (CanProcessActions()
+                   && CurrentState == ArchiveRoomState.WaitingForExitRoom
+                   && _fireGrowthCompleted)
+            {
+                PlayAnnouncement(OfficeFireVoiceLineId.ArchiveFireGrowth);
+                yield return new WaitForSeconds(fireGrowthReminderIntervalSeconds);
+            }
         }
 
         private ArchiveRoomFireGrowthController ResolveFireGrowthController()
         {
+            if (fireGrowthController != null)
+            {
+                return fireGrowthController;
+            }
+
+            fireGrowthController = GetComponent<ArchiveRoomFireGrowthController>();
             if (fireGrowthController != null)
             {
                 return fireGrowthController;
@@ -427,6 +513,7 @@ namespace Woi.OfficeFire
         {
             CancelSmokeNoticeDelay();
             CancelSmokeNoticeReminder();
+            CancelFireGrowthReminderLoop();
             StopEvacuationNpcs();
             base.NotifyDeselected();
             if (_stateMachine != null)
@@ -471,8 +558,11 @@ namespace Woi.OfficeFire
         {
             CancelSmokeNoticeDelay();
             CancelSmokeNoticeReminder();
+            CancelFireGrowthReminderLoop();
             StopEvacuationNpcs();
             base.ResetRuntimeState();
+            _extinguishingStarted = false;
+            _fireGrowthCompleted = false;
             if (_stateMachine != null)
             {
                 _stateMachine.SnapTo(ArchiveRoomState.None);
@@ -750,6 +840,7 @@ namespace Woi.OfficeFire
             {
                 _archive.SetObjective(OfficeFireObjectiveId.PressArchiveAlarm);
                 _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
+                _archive.AllowExtinguisherSpray();
                 _archive.BeginArchiveFireGrowth();
                 NotLeaned();
             }
@@ -785,14 +876,14 @@ namespace Woi.OfficeFire
                         _archive.InvokeWaterMistake();
                         break;
                     case Actions.GrabExtinguisher:
-                        _archive.LogFireExtinguishStatus("Sondurucu alindi ama alarm henuz basilmadi — HATA");
-                        _archive.RegisterMistake(OfficeFireMistakeId.UsedExtinguisherBeforeAlarm);
-                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
+                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.EstinguisherHandled);
                         break;
                     case Actions.UseExtinguisher:
-                        _archive.LogFireExtinguishStatus("Sondurucu kullanildi ama alarm henuz basilmadi — HATA");
-                        _archive.RegisterMistake(OfficeFireMistakeId.UsedExtinguisherBeforeAlarm);
-                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
+                        _archive.LogFireExtinguishStatus("Sondurme basladi — EstinguishingStarted anonsu");
+                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.EstinguishingStarted);
+                        break;
+                    case Actions.FireGrowth:
+                        _archive.ChangeState(ArchiveRoomState.WaitingForExitRoom);
                         break;
                     default:
                         LogUnknownAction(actionId);
@@ -826,18 +917,19 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.UseExtinguisher:
-                        _archive.LogFireExtinguishStatus("Sondurucu basarili — yangin kontrol altina alindi");
-                        _archive.MarkFireControlled();
-                        _archive.RegisterCorrectAction(OfficeFireCorrectActionId.UsedExtinguisherCorrectly);
-                        _archive.RegisterCorrectAction(OfficeFireCorrectActionId.ControlledArchiveFire);
-                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveFireControlled);
-                        _archive.InvokeFireControlled();
-                        _archive.ChangeState(ArchiveRoomState.WaitingForExitRoom);
+                        _archive.LogFireExtinguishStatus("Sondurme basladi — EstinguishingStarted anonsu");
+                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.EstinguishingStarted);
                         break;
                     case Actions.UseWater:
                         _archive.RegisterMistake(OfficeFireMistakeId.UsedWaterOnElectricalFire);
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveWaterMistake);
                         _archive.InvokeWaterMistake();
+                        break;
+                    case Actions.GrabExtinguisher:
+                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.EstinguisherHandled);
+                        break;
+                    case Actions.FireGrowth:
+                        _archive.ChangeState(ArchiveRoomState.WaitingForExitRoom);
                         break;
                     default:
                         LogUnknownAction(actionId);
@@ -861,6 +953,12 @@ namespace Woi.OfficeFire
             public override void Enter()
             {
                 _archive.SetObjective(OfficeFireObjectiveId.ExitArchiveRoom);
+                _archive.BeginFireGrowthReminderLoop();
+            }
+
+            public override void Exit()
+            {
+                _archive.CancelFireGrowthReminderLoop();
             }
 
             public override void HandleAction(string actionId)
@@ -868,7 +966,7 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.ExitArchiveRoom:
-                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveFireNotControlledEvacuate);
+                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
                         _archive.InvokeEvacuationStarted();
                         _archive.StartEvacuationNpcs();
                         _archive.ChangeState(ArchiveRoomState.WaitingForAssemblyArea);

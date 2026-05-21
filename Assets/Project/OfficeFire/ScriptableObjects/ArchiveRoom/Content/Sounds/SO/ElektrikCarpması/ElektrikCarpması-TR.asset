@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f0ce49fbc1e6594982f24d5ad48acf7, type: 3}
   m_Name: "ElektrikCarpmas\u0131-TR"
   m_EditorClassIdentifier: WoiUtils.AudioSystem.Runtime::WoiUtils.AudioSystem.SoundDefinition
-  selectionMode: 0
+  selectionMode: 3
   clips:
   - clip: {fileID: 8300000, guid: 2a309149f2fd04547a662a8e625293b6, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 1babe8bbe38f65e45b37679899683a63, type: 3}
     weight: 0
     delay: 0
   noImmediateRepeat: 1
@@ -22,7 +25,7 @@ MonoBehaviour:
   useCustomCategory: 0
   customCategoryKey: 
   mixerGroup: {fileID: 0}
-  scheduleMode: 0
+  scheduleMode: 1
   queueScope: 0
   instanceMode: 1
   reTriggerMode: 0

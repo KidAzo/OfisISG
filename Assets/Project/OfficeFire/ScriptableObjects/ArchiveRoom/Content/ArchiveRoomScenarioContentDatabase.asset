@@ -60,14 +60,14 @@ MonoBehaviour:
       EnglishTitle: "T\xFCp al\u0131nd\u0131"
       EnglishBody: "T\xFCp al\u0131nd\u0131"
     Voice: {fileID: 11400000, guid: e8e865d8431349c8be82a5cdbf020f03, type: 2}
-  - Id: 100
+  - Id: 311
     Popup:
-      TurkishTitle: "Ar\u015Fiv olay\u0131"
-      TurkishBody: "Ar\u015Fiv odas\u0131n\u0131 kontrol edin."
+      TurkishTitle: "Yang\u0131n S\xF6nd\xFCr\xFClemedi\t"
+      TurkishBody: "Ar\u015Fiv odas\u0131n\u0131 terk edin."
       EnglishTitle: Archive incident
       EnglishBody: Inspect the archive room.
-    Voice: {fileID: 0}
-  - Id: 101
+    Voice: {fileID: 11400000, guid: 949f1f0fd7ce4498b2a8d77253e6b380, type: 2}
+  - Id: 312
     Popup:
       TurkishTitle: ArchiveElectricalFireWarning
       TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
@@ -75,14 +75,13 @@ MonoBehaviour:
       EnglishTitle: ArchiveElectricalFireWarning
       EnglishBody: Assign audio clip and edit this text in the content database.
     Voice: {fileID: 11400000, guid: e35aad4b20f04060b1a4014a86bc563f, type: 2}
-  - Id: 102
+  - Id: 313
     Popup:
-      TurkishTitle: ArchiveWaterMistake
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
-        \xFCzerinden d\xFCzenleyin."
+      TurkishTitle: "Alan\u0131 Terk Edin"
+      TurkishBody: "G\xFCvenliginiz i\xE7in alan\u0131 terk edin"
       EnglishTitle: ArchiveWaterMistake
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: a3fd4b27fb814f6bbd8ae889e763dde7, type: 2}
   - Id: 103
     Popup:
       TurkishTitle: "Alarm\u0131 \xE7al\u0131\u015Ft\u0131r\u0131n"
