@@ -29,6 +29,14 @@ MonoBehaviour:
       EnglishTitle: CrouchInSmoke
       EnglishBody: Assign audio clip and edit this text in the content database.
     Voice: {fileID: 11400000, guid: 1b683bcafd54ec449bd1539fc96a87ff, type: 2}
+  - Id: 13
+    Popup:
+      TurkishTitle: Tahliye
+      TurkishBody: "En yak\u0131n g\xFCvenli \xE7\u0131k\u0131\u015F\u0131 kullanarak
+        alan\u0131 terk edin."
+      EnglishTitle: Evacuate
+      EnglishBody: Leave the area using the nearest safe exit.
+    Voice: {fileID: 11400000, guid: a3fd4b27fb814f6bbd8ae889e763dde7, type: 2}
   - Id: 14
     Popup:
       TurkishTitle: DoNotUseElevator
@@ -36,7 +44,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: DoNotUseElevator
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: 6dfd2d017e24442386dd2cc79946c3f6, type: 2}
   - Id: 15
     Popup:
       TurkishTitle: GoToAssemblyArea
@@ -44,15 +52,14 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: GoToAssemblyArea
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
-  - Id: 16
+    Voice: {fileID: 11400000, guid: 31f8a5a23b0f417282faf7bf8ed35919, type: 2}
+  - Id: 310
     Popup:
-      TurkishTitle: ScenarioCompleted
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
-        \xFCzerinden d\xFCzenleyin."
-      EnglishTitle: ScenarioCompleted
-      EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
+      TurkishTitle: "T\xFCp al\u0131nd\u0131"
+      TurkishBody: "T\xFCp al\u0131nd\u0131"
+      EnglishTitle: "T\xFCp al\u0131nd\u0131"
+      EnglishBody: "T\xFCp al\u0131nd\u0131"
+    Voice: {fileID: 11400000, guid: e8e865d8431349c8be82a5cdbf020f03, type: 2}
   - Id: 100
     Popup:
       TurkishTitle: "Ar\u015Fiv olay\u0131"
@@ -67,7 +74,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveElectricalFireWarning
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: e35aad4b20f04060b1a4014a86bc563f, type: 2}
   - Id: 102
     Popup:
       TurkishTitle: ArchiveWaterMistake
@@ -83,7 +90,7 @@ MonoBehaviour:
         devreye al\u0131n."
       EnglishTitle: Press the alarm
       EnglishBody: Activate the fire alarm before other actions.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: 3aefa70408cdef04e9d5a7033d01135c, type: 2}
   - Id: 104
     Popup:
       TurkishTitle: ArchiveCutPowerInstruction
@@ -107,7 +114,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveUseExtinguisherInstruction
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: 2b375e05c71a429db530f2050e079c29, type: 2}
   - Id: 107
     Popup:
       TurkishTitle: ArchiveFireControlled
@@ -115,7 +122,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveFireControlled
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: 1d57c12b1dd74b0fb34fc5efede6ecf2, type: 2}
   - Id: 108
     Popup:
       TurkishTitle: ArchiveFireNotControlledEvacuate
@@ -123,4 +130,29 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveFireNotControlledEvacuate
       EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 11400000, guid: 949f1f0fd7ce4498b2a8d77253e6b380, type: 2}
+  - Id: 11
+    Popup:
+      TurkishTitle: CrouchInSmoke
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: CrouchInSmoke
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
     Voice: {fileID: 0}
+  - Id: 12
+    Popup:
+      TurkishTitle: AlarmInstruction
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: AlarmInstruction
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
+    Voice: {fileID: 0}
+  - Id: 310
+    Popup:
+      TurkishTitle: EstinguisherHandled
+      TurkishBody: "S\xF6nd\xFCr\xFCc\xFC al\u0131nd\u0131."
+      EnglishTitle: EstinguisherHandled
+      EnglishBody: Extinguisher picked up.
+    Voice: {fileID: 11400000, guid: e8e865d8431349c8be82a5cdbf020f03, type: 2}

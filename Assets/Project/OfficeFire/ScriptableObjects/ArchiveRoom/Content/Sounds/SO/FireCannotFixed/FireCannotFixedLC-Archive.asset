@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50147cf09dbd8b447938a05c73c5c4d9, type: 3}
+  m_Name: FireCannotFixedLC-Archive
+  m_EditorClassIdentifier: WoiUtils.AudioSystem.Runtime::WoiUtils.AudioSystem.LocalizedSoundDefinition
+  english: {fileID: 11400000, guid: ff571c4f4fda4c77b55df80e902a0175, type: 2}
+  turkish: {fileID: 11400000, guid: 6372fc92d4e94f26b00a1c45a44c85c3, type: 2}

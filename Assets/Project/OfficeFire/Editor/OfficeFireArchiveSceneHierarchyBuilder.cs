@@ -226,6 +226,13 @@ namespace Woi.OfficeFire.Editor
                 componentsAlreadyPresent,
                 componentWarnings);
 
+            OfficeFireSceneHierarchyBuilder.TryAddComponent<OfficeFireArchiveExtinguisherGrabScenarioBridge>(
+                tArchiveController.gameObject,
+                "OfficeFireArchiveExtinguisherGrabScenarioBridge",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
             // Breaker gate is opt-in only (enableBreakerGate on the component). Archive flow uses alarm → extinguish.
 
             OfficeFireSceneHierarchyBuilder.TryAddComponent<OfficeFireScenarioBootstrapper>(

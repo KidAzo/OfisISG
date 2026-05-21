@@ -41,5 +41,6 @@ namespace Woi.OfficeFire
         KitchenTurnOffStoveInstruction = 307,
         KitchenFireGrowingEvacuate = 308,
         LeanCorrectly = 309,
+        EstinguisherHandled = 310,
     }
 }

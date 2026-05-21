@@ -127,73 +127,39 @@ MonoBehaviour:
         area.
   voiceEntries:
   - Id: 1
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 2
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 3
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 4
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 5
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 6
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 7
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 8
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 9
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 10
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 11
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 12
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 13
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 14
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 15
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 16
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   - Id: 17
-    Clip:
-      TurkishClip: {fileID: 0}
-      EnglishClip: {fileID: 0}
+    Sound: {fileID: 0}
   cueEntries:
   - Id: 1
     PopupId: 1
