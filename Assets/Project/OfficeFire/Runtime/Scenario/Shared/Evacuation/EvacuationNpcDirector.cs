@@ -4,16 +4,16 @@ using UnityEngine;
 namespace Woi.OfficeFire
 {
     /// <summary>
-    /// Starts and stops evacuation NPCs on <see cref="EvacuationPathFollower"/> instances.
+    /// Starts and stops evacuation NPCs on <see cref="SplineNpcController"/> instances.
     /// Wire from <see cref="ArchiveRoomScenarioController"/> when entering assembly area state.
     /// </summary>
     public sealed class EvacuationNpcDirector : MonoBehaviour
     {
         [SerializeField]
-        private bool collectFollowersFromChildren = true;
+        private bool collectControllersFromChildren = true;
 
         [SerializeField]
-        private List<EvacuationPathFollower> followers = new List<EvacuationPathFollower>();
+        private List<SplineNpcController> npcControllers = new List<SplineNpcController>();
 
         [SerializeField]
         private bool stopAndResetOnStop = true;
@@ -24,17 +24,17 @@ namespace Woi.OfficeFire
 
         public void StartEvacuation()
         {
-            EnsureFollowerList();
+            EnsureControllerList();
 
-            for (int i = 0; i < followers.Count; i++)
+            for (int i = 0; i < npcControllers.Count; i++)
             {
-                EvacuationPathFollower follower = followers[i];
-                if (follower == null)
+                SplineNpcController controller = npcControllers[i];
+                if (controller == null)
                 {
                     continue;
                 }
 
-                follower.Begin();
+                controller.Begin();
             }
 
             _isEvacuationActive = true;
@@ -42,47 +42,47 @@ namespace Woi.OfficeFire
 
         public void StopEvacuation()
         {
-            EnsureFollowerList();
+            EnsureControllerList();
 
-            for (int i = 0; i < followers.Count; i++)
+            for (int i = 0; i < npcControllers.Count; i++)
             {
-                EvacuationPathFollower follower = followers[i];
-                if (follower == null)
+                SplineNpcController controller = npcControllers[i];
+                if (controller == null)
                 {
                     continue;
                 }
 
-                follower.StopEvacuation(stopAndResetOnStop);
+                controller.StopEvacuation(stopAndResetOnStop);
             }
 
             _isEvacuationActive = false;
         }
 
-        public void RefreshFollowerList()
+        public void RefreshControllerList()
         {
-            followers.Clear();
-            if (!collectFollowersFromChildren)
+            npcControllers.Clear();
+            if (!collectControllersFromChildren)
             {
                 return;
             }
 
-            followers.AddRange(GetComponentsInChildren<EvacuationPathFollower>(true));
+            npcControllers.AddRange(GetComponentsInChildren<SplineNpcController>(true));
         }
 
-        private void EnsureFollowerList()
+        private void EnsureControllerList()
         {
-            if (collectFollowersFromChildren || followers.Count == 0)
+            if (collectControllersFromChildren || npcControllers.Count == 0)
             {
-                RefreshFollowerList();
+                RefreshControllerList();
             }
         }
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (collectFollowersFromChildren)
+            if (collectControllersFromChildren)
             {
-                RefreshFollowerList();
+                RefreshControllerList();
             }
         }
 #endif

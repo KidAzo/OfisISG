@@ -300,30 +300,19 @@ namespace Woi.OfficeFire.Editor
                 componentsAlreadyPresent,
                 componentWarnings);
 
-            Transform samplePath = pathsFolder != null
-                ? OfficeFireSceneHierarchyBuilder.EnsureChild(
-                    pathsFolder,
-                    "Path_AssemblyArea_01",
-                    created,
-                    reused)
-                : null;
-
-            if (samplePath == null)
+            if (pathsFolder == null || npcsFolder == null)
             {
                 return director;
             }
 
-            OfficeFireSceneHierarchyBuilder.TryAddComponent<EvacuationPath>(
-                samplePath.gameObject,
-                "EvacuationPath",
-                componentsAdded,
-                componentsAlreadyPresent,
-                componentWarnings);
+            int configured = OfficeFireArchiveEvacuationNpcBuilder.SetupEvacuationNpcsInScene(
+                evacuationRoot.gameObject.scene,
+                OfficeFireArchiveEvacuationNpcBuilder.DefaultNpcCount);
 
-            if (npcsFolder != null)
+            if (configured == 0)
             {
                 componentWarnings.Add(
-                    "Evacuation: Move scene NPCs under 'ArchiveRoom/Evacuation/Npcs', add EvacuationPathFollower per character, assign Path and Animator.");
+                    "Evacuation: Could not auto-create NPC/path pairs. Use Woi/Office Fire/Archive/Setup Evacuation NPCs.");
             }
 
             return director;

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionMode: 0
   clips:
-  - clip: {fileID: 8300000, guid: 8c53d2dcec78054448568936d152c4e9, type: 3}
+  - clip: {fileID: 8300000, guid: 5559d0f2821101d4b86a13ff39b08803, type: 3}
     weight: 93.99
     delay: 0
   noImmediateRepeat: 0

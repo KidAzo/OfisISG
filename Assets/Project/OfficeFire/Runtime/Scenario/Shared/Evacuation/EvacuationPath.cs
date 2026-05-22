@@ -6,7 +6,7 @@ namespace Woi.OfficeFire
 {
     /// <summary>
     /// Designer-authored evacuation route using a <see cref="SplineContainer"/>.
-    /// Draw knots in the Scene view; NPCs follow via <see cref="EvacuationPathFollower"/>.
+    /// Draw knots in the Scene view; NPCs follow via <see cref="SplineNpcController"/>.
     /// </summary>
     [RequireComponent(typeof(SplineContainer))]
     public sealed class EvacuationPath : MonoBehaviour
@@ -36,12 +36,13 @@ namespace Woi.OfficeFire
 
         public float GetLength()
         {
-            if (_container == null)
+            SplineContainer container = Container;
+            if (container == null || container.Splines == null || container.Splines.Count <= splineIndex)
             {
                 return 0f;
             }
 
-            return _container.CalculateLength(splineIndex);
+            return container.CalculateLength(splineIndex);
         }
 
         public bool TrySample(float normalizedTime, out Vector3 worldPosition, out Vector3 worldTangent)
@@ -49,13 +50,18 @@ namespace Woi.OfficeFire
             worldPosition = default;
             worldTangent = Vector3.forward;
 
-            if (_container == null)
+            SplineContainer container = Container;
+            if (container == null || container.Splines == null || container.Splines.Count <= splineIndex)
             {
                 return false;
             }
 
             float t = Mathf.Clamp01(normalizedTime);
-            _container.Evaluate(splineIndex, t, out float3 position, out float3 tangent, out float3 _);
+            if (!container.Evaluate(splineIndex, t, out float3 position, out float3 tangent, out float3 _))
+            {
+                return false;
+            }
+
             worldPosition = position;
             worldTangent = tangent;
 
@@ -69,6 +75,19 @@ namespace Woi.OfficeFire
             }
 
             return true;
+        }
+
+        private SplineContainer Container
+        {
+            get
+            {
+                if (_container == null)
+                {
+                    _container = GetComponent<SplineContainer>();
+                }
+
+                return _container;
+            }
         }
     }
 }
