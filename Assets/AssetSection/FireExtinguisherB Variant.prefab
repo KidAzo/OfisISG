@@ -82,7 +82,10 @@ GameObject:
   - component: {fileID: 6450667532936989322}
   - component: {fileID: 7462976316200155775}
   - component: {fileID: 3876156246711262520}
-  m_Layer: 7
+  - component: {fileID: 9283746519283746519}
+  - component: {fileID: 9283746519283746522}
+  - component: {fileID: 9283746519283746521}
+  m_Layer: 8
   m_Name: FireExtinguisherB Variant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -527,6 +530,60 @@ MonoBehaviour:
   _sustainImpulseSeconds: 0.035
   _sustainIntervalSeconds: 0.09
   _delayBeforeSustainSeconds: 0.08
+--- !u!114 &9283746519283746519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573337445447010207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: QuickOutline::Outline
+  outlineMode: 0
+  outlineColor: {r: 1, g: 0.92156863, b: 0, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &9283746519283746522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573337445447010207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99b26e5f1c6ee2d4a9e4eda1e0e19a68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Woi.OfficeFire.PCVR::Woi.OfficeFire.HoverableOutline
+  outline: {fileID: 9283746519283746519}
+  useOutlineWidth: 1
+  hoverOutlineWidth: 5
+--- !u!65 &9283746519283746521
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573337445447010207}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.2305347, y: 0.55517286, z: 0.18639208}
+  m_Center: {x: -0.008752391, y: 0.25259522, z: 0.00008433312}
 --- !u!1 &2370036815817635248
 GameObject:
   m_ObjectHideFlags: 0
@@ -10631,7 +10688,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Woi.Game.PinPullFeedback
   _extinguisherController: {fileID: 1348153349264276450}
-  _outline: {fileID: 0}
+  _outline: {fileID: 9283746519283746519}
   _pinTransform: {fileID: 5706891572515371043}
   _localPullOffset: {x: 0, y: 0, z: 0.06}
   _pullMoveDuration: 0.12

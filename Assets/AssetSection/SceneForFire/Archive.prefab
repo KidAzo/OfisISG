@@ -1062,8 +1062,7 @@ PrefabInstance:
       propertyPath: fireMode
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1027541874334986966, guid: b5369ccc56b81ea4f8b37fb4d4681120, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1247138281021836562, guid: b5369ccc56b81ea4f8b37fb4d4681120, type: 3}
     m_AddedGameObjects:
