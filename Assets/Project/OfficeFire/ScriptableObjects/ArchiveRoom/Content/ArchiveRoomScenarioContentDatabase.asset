@@ -25,7 +25,7 @@ MonoBehaviour:
   - Id: 309
     Popup:
       TurkishTitle: "Egil\t"
-      TurkishBody: "Egilmen laz\u0131m keke"
+      TurkishBody: "Dumandan daha az etkilenmek i\xE7in egilmeniz gerekli"
       EnglishTitle: CrouchInSmoke
       EnglishBody: Assign audio clip and edit this text in the content database.
     Voice: {fileID: 11400000, guid: 1b683bcafd54ec449bd1539fc96a87ff, type: 2}

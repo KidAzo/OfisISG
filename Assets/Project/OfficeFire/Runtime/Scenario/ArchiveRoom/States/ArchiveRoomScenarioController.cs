@@ -9,6 +9,7 @@ namespace Woi.OfficeFire
     {
         public static class Actions
         {
+            public const string ReachedExitDoor = "reached_exit_door";
             public const string NoticeSmoke = "notice_smoke";
             public const string OpenArchiveDoor = "open_archive_door";
             public const string EnteredArchiveRoom = "entered_archive_room";
@@ -85,6 +86,15 @@ namespace Woi.OfficeFire
         [Min(0.1f)]
         private float fireGrowthReminderIntervalSeconds = 15f;
 
+        [Header("Archive — assembly area reminders")]
+        [Tooltip("EvacuationInstruction loops in WaitingForAssemblyArea until ReachedExitDoor trigger fires.")]
+        [SerializeField]
+        [Min(0.1f)]
+        private float assemblyAreaReminderIntervalSeconds = 15f;
+
+        [SerializeField]
+        private OfficeFireVoiceLineId assemblyAreaReminderVoiceLine = OfficeFireVoiceLineId.EvacuationInstruction;
+
         [Header("Archive — debug")]
         [SerializeField]
         private bool enableFireExtinguishDebugLogs = true;
@@ -93,6 +103,8 @@ namespace Woi.OfficeFire
         private Coroutine _smokeNoticeDelayRoutine;
         private Coroutine _smokeNoticeReminderRoutine;
         private Coroutine _fireGrowthReminderRoutine;
+        private Coroutine _assemblyAreaReminderRoutine;
+        private bool _hasReachedExitDoor;
         private bool _isWaitingForNoticeSmokeAction;
         private bool _extinguishingStarted;
         private bool _fireGrowthCompleted;
@@ -104,6 +116,7 @@ namespace Woi.OfficeFire
         private void Awake()
         {
             EnsureFireExtinguishBridge();
+            EnsureExtinguisherHudBridge();
             DisableLegacyAlarmActions();
 
             _stateMachine = new ScenarioStateMachine<ArchiveRoomState>();
@@ -126,6 +139,16 @@ namespace Woi.OfficeFire
             }
 
             gameObject.AddComponent<OfficeFireArchiveFireExtinguishBridge>();
+        }
+
+        private void EnsureExtinguisherHudBridge()
+        {
+            if (GetComponent<OfficeFireArchiveExtinguisherHudBridge>() != null)
+            {
+                return;
+            }
+
+            gameObject.AddComponent<OfficeFireArchiveExtinguisherHudBridge>();
         }
 
         private static void DisableLegacyAlarmActions()
@@ -176,6 +199,7 @@ namespace Woi.OfficeFire
             CancelSmokeNoticeDelay();
             CancelSmokeNoticeReminder();
             CancelFireGrowthReminderLoop();
+            CancelAssemblyAreaReminderLoop();
             if (_stateMachine != null)
             {
                 _stateMachine.StateChanged -= HandleArchiveStateChanged;
@@ -397,6 +421,55 @@ namespace Woi.OfficeFire
             }
         }
 
+        public void BeginAssemblyAreaReminderLoop()
+        {
+            if (CurrentState != ArchiveRoomState.WaitingForAssemblyArea || _hasReachedExitDoor)
+            {
+                return;
+            }
+
+            CancelAssemblyAreaReminderLoop();
+            _assemblyAreaReminderRoutine = StartCoroutine(AssemblyAreaReminderRoutine());
+        }
+
+        public void CancelAssemblyAreaReminderLoop()
+        {
+            if (_assemblyAreaReminderRoutine == null)
+            {
+                return;
+            }
+
+            StopCoroutine(_assemblyAreaReminderRoutine);
+            _assemblyAreaReminderRoutine = null;
+        }
+
+        public void NotifyReachedExitDoor()
+        {
+            if (_hasReachedExitDoor)
+            {
+                return;
+            }
+
+            _hasReachedExitDoor = true;
+            CancelAssemblyAreaReminderLoop();
+            RegisterCorrectAction(OfficeFireCorrectActionId.ReachedExitDoor);
+        }
+
+        private IEnumerator AssemblyAreaReminderRoutine()
+        {
+            while (CanProcessActions()
+                   && CurrentState == ArchiveRoomState.WaitingForAssemblyArea
+                   && !_hasReachedExitDoor)
+            {
+                if (assemblyAreaReminderVoiceLine != OfficeFireVoiceLineId.None)
+                {
+                    PlayAnnouncement(assemblyAreaReminderVoiceLine);
+                }
+
+                yield return new WaitForSeconds(assemblyAreaReminderIntervalSeconds);
+            }
+        }
+
         private ArchiveRoomFireGrowthController ResolveFireGrowthController()
         {
             if (fireGrowthController != null)
@@ -514,6 +587,7 @@ namespace Woi.OfficeFire
             CancelSmokeNoticeDelay();
             CancelSmokeNoticeReminder();
             CancelFireGrowthReminderLoop();
+            CancelAssemblyAreaReminderLoop();
             StopEvacuationNpcs();
             base.NotifyDeselected();
             if (_stateMachine != null)
@@ -559,10 +633,12 @@ namespace Woi.OfficeFire
             CancelSmokeNoticeDelay();
             CancelSmokeNoticeReminder();
             CancelFireGrowthReminderLoop();
+            CancelAssemblyAreaReminderLoop();
             StopEvacuationNpcs();
             base.ResetRuntimeState();
             _extinguishingStarted = false;
             _fireGrowthCompleted = false;
+            _hasReachedExitDoor = false;
             if (_stateMachine != null)
             {
                 _stateMachine.SnapTo(ArchiveRoomState.None);
@@ -971,9 +1047,6 @@ namespace Woi.OfficeFire
                         _archive.StartEvacuationNpcs();
                         _archive.ChangeState(ArchiveRoomState.WaitingForAssemblyArea);
                         break;
-                    case Actions.ElevatorProximity:
-                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.DoNotUseElevator);
-                        break;
                     default:
                         LogUnknownAction(actionId);
                         break;
@@ -996,13 +1069,14 @@ namespace Woi.OfficeFire
             public override void Enter()
             {
                 _archive.SetObjective(OfficeFireObjectiveId.GoToAssemblyArea);
-                _archive.PlayAnnouncement(OfficeFireVoiceLineId.EvacuationInstruction);
+                _archive.BeginAssemblyAreaReminderLoop();
                 _archive.InvokeEvacuationStarted();
                 _archive.StartEvacuationNpcs();
             }
 
             public override void Exit()
             {
+                _archive.CancelAssemblyAreaReminderLoop();
                 _archive.StopEvacuationNpcs();
             }
 
@@ -1014,6 +1088,12 @@ namespace Woi.OfficeFire
                         _archive.MarkEvacuated();
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.ReachedAssemblyArea);
                         _archive.ChangeState(ArchiveRoomState.Completed);
+                        break;
+                    case Actions.ReachedExitDoor:
+                        _archive.NotifyReachedExitDoor();
+                        break;
+                    case Actions.ElevatorProximity:
+                        _archive.PlayAnnouncement(OfficeFireVoiceLineId.DoNotUseElevator);
                         break;
                     default:
                         LogUnknownAction(actionId);

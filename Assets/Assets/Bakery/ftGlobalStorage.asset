@@ -25,7 +25,8 @@ MonoBehaviour:
   - Assets/Project/Characters/Animations/X Bot@Running.fbx
   - Assets/AssetSection/FireAdd_On/2m2Fire.fbx
   - Assets/AssetSection/FireAdd_On/ToplanmaAlaniTabela.fbx
-  uvOverlapAssetList: 00000000010100000000000001010000000000000000000000000000
+  - Assets/Project/Characters/Animations/Running.fbx
+  uvOverlapAssetList: 0000000001010000000000000101000000000000000000000000000000000000
   xatlasWarningShown: 0
   foundCompatibleSetup: 0
   gpuName_2: 

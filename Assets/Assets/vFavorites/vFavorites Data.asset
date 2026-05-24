@@ -32,6 +32,24 @@ MonoBehaviour:
       isFolder: 0
       isAsset: 1
       _id: 1042770817
+    - globalId:
+        globalObjectIdString: GlobalObjectId_V1-1-86ac583fd775cc949aa267c369d36dd2-102900000-0
+      _typeString: UnityEditor.SceneAsset, UnityEditor.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      _obj: {fileID: 102900000, guid: 86ac583fd775cc949aa267c369d36dd2, type: 3}
+      isSceneGameObject: 0
+      isFolder: 0
+      isAsset: 1
+      _id: 1039677410
+    - globalId:
+        globalObjectIdString: GlobalObjectId_V1-1-6e53403b119b63d4ab5ab1a8b6817a14-102900000-0
+      _typeString: UnityEditor.SceneAsset, UnityEditor.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      _obj: {fileID: 102900000, guid: 6e53403b119b63d4ab5ab1a8b6817a14, type: 3}
+      isSceneGameObject: 0
+      isFolder: 0
+      isAsset: 1
+      _id: 1058986763
     name: Page 1
     _id: 1047756282
   - items: []

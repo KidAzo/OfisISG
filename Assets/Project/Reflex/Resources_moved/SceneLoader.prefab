@@ -196,6 +196,12 @@ MonoBehaviour:
     - SceneName: FireModule_Office
       AddressableKey: 
       SceneType: 0
+    - SceneName: FireStairsOfis
+      AddressableKey: 
+      SceneType: 2
+    - SceneName: FireStairsOfis 1
+      AddressableKey: 
+      SceneType: 2
   _runCatalogHealthBeforeSelectedGroups: 1
   _catalogHealthGroupNames:
   - Fire_Train
