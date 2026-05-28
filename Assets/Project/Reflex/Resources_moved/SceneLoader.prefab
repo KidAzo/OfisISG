@@ -202,6 +202,11 @@ MonoBehaviour:
     - SceneName: FireStairsOfis 1
       AddressableKey: 
       SceneType: 2
+  - GroupName: OutDoor
+    Scenes:
+    - SceneName: OutDoor
+      AddressableKey: 
+      SceneType: 0
   _runCatalogHealthBeforeSelectedGroups: 1
   _catalogHealthGroupNames:
   - Fire_Train

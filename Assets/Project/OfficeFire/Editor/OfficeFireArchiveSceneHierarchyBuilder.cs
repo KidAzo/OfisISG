@@ -301,6 +301,13 @@ namespace Woi.OfficeFire.Editor
                 componentsAlreadyPresent,
                 componentWarnings);
             WireTrigger(
+                OfficeFireSceneHierarchyBuilder.EnsureChild(triggers, "Trigger_AssemblyAreaDoor", created, reused),
+                null,
+                ArchiveRoomScenarioController.Actions.ReachedAssemblyAreaDoor,
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+            WireTrigger(
                 OfficeFireSceneHierarchyBuilder.EnsureChild(triggers, "Trigger_Elevator_A", created, reused),
                 null,
                 ArchiveRoomScenarioController.Actions.ElevatorProximity,

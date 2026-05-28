@@ -14,6 +14,23 @@ namespace Woi.OfficeFire
         [SerializeField]
         private LocalizationService localizationService;
 
+        private void Awake()
+        {
+            if (!ServiceLocator.IsRegistered<OfficeFireLanguageResolver>())
+            {
+                ServiceLocator.Register(this);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (ServiceLocator.TryGet(out OfficeFireLanguageResolver registered) &&
+                ReferenceEquals(registered, this))
+            {
+                ServiceLocator.Unregister<OfficeFireLanguageResolver>();
+            }
+        }
+
         /// <summary>
         /// Allows callers (e.g. content presenters) to forward an inspector-assigned host at runtime.
         /// </summary>

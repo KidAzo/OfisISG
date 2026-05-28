@@ -8,6 +8,18 @@ using UnityEngine.SceneManagement;
 
 namespace Woi.Settings
 {
+	public enum SceneLoadPresentation
+	{
+		/// <summary>Loading canvas, optional progress bar, and XR black fade.</summary>
+		Default = 0,
+
+		/// <summary>No loading canvas or progress bar. XR uses black fade only when configured.</summary>
+		FadeOnly = 1,
+
+		/// <summary>No loading UI. Caller handles fade/transition.</summary>
+		Silent = 2,
+	}
+
 	public class SceneLoader : MonoBehaviour, ISceneLoaderService
 	{
 		LoadingScreenController.LoadingScreenSettings loadingScreenSettings;
@@ -36,20 +48,25 @@ namespace Woi.Settings
 		private int currentSceneGroupID = 0;
 		public void SetCurrentSceneGroupId(int id) => currentSceneGroupID = id;
 
-		public async Task LoadScene(string name)
+		public Task LoadScene(string name)
+		{
+			return LoadScene(name, SceneLoadPresentation.Default);
+		}
+
+		public async Task LoadScene(string name, SceneLoadPresentation presentation)
 		{
 			int index = GetGroupIndex(name);
-			await LoadSceneGroup(index);
+			await LoadSceneGroup(index, presentation);
 		}
 
-		public async Task LoadScene(int index)
+		public Task LoadScene(int index)
 		{
-			await LoadSceneGroup(index);
+			return LoadSceneGroup(index, SceneLoadPresentation.Default);
 		}
 
-		public async Task LoadSceneFromID()
+		public Task LoadSceneFromID()
 		{
-			await LoadSceneGroup(currentSceneGroupID);
+			return LoadSceneGroup(currentSceneGroupID, SceneLoadPresentation.Default);
 		}
 		
 		void Awake()
@@ -87,20 +104,36 @@ namespace Woi.Settings
 			Debug.Log($"Current Progress: {loadingScreenSettings.progressBar.fillAmount}, Target Progress: {targetProgress}");
 		}
 
-		public async Task LoadSceneGroup(int index)
+		public Task LoadSceneGroup(int index)
 		{
+			return LoadSceneGroup(index, SceneLoadPresentation.Default);
+		}
+
+		public async Task LoadSceneGroup(int index, SceneLoadPresentation presentation)
+		{
+			bool useLoadingCanvas = presentation == SceneLoadPresentation.Default;
+
 			RefreshLoadingScreenSettings();
-			if (HasLoadingProgressUi)
+			if (useLoadingCanvas && HasLoadingProgressUi)
 				loadingScreenSettings.progressBar.fillAmount = 0f;
-			else
+			else if (useLoadingCanvas)
 				Debug.LogWarning(
 					"[SceneLoader] Loading screen UI is not fully configured (missing XR/PC LoadingScreenSettings or progress bar). Scene load continues without progress bar.");
 
 			targetProgress = 1f;
+			isLoading = useLoadingCanvas && HasLoadingProgressUi;
 
 			if (index < 0 || index >= sceneGroups.Length)
 			{
 				Debug.LogError("Invalid scene group index: " + index);
+				return;
+			}
+
+			if (presentation == SceneLoadPresentation.Silent)
+			{
+				var silentGroup = sceneGroups[index];
+				LoadingProgress silentProgress = new LoadingProgress();
+				await manager.LoadScenes(silentGroup, silentProgress, false);
 				return;
 			}
 
@@ -148,7 +181,8 @@ namespace Woi.Settings
 					xrFadeOverlay.interactable = false;
 				}
 
-				EnableLoadingCanvas(true);
+				if (useLoadingCanvas)
+					EnableLoadingCanvas(true);
 
 				if (xrFadeOverlay != null)
 					await RunFadeCanvasGroupAsync(xrFadeOverlay, 0f, 1f, xrFadeIn);
@@ -170,7 +204,8 @@ namespace Woi.Settings
 
 				await manager.LoadScenes(group, progress, false);
 
-				await Task.Delay((int)beforeDelayScene); //A little delay to ensure progress bar reaches 100%	
+				if (useLoadingCanvas)
+					await Task.Delay((int)beforeDelayScene);
 
 				if (manageXrRig)
 					EnableXrRigSafe(xrRigDisabledTarget, loadingScreenSettings);
@@ -195,7 +230,9 @@ namespace Woi.Settings
 			}
 			finally
 			{
-				EnableLoadingCanvas(false);
+				isLoading = false;
+				if (useLoadingCanvas)
+					EnableLoadingCanvas(false);
 			}
 		}
 
@@ -312,6 +349,9 @@ namespace Woi.Settings
 	public interface ISceneLoaderService
 	{
 		Task LoadScene(string name);
+
+		Task LoadScene(string name, SceneLoadPresentation presentation);
+
 		SceneGroupManager Manager { get; }
 	}
 }

@@ -23,6 +23,7 @@ namespace Woi.OfficeFire
             public const string PlayerLeaned = "player_leaned";
             public const string ElevatorProximity = "elevator_proximity";
             public const string FireGrowth = "fire_growth";
+            public const string ReachedAssemblyAreaDoor = "reached_assembly_area_door";
         }
 
         [Header("Archive — hooks")]
@@ -73,6 +74,11 @@ namespace Woi.OfficeFire
         [SerializeField]
         private EvacuationNpcDirector evacuationNpcDirector;
 
+        [Header("Archive — outdoor assembly")]
+        [Tooltip("SceneLoader SceneGroup GroupName loaded when ReachedAssemblyAreaDoor fires.")]
+        [SerializeField]
+        private string outdoorSceneGroupName = "OutDoor";
+
         [Header("Archive — state machine")]
         [SerializeField]
         private ArchiveRoomStateChangedEvent onArchiveStateChanged = new ArchiveRoomStateChangedEvent();
@@ -105,6 +111,7 @@ namespace Woi.OfficeFire
         private Coroutine _fireGrowthReminderRoutine;
         private Coroutine _assemblyAreaReminderRoutine;
         private bool _hasReachedExitDoor;
+        private bool _outdoorSceneLoadRequested;
         private bool _isWaitingForNoticeSmokeAction;
         private bool _extinguishingStarted;
         private bool _fireGrowthCompleted;
@@ -455,6 +462,19 @@ namespace Woi.OfficeFire
             RegisterCorrectAction(OfficeFireCorrectActionId.ReachedExitDoor);
         }
 
+        public void HandleReachedExitDoor()
+        {
+            NotifyReachedExitDoor();
+            PlayAnnouncement(OfficeFireVoiceLineId.ReachedExitDoor);
+        }
+
+        public void HandleReachedAssemblyAreaDoor()
+        {
+            MarkEvacuated();
+            RegisterCorrectAction(OfficeFireCorrectActionId.ReachedAssemblyArea);
+            LoadOutdoorAssemblyScene();
+        }
+
         private IEnumerator AssemblyAreaReminderRoutine()
         {
             while (CanProcessActions()
@@ -576,6 +596,29 @@ namespace Woi.OfficeFire
             evacuationNpcDirector.StopEvacuation();
         }
 
+        public void LoadOutdoorAssemblyScene()
+        {
+            if (_outdoorSceneLoadRequested)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(outdoorSceneGroupName))
+            {
+                Debug.LogWarning("[ArchiveRoomScenarioController] Outdoor scene group name is not assigned.", this);
+                return;
+            }
+
+            _outdoorSceneLoadRequested = true;
+            CancelAssemblyAreaReminderLoop();
+            StopEvacuationNpcs();
+
+            Debug.Log(
+                $"[ArchiveRoomScenarioController] Loading outdoor scene group '{outdoorSceneGroupName.Trim()}'.",
+                this);
+            AssemblySceneController.LoadAssemblyScene(outdoorSceneGroupName.Trim());
+        }
+
         public override void StartScenario()
         {
             base.StartScenario();
@@ -625,6 +668,18 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            if (actionId == Actions.ReachedExitDoor)
+            {
+                HandleReachedExitDoor();
+                return;
+            }
+
+            if (actionId == Actions.ReachedAssemblyAreaDoor)
+            {
+                HandleReachedAssemblyAreaDoor();
+                return;
+            }
+
             _stateMachine.HandleAction(actionId);
         }
 
@@ -639,6 +694,7 @@ namespace Woi.OfficeFire
             _extinguishingStarted = false;
             _fireGrowthCompleted = false;
             _hasReachedExitDoor = false;
+            _outdoorSceneLoadRequested = false;
             if (_stateMachine != null)
             {
                 _stateMachine.SnapTo(ArchiveRoomState.None);
@@ -1088,9 +1144,6 @@ namespace Woi.OfficeFire
                         _archive.MarkEvacuated();
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.ReachedAssemblyArea);
                         _archive.ChangeState(ArchiveRoomState.Completed);
-                        break;
-                    case Actions.ReachedExitDoor:
-                        _archive.NotifyReachedExitDoor();
                         break;
                     case Actions.ElevatorProximity:
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.DoNotUseElevator);

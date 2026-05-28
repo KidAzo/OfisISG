@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f0ce49fbc1e6594982f24d5ad48acf7, type: 3}
   m_Name: ReachedAssembly-EN
   m_EditorClassIdentifier: WoiUtils.AudioSystem.Runtime::WoiUtils.AudioSystem.SoundDefinition
-  selectionMode: 0
+  selectionMode: 3
   clips:
   - clip: {fileID: 8300000, guid: 5021d2bf6f18a0e408ad8638aedf0f70, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 87e12ce4f276f1d4085ab5e2b31ff41e, type: 3}
     weight: 0
     delay: 0
   noImmediateRepeat: 1
@@ -22,7 +25,7 @@ MonoBehaviour:
   useCustomCategory: 0
   customCategoryKey: 
   mixerGroup: {fileID: 0}
-  scheduleMode: 0
+  scheduleMode: 1
   queueScope: 0
   instanceMode: 0
   reTriggerMode: 0

@@ -45,5 +45,8 @@ namespace Woi.OfficeFire
         EstinguishingStarted = 311,
         ArchiveFireGrowth = 312,
         ExittedArchiveRoom = 313,
+        ReachAssemblyArea = 314,
+        ReachedExitDoor = 315,
+        ReachedAssemblyAreaDoor = 316,
     }
 }

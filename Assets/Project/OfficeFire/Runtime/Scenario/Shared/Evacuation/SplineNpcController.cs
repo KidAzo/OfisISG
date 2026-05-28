@@ -4,7 +4,8 @@ using UnityEngine;
 namespace Woi.OfficeFire
 {
     /// <summary>
-    /// Moves a humanoid along an <see cref="EvacuationPath"/> spline, or keeps it idle in place.
+    /// Moves a humanoid along an <see cref="EvacuationPath"/> spline, or plays the configured
+    /// locomotion animation in place when no path is assigned.
     /// Started/stopped by <see cref="EvacuationNpcDirector"/> during evacuation.
     /// </summary>
     [DefaultExecutionOrder(100)]
@@ -96,6 +97,9 @@ namespace Woi.OfficeFire
 
         public bool IsRunning => _isRunning;
 
+        private bool MovesAlongPath =>
+            path != null && locomotionMode != NpcLocomotionMode.Idle;
+
         private void Awake()
         {
             if (animator == null)
@@ -105,6 +109,11 @@ namespace Woi.OfficeFire
 
             CacheAnimationHashes();
             StoreResetPose();
+
+            if (locomotionMode == NpcLocomotionMode.Idle)
+            {
+                PlayAnimation(NpcLocomotionMode.Idle);
+            }
         }
 
         private void Start()
@@ -123,7 +132,7 @@ namespace Woi.OfficeFire
 
         private void Update()
         {
-            if (!_isRunning || locomotionMode == NpcLocomotionMode.Idle)
+            if (!_isRunning || !MovesAlongPath)
             {
                 return;
             }
@@ -131,12 +140,6 @@ namespace Woi.OfficeFire
             if (_delayRemaining > 0f)
             {
                 _delayRemaining -= Time.deltaTime;
-                return;
-            }
-
-            if (path == null)
-            {
-                StopEvacuation(resetPose: false);
                 return;
             }
 
@@ -176,21 +179,12 @@ namespace Woi.OfficeFire
                 gameObject.SetActive(true);
             }
 
-            if (locomotionMode == NpcLocomotionMode.Idle)
-            {
-                PlayAnimation(NpcLocomotionMode.Idle);
-                return;
-            }
-
-            if (path == null)
-            {
-                Debug.LogWarning("[SplineNpcController] Path is not assigned.", this);
-                _isRunning = false;
-                return;
-            }
-
             PlayAnimation(locomotionMode);
-            ApplyPose(_normalizedTime);
+
+            if (MovesAlongPath)
+            {
+                ApplyPose(_normalizedTime);
+            }
         }
 
         public void StopEvacuation(bool resetPose = true)

@@ -19,8 +19,7 @@ namespace Woi.OfficeFire
         [SerializeField]
         private OfficeFireVoiceLineContentDatabase database;
 
-        [SerializeField]
-        private OfficeFireLanguageResolver languageResolver;
+        private OfficeFireLanguageResolver _languageResolver;
 
         [Header("Woi Audio")]
         [Tooltip("Optional. If empty, resolved from scene or added on this GameObject.")]
@@ -127,6 +126,8 @@ namespace Woi.OfficeFire
         {
             _playSession++;
             int session = _playSession;
+
+            ResolveLanguageResolver();
 
             database.TryGetLocalizedSound(voiceLineId, out LocalizedSoundDefinition localizedSound);
             float popupDuration = OfficeFireAnnouncementAudioPlayback.EstimateDuration(localizedSound);
@@ -346,6 +347,26 @@ namespace Woi.OfficeFire
             }
 
             popupService = FindFirstObjectByType<PopupService>();
+        }
+
+        private void ResolveLanguageResolver()
+        {
+            if (_languageResolver != null)
+            {
+                return;
+            }
+
+            if (ServiceLocator.TryGet(out OfficeFireLanguageResolver registered) && registered != null)
+            {
+                _languageResolver = registered;
+                return;
+            }
+
+            _languageResolver = FindFirstObjectByType<OfficeFireLanguageResolver>();
+            if (_languageResolver == null)
+            {
+                _languageResolver = gameObject.AddComponent<OfficeFireLanguageResolver>();
+            }
         }
 
         private bool TryResolvePopupTexts(

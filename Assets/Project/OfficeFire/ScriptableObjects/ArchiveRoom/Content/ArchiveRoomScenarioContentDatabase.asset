@@ -90,22 +90,22 @@ MonoBehaviour:
       EnglishTitle: Press the alarm
       EnglishBody: Activate the fire alarm before other actions.
     Voice: {fileID: 11400000, guid: 3aefa70408cdef04e9d5a7033d01135c, type: 2}
-  - Id: 104
+  - Id: 314
     Popup:
-      TurkishTitle: ArchiveCutPowerInstruction
+      TurkishTitle: 'Reached '
       TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveCutPowerInstruction
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
-  - Id: 105
+    Voice: {fileID: 11400000, guid: 31f8a5a23b0f417282faf7bf8ed35919, type: 2}
+  - Id: 315
     Popup:
       TurkishTitle: ArchivePowerCutSuccess
       TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchivePowerCutSuccess
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: 6de95f9a6f352384084629148c24244e, type: 2}
   - Id: 106
     Popup:
       TurkishTitle: ArchiveUseExtinguisherInstruction
@@ -155,3 +155,10 @@ MonoBehaviour:
       EnglishTitle: EstinguisherHandled
       EnglishBody: Extinguisher picked up.
     Voice: {fileID: 11400000, guid: e8e865d8431349c8be82a5cdbf020f03, type: 2}
+  - Id: 0
+    Popup:
+      TurkishTitle: 
+      TurkishBody: 
+      EnglishTitle: 
+      EnglishBody: 
+    Voice: {fileID: 0}
