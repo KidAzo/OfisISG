@@ -837,6 +837,18 @@ namespace Woi.OfficeFire.Editor
                 }
             }
 
+            SerializedProperty instructionTextProp = so.FindProperty("instructionText");
+            if (instructionTextProp != null)
+            {
+                instructionTextProp.stringValue = "Press E to activate the alarm";
+            }
+
+            SerializedProperty instructionTextTrProp = so.FindProperty("instructionTextTurkish");
+            if (instructionTextTrProp != null)
+            {
+                instructionTextTrProp.stringValue = "Alarm\u0131 \u00e7al\u0131\u015ft\u0131rmak i\u00e7in E'ye bas\u0131n";
+            }
+
             so.ApplyModifiedProperties();
         }
 

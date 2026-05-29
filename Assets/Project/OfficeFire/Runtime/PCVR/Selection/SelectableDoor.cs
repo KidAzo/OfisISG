@@ -30,6 +30,11 @@ namespace Woi.OfficeFire
         [SerializeField]
         private Vector3 instructionLocalOffset = new Vector3(0f, 2f, 0f);
 
+        [Tooltip("Popup size multiplier (1 = InteractHoverPopupHost default scale).")]
+        [SerializeField]
+        [Min(0.01f)]
+        private float instructionPopupScale = 1f;
+
         [Header("Door Pivot")]
         [SerializeField]
         private Transform doorPivot;
@@ -290,6 +295,7 @@ namespace Woi.OfficeFire
                     this,
                     resolveAnchor: () => doorPivot != null ? doorPivot : transform,
                     resolveLocalOffset: () => instructionLocalOffset,
+                    resolveWorldScale: () => instructionPopupScale,
                     hideWhenNotSelectable: true,
                     hideWhenInstructionEmpty: true,
                     preferTurkish: true,

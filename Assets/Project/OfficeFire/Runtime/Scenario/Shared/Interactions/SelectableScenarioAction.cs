@@ -31,6 +31,11 @@ namespace Woi.OfficeFire
         [SerializeField]
         private Vector3 instructionLocalOffset = new Vector3(0f, 1.1f, 0f);
 
+        [Tooltip("Popup size multiplier (1 = InteractHoverPopupHost default scale).")]
+        [SerializeField]
+        [Min(0.01f)]
+        private float instructionPopupScale = 1f;
+
         [SerializeField]
         private UnityEvent onSelected = new UnityEvent();
 
@@ -57,6 +62,11 @@ namespace Woi.OfficeFire
 
         public void Hover(bool isHovered)
         {
+            if (UsesExternalInstructionPrompt())
+            {
+                return;
+            }
+
             EnsureInstructionPrompt();
             _instructionPrompt?.SetHovered(isHovered);
         }
@@ -117,6 +127,11 @@ namespace Woi.OfficeFire
 
         private void EnsureInstructionPrompt()
         {
+            if (UsesExternalInstructionPrompt())
+            {
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(instructionText) && string.IsNullOrWhiteSpace(instructionTextTurkish))
             {
                 return;
@@ -128,6 +143,7 @@ namespace Woi.OfficeFire
                     this,
                     resolveAnchor: () => instructionAnchor != null ? instructionAnchor : transform,
                     resolveLocalOffset: () => instructionLocalOffset,
+                    resolveWorldScale: () => instructionPopupScale,
                     hideWhenNotSelectable: true,
                     hideWhenInstructionEmpty: true,
                     preferTurkish: true,
@@ -137,6 +153,22 @@ namespace Woi.OfficeFire
             }
 
             _instructionPrompt.SetInstruction(instructionText, instructionTextTurkish);
+        }
+
+        public static bool UsesExternalInstructionPrompt(MonoBehaviour host)
+        {
+            if (host == null)
+            {
+                return false;
+            }
+
+            return host.GetComponent<SelectableInstructionPrompt>() != null
+                || host.GetComponentInChildren<SelectableInstructionPrompt>(true) != null;
+        }
+
+        private bool UsesExternalInstructionPrompt()
+        {
+            return UsesExternalInstructionPrompt(this);
         }
     }
 }

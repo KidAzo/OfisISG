@@ -5,6 +5,12 @@ using UnityEngine.UIElements;
 
 namespace Woi.OfficeFire
 {
+    public enum InteractPopupFacingMode
+    {
+        AutoFaceCamera = 0,
+        AnchorForward = 1,
+    }
+
     /// <summary>
     /// Dedicated world-space hover popup for selectables. Uses the same UXML as PopupService
     /// but owns a separate runtime <see cref="UIDocument"/> — the 2D PopupHUD document is never touched.
@@ -25,9 +31,24 @@ namespace Woi.OfficeFire
         [SerializeField]
         private PanelSettings worldPanelSettingsSource;
 
-        [Tooltip("Flip UI 180° on Y so text reads correctly on world-space panels.")]
+        [Tooltip("AutoFaceCamera keeps the anchor yaw and only applies a small turn toward the camera plus a readable-side flip when needed.")]
+        [SerializeField]
+        private InteractPopupFacingMode facingMode = InteractPopupFacingMode.AutoFaceCamera;
+
+        [Tooltip("Max left/right yaw adjustment toward the camera in AutoFaceCamera mode.")]
+        [SerializeField]
+        [Range(0f, 15f)]
+        private float autoFaceCameraMaxYawDegrees = 2f;
+
+        [Tooltip("Only used when Facing Mode is AnchorForward.")]
         [SerializeField]
         private bool uiFacingFlipY180 = true;
+
+        [SerializeField]
+        private bool autoResolvePlayerCamera = true;
+
+        [SerializeField]
+        private string playerTag = "Player";
 
         [SerializeField]
         private float worldDocumentScale = 0.0016f;
@@ -52,15 +73,18 @@ namespace Woi.OfficeFire
         private object _currentOwner;
         private Transform _currentAnchor;
         private Vector3 _currentLocalOffset;
+        private float _currentWorldScale = 1f;
         private Coroutine _waitForRootRoutine;
         private Coroutine _pendingShowRoutine;
 
         private object _pendingOwner;
         private Transform _pendingAnchor;
         private Vector3 _pendingLocalOffset;
+        private float _pendingWorldScale = 1f;
         private string _pendingInstructionText;
         private string _currentInstructionText = string.Empty;
         private Quaternion _baseWorldRotation = Quaternion.identity;
+        private Camera _resolvedViewCamera;
 
         public static OfficeFireInteractPopupHost FindInstance() =>
             FindFirstObjectByType<OfficeFireInteractPopupHost>(FindObjectsInactive.Include);
@@ -132,11 +156,12 @@ namespace Woi.OfficeFire
             }
         }
 
-        public void Show(object owner, Transform anchor, Vector3 localOffset, string instructionText)
+        public void Show(object owner, Transform anchor, Vector3 localOffset, string instructionText, float worldScale = 1f)
         {
             _pendingOwner = owner;
             _pendingAnchor = anchor;
             _pendingLocalOffset = localOffset;
+            _pendingWorldScale = worldScale > 0f ? worldScale : 1f;
             _pendingInstructionText = instructionText;
             _hasPendingShow = true;
 
@@ -149,7 +174,12 @@ namespace Woi.OfficeFire
 
             if (TryBind())
             {
-                ApplyShow(_pendingOwner, _pendingAnchor, _pendingLocalOffset, _pendingInstructionText);
+                ApplyShow(
+                    _pendingOwner,
+                    _pendingAnchor,
+                    _pendingLocalOffset,
+                    _pendingInstructionText,
+                    _pendingWorldScale);
                 _hasPendingShow = false;
                 return;
             }
@@ -160,7 +190,7 @@ namespace Woi.OfficeFire
             }
         }
 
-        public void UpdatePosition(object owner, Transform anchor, Vector3 localOffset)
+        public void UpdatePosition(object owner, Transform anchor, Vector3 localOffset, float worldScale = 1f)
         {
             if (!_visible || !ReferenceEquals(_currentOwner, owner))
             {
@@ -169,6 +199,8 @@ namespace Woi.OfficeFire
 
             _currentAnchor = anchor != null ? anchor : transform;
             _currentLocalOffset = localOffset;
+            _currentWorldScale = worldScale > 0f ? worldScale : 1f;
+            ApplyWorldScale();
             UpdateWorldPosition();
         }
 
@@ -205,15 +237,26 @@ namespace Woi.OfficeFire
                 yield break;
             }
 
-            ApplyShow(_pendingOwner, _pendingAnchor, _pendingLocalOffset, _pendingInstructionText);
+            ApplyShow(
+                _pendingOwner,
+                _pendingAnchor,
+                _pendingLocalOffset,
+                _pendingInstructionText,
+                _pendingWorldScale);
             _hasPendingShow = false;
         }
 
-        private void ApplyShow(object owner, Transform anchor, Vector3 localOffset, string instructionText)
+        private void ApplyShow(
+            object owner,
+            Transform anchor,
+            Vector3 localOffset,
+            string instructionText,
+            float worldScale)
         {
             _currentOwner = owner;
             _currentAnchor = anchor != null ? anchor : transform;
             _currentLocalOffset = localOffset;
+            _currentWorldScale = worldScale > 0f ? worldScale : 1f;
             _currentInstructionText = instructionText ?? string.Empty;
             _baseWorldRotation = ResolveBaseRotation(_currentAnchor);
 
@@ -225,7 +268,7 @@ namespace Woi.OfficeFire
             EnsureLabelBindings();
             ApplyVrWorldVisualLayout();
             ApplyInstructionText(_currentInstructionText);
-            transform.localScale = Vector3.one * Mathf.Max(1e-6f, worldDocumentScale);
+            ApplyWorldScale();
 
             if (_root != null)
             {
@@ -247,6 +290,7 @@ namespace Woi.OfficeFire
             _currentOwner = null;
             _currentAnchor = null;
             _currentLocalOffset = Vector3.zero;
+            _currentWorldScale = 1f;
 
             if (_pendingShowRoutine != null)
             {
@@ -328,7 +372,12 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            ApplyShow(_pendingOwner, _pendingAnchor, _pendingLocalOffset, _pendingInstructionText);
+            ApplyShow(
+                _pendingOwner,
+                _pendingAnchor,
+                _pendingLocalOffset,
+                _pendingInstructionText,
+                _pendingWorldScale);
             _hasPendingShow = false;
 
             if (_pendingShowRoutine != null)
@@ -336,6 +385,12 @@ namespace Woi.OfficeFire
                 StopCoroutine(_pendingShowRoutine);
                 _pendingShowRoutine = null;
             }
+        }
+
+        private void ApplyWorldScale()
+        {
+            float scale = Mathf.Max(1e-6f, worldDocumentScale * _currentWorldScale);
+            transform.localScale = Vector3.one * scale;
         }
 
         private void UpdateWorldPosition()
@@ -352,7 +407,115 @@ namespace Woi.OfficeFire
 
         private void ApplyAnchorRotation()
         {
+            if (facingMode == InteractPopupFacingMode.AutoFaceCamera)
+            {
+                Camera viewCamera = ResolveViewCamera();
+                if (viewCamera != null)
+                {
+                    transform.rotation = ResolveReadableCameraRotation(viewCamera.transform);
+                    return;
+                }
+            }
+
             transform.rotation = ApplyUiFacingFlip(_baseWorldRotation);
+        }
+
+        private Quaternion ResolveReadableCameraRotation(Transform cameraTransform)
+        {
+            Quaternion anchorRotation = ResolveReadableAnchorRotation(cameraTransform);
+            return ApplyClampedYawTowardCamera(anchorRotation, cameraTransform, autoFaceCameraMaxYawDegrees);
+        }
+
+        private Quaternion ResolveReadableAnchorRotation(Transform cameraTransform)
+        {
+            Quaternion noFlip = _baseWorldRotation;
+            Quaternion withFlip = _baseWorldRotation * Quaternion.Euler(0f, 180f, 0f);
+
+            float noFlipReadability = Vector3.Dot(noFlip * Vector3.right, cameraTransform.right);
+            float flipReadability = Vector3.Dot(withFlip * Vector3.right, cameraTransform.right);
+
+            return flipReadability > noFlipReadability ? withFlip : noFlip;
+        }
+
+        private Quaternion ApplyClampedYawTowardCamera(
+            Quaternion baseRotation,
+            Transform cameraTransform,
+            float maxYawDegrees)
+        {
+            if (maxYawDegrees <= 0f)
+            {
+                return baseRotation;
+            }
+
+            Vector3 toCamera = cameraTransform.position - transform.position;
+            toCamera.y = 0f;
+            if (toCamera.sqrMagnitude <= 1e-8f)
+            {
+                return baseRotation;
+            }
+
+            Vector3 baseForward = baseRotation * Vector3.forward;
+            baseForward.y = 0f;
+            if (baseForward.sqrMagnitude <= 1e-8f)
+            {
+                return baseRotation;
+            }
+
+            float yawDelta = Vector3.SignedAngle(
+                baseForward.normalized,
+                toCamera.normalized,
+                Vector3.up);
+            yawDelta = Mathf.Clamp(yawDelta, -maxYawDegrees, maxYawDegrees);
+
+            return baseRotation * Quaternion.Euler(0f, yawDelta, 0f);
+        }
+
+        private Camera ResolveViewCamera()
+        {
+            if (_resolvedViewCamera != null && _resolvedViewCamera.isActiveAndEnabled)
+            {
+                return _resolvedViewCamera;
+            }
+
+            if (Camera.main != null)
+            {
+                _resolvedViewCamera = Camera.main;
+                return _resolvedViewCamera;
+            }
+
+            if (!autoResolvePlayerCamera)
+            {
+                return null;
+            }
+
+            if (!string.IsNullOrEmpty(playerTag))
+            {
+                GameObject player = GameObject.FindGameObjectWithTag(playerTag);
+                if (player != null)
+                {
+                    Camera playerCamera = player.GetComponentInChildren<Camera>(true);
+                    if (playerCamera != null)
+                    {
+                        _resolvedViewCamera = playerCamera;
+                        return _resolvedViewCamera;
+                    }
+                }
+            }
+
+            Camera[] cameras = FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                Camera candidate = cameras[i];
+                if (candidate == null || !candidate.isActiveAndEnabled)
+                {
+                    continue;
+                }
+
+                _resolvedViewCamera = candidate;
+                return _resolvedViewCamera;
+            }
+
+            return null;
         }
 
         private Quaternion ApplyUiFacingFlip(Quaternion rotation)

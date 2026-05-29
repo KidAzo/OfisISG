@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Woi.OfficeFire
 {
     /// <summary>
-    /// Archive alarm interactable: hover outline + E to dispatch <c>press_alarm</c> and raise a SOAP event.
+    /// Archive alarm interactable: hover outline + 3D instruction popup + E to dispatch <c>press_alarm</c>.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Woi/Office Fire/Alarm")]
@@ -25,6 +25,28 @@ namespace Woi.OfficeFire
         [SerializeField]
         private ScriptableEventNoParam alarmPressed;
 
+        [Header("Instruction Prompt")]
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string instructionText = "Press E to activate the alarm";
+
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string instructionTextTurkish = "Alarmı çalıştırmak için E'ye basın";
+
+        [Header("Instruction Placement")]
+        [SerializeField]
+        private Transform instructionAnchor;
+
+        [Tooltip("Local offset from Instruction Anchor (or this transform when anchor is empty).")]
+        [SerializeField]
+        private Vector3 instructionLocalOffset = new Vector3(0f, 0.35f, 0f);
+
+        [Tooltip("Popup size multiplier (1 = InteractHoverPopupHost default scale).")]
+        [SerializeField]
+        [Min(0.01f)]
+        private float instructionPopupScale = 1f;
+
         [Header("Hover Outline")]
         [SerializeField]
         private Outline outline;
@@ -40,35 +62,41 @@ namespace Woi.OfficeFire
         [SerializeField]
         private bool enableDebugLogs = true;
 
-        private float _defaultOutlineWidth;
         private bool _isHovered;
         private bool _loggedMissingOutline;
         private bool _alarmTriggered;
+        private InstructionPromptController _instructionPrompt;
+        private float _defaultOutlineWidth;
 
         public bool IsSelectable => isSelectable && (!_alarmTriggered) && (!requireHoverToPress || _isHovered);
 
         private void Awake()
         {
             RemoveLegacySelectableAction();
+            EnsureInstructionPrompt();
         }
 
         private void Start()
         {
+            EnsureInstructionPrompt();
             EnsureOutline();
-            if (outline == null)
-            {
-                return;
-            }
-
-            _defaultOutlineWidth = outline.OutlineWidth;
-            ApplyHoverState(false);
 
             if (enableDebugLogs)
             {
                 Debug.Log(
-                    $"[Alarm] Ready on '{name}'. Outline='{outline.name}', defaultWidth={_defaultOutlineWidth}, requireHoverToPress={requireHoverToPress}.",
+                    $"[Alarm] Ready on '{name}'. requireHoverToPress={requireHoverToPress}, outline={(outline != null ? outline.name : "none")}.",
                     this);
             }
+        }
+
+        private void OnDisable()
+        {
+            _instructionPrompt?.Hide();
+        }
+
+        private void LateUpdate()
+        {
+            _instructionPrompt?.Tick();
         }
 
         public void Hover(bool isHovered)
@@ -79,28 +107,20 @@ namespace Woi.OfficeFire
             }
 
             _isHovered = isHovered;
-            EnsureOutline();
 
-            if (outline == null)
+            if (UsesExternalInstructionPrompt())
             {
-                if (!_loggedMissingOutline)
-                {
-                    Debug.LogWarning(
-                        $"[Alarm] Hover({isHovered}) — Quick Outline not found on '{name}' or children (selection still uses hover state).",
-                        this);
-                    _loggedMissingOutline = true;
-                }
-
-                return;
+                ApplyOutlineHover(isHovered);
             }
-
-            ApplyHoverState(isHovered);
+            else
+            {
+                EnsureInstructionPrompt();
+                _instructionPrompt?.SetHovered(isHovered);
+            }
 
             if (enableDebugLogs)
             {
-                Debug.Log(
-                    $"[Alarm] Hover {(isHovered ? "ENTER" : "EXIT")} on '{name}'. outline.enabled={outline.enabled}, width={outline.OutlineWidth}.",
-                    this);
+                Debug.Log($"[Alarm] Hover {(isHovered ? "ENTER" : "EXIT")} on '{name}'.", this);
             }
         }
 
@@ -141,6 +161,8 @@ namespace Woi.OfficeFire
 
             _alarmTriggered = true;
             isSelectable = false;
+            _instructionPrompt?.Hide();
+
             if (enableDebugLogs)
             {
                 Debug.Log($"[Alarm] PressAlarm on '{name}'.", this);
@@ -190,6 +212,37 @@ namespace Woi.OfficeFire
             return OfficeFireActiveScenarioLocator.TryGetActive(out scenario);
         }
 
+        private void EnsureInstructionPrompt()
+        {
+            if (UsesExternalInstructionPrompt())
+            {
+                return;
+            }
+
+            if (_instructionPrompt == null)
+            {
+                EnsureOutline();
+
+                _instructionPrompt = new InstructionPromptController(
+                    this,
+                    resolveAnchor: () => instructionAnchor != null ? instructionAnchor : transform,
+                    resolveLocalOffset: () => instructionLocalOffset,
+                    resolveWorldScale: () => instructionPopupScale,
+                    hideWhenNotSelectable: true,
+                    hideWhenInstructionEmpty: true,
+                    preferTurkish: true,
+                    outline: outline,
+                    useOutlineWidth: useOutlineWidth,
+                    hoverOutlineWidth: hoverOutlineWidth);
+            }
+
+            _instructionPrompt.SetInstruction(
+                string.IsNullOrWhiteSpace(instructionText) ? "Press E to activate the alarm" : instructionText,
+                string.IsNullOrWhiteSpace(instructionTextTurkish)
+                    ? "Alarmı çalıştırmak için E'ye basın"
+                    : instructionTextTurkish);
+        }
+
         private void EnsureOutline()
         {
             if (outline != null)
@@ -202,13 +255,38 @@ namespace Woi.OfficeFire
             {
                 outline = GetComponentInChildren<Outline>(true);
             }
+
+            if (outline == null && !_loggedMissingOutline)
+            {
+                Debug.LogWarning(
+                    $"[Alarm] Quick Outline not found on '{name}' or children.",
+                    this);
+                _loggedMissingOutline = true;
+                return;
+            }
+
+            if (outline != null && _defaultOutlineWidth <= 0f)
+            {
+                _defaultOutlineWidth = outline.OutlineWidth;
+            }
         }
 
-        private void ApplyHoverState(bool isHovered)
+        private bool UsesExternalInstructionPrompt()
         {
+            return SelectableScenarioAction.UsesExternalInstructionPrompt(this);
+        }
+
+        private void ApplyOutlineHover(bool isHovered)
+        {
+            EnsureOutline();
             if (outline == null)
             {
                 return;
+            }
+
+            if (_defaultOutlineWidth <= 0f)
+            {
+                _defaultOutlineWidth = outline.OutlineWidth;
             }
 
             if (useOutlineWidth)

@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Woi.OfficeFire
 {
     /// <summary>
     /// Casts a center-screen ray from the player camera each frame and calls
-    /// <see cref="IHoverable.Hover"/> on the hit object.
+    /// <see cref="IHoverable.Hover"/> on every matching object in the hit hierarchy.
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Woi/Office Fire/PC Hover Interactor")]
@@ -35,11 +36,29 @@ namespace Woi.OfficeFire
         [SerializeField]
         private bool enableDebugLogs = true;
 
+        private static readonly IHoverable[] EmptyHoverables = Array.Empty<IHoverable>();
+
         private Camera _resolvedCamera;
-        private IHoverable _currentHoverable;
+        private IHoverable[] _currentHoverables = EmptyHoverables;
         private bool _loggedMissingCamera;
 
-        public IHoverable CurrentHoverable => _currentHoverable;
+        public IHoverable CurrentHoverable =>
+            _currentHoverables.Length > 0 ? _currentHoverables[0] : null;
+
+        public IReadOnlyList<IHoverable> CurrentHoverables => _currentHoverables;
+
+        public ISelectable ResolveSelectableHoverTarget()
+        {
+            for (int i = 0; i < _currentHoverables.Length; i++)
+            {
+                if (_currentHoverables[i] is ISelectable selectable && selectable.IsSelectable)
+                {
+                    return selectable;
+                }
+            }
+
+            return null;
+        }
 
         public void SetRayCamera(Camera camera)
         {
@@ -59,27 +78,34 @@ namespace Woi.OfficeFire
 
         private void UpdateHoverTarget()
         {
-            IHoverable hoverable = TryGetHoverableFromRay();
-            if (ReferenceEquals(hoverable, _currentHoverable))
+            IHoverable[] hoverables = TryGetHoverablesFromRay();
+            if (HoverablesEqual(_currentHoverables, hoverables))
             {
                 return;
             }
 
             ClearHover();
-            _currentHoverable = hoverable;
+            _currentHoverables = hoverables ?? EmptyHoverables;
 
-            if (_currentHoverable != null)
+            for (int i = 0; i < _currentHoverables.Length; i++)
             {
-                _currentHoverable.Hover(true);
+                IHoverable hoverable = _currentHoverables[i];
+                if (hoverable == null)
+                {
+                    continue;
+                }
+
+                hoverable.Hover(true);
 
                 if (enableDebugLogs)
                 {
                     Debug.Log(
-                        $"[PCHoverInteractor] Hover started on '{GetHoverableDebugName(_currentHoverable)}'.",
+                        $"[PCHoverInteractor] Hover started on '{GetHoverableDebugName(hoverable)}'.",
                         this);
                 }
             }
-            else if (enableDebugLogs)
+
+            if (enableDebugLogs && _currentHoverables.Length == 0)
             {
                 Debug.Log("[PCHoverInteractor] Hover cleared — ray missed IHoverable.", this);
             }
@@ -97,16 +123,21 @@ namespace Woi.OfficeFire
 
         private void ClearHover()
         {
-            if (_currentHoverable == null)
+            for (int i = 0; i < _currentHoverables.Length; i++)
             {
-                return;
+                IHoverable hoverable = _currentHoverables[i];
+                if (hoverable == null)
+                {
+                    continue;
+                }
+
+                hoverable.Hover(false);
             }
 
-            _currentHoverable.Hover(false);
-            _currentHoverable = null;
+            _currentHoverables = EmptyHoverables;
         }
 
-        private IHoverable TryGetHoverableFromRay()
+        private IHoverable[] TryGetHoverablesFromRay()
         {
             Camera cam = ResolveCamera();
             if (cam == null)
@@ -119,7 +150,7 @@ namespace Woi.OfficeFire
                     _loggedMissingCamera = true;
                 }
 
-                return null;
+                return EmptyHoverables;
             }
 
             _loggedMissingCamera = false;
@@ -128,7 +159,7 @@ namespace Woi.OfficeFire
             RaycastHit[] hits = Physics.RaycastAll(ray, maxDistance, hoverMask, triggerInteraction);
             if (hits == null || hits.Length == 0)
             {
-                return null;
+                return EmptyHoverables;
             }
 
             Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
@@ -141,14 +172,96 @@ namespace Woi.OfficeFire
                     continue;
                 }
 
-                IHoverable hoverable = hit.collider.GetComponentInParent<IHoverable>();
-                if (hoverable != null)
+                IHoverable[] hoverables = CollectHoverablesFromCollider(hit.collider);
+                if (hoverables.Length == 0)
                 {
-                    return hoverable;
+                    continue;
+                }
+
+                return hoverables;
+            }
+
+            return EmptyHoverables;
+        }
+
+        private static IHoverable[] CollectHoverablesFromCollider(Collider collider)
+        {
+            if (collider == null)
+            {
+                return EmptyHoverables;
+            }
+
+            List<IHoverable> unique = new List<IHoverable>();
+            AddUniqueHoverables(unique, collider.GetComponentsInParent<IHoverable>(true));
+            AddUniqueHoverables(unique, collider.GetComponentsInChildren<IHoverable>(true));
+            return unique.Count > 0 ? unique.ToArray() : EmptyHoverables;
+        }
+
+        private static void AddUniqueHoverables(List<IHoverable> unique, IHoverable[] hoverables)
+        {
+            if (hoverables == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < hoverables.Length; i++)
+            {
+                IHoverable hoverable = hoverables[i];
+                if (hoverable == null)
+                {
+                    continue;
+                }
+
+                bool alreadyAdded = false;
+                for (int j = 0; j < unique.Count; j++)
+                {
+                    if (ReferenceEquals(unique[j], hoverable))
+                    {
+                        alreadyAdded = true;
+                        break;
+                    }
+                }
+
+                if (!alreadyAdded)
+                {
+                    unique.Add(hoverable);
+                }
+            }
+        }
+
+        private static IHoverable[] DeduplicateHoverables(IHoverable[] hoverables)
+        {
+            List<IHoverable> unique = new List<IHoverable>(hoverables.Length);
+            AddUniqueHoverables(unique, hoverables);
+            return unique.Count > 0 ? unique.ToArray() : EmptyHoverables;
+        }
+
+        private static bool HoverablesEqual(IHoverable[] left, IHoverable[] right)
+        {
+            if (ReferenceEquals(left, right))
+            {
+                return true;
+            }
+
+            if (left == null || right == null)
+            {
+                return false;
+            }
+
+            if (left.Length != right.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < left.Length; i++)
+            {
+                if (!ReferenceEquals(left[i], right[i]))
+                {
+                    return false;
                 }
             }
 
-            return null;
+            return true;
         }
 
         private Camera ResolveCamera()

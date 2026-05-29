@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Obvious.Soap;
 using UnityEngine;
 
@@ -169,7 +170,8 @@ namespace Woi.OfficeFire
             }
 
             IHoverable hoverable = hoverInteractor.CurrentHoverable;
-            if (hoverable is not ISelectable selectable || !selectable.IsSelectable)
+            ISelectable selectable = hoverInteractor.ResolveSelectableHoverTarget();
+            if (selectable == null || !selectable.IsSelectable)
             {
                 if (enableDebugLogs && hoverable != null)
                 {
@@ -180,6 +182,13 @@ namespace Woi.OfficeFire
 
                 return false;
             }
+
+            if (selectable is not IHoverable selectableHoverable)
+            {
+                return false;
+            }
+
+            hoverable = selectableHoverable;
 
             Camera cam = ResolveCamera();
             if (cam == null)
@@ -245,16 +254,19 @@ namespace Woi.OfficeFire
                 return null;
             }
 
-            ISelectable[] selectables = collider.GetComponentsInParent<ISelectable>(true);
-            if (selectables == null || selectables.Length == 0)
+            List<ISelectable> candidates = new List<ISelectable>();
+            AddSelectables(candidates, collider.GetComponentsInParent<ISelectable>(true));
+            AddSelectables(candidates, collider.GetComponentsInChildren<ISelectable>(true));
+
+            if (candidates.Count == 0)
             {
                 return null;
             }
 
             ISelectable fallback = null;
-            for (int i = 0; i < selectables.Length; i++)
+            for (int i = 0; i < candidates.Count; i++)
             {
-                ISelectable candidate = selectables[i];
+                ISelectable candidate = candidates[i];
                 if (candidate == null || !candidate.IsSelectable)
                 {
                     continue;
@@ -269,6 +281,38 @@ namespace Woi.OfficeFire
             }
 
             return fallback;
+        }
+
+        private static void AddSelectables(List<ISelectable> candidates, ISelectable[] selectables)
+        {
+            if (selectables == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < selectables.Length; i++)
+            {
+                ISelectable selectable = selectables[i];
+                if (selectable == null)
+                {
+                    continue;
+                }
+
+                bool exists = false;
+                for (int j = 0; j < candidates.Count; j++)
+                {
+                    if (ReferenceEquals(candidates[j], selectable))
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists)
+                {
+                    candidates.Add(selectable);
+                }
+            }
         }
 
         private PCHoverInteractor ResolveHoverInteractor()

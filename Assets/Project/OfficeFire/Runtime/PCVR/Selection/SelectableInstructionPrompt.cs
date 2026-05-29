@@ -1,4 +1,5 @@
 using UnityEngine;
+using Woi.Game;
 
 namespace Woi.OfficeFire
 {
@@ -29,6 +30,11 @@ namespace Woi.OfficeFire
         [SerializeField]
         private Vector3 localOffset = new Vector3(0f, 1.1f, 0f);
 
+        [Tooltip("Popup size multiplier (1 = InteractHoverPopupHost default scale).")]
+        [SerializeField]
+        [Min(0.01f)]
+        private float instructionPopupScale = 1f;
+
         [Header("Visibility")]
         [SerializeField]
         private bool hideWhenNotSelectable = true;
@@ -55,6 +61,8 @@ namespace Woi.OfficeFire
         private float hoverOutlineWidth = 5f;
 
         private InstructionPromptController _controller;
+        private HoverOutline _hoverOutline;
+        private bool _lastHoverOutlineState;
 
         public string InstructionText
         {
@@ -70,6 +78,7 @@ namespace Woi.OfficeFire
 
         private void Awake()
         {
+            _hoverOutline = GetComponent<HoverOutline>();
             EnsureController();
             SyncInstruction();
         }
@@ -81,10 +90,30 @@ namespace Woi.OfficeFire
 
         private void LateUpdate()
         {
+            if (_hoverOutline != null)
+            {
+                bool hovered = _hoverOutline.IsHovered;
+                if (hovered != _lastHoverOutlineState)
+                {
+                    _lastHoverOutlineState = hovered;
+                    ApplyHoveredState(hovered);
+                }
+            }
+
             _controller?.Tick();
         }
 
         public void Hover(bool isHovered)
+        {
+            if (_hoverOutline != null)
+            {
+                return;
+            }
+
+            ApplyHoveredState(isHovered);
+        }
+
+        private void ApplyHoveredState(bool isHovered)
         {
             EnsureController();
             SyncInstruction();
@@ -119,6 +148,7 @@ namespace Woi.OfficeFire
                 this,
                 resolveAnchor: () => anchor != null ? anchor : transform,
                 resolveLocalOffset: () => localOffset,
+                resolveWorldScale: () => instructionPopupScale,
                 hideWhenNotSelectable,
                 hideWhenInstructionEmpty,
                 preferTurkish,

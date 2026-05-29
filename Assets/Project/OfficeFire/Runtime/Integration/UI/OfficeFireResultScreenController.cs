@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -18,7 +19,13 @@ namespace Woi.OfficeFire
         private UnityEvent onContinueClicked;
 
         [Header("Player Input")]
-        [Tooltip("Disabled while the result screen is visible (e.g. FirstPersonController).")]
+        [SerializeField]
+        private Transform playerRoot;
+
+        [SerializeField]
+        private string playerTag = "Player";
+
+        [Tooltip("Disabled while the result screen is visible.")]
         [SerializeField]
         private Behaviour[] playerInputBehaviours;
 
@@ -26,10 +33,39 @@ namespace Woi.OfficeFire
         private bool autoFindPlayerInputBehaviours = true;
 
         [SerializeField]
-        private string autoFindBehaviourTypeName = "FirstPersonController";
+        private string[] autoFindBehaviourTypeNames =
+        {
+            "PCHoverInteractor",
+            "PCSelectableInteractor",
+            "PlayerLeanController",
+        };
 
         [SerializeField]
         private bool disablePlayerInputWhileVisible = true;
+
+        private static readonly string[] MovementSpeedFieldNames =
+        {
+            "_walkSpeed",
+            "walkSpeed",
+            "_sprintSpeed",
+            "sprintSpeed",
+        };
+
+        private static readonly string[] MouseSensitivityFieldNames =
+        {
+            "_mouseSensitivity",
+            "mouseSensitivity",
+        };
+
+        private static readonly BindingFlags BehaviourFieldFlags =
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+        private sealed class FloatFieldSnapshot
+        {
+            public Behaviour Target;
+            public FieldInfo Field;
+            public float OriginalValue;
+        }
 
         private VisualElement _root;
         private VisualElement _statusBadge;
@@ -56,6 +92,7 @@ namespace Woi.OfficeFire
         private bool _playerInputCaptured;
         private bool[] _savedBehaviourEnabledStates;
         private Behaviour[] _capturedBehaviours;
+        private readonly List<FloatFieldSnapshot> _frozenFloatFields = new List<FloatFieldSnapshot>();
         private UnityEngine.CursorLockMode _savedCursorLockState;
         private bool _savedCursorVisible;
 
@@ -381,6 +418,8 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            FreezePlayerMovementAndLook();
+
             _capturedBehaviours = ResolvePlayerInputBehaviours();
             if (_capturedBehaviours != null && _capturedBehaviours.Length > 0)
             {
@@ -412,6 +451,8 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            RestoreFrozenFloatFields();
+
             if (_capturedBehaviours != null && _savedBehaviourEnabledStates != null)
             {
                 for (int i = 0; i < _capturedBehaviours.Length; i++)
@@ -433,19 +474,155 @@ namespace Woi.OfficeFire
             _savedBehaviourEnabledStates = null;
         }
 
+        private void FreezePlayerMovementAndLook()
+        {
+            Transform root = ResolvePlayerRoot();
+            if (root == null)
+            {
+                return;
+            }
+
+            MonoBehaviour[] behaviours = root.GetComponentsInChildren<MonoBehaviour>(true);
+            for (int i = 0; i < behaviours.Length; i++)
+            {
+                MonoBehaviour behaviour = behaviours[i];
+                if (behaviour == null)
+                {
+                    continue;
+                }
+
+                FreezeFloatFields(behaviour, MovementSpeedFieldNames);
+                FreezeFloatFields(behaviour, MouseSensitivityFieldNames);
+            }
+        }
+
+        private void FreezeFloatFields(MonoBehaviour behaviour, string[] fieldNames)
+        {
+            System.Type type = behaviour.GetType();
+            for (int i = 0; i < fieldNames.Length; i++)
+            {
+                FieldInfo field = type.GetField(fieldNames[i], BehaviourFieldFlags);
+                if (field == null || field.FieldType != typeof(float))
+                {
+                    continue;
+                }
+
+                if (TryFindExistingSnapshot(behaviour, field, out FloatFieldSnapshot existing))
+                {
+                    field.SetValue(behaviour, 0f);
+                    continue;
+                }
+
+                float originalValue = (float)field.GetValue(behaviour);
+                _frozenFloatFields.Add(new FloatFieldSnapshot
+                {
+                    Target = behaviour,
+                    Field = field,
+                    OriginalValue = originalValue,
+                });
+                field.SetValue(behaviour, 0f);
+            }
+        }
+
+        private bool TryFindExistingSnapshot(Behaviour target, FieldInfo field, out FloatFieldSnapshot snapshot)
+        {
+            for (int i = 0; i < _frozenFloatFields.Count; i++)
+            {
+                FloatFieldSnapshot candidate = _frozenFloatFields[i];
+                if (candidate.Target == target && candidate.Field == field)
+                {
+                    snapshot = candidate;
+                    return true;
+                }
+            }
+
+            snapshot = null;
+            return false;
+        }
+
+        private void RestoreFrozenFloatFields()
+        {
+            for (int i = 0; i < _frozenFloatFields.Count; i++)
+            {
+                FloatFieldSnapshot snapshot = _frozenFloatFields[i];
+                if (snapshot.Target == null || snapshot.Field == null)
+                {
+                    continue;
+                }
+
+                snapshot.Field.SetValue(snapshot.Target, snapshot.OriginalValue);
+            }
+
+            _frozenFloatFields.Clear();
+        }
+
+        private Transform ResolvePlayerRoot()
+        {
+            if (playerRoot != null)
+            {
+                return playerRoot;
+            }
+
+            if (!string.IsNullOrWhiteSpace(playerTag))
+            {
+                GameObject taggedPlayer = GameObject.FindGameObjectWithTag(playerTag);
+                if (taggedPlayer != null)
+                {
+                    return taggedPlayer.transform;
+                }
+            }
+
+            return null;
+        }
+
         private Behaviour[] ResolvePlayerInputBehaviours()
         {
-            if (playerInputBehaviours != null && playerInputBehaviours.Length > 0)
+            List<Behaviour> resolved = new List<Behaviour>();
+
+            if (playerInputBehaviours != null)
             {
-                return playerInputBehaviours;
+                for (int i = 0; i < playerInputBehaviours.Length; i++)
+                {
+                    AddUniqueBehaviour(resolved, playerInputBehaviours[i]);
+                }
             }
 
-            if (!autoFindPlayerInputBehaviours)
+            if (autoFindPlayerInputBehaviours && autoFindBehaviourTypeNames != null)
             {
-                return null;
+                for (int i = 0; i < autoFindBehaviourTypeNames.Length; i++)
+                {
+                    Behaviour[] found = FindBehavioursByTypeName(autoFindBehaviourTypeNames[i]);
+                    if (found == null)
+                    {
+                        continue;
+                    }
+
+                    for (int j = 0; j < found.Length; j++)
+                    {
+                        AddUniqueBehaviour(resolved, found[j]);
+                    }
+                }
             }
 
-            return FindBehavioursByTypeName(autoFindBehaviourTypeName);
+            return resolved.Count > 0 ? resolved.ToArray() : null;
+        }
+
+        private static void AddUniqueBehaviour(List<Behaviour> resolved, Behaviour behaviour)
+        {
+            if (behaviour == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < resolved.Count; i++)
+            {
+                if (resolved[i] == behaviour)
+                {
+                    return;
+                }
+            }
+
+            resolved.Add(behaviour);
         }
 
         private static Behaviour[] FindBehavioursByTypeName(string typeName)

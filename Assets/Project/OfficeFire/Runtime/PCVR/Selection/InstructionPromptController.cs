@@ -8,6 +8,7 @@ namespace Woi.OfficeFire
         private readonly MonoBehaviour _host;
         private readonly Func<Transform> _resolveAnchor;
         private readonly Func<Vector3> _resolveLocalOffset;
+        private readonly Func<float> _resolveWorldScale;
         private readonly bool _hideWhenNotSelectable;
         private readonly bool _hideWhenInstructionEmpty;
         private readonly bool _preferTurkish;
@@ -25,6 +26,7 @@ namespace Woi.OfficeFire
             MonoBehaviour host,
             Func<Transform> resolveAnchor,
             Func<Vector3> resolveLocalOffset,
+            Func<float> resolveWorldScale,
             bool hideWhenNotSelectable,
             bool hideWhenInstructionEmpty,
             bool preferTurkish,
@@ -35,6 +37,7 @@ namespace Woi.OfficeFire
             _host = host;
             _resolveAnchor = resolveAnchor ?? (() => host != null ? host.transform : null);
             _resolveLocalOffset = resolveLocalOffset ?? (() => Vector3.zero);
+            _resolveWorldScale = resolveWorldScale ?? (() => 1f);
             _hideWhenNotSelectable = hideWhenNotSelectable;
             _hideWhenInstructionEmpty = hideWhenInstructionEmpty;
             _preferTurkish = preferTurkish;
@@ -88,7 +91,7 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            host.UpdatePosition(_host, ResolveAnchor(), ResolveLocalOffset());
+            host.UpdatePosition(_host, ResolveAnchor(), ResolveLocalOffset(), ResolveWorldScale());
         }
 
         private void RefreshPopup()
@@ -119,7 +122,7 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            host.Show(_host, ResolveAnchor(), ResolveLocalOffset(), text);
+            host.Show(_host, ResolveAnchor(), ResolveLocalOffset(), text, ResolveWorldScale());
         }
 
         private Transform ResolveAnchor()
@@ -129,6 +132,12 @@ namespace Woi.OfficeFire
         }
 
         private Vector3 ResolveLocalOffset() => _resolveLocalOffset();
+
+        private float ResolveWorldScale()
+        {
+            float scale = _resolveWorldScale();
+            return scale > 0f ? scale : 1f;
+        }
 
         private OfficeFireInteractPopupHost ResolvePopupHost()
         {
@@ -166,7 +175,7 @@ namespace Woi.OfficeFire
                 return true;
             }
 
-            ISelectable[] selectables = _host.GetComponents<ISelectable>();
+            ISelectable[] selectables = _host.GetComponentsInParent<ISelectable>(true);
             if (selectables == null || selectables.Length == 0)
             {
                 return true;
