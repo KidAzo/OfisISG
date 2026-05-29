@@ -1,0 +1,44 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="OfficeFireResultScreen.uss" />
+    <ui:VisualElement name="office-fire-result-root" class="result-root">
+        <ui:VisualElement name="result-backdrop" class="result-backdrop" picking-mode="Position" />
+        <ui:VisualElement class="result-panel main-widget">
+            <ui:VisualElement class="header-container">
+                <ui:VisualElement class="header-icon-bg">
+                    <ui:Label text="📋" class="header-icon-emoji" />
+                </ui:VisualElement>
+                <ui:VisualElement class="header-text-column">
+                    <ui:Label name="result-title" class="title-text" text="Training Result" />
+                    <ui:Label name="result-subtitle" class="subtitle-text" text="Archive Room Scenario" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="result-status-badge" class="status-badge status-badge--pending">
+                <ui:Label name="result-status-label" class="status-badge-text" text="PASSED" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="stats-grid">
+                <ui:VisualElement class="stat-card">
+                    <ui:Label name="reaction-time-label" class="label-text" text="REACTION TIME" />
+                    <ui:Label name="reaction-time-value" class="value-text text-emerald" text="12.4 s" />
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-card">
+                    <ui:Label name="fire-controlled-label" class="label-text" text="FIRE" />
+                    <ui:Label name="fire-controlled-value" class="value-text" text="Controlled" />
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-card">
+                    <ui:Label name="evacuated-label" class="label-text" text="EVACUATION" />
+                    <ui:Label name="evacuated-value" class="value-text" text="Completed" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:Label name="correct-section-title" class="section-title text-emerald" text="Correct Actions" />
+            <ui:ScrollView name="correct-actions-list" class="result-scroll" />
+
+            <ui:Label name="mistakes-section-title" class="section-title text-red" text="Mistakes" />
+            <ui:ScrollView name="mistakes-list" class="result-scroll" />
+
+            <ui:Button name="btn-result-continue" class="result-continue-button" text="Continue" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

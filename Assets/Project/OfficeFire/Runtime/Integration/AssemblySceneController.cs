@@ -63,6 +63,9 @@ namespace Woi.OfficeFire
         private GameObject resultScreenRoot;
 
         [SerializeField]
+        private OfficeFireResultScreenController resultScreenController;
+
+        [SerializeField]
         private UnityEvent onResultScreenRequested;
 
         [Header("Debug")]
@@ -108,7 +111,11 @@ namespace Woi.OfficeFire
                 StopCoroutine(_sequence);
             }
 
-            if (resultScreenRoot != null)
+            if (resultScreenController != null)
+            {
+                resultScreenController.HideScreen();
+            }
+            else if (resultScreenRoot != null)
             {
                 resultScreenRoot.SetActive(false);
             }
@@ -135,13 +142,46 @@ namespace Woi.OfficeFire
                 }
             }
 
-            if (resultScreenRoot != null)
+            ShowResultScreen();
+            _sequence = null;
+        }
+
+        private void ShowResultScreen()
+        {
+            OfficeFireResultScreenController screen = ResolveResultScreenController();
+            if (screen != null)
+            {
+                if (OfficeFireScenarioReportHolder.TryConsume(out OfficeFireScenarioReport report))
+                {
+                    screen.Present(report);
+                }
+                else
+                {
+                    screen.Present(new OfficeFireScenarioReport());
+                }
+            }
+            else if (resultScreenRoot != null)
             {
                 resultScreenRoot.SetActive(true);
             }
 
             onResultScreenRequested?.Invoke();
-            _sequence = null;
+        }
+
+        private OfficeFireResultScreenController ResolveResultScreenController()
+        {
+            if (resultScreenController != null)
+            {
+                return resultScreenController;
+            }
+
+            if (resultScreenRoot != null &&
+                resultScreenRoot.TryGetComponent(out OfficeFireResultScreenController onRoot))
+            {
+                return onRoot;
+            }
+
+            return FindFirstObjectByType<OfficeFireResultScreenController>(FindObjectsInactive.Include);
         }
 
         private void TeleportPlayer()

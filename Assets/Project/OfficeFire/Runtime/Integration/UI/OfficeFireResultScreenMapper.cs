@@ -1,0 +1,155 @@
+using System.Globalization;
+
+namespace Woi.OfficeFire
+{
+    public static class OfficeFireResultScreenMapper
+    {
+        public static OfficeFireResultScreenModel FromReport(OfficeFireScenarioReport report, bool turkish)
+        {
+            OfficeFireResultScreenModel model = new OfficeFireResultScreenModel
+            {
+                Title = turkish ? "Eğitim Sonucu" : "Training Result",
+                Subtitle = GetScenarioTitle(report?.scenarioId ?? OfficeFireScenarioId.None, turkish),
+                ReactionTimeLabel = turkish ? "TEPKİ SÜRESİ" : "REACTION TIME",
+                ReactionTimeValue = FormatReactionTime(report?.reactionTime ?? 0f),
+                FireControlledLabel = turkish ? "YANGIN" : "FIRE",
+                FireControlledValue = FormatBool(
+                    report != null && report.fireControlled,
+                    turkish ? "Kontrol altında" : "Controlled",
+                    turkish ? "Kontrol edilmedi" : "Not controlled"),
+                EvacuatedLabel = turkish ? "TAHLİYE" : "EVACUATION",
+                EvacuatedValue = FormatBool(
+                    report != null && report.evacuated,
+                    turkish ? "Tamamlandı" : "Completed",
+                    turkish ? "Tamamlanmadı" : "Not completed"),
+                CorrectSectionTitle = turkish ? "Doğru Davranışlar" : "Correct Actions",
+                MistakesSectionTitle = turkish ? "Hatalar" : "Mistakes",
+                EmptyCorrectText = turkish ? "Kayıtlı doğru davranış yok." : "No correct actions recorded.",
+                EmptyMistakesText = turkish ? "Hata kaydedilmedi." : "No mistakes recorded.",
+                ContinueButtonText = turkish ? "Devam" : "Continue",
+            };
+
+            bool passed = report != null && report.mistakes.Count == 0;
+            model.Passed = passed;
+            model.StatusLabel = passed
+                ? (turkish ? "BAŞARILI" : "PASSED")
+                : (turkish ? "İYİLEŞTİRME GEREKİYOR" : "NEEDS IMPROVEMENT");
+
+            if (report == null)
+            {
+                return model;
+            }
+
+            for (int i = 0; i < report.correctActions.Count; i++)
+            {
+                model.CorrectActions.Add(GetCorrectActionLabel(report.correctActions[i], turkish));
+            }
+
+            for (int i = 0; i < report.mistakes.Count; i++)
+            {
+                model.Mistakes.Add(GetMistakeLabel(report.mistakes[i], turkish));
+            }
+
+            return model;
+        }
+
+        public static string GetScenarioTitle(OfficeFireScenarioId scenarioId, bool turkish)
+        {
+            return scenarioId switch
+            {
+                OfficeFireScenarioId.ArchiveRoom => turkish ? "Arşiv Odası Senaryosu" : "Archive Room Scenario",
+                OfficeFireScenarioId.ServerRoom => turkish ? "Sunucu Odası Senaryosu" : "Server Room Scenario",
+                OfficeFireScenarioId.KitchenCafe => turkish ? "Mutfak / Kafe Senaryosu" : "Kitchen / Cafe Scenario",
+                _ => turkish ? "Ofis Yangın Eğitimi" : "Office Fire Training",
+            };
+        }
+
+        public static string GetCorrectActionLabel(OfficeFireCorrectActionId id, bool turkish)
+        {
+            if (id == OfficeFireCorrectActionId.None)
+            {
+                return string.Empty;
+            }
+
+            (string en, string tr) = id switch
+            {
+                OfficeFireCorrectActionId.NoticedSmoke => ("Noticed smoke", "Duman fark edildi"),
+                OfficeFireCorrectActionId.PressedAlarm => ("Pressed the alarm", "Alarm basıldı"),
+                OfficeFireCorrectActionId.EvacuatedSafely => ("Evacuated safely", "Güvenli tahliye"),
+                OfficeFireCorrectActionId.ReachedAssemblyArea => ("Reached assembly area", "Toplanma alanına ulaşıldı"),
+                OfficeFireCorrectActionId.OpenedArchiveDoor => ("Opened archive door", "Arşiv kapısı açıldı"),
+                OfficeFireCorrectActionId.CutPower => ("Cut electrical power", "Elektrik kesildi"),
+                OfficeFireCorrectActionId.UsedExtinguisherCorrectly => ("Used extinguisher correctly", "Söndürücü doğru kullanıldı"),
+                OfficeFireCorrectActionId.ControlledArchiveFire => ("Controlled archive fire", "Arşiv yangını kontrol altına alındı"),
+                OfficeFireCorrectActionId.EnteredServerRoomSafely => ("Entered server room safely", "Sunucu odasına güvenli giriş"),
+                OfficeFireCorrectActionId.ActivatedSuppressionSystem => ("Activated suppression system", "Söndürme sistemi devreye alındı"),
+                OfficeFireCorrectActionId.LeftServerRoomBeforeGas => ("Left server room before gas release", "Gaz salınımından önce odadan çıkıldı"),
+                OfficeFireCorrectActionId.ControlledServerFire => ("Controlled server fire", "Sunucu yangını kontrol altına alındı"),
+                OfficeFireCorrectActionId.SelectedFireBlanket => ("Selected fire blanket", "Yangın battaniyesi alındı"),
+                OfficeFireCorrectActionId.PlacedFireBlanketCorrectly => ("Placed fire blanket correctly", "Yangın battaniyesi doğru yerleştirildi"),
+                OfficeFireCorrectActionId.TurnedOffStove => ("Turned off the stove", "Ocak kapatıldı"),
+                OfficeFireCorrectActionId.ControlledKitchenFire => ("Controlled kitchen fire", "Mutfak yangını kontrol altına alındı"),
+                OfficeFireCorrectActionId.UsedExtinguisherControlled => ("Used extinguisher in a controlled way", "Söndürücü kontrollü kullanıldı"),
+                OfficeFireCorrectActionId.LeanedCorrectly => ("Leaned correctly in smoke", "Duman içinde doğru eğilme"),
+                OfficeFireCorrectActionId.ReachedExitDoor => ("Reached exit door", "Çıkış kapısına ulaşıldı"),
+                _ => (id.ToString(), id.ToString()),
+            };
+
+            return Pick(en, tr, turkish);
+        }
+
+        public static string GetMistakeLabel(OfficeFireMistakeId id, bool turkish)
+        {
+            if (id == OfficeFireMistakeId.None)
+            {
+                return string.Empty;
+            }
+
+            (string en, string tr) = id switch
+            {
+                OfficeFireMistakeId.DelayedReaction => ("Delayed reaction", "Geç tepki"),
+                OfficeFireMistakeId.StoodInSmoke => ("Stood in smoke", "Duman içinde ayakta kalındı"),
+                OfficeFireMistakeId.ReturnedToFireZone => ("Returned to fire zone", "Yangın bölgesine geri dönüldü"),
+                OfficeFireMistakeId.UsedElevator => ("Used elevator during evacuation", "Tahliyede asansör kullanıldı"),
+                OfficeFireMistakeId.DelayedEvacuation => ("Delayed evacuation", "Tahliye geciktirildi"),
+                OfficeFireMistakeId.UsedWaterOnElectricalFire => ("Used water on electrical fire", "Elektrik yangınına su kullanıldı"),
+                OfficeFireMistakeId.UsedExtinguisherBeforeAlarm => ("Used extinguisher before alarm", "Alarmdan önce söndürücü kullanıldı"),
+                OfficeFireMistakeId.UsedExtinguisherBeforePowerCut => ("Used extinguisher before power cut", "Elektrik kesilmeden söndürücü kullanıldı"),
+                OfficeFireMistakeId.WrongExtinguisherDistance => ("Wrong extinguisher distance", "Yanlış söndürücü mesafesi"),
+                OfficeFireMistakeId.WrongExtinguisherAngle => ("Wrong extinguisher angle", "Yanlış söndürücü açısı"),
+                OfficeFireMistakeId.UsedWaterOnServerFire => ("Used water on server fire", "Sunucu yangınına su kullanıldı"),
+                OfficeFireMistakeId.UsedManualExtinguisherBeforeSuppression => ("Used manual extinguisher before suppression", "Sistem devreye alınmadan manuel söndürücü kullanıldı"),
+                OfficeFireMistakeId.StayedInsideDuringGasSuppression => ("Stayed inside during gas suppression", "Gazlı söndürme sırasında içeride kalındı"),
+                OfficeFireMistakeId.UsedWaterOnOilFire => ("Used water on oil fire", "Yağ yangınına su kullanıldı"),
+                OfficeFireMistakeId.MovedBurningPan => ("Moved burning pan", "Yanan tencere taşındı"),
+                OfficeFireMistakeId.UsedExtinguisherTooCloseToOilFire => ("Used extinguisher too close to oil fire", "Yağ yangınına çok yakın söndürücü kullanıldı"),
+                OfficeFireMistakeId.UsedExtinguisherUncontrolled => ("Used extinguisher uncontrolled", "Söndürücü kontrolsüz kullanıldı"),
+                OfficeFireMistakeId.FailedToCoverPanWithBlanket => ("Failed to cover pan with blanket", "Tencere battaniye ile kapatılamadı"),
+                OfficeFireMistakeId.ForgotToTurnOffStove => ("Forgot to turn off stove", "Ocak kapatılmadı"),
+                _ => (id.ToString(), id.ToString()),
+            };
+
+            return Pick(en, tr, turkish);
+        }
+
+        private static string Pick(string english, string turkish, bool useTurkish)
+        {
+            return useTurkish ? turkish : english;
+        }
+
+        private static string FormatReactionTime(float seconds)
+        {
+            if (seconds <= 0.01f)
+            {
+                return "—";
+            }
+
+            return seconds.ToString("0.0", CultureInfo.InvariantCulture) + " s";
+        }
+
+        private static string FormatBool(bool value, string yes, string no)
+        {
+            return value ? yes : no;
+        }
+    }
+}

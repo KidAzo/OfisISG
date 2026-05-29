@@ -613,6 +613,13 @@ namespace Woi.OfficeFire
             CancelAssemblyAreaReminderLoop();
             StopEvacuationNpcs();
 
+            if (!IsCompleted)
+            {
+                CompleteScenario();
+            }
+
+            OfficeFireScenarioReportHolder.Stash(Report);
+
             Debug.Log(
                 $"[ArchiveRoomScenarioController] Loading outdoor scene group '{outdoorSceneGroupName.Trim()}'.",
                 this);
