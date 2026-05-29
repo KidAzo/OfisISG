@@ -95,20 +95,23 @@
 
 .status-badge {
     align-self: flex-start;
-    border-radius: 999px;
-    padding: 6px 14px;
+    border-radius: 6px;
+    padding: 8px 12px;
     margin-bottom: 18px;
     border-width: 1px;
+    border-left-width: 3px;
 }
 
 .status-badge--pass {
     background-color: rgba(16, 185, 129, 0.16);
     border-color: rgba(16, 185, 129, 0.45);
+    border-left-color: rgba(16, 185, 129, 0.85);
 }
 
 .status-badge--fail {
     background-color: rgba(245, 158, 11, 0.14);
     border-color: rgba(245, 158, 11, 0.45);
+    border-left-color: rgba(245, 158, 11, 0.85);
 }
 
 .status-badge-text {
@@ -191,6 +194,10 @@
     border-left-color: rgba(239, 68, 68, 0.75);
 }
 
+.result-row--missing {
+    border-left-color: rgba(245, 158, 11, 0.75);
+}
+
 .result-row-marker {
     width: 18px;
     margin-right: 10px;
@@ -205,6 +212,10 @@
 
 .result-row--mistake .result-row-marker {
     color: var(--color-red);
+}
+
+.result-row--missing .result-row-marker {
+    color: var(--color-amber);
 }
 
 .result-row-text {

@@ -35,8 +35,12 @@ namespace Woi.OfficeFire
                 fireControlled = source.fireControlled,
                 evacuated = source.evacuated,
                 completed = source.completed,
-                correctActions = new List<OfficeFireCorrectActionId>(source.correctActions),
-                mistakes = new List<OfficeFireMistakeId>(source.mistakes),
+                correctActions = source.correctActions != null
+                    ? new List<OfficeFireCorrectActionId>(source.correctActions)
+                    : new List<OfficeFireCorrectActionId>(),
+                mistakes = source.mistakes != null
+                    ? new List<OfficeFireMistakeId>(source.mistakes)
+                    : new List<OfficeFireMistakeId>(),
             };
         }
     }

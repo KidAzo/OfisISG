@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace Woi.OfficeFire
 {
-    public sealed class SelectableDoor : MonoBehaviour, ISelectable
+    public sealed class SelectableDoor : MonoBehaviour, ISelectable, IHoverable
     {
         private static readonly SelectionContext DefaultSelectionContext =
             new SelectionContext(SelectionSource.Unknown, null, default, default);
@@ -15,6 +15,20 @@ namespace Woi.OfficeFire
 
         [SerializeField]
         private bool toggleOnSelect = true;
+
+        [Header("Instruction Prompt")]
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string instructionText;
+
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string instructionTextTurkish;
+
+        [Header("Instruction Placement")]
+        [Tooltip("Local offset from door pivot (or this transform when pivot is empty).")]
+        [SerializeField]
+        private Vector3 instructionLocalOffset = new Vector3(0f, 2f, 0f);
 
         [Header("Door Pivot")]
         [SerializeField]
@@ -48,6 +62,7 @@ namespace Woi.OfficeFire
         private Quaternion _closedLocalRotation;
         private Coroutine _rotationRoutine;
         private bool _isOpen;
+        private InstructionPromptController _instructionPrompt;
 
         public bool IsSelectable => isSelectable;
 
@@ -65,6 +80,24 @@ namespace Woi.OfficeFire
             {
                 _isOpen = false;
             }
+
+            EnsureInstructionPrompt();
+        }
+
+        private void OnDisable()
+        {
+            _instructionPrompt?.Hide();
+        }
+
+        private void LateUpdate()
+        {
+            _instructionPrompt?.Tick();
+        }
+
+        public void Hover(bool isHovered)
+        {
+            EnsureInstructionPrompt();
+            _instructionPrompt?.SetHovered(isHovered);
         }
 
         public void SetSelectable(bool value)
@@ -242,6 +275,30 @@ namespace Woi.OfficeFire
                     onClosed.Invoke();
                 }
             }
+        }
+
+        private void EnsureInstructionPrompt()
+        {
+            if (string.IsNullOrWhiteSpace(instructionText) && string.IsNullOrWhiteSpace(instructionTextTurkish))
+            {
+                return;
+            }
+
+            if (_instructionPrompt == null)
+            {
+                _instructionPrompt = new InstructionPromptController(
+                    this,
+                    resolveAnchor: () => doorPivot != null ? doorPivot : transform,
+                    resolveLocalOffset: () => instructionLocalOffset,
+                    hideWhenNotSelectable: true,
+                    hideWhenInstructionEmpty: true,
+                    preferTurkish: true,
+                    outline: null,
+                    useOutlineWidth: false,
+                    hoverOutlineWidth: 5f);
+            }
+
+            _instructionPrompt.SetInstruction(instructionText, instructionTextTurkish);
         }
     }
 }

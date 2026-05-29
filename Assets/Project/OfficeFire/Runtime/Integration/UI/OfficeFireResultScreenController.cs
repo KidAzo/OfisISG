@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -16,6 +17,20 @@ namespace Woi.OfficeFire
         [SerializeField]
         private UnityEvent onContinueClicked;
 
+        [Header("Player Input")]
+        [Tooltip("Disabled while the result screen is visible (e.g. FirstPersonController).")]
+        [SerializeField]
+        private Behaviour[] playerInputBehaviours;
+
+        [SerializeField]
+        private bool autoFindPlayerInputBehaviours = true;
+
+        [SerializeField]
+        private string autoFindBehaviourTypeName = "FirstPersonController";
+
+        [SerializeField]
+        private bool disablePlayerInputWhileVisible = true;
+
         private VisualElement _root;
         private VisualElement _statusBadge;
         private Label _titleLabel;
@@ -28,14 +43,21 @@ namespace Woi.OfficeFire
         private Label _evacuatedLabel;
         private Label _evacuatedValue;
         private Label _correctSectionTitle;
+        private Label _missingSectionTitle;
         private Label _mistakesSectionTitle;
         private ScrollView _correctList;
+        private ScrollView _missingList;
         private ScrollView _mistakesList;
         private Button _continueButton;
 
         private OfficeFireScenarioReport _lastReport;
         private bool _uiBound;
         private Coroutine _deferredBindRoutine;
+        private bool _playerInputCaptured;
+        private bool[] _savedBehaviourEnabledStates;
+        private Behaviour[] _capturedBehaviours;
+        private UnityEngine.CursorLockMode _savedCursorLockState;
+        private bool _savedCursorVisible;
 
         private void Awake()
         {
@@ -58,10 +80,8 @@ namespace Woi.OfficeFire
                 _deferredBindRoutine = null;
             }
 
-            if (_continueButton != null)
-            {
-                _continueButton.clicked -= HandleContinueClicked;
-            }
+            ReleasePlayerInput();
+            ReleaseUiBinding();
         }
 
         private void LateUpdate()
@@ -85,6 +105,8 @@ namespace Woi.OfficeFire
         public void Present(OfficeFireScenarioReport report)
         {
             _lastReport = report;
+            ShowScreen();
+
             if (!TryBindUi())
             {
                 return;
@@ -94,11 +116,12 @@ namespace Woi.OfficeFire
             _lastPresentTurkish = turkish;
             OfficeFireResultScreenModel model = OfficeFireResultScreenMapper.FromReport(report, turkish);
             ApplyModel(model);
-            ShowScreen();
         }
 
         public void HideScreen()
         {
+            ReleasePlayerInput();
+
             if (_root != null)
             {
                 _root.style.display = DisplayStyle.None;
@@ -110,6 +133,7 @@ namespace Woi.OfficeFire
         public void ShowScreen()
         {
             gameObject.SetActive(true);
+            CapturePlayerInput();
 
             if (_root != null)
             {
@@ -134,6 +158,7 @@ namespace Woi.OfficeFire
             _evacuatedLabel.text = model.EvacuatedLabel;
             _evacuatedValue.text = model.EvacuatedValue;
             _correctSectionTitle.text = model.CorrectSectionTitle;
+            _missingSectionTitle.text = model.MissingSectionTitle;
             _mistakesSectionTitle.text = model.MistakesSectionTitle;
             _continueButton.text = model.ContinueButtonText;
 
@@ -151,46 +176,75 @@ namespace Woi.OfficeFire
             _evacuatedValue.AddToClassList(
                 _lastReport != null && _lastReport.evacuated ? "text-emerald" : "text-red");
 
-            RebuildList(_correctList, model.CorrectActions, model.EmptyCorrectText, isMistake: false);
-            RebuildList(_mistakesList, model.Mistakes, model.EmptyMistakesText, isMistake: true);
+            RebuildList(_correctList, model.CompletedObjectives, model.EmptyCorrectText, ResultRowKind.Completed);
+            RebuildList(_missingList, model.MissingObjectives, model.EmptyMissingText, ResultRowKind.Missing);
+            RebuildList(_mistakesList, model.Mistakes, model.EmptyMistakesText, ResultRowKind.Mistake);
         }
 
-        private static void RebuildList(ScrollView list, System.Collections.Generic.List<string> items, string emptyText, bool isMistake)
+        private enum ResultRowKind
+        {
+            Completed,
+            Missing,
+            Mistake,
+        }
+
+        private static void RebuildList(
+            ScrollView list,
+            System.Collections.Generic.List<string> items,
+            string emptyText,
+            ResultRowKind rowKind)
         {
             if (list == null)
             {
                 return;
             }
 
-            list.Clear();
+            VisualElement container = list.contentContainer;
+            container.Clear();
 
             if (items == null || items.Count == 0)
             {
                 Label empty = new Label(emptyText);
                 empty.AddToClassList("result-empty-text");
-                list.Add(empty);
+                container.Add(empty);
                 return;
             }
 
             for (int i = 0; i < items.Count; i++)
             {
-                list.Add(CreateRow(items[i], isMistake));
+                container.Add(CreateRow(items[i], rowKind));
             }
         }
 
-        private static VisualElement CreateRow(string text, bool isMistake)
+        private static VisualElement CreateRow(string text, ResultRowKind rowKind)
         {
             VisualElement row = new VisualElement();
             row.AddToClassList("result-row");
-            row.AddToClassList(isMistake ? "result-row--mistake" : "result-row--correct");
 
-            Label marker = new Label(isMistake ? "✕" : "✓");
-            marker.AddToClassList("result-row-marker");
+            string marker;
+            switch (rowKind)
+            {
+                case ResultRowKind.Missing:
+                    row.AddToClassList("result-row--missing");
+                    marker = "!";
+                    break;
+                case ResultRowKind.Mistake:
+                    row.AddToClassList("result-row--mistake");
+                    marker = "✕";
+                    break;
+                default:
+                    row.AddToClassList("result-row--correct");
+                    marker = "✓";
+                    break;
+            }
+
+            Label markerLabel = new Label(marker);
+            markerLabel.AddToClassList("result-row-marker");
 
             Label label = new Label(text);
             label.AddToClassList("result-row-text");
 
-            row.Add(marker);
+            row.Add(markerLabel);
             row.Add(label);
             return row;
         }
@@ -247,8 +301,38 @@ namespace Woi.OfficeFire
             _deferredBindRoutine = null;
         }
 
+        private void ReleaseUiBinding()
+        {
+            if (_continueButton != null)
+            {
+                _continueButton.clicked -= HandleContinueClicked;
+            }
+
+            _uiBound = false;
+            _root = null;
+            _statusBadge = null;
+            _titleLabel = null;
+            _subtitleLabel = null;
+            _statusLabel = null;
+            _reactionTimeLabel = null;
+            _reactionTimeValue = null;
+            _fireControlledLabel = null;
+            _fireControlledValue = null;
+            _evacuatedLabel = null;
+            _evacuatedValue = null;
+            _correctSectionTitle = null;
+            _missingSectionTitle = null;
+            _mistakesSectionTitle = null;
+            _correctList = null;
+            _missingList = null;
+            _mistakesList = null;
+            _continueButton = null;
+        }
+
         private void BindUi(VisualElement root)
         {
+            ReleaseUiBinding();
+
             _root = root.Q<VisualElement>("office-fire-result-root") ?? root;
             _statusBadge = _root.Q<VisualElement>("result-status-badge");
             _titleLabel = _root.Q<Label>("result-title");
@@ -261,8 +345,10 @@ namespace Woi.OfficeFire
             _evacuatedLabel = _root.Q<Label>("evacuated-label");
             _evacuatedValue = _root.Q<Label>("evacuated-value");
             _correctSectionTitle = _root.Q<Label>("correct-section-title");
+            _missingSectionTitle = _root.Q<Label>("missing-section-title");
             _mistakesSectionTitle = _root.Q<Label>("mistakes-section-title");
             _correctList = _root.Q<ScrollView>("correct-actions-list");
+            _missingList = _root.Q<ScrollView>("missing-objectives-list");
             _mistakesList = _root.Q<ScrollView>("mistakes-list");
             _continueButton = _root.Q<Button>("btn-result-continue");
 
@@ -272,7 +358,10 @@ namespace Woi.OfficeFire
                 _continueButton.clicked += HandleContinueClicked;
             }
 
-            _uiBound = _titleLabel != null && _correctList != null && _mistakesList != null;
+            _uiBound = _titleLabel != null
+                && _correctList != null
+                && _missingList != null
+                && _mistakesList != null;
             if (!_uiBound)
             {
                 Debug.LogWarning("[OfficeFireResultScreenController] Required UXML elements were not found.", this);
@@ -283,6 +372,103 @@ namespace Woi.OfficeFire
         {
             HideScreen();
             onContinueClicked?.Invoke();
+        }
+
+        private void CapturePlayerInput()
+        {
+            if (!disablePlayerInputWhileVisible || _playerInputCaptured)
+            {
+                return;
+            }
+
+            _capturedBehaviours = ResolvePlayerInputBehaviours();
+            if (_capturedBehaviours != null && _capturedBehaviours.Length > 0)
+            {
+                _savedBehaviourEnabledStates = new bool[_capturedBehaviours.Length];
+                for (int i = 0; i < _capturedBehaviours.Length; i++)
+                {
+                    Behaviour behaviour = _capturedBehaviours[i];
+                    if (behaviour == null)
+                    {
+                        continue;
+                    }
+
+                    _savedBehaviourEnabledStates[i] = behaviour.enabled;
+                    behaviour.enabled = false;
+                }
+            }
+
+            _savedCursorLockState = UnityEngine.Cursor.lockState;
+            _savedCursorVisible = UnityEngine.Cursor.visible;
+            UnityEngine.Cursor.lockState = UnityEngine.CursorLockMode.None;
+            UnityEngine.Cursor.visible = true;
+            _playerInputCaptured = true;
+        }
+
+        private void ReleasePlayerInput()
+        {
+            if (!_playerInputCaptured)
+            {
+                return;
+            }
+
+            if (_capturedBehaviours != null && _savedBehaviourEnabledStates != null)
+            {
+                for (int i = 0; i < _capturedBehaviours.Length; i++)
+                {
+                    Behaviour behaviour = _capturedBehaviours[i];
+                    if (behaviour == null || i >= _savedBehaviourEnabledStates.Length)
+                    {
+                        continue;
+                    }
+
+                    behaviour.enabled = _savedBehaviourEnabledStates[i];
+                }
+            }
+
+            UnityEngine.Cursor.lockState = _savedCursorLockState;
+            UnityEngine.Cursor.visible = _savedCursorVisible;
+            _playerInputCaptured = false;
+            _capturedBehaviours = null;
+            _savedBehaviourEnabledStates = null;
+        }
+
+        private Behaviour[] ResolvePlayerInputBehaviours()
+        {
+            if (playerInputBehaviours != null && playerInputBehaviours.Length > 0)
+            {
+                return playerInputBehaviours;
+            }
+
+            if (!autoFindPlayerInputBehaviours)
+            {
+                return null;
+            }
+
+            return FindBehavioursByTypeName(autoFindBehaviourTypeName);
+        }
+
+        private static Behaviour[] FindBehavioursByTypeName(string typeName)
+        {
+            if (string.IsNullOrWhiteSpace(typeName))
+            {
+                return null;
+            }
+
+            MonoBehaviour[] allBehaviours = FindObjectsByType<MonoBehaviour>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+            List<Behaviour> matches = new List<Behaviour>();
+            for (int i = 0; i < allBehaviours.Length; i++)
+            {
+                MonoBehaviour behaviour = allBehaviours[i];
+                if (behaviour != null && behaviour.GetType().Name == typeName)
+                {
+                    matches.Add(behaviour);
+                }
+            }
+
+            return matches.Count > 0 ? matches.ToArray() : null;
         }
 
         private static bool ResolveTurkish()

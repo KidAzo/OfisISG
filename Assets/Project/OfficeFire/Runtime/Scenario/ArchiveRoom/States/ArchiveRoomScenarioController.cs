@@ -79,6 +79,11 @@ namespace Woi.OfficeFire
         [SerializeField]
         private string outdoorSceneGroupName = "OutDoor";
 
+        [SerializeField]
+        [Min(0f)]
+        [Tooltip("Fade to black before OutDoor loads. Does not affect OutDoor reveal — set that on OutDoor AssemblySceneController.")]
+        private float outdoorFadeToBlackSeconds = 0.45f;
+
         [Header("Archive — state machine")]
         [SerializeField]
         private ArchiveRoomStateChangedEvent onArchiveStateChanged = new ArchiveRoomStateChangedEvent();
@@ -623,7 +628,10 @@ namespace Woi.OfficeFire
             Debug.Log(
                 $"[ArchiveRoomScenarioController] Loading outdoor scene group '{outdoorSceneGroupName.Trim()}'.",
                 this);
-            AssemblySceneController.LoadAssemblyScene(outdoorSceneGroupName.Trim());
+            AssemblySceneController.LoadAssemblyScene(
+                outdoorSceneGroupName.Trim(),
+                outdoorFadeToBlackSeconds,
+                0.45f);
         }
 
         public override void StartScenario()
@@ -1105,6 +1113,7 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.ExitArchiveRoom:
+                        _archive.RegisterCorrectAction(OfficeFireCorrectActionId.ExitedArchiveRoom);
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
                         _archive.InvokeEvacuationStarted();
                         _archive.StartEvacuationNpcs();

@@ -209,6 +209,64 @@
     color: rgba(255, 255, 255, 0.6);
 }
 
+/* 3D selectable hover only (OfficeFireInteractPopupHost) — shrink-wrap, no 320px notification width. */
+.popup-service-root.interact-hover-compact {
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    flex-grow: 0;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.popup-service-root.interact-hover-compact > .popup-anchor-wrap {
+    width: auto;
+    max-width: none;
+}
+
+.popup-panel.interact-hover-compact {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 0;
+    align-self: flex-start;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.popup-panel.interact-hover-compact .popup-main-row {
+    align-items: center;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.popup-panel.interact-hover-compact .popup-text-stack.text-content {
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-right: 0;
+    white-space: nowrap;
+}
+
+.popup-panel.interact-hover-compact .popup-title.notification-title {
+    font-size: 14px;
+    margin-bottom: 0;
+    margin-right: 6px;
+    padding: 0;
+    white-space: nowrap;
+}
+
+.popup-panel.interact-hover-compact .popup-message.notification-message {
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+}
+
 .popup-close {
     min-width: 28px;
     height: 28px;

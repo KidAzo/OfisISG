@@ -14,26 +14,29 @@
             </ui:VisualElement>
 
             <ui:VisualElement name="result-status-badge" class="status-badge status-badge--pending">
-                <ui:Label name="result-status-label" class="status-badge-text" text="PASSED" />
+                <ui:Label name="result-status-label" class="status-badge-text" text="—" />
             </ui:VisualElement>
 
             <ui:VisualElement class="stats-grid">
                 <ui:VisualElement class="stat-card">
                     <ui:Label name="reaction-time-label" class="label-text" text="REACTION TIME" />
-                    <ui:Label name="reaction-time-value" class="value-text text-emerald" text="12.4 s" />
+                    <ui:Label name="reaction-time-value" class="value-text text-emerald" text="—" />
                 </ui:VisualElement>
                 <ui:VisualElement class="stat-card">
                     <ui:Label name="fire-controlled-label" class="label-text" text="FIRE" />
-                    <ui:Label name="fire-controlled-value" class="value-text" text="Controlled" />
+                    <ui:Label name="fire-controlled-value" class="value-text" text="—" />
                 </ui:VisualElement>
                 <ui:VisualElement class="stat-card">
                     <ui:Label name="evacuated-label" class="label-text" text="EVACUATION" />
-                    <ui:Label name="evacuated-value" class="value-text" text="Completed" />
+                    <ui:Label name="evacuated-value" class="value-text" text="—" />
                 </ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:Label name="correct-section-title" class="section-title text-emerald" text="Correct Actions" />
+            <ui:Label name="correct-section-title" class="section-title text-emerald" text="Completed Objectives" />
             <ui:ScrollView name="correct-actions-list" class="result-scroll" />
+
+            <ui:Label name="missing-section-title" class="section-title text-amber" text="Missing Objectives" />
+            <ui:ScrollView name="missing-objectives-list" class="result-scroll" />
 
             <ui:Label name="mistakes-section-title" class="section-title text-red" text="Mistakes" />
             <ui:ScrollView name="mistakes-list" class="result-scroll" />

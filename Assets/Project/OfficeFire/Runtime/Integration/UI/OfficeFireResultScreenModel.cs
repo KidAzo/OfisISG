@@ -26,15 +26,21 @@ namespace Woi.OfficeFire
 
         public string CorrectSectionTitle { get; set; } = string.Empty;
 
+        public string MissingSectionTitle { get; set; } = string.Empty;
+
         public string MistakesSectionTitle { get; set; } = string.Empty;
 
         public string EmptyCorrectText { get; set; } = string.Empty;
+
+        public string EmptyMissingText { get; set; } = string.Empty;
 
         public string EmptyMistakesText { get; set; } = string.Empty;
 
         public string ContinueButtonText { get; set; } = string.Empty;
 
-        public List<string> CorrectActions { get; } = new List<string>();
+        public List<string> CompletedObjectives { get; } = new List<string>();
+
+        public List<string> MissingObjectives { get; } = new List<string>();
 
         public List<string> Mistakes { get; } = new List<string>();
     }

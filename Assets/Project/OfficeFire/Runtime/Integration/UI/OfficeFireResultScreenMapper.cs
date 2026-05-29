@@ -22,35 +22,76 @@ namespace Woi.OfficeFire
                     report != null && report.evacuated,
                     turkish ? "Tamamlandı" : "Completed",
                     turkish ? "Tamamlanmadı" : "Not completed"),
-                CorrectSectionTitle = turkish ? "Doğru Davranışlar" : "Correct Actions",
+                CorrectSectionTitle = turkish ? "Tamamlanan Görevler" : "Completed Objectives",
+                MissingSectionTitle = turkish ? "Eksik Görevler" : "Missing Objectives",
                 MistakesSectionTitle = turkish ? "Hatalar" : "Mistakes",
-                EmptyCorrectText = turkish ? "Kayıtlı doğru davranış yok." : "No correct actions recorded.",
+                EmptyCorrectText = turkish ? "Tamamlanan görev yok." : "No completed objectives.",
+                EmptyMissingText = turkish ? "Eksik görev yok." : "No missing objectives.",
                 EmptyMistakesText = turkish ? "Hata kaydedilmedi." : "No mistakes recorded.",
                 ContinueButtonText = turkish ? "Devam" : "Continue",
             };
 
-            bool passed = report != null && report.mistakes.Count == 0;
-            model.Passed = passed;
-            model.StatusLabel = passed
-                ? (turkish ? "BAŞARILI" : "PASSED")
-                : (turkish ? "İYİLEŞTİRME GEREKİYOR" : "NEEDS IMPROVEMENT");
-
             if (report == null)
             {
+                model.Passed = false;
+                model.StatusLabel = turkish ? "İYİLEŞTİRME GEREKİYOR" : "NEEDS IMPROVEMENT";
                 return model;
             }
 
-            for (int i = 0; i < report.correctActions.Count; i++)
-            {
-                model.CorrectActions.Add(GetCorrectActionLabel(report.correctActions[i], turkish));
-            }
+            OfficeFireScenarioResultCatalog.EvaluateObjectives(
+                report,
+                model.CompletedObjectives,
+                model.MissingObjectives,
+                objectiveId => GetObjectiveLabel(objectiveId, turkish));
 
             for (int i = 0; i < report.mistakes.Count; i++)
             {
                 model.Mistakes.Add(GetMistakeLabel(report.mistakes[i], turkish));
             }
 
+            bool passed = model.MissingObjectives.Count == 0 && model.Mistakes.Count == 0;
+            model.Passed = passed;
+            model.StatusLabel = passed
+                ? (turkish ? "BAŞARILI" : "PASSED")
+                : (turkish ? "İYİLEŞTİRME GEREKİYOR" : "NEEDS IMPROVEMENT");
+
             return model;
+        }
+
+        public static string GetObjectiveLabel(OfficeFireObjectiveId id, bool turkish)
+        {
+            if (id == OfficeFireObjectiveId.None)
+            {
+                return string.Empty;
+            }
+
+            (string en, string tr) = id switch
+            {
+                OfficeFireObjectiveId.EvacuateBuilding => ("Evacuate the building", "Binayı tahliye edin"),
+                OfficeFireObjectiveId.GoToEmergencyExit => ("Go to the emergency exit", "Acil çıkışa gidin"),
+                OfficeFireObjectiveId.GoToStairs => ("Go to the stairs", "Merdivenlere gidin"),
+                OfficeFireObjectiveId.GoToAssemblyArea => ("Go to the assembly area", "Toplanma alanına gidin"),
+                OfficeFireObjectiveId.CheckArchiveRoom => ("Inspect the archive room", "Arşiv odasını kontrol edin"),
+                OfficeFireObjectiveId.OpenArchiveDoor => ("Open the archive door", "Arşiv kapısını açın"),
+                OfficeFireObjectiveId.PressArchiveAlarm => ("Press the alarm", "Alarmı çalıştırın"),
+                OfficeFireObjectiveId.CutArchivePower => ("Cut archive power", "Arşiv elektriğini kesin"),
+                OfficeFireObjectiveId.UseArchiveExtinguisher => ("Use the extinguisher", "Söndürücüyü kullanın"),
+                OfficeFireObjectiveId.ExitArchiveRoom => ("Exit the archive room", "Arşiv odasından çıkın"),
+                OfficeFireObjectiveId.CheckServerRoom => ("Inspect the server room", "Sunucu odasını kontrol edin"),
+                OfficeFireObjectiveId.EnterServerRoom => ("Enter the server room", "Sunucu odasına girin"),
+                OfficeFireObjectiveId.ActivateServerSuppression => ("Activate suppression system", "Söndürme sistemini devreye alın"),
+                OfficeFireObjectiveId.EvacuateServerRoom => ("Evacuate the server room", "Sunucu odasını tahliye edin"),
+                OfficeFireObjectiveId.LeaveServerRoom => ("Leave the server room", "Sunucu odasından çıkın"),
+                OfficeFireObjectiveId.CheckKitchenArea => ("Check the kitchen area", "Mutfak alanını kontrol edin"),
+                OfficeFireObjectiveId.GetFireBlanket => ("Get the fire blanket", "Yangın battaniyesini alın"),
+                OfficeFireObjectiveId.PlaceFireBlanket => ("Place the fire blanket", "Yangın battaniyesini yerleştirin"),
+                OfficeFireObjectiveId.TurnOffStove => ("Turn off the stove", "Ocağı kapatın"),
+                OfficeFireObjectiveId.PressKitchenAlarm => ("Press the kitchen alarm", "Mutfak alarmını çalıştırın"),
+                OfficeFireObjectiveId.ExitKitchenArea => ("Exit the kitchen area", "Mutfak alanından çıkın"),
+                _ => (id.ToString(), id.ToString()),
+            };
+
+            return Pick(en, tr, turkish);
         }
 
         public static string GetScenarioTitle(OfficeFireScenarioId scenarioId, bool turkish)
@@ -92,6 +133,7 @@ namespace Woi.OfficeFire
                 OfficeFireCorrectActionId.UsedExtinguisherControlled => ("Used extinguisher in a controlled way", "Söndürücü kontrollü kullanıldı"),
                 OfficeFireCorrectActionId.LeanedCorrectly => ("Leaned correctly in smoke", "Duman içinde doğru eğilme"),
                 OfficeFireCorrectActionId.ReachedExitDoor => ("Reached exit door", "Çıkış kapısına ulaşıldı"),
+                OfficeFireCorrectActionId.ExitedArchiveRoom => ("Exited archive room", "Arşiv odasından çıkıldı"),
                 _ => (id.ToString(), id.ToString()),
             };
 

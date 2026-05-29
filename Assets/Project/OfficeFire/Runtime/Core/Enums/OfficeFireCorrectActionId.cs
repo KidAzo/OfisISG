@@ -26,5 +26,6 @@ namespace Woi.OfficeFire
         UsedExtinguisherControlled = 304,
         LeanedCorrectly = 305,
         ReachedExitDoor = 306,
+        ExitedArchiveRoom = 307,
     }
 }

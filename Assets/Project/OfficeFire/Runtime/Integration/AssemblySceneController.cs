@@ -31,11 +31,16 @@ namespace Woi.OfficeFire
 
         [SerializeField]
         [Min(0f)]
+        [Tooltip("Fade to black before the scene group loads (Archive → OutDoor).")]
         private float fadeInDurationSeconds = 0.45f;
 
         [SerializeField]
         [Min(0f)]
+        [Tooltip("Fade from black after OutDoor loads — increase this to slow the scene reveal.")]
         private float fadeOutDurationSeconds = 0.45f;
+
+        public float FadeInDurationSeconds => fadeInDurationSeconds;
+        public float FadeOutDurationSeconds => fadeOutDurationSeconds;
 
         [Header("Player")]
         [SerializeField]
@@ -67,6 +72,10 @@ namespace Woi.OfficeFire
 
         [SerializeField]
         private UnityEvent onResultScreenRequested;
+
+        [SerializeField]
+        [Min(0f)]
+        private float delayBeforeResultScreenSeconds = 5.5f;
 
         [Header("Debug")]
         [SerializeField]
@@ -142,6 +151,11 @@ namespace Woi.OfficeFire
                 }
             }
 
+            if (delayBeforeResultScreenSeconds > 0f)
+            {
+                yield return new WaitForSeconds(delayBeforeResultScreenSeconds);
+            }
+
             ShowResultScreen();
             _sequence = null;
         }
@@ -192,7 +206,7 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            Transform root = xrOriginRoot != null ? xrOriginRoot : playerRoot;
+            Transform root = ResolvePlayerRoot();
             if (root == null)
             {
                 Debug.LogWarning("[AssemblySceneController] Player root is not assigned.", this);
@@ -227,6 +241,82 @@ namespace Woi.OfficeFire
             if (controller != null)
             {
                 controller.enabled = true;
+            }
+
+            EnsureGameplayCamera(root);
+        }
+
+        private Transform ResolvePlayerRoot()
+        {
+            if (xrOriginRoot != null)
+            {
+                return xrOriginRoot;
+            }
+
+            if (playerRoot != null)
+            {
+                return playerRoot;
+            }
+
+            GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
+            return taggedPlayer != null ? taggedPlayer.transform : null;
+        }
+
+        private static void EnsureGameplayCamera(Transform playerRoot)
+        {
+            Camera playerCamera = null;
+            if (playerRoot != null)
+            {
+                playerCamera = playerRoot.GetComponentInChildren<Camera>(true);
+            }
+
+            if (playerCamera == null)
+            {
+                GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
+                if (taggedPlayer != null)
+                {
+                    playerCamera = taggedPlayer.GetComponentInChildren<Camera>(true);
+                }
+            }
+
+            Camera[] cameras = Object.FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                Camera camera = cameras[i];
+                if (camera == null)
+                {
+                    continue;
+                }
+
+                if (camera.gameObject.name == FadeOverlayName)
+                {
+                    continue;
+                }
+
+                bool isPlayerCamera = playerCamera != null && camera == playerCamera;
+                if (isPlayerCamera)
+                {
+                    if (!camera.gameObject.activeInHierarchy)
+                    {
+                        camera.gameObject.SetActive(true);
+                    }
+
+                    camera.enabled = true;
+                    camera.tag = "MainCamera";
+                    continue;
+                }
+
+                if (camera.CompareTag("MainCamera"))
+                {
+                    camera.enabled = false;
+                }
+            }
+
+            if (playerCamera == null)
+            {
+                Debug.LogWarning(
+                    "[AssemblySceneController] No player camera found after scene load. " +
+                    "Assign Player Root or ensure a Player-tagged object has an enabled Camera.");
             }
         }
 
@@ -268,6 +358,7 @@ namespace Woi.OfficeFire
 
                 CanvasGroup fadeOverlay = SceneFadeOverlay.GetOrCreate(FadeOverlayName);
                 fadeOverlay.gameObject.SetActive(true);
+                SceneFadeOverlay.SetTransitionCameraActive(fadeOverlay, true);
 
                 yield return SceneFadeOverlay.Fade(fadeOverlay, 0f, 1f, fadeInSeconds);
 
@@ -282,12 +373,17 @@ namespace Woi.OfficeFire
                     Debug.LogException(loadTask.Exception.GetBaseException(), this);
                     _beginWhenSceneLoads = false;
                     yield return SceneFadeOverlay.Fade(fadeOverlay, fadeOverlay.alpha, 0f, fadeOutSeconds);
+                    SceneFadeOverlay.SetTransitionCameraActive(fadeOverlay, false);
                     fadeOverlay.gameObject.SetActive(false);
                     Destroy(gameObject);
                     yield break;
                 }
 
-                yield return SceneFadeOverlay.Fade(fadeOverlay, 1f, 0f, fadeOutSeconds);
+                EnsureGameplayCamera(null);
+
+                float revealFadeSeconds = ResolveFadeFromBlackSeconds(fadeOutSeconds);
+                yield return SceneFadeOverlay.Fade(fadeOverlay, 1f, 0f, revealFadeSeconds);
+                SceneFadeOverlay.SetTransitionCameraActive(fadeOverlay, false);
                 fadeOverlay.gameObject.SetActive(false);
                 Destroy(gameObject);
             }
@@ -308,20 +404,36 @@ namespace Woi.OfficeFire
                 loader = null;
                 return false;
             }
+
+            private static float ResolveFadeFromBlackSeconds(float fallbackSeconds)
+            {
+                AssemblySceneController controller = FindFirstObjectByType<AssemblySceneController>();
+                if (controller == null)
+                {
+                    return fallbackSeconds;
+                }
+
+                return controller.FadeOutDurationSeconds;
+            }
         }
 
         private static class SceneFadeOverlay
         {
+            private const string TransitionCameraName = "TransitionCamera";
+
             public static CanvasGroup GetOrCreate(string overlayName)
             {
                 GameObject existing = GameObject.Find(overlayName);
                 if (existing != null && existing.TryGetComponent(out CanvasGroup existingGroup))
                 {
+                    EnsureTransitionCamera(existing);
                     return existingGroup;
                 }
 
                 GameObject root = new GameObject(overlayName);
-                DontDestroyOnLoad(root);
+                Object.DontDestroyOnLoad(root);
+
+                EnsureTransitionCamera(root);
 
                 Canvas canvas = root.AddComponent<Canvas>();
                 canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -349,6 +461,41 @@ namespace Woi.OfficeFire
                 group.blocksRaycasts = false;
                 group.interactable = false;
                 return group;
+            }
+
+            public static void SetTransitionCameraActive(CanvasGroup group, bool active)
+            {
+                if (group == null)
+                {
+                    return;
+                }
+
+                Transform transitionCameraTransform = group.transform.Find(TransitionCameraName);
+                if (transitionCameraTransform != null &&
+                    transitionCameraTransform.TryGetComponent(out Camera transitionCamera))
+                {
+                    transitionCamera.enabled = active;
+                }
+            }
+
+            private static void EnsureTransitionCamera(GameObject root)
+            {
+                Transform existing = root.transform.Find(TransitionCameraName);
+                if (existing != null)
+                {
+                    return;
+                }
+
+                GameObject cameraObject = new GameObject(TransitionCameraName);
+                cameraObject.transform.SetParent(root.transform, false);
+
+                Camera camera = cameraObject.AddComponent<Camera>();
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = Color.black;
+                camera.cullingMask = 0;
+                camera.depth = 100f;
+                camera.useOcclusionCulling = false;
+                camera.enabled = false;
             }
 
             public static IEnumerator Fade(CanvasGroup group, float from, float to, float durationSeconds)
