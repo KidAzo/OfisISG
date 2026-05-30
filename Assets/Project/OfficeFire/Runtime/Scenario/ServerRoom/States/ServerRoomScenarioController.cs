@@ -1089,9 +1089,7 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.ReachAssemblyArea:
-                        _server.MarkEvacuated();
-                        _server.RegisterCorrectAction(OfficeFireCorrectActionId.ReachedAssemblyArea);
-                        _server.ChangeState(ServerRoomState.Completed);
+                        _server.HandleReachedAssemblyAreaDoor();
                         break;
                     case Actions.ElevatorProximity:
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.DoNotUseElevator);

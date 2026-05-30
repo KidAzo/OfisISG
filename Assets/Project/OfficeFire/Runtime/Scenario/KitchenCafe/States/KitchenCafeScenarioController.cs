@@ -1089,9 +1089,7 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.ReachAssemblyArea:
-                        _kitchen.MarkEvacuated();
-                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.ReachedAssemblyArea);
-                        _kitchen.ChangeState(KitchenCafeState.Completed);
+                        _kitchen.HandleReachedAssemblyAreaDoor();
                         break;
                     case Actions.ElevatorProximity:
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.DoNotUseElevator);

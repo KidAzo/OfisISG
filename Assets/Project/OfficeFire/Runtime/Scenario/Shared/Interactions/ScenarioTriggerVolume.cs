@@ -15,6 +15,7 @@ namespace Woi.OfficeFire
         private string actionId;
 
         [SerializeField]
+        [Tooltip("Optional fallback when no scenario is active via OfficeFireScenarioBootstrapper.")]
         private OfficeFireScenarioController targetScenario;
 
         [SerializeField]
@@ -108,7 +109,7 @@ namespace Woi.OfficeFire
         {
             if (!TryResolveScenario(out OfficeFireScenarioController scenario))
             {
-                Debug.LogWarning("[ScenarioTriggerVolume] No target scenario (assign targetScenario or start a scenario).", this);
+                Debug.LogWarning("[ScenarioTriggerVolume] No target scenario (start a scenario or assign a fallback targetScenario).", this);
                 return false;
             }
 
@@ -118,13 +119,19 @@ namespace Woi.OfficeFire
 
         private bool TryResolveScenario(out OfficeFireScenarioController scenario)
         {
+            if (OfficeFireActiveScenarioLocator.TryGetActive(out scenario))
+            {
+                return true;
+            }
+
             if (targetScenario != null)
             {
                 scenario = targetScenario;
                 return true;
             }
 
-            return OfficeFireActiveScenarioLocator.TryGetActive(out scenario);
+            scenario = null;
+            return false;
         }
 
         private void Reset()
