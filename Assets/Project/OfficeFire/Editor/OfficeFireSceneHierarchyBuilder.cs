@@ -69,7 +69,6 @@ namespace Woi.OfficeFire.Editor
 
             EnsureChild(triggers, "Trigger_NoticeFire", created, reused);
             EnsureChild(triggers, "Trigger_EnterKitchen", created, reused);
-            EnsureChild(triggers, "Trigger_AssemblyArea", created, reused);
 
             EnsureChild(guidance, "EmergencyLights", created, reused);
             EnsureChild(guidance, "ExitSigns", created, reused);
@@ -130,6 +129,8 @@ namespace Woi.OfficeFire.Editor
                 kitchenController != null ? kitchenController.gameObject : null,
                 componentWarnings,
                 setStartScenario: OfficeFireScenarioId.KitchenCafe);
+
+            OfficeFireSharedEvacuationTriggersBuilder.EnsureSharedEvacuationTriggersInScene(scene);
 
             EditorSceneManager.MarkSceneDirty(scene);
             Undo.CollapseUndoOperations(undoGroup);

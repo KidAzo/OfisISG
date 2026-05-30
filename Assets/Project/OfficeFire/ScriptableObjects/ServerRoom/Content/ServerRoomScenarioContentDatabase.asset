@@ -22,22 +22,13 @@ MonoBehaviour:
       EnglishTitle: Smoke detected
       EnglishBody: Check the area and follow safety instructions.
     Voice: {fileID: 11400000, guid: 7700df6ac45f878438502b0e29521b07, type: 2}
-  - Id: 11
+  - Id: 309
     Popup:
-      TurkishTitle: CrouchInSmoke
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
-        \xFCzerinden d\xFCzenleyin."
+      TurkishTitle: "Egil\t"
+      TurkishBody: "Dumandan daha az etkilenmek i\xE7in egilmeniz gerekli"
       EnglishTitle: CrouchInSmoke
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
-  - Id: 12
-    Popup:
-      TurkishTitle: AlarmInstruction
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
-        \xFCzerinden d\xFCzenleyin."
-      EnglishTitle: AlarmInstruction
-      EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: 1b683bcafd54ec449bd1539fc96a87ff, type: 2}
   - Id: 13
     Popup:
       TurkishTitle: Tahliye
@@ -45,7 +36,7 @@ MonoBehaviour:
         alan\u0131 terk edin."
       EnglishTitle: Evacuate
       EnglishBody: Leave the area using the nearest safe exit.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: a3fd4b27fb814f6bbd8ae889e763dde7, type: 2}
   - Id: 14
     Popup:
       TurkishTitle: DoNotUseElevator
@@ -53,7 +44,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: DoNotUseElevator
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: 6dfd2d017e24442386dd2cc79946c3f6, type: 2}
   - Id: 15
     Popup:
       TurkishTitle: GoToAssemblyArea
@@ -61,74 +52,160 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: GoToAssemblyArea
       EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 11400000, guid: 31f8a5a23b0f417282faf7bf8ed35919, type: 2}
+  - Id: 310
+    Popup:
+      TurkishTitle: "T\xFCp al\u0131nd\u0131"
+      TurkishBody: "T\xFCp al\u0131nd\u0131"
+      EnglishTitle: "T\xFCp al\u0131nd\u0131"
+      EnglishBody: "T\xFCp al\u0131nd\u0131"
+    Voice: {fileID: 11400000, guid: e8e865d8431349c8be82a5cdbf020f03, type: 2}
+  - Id: 311
+    Popup:
+      TurkishTitle: "Yang\u0131n S\xF6nd\xFCr\xFClemedi\t"
+      TurkishBody: "Ar\u015Fiv odas\u0131n\u0131 terk edin."
+      EnglishTitle: Archive incident
+      EnglishBody: Inspect the archive room.
+    Voice: {fileID: 11400000, guid: 949f1f0fd7ce4498b2a8d77253e6b380, type: 2}
+  - Id: 312
+    Popup:
+      TurkishTitle: ArchiveElectricalFireWarning
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveElectricalFireWarning
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 11400000, guid: e35aad4b20f04060b1a4014a86bc563f, type: 2}
+  - Id: 313
+    Popup:
+      TurkishTitle: "Alan\u0131 Terk Edin"
+      TurkishBody: "G\xFCvenliginiz i\xE7in alan\u0131 terk edin"
+      EnglishTitle: ArchiveWaterMistake
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 11400000, guid: a3fd4b27fb814f6bbd8ae889e763dde7, type: 2}
+  - Id: 103
+    Popup:
+      TurkishTitle: "Alarm\u0131 \xE7al\u0131\u015Ft\u0131r\u0131n"
+      TurkishBody: "Di\u011Fer i\u015Flemlerden \xF6nce yang\u0131n alarm\u0131n\u0131
+        devreye al\u0131n."
+      EnglishTitle: Press the alarm
+      EnglishBody: Activate the fire alarm before other actions.
+    Voice: {fileID: 11400000, guid: 3aefa70408cdef04e9d5a7033d01135c, type: 2}
+  - Id: 314
+    Popup:
+      TurkishTitle: 'Reached '
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveCutPowerInstruction
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 11400000, guid: 31f8a5a23b0f417282faf7bf8ed35919, type: 2}
+  - Id: 315
+    Popup:
+      TurkishTitle: ArchivePowerCutSuccess
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchivePowerCutSuccess
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 11400000, guid: 6de95f9a6f352384084629148c24244e, type: 2}
+  - Id: 106
+    Popup:
+      TurkishTitle: ArchiveUseExtinguisherInstruction
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveUseExtinguisherInstruction
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 11400000, guid: 2b375e05c71a429db530f2050e079c29, type: 2}
+  - Id: 107
+    Popup:
+      TurkishTitle: ArchiveFireControlled
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveFireControlled
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 11400000, guid: 1d57c12b1dd74b0fb34fc5efede6ecf2, type: 2}
+  - Id: 108
+    Popup:
+      TurkishTitle: ArchiveFireNotControlledEvacuate
+      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveFireNotControlledEvacuate
+      EnglishBody: Assign audio clip and edit this text in the content database.
+    Voice: {fileID: 11400000, guid: 949f1f0fd7ce4498b2a8d77253e6b380, type: 2}
+  - Id: 11
+    Popup:
+      TurkishTitle: CrouchInSmoke
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: CrouchInSmoke
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
+    Voice: {fileID: 0}
+  - Id: 12
+    Popup:
+      TurkishTitle: AlarmInstruction
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: AlarmInstruction
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
     Voice: {fileID: 0}
   - Id: 16
     Popup:
       TurkishTitle: ScenarioCompleted
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ScenarioCompleted
-      EnglishBody: Assign audio clip and edit this text in the content database.
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
     Voice: {fileID: 0}
-  - Id: 200
+  - Id: 100
     Popup:
-      TurkishTitle: ServerIncidentDetected
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+      TurkishTitle: "Ar\u015Fiv olay\u0131"
+      TurkishBody: "Ar\u015Fiv odas\u0131n\u0131 kontrol edin."
+      EnglishTitle: Archive incident
+      EnglishBody: Inspect the archive room.
+    Voice: {fileID: 0}
+  - Id: 101
+    Popup:
+      TurkishTitle: ArchiveElectricalFireWarning
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
         \xFCzerinden d\xFCzenleyin."
-      EnglishTitle: ServerIncidentDetected
-      EnglishBody: Assign audio clip and edit this text in the content database.
+      EnglishTitle: ArchiveElectricalFireWarning
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
     Voice: {fileID: 0}
-  - Id: 201
+  - Id: 102
     Popup:
-      TurkishTitle: ServerElectronicFireWarning
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+      TurkishTitle: ArchiveWaterMistake
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
         \xFCzerinden d\xFCzenleyin."
-      EnglishTitle: ServerElectronicFireWarning
-      EnglishBody: Assign audio clip and edit this text in the content database.
+      EnglishTitle: ArchiveWaterMistake
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
     Voice: {fileID: 0}
-  - Id: 202
+  - Id: 104
     Popup:
-      TurkishTitle: "Su kullanmay\u0131n"
-      TurkishBody: "Bu yang\u0131n t\xFCr\xFCnde su kullanmak g\xFCvenli de\u011Fildir."
-      EnglishTitle: Do not use water
-      EnglishBody: Water is not safe on this type of fire.
-    Voice: {fileID: 0}
-  - Id: 203
-    Popup:
-      TurkishTitle: "Hen\xFCz s\xF6nd\xFCr\xFCc\xFC kullanmay\u0131n"
-      TurkishBody: "\xD6nce bask\u0131lama sistemini devreye al\u0131n."
-      EnglishTitle: Do not use extinguisher yet
-      EnglishBody: Activate the suppression system first.
-    Voice: {fileID: 0}
-  - Id: 204
-    Popup:
-      TurkishTitle: ServerSuppressionInstruction
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+      TurkishTitle: ArchiveCutPowerInstruction
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
         \xFCzerinden d\xFCzenleyin."
-      EnglishTitle: ServerSuppressionInstruction
-      EnglishBody: Assign audio clip and edit this text in the content database.
+      EnglishTitle: ArchiveCutPowerInstruction
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
     Voice: {fileID: 0}
-  - Id: 205
+  - Id: 105
     Popup:
-      TurkishTitle: ServerSuppressionCountdown
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+      TurkishTitle: ArchivePowerCutSuccess
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
         \xFCzerinden d\xFCzenleyin."
-      EnglishTitle: ServerSuppressionCountdown
-      EnglishBody: Assign audio clip and edit this text in the content database.
+      EnglishTitle: ArchivePowerCutSuccess
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
     Voice: {fileID: 0}
-  - Id: 206
+  - Id: 316
     Popup:
-      TurkishTitle: ServerGasActiveLeaveArea
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
+      TurkishTitle: ReachedAssemblyAreaDoor
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
         \xFCzerinden d\xFCzenleyin."
-      EnglishTitle: ServerGasActiveLeaveArea
-      EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 0}
-  - Id: 207
-    Popup:
-      TurkishTitle: ServerFireControlled
-      TurkishBody: "Ses dosyas\u0131n\u0131 atay\u0131p bu metni content database
-        \xFCzerinden d\xFCzenleyin."
-      EnglishTitle: ServerFireControlled
-      EnglishBody: Assign audio clip and edit this text in the content database.
+      EnglishTitle: ReachedAssemblyAreaDoor
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
     Voice: {fileID: 0}

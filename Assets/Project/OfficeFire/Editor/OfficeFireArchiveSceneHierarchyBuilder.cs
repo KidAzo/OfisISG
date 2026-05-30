@@ -16,7 +16,6 @@ namespace Woi.OfficeFire.Editor
         private const string RootName = "======FireModules======";
         private const string MenuPath = "Tools/Woi/Office Fire/Scene/Create Archive Room Hierarchy";
         private const string BatchMenuPath = "Tools/Woi/Office Fire/Scene/Create Archive Room In All Scenario Scenes";
-        private const string EnsureEvacuationTriggersMenuPath = "Tools/Woi/Office Fire/Scene/Ensure Archive Evacuation Triggers";
 
         private static readonly string[] ScenarioScenePaths =
         {
@@ -55,96 +54,12 @@ namespace Woi.OfficeFire.Editor
             }
         }
 
-        [MenuItem(EnsureEvacuationTriggersMenuPath, false, 23)]
-        private static void EnsureArchiveEvacuationTriggersActiveScene()
-        {
-            EnsureArchiveEvacuationTriggersInScene(SceneManager.GetActiveScene());
-        }
-
-        [MenuItem(EnsureEvacuationTriggersMenuPath, true, 23)]
-        private static bool EnsureArchiveEvacuationTriggersActiveSceneValidate()
-        {
-            return Application.isPlaying == false;
-        }
-
         /// <summary>
-        /// Adds missing Archive evacuation triggers (ReachedExitDoor + both elevators) under the active scene.
+        /// Forwards to <see cref="OfficeFireSharedEvacuationTriggersBuilder.EnsureSharedEvacuationTriggersInScene"/>.
         /// </summary>
         public static void EnsureArchiveEvacuationTriggersInScene(Scene scene)
         {
-            if (!scene.IsValid() || !scene.isLoaded)
-            {
-                Debug.LogWarning("[Office Fire Scene] Scene is not valid or not loaded: " + scene.path);
-                return;
-            }
-
-            Undo.IncrementCurrentGroup();
-            Undo.SetCurrentGroupName("Office Fire: Ensure Archive Evacuation Triggers");
-            int undoGroup = Undo.GetCurrentGroup();
-
-            var created = new List<string>();
-            var reused = new List<string>();
-            var componentsAdded = new List<string>();
-            var componentsAlreadyPresent = new List<string>();
-            var componentWarnings = new List<string>();
-
-            Transform archiveRoot = FindArchiveRoomRoot(scene);
-            if (archiveRoot == null)
-            {
-                Debug.LogError(
-                    "[Office Fire Scene] ArchiveRoom not found. Run 'Create Archive Room Hierarchy' first.",
-                    null);
-                Undo.CollapseUndoOperations(undoGroup);
-                return;
-            }
-
-            Transform triggers = FindOrCreateTriggersFolder(archiveRoot, created, reused);
-            ArchiveRoomScenarioController archiveController =
-                archiveRoot.GetComponentInChildren<ArchiveRoomScenarioController>(true);
-
-            EnsureEvacuationTrigger(
-                triggers,
-                "Trigger_ReachedExitDoor",
-                ArchiveRoomScenarioController.Actions.ReachedExitDoor,
-                archiveController,
-                created,
-                reused,
-                componentsAdded,
-                componentsAlreadyPresent,
-                componentWarnings);
-            EnsureEvacuationTrigger(
-                triggers,
-                "Trigger_Elevator_A",
-                ArchiveRoomScenarioController.Actions.ElevatorProximity,
-                archiveController,
-                created,
-                reused,
-                componentsAdded,
-                componentsAlreadyPresent,
-                componentWarnings);
-            EnsureEvacuationTrigger(
-                triggers,
-                "Trigger_Elevator_B",
-                ArchiveRoomScenarioController.Actions.ElevatorProximity,
-                archiveController,
-                created,
-                reused,
-                componentsAdded,
-                componentsAlreadyPresent,
-                componentWarnings);
-
-            if (archiveController != null)
-            {
-                RewireArchiveInteractions(archiveRoot, archiveController, componentWarnings);
-            }
-            else
-            {
-                componentWarnings.Add("ArchiveRoomScenarioController not found — wire targetScenario manually.");
-            }
-
-            EditorSceneManager.MarkSceneDirty(scene);
-            Undo.CollapseUndoOperations(undoGroup);
-            LogSummary(scene.path, created, reused, componentsAdded, componentsAlreadyPresent, componentWarnings);
+            OfficeFireSharedEvacuationTriggersBuilder.EnsureSharedEvacuationTriggersInScene(scene);
         }
 
         /// <summary>
@@ -287,40 +202,14 @@ namespace Woi.OfficeFire.Editor
                 componentsAlreadyPresent,
                 componentWarnings);
             WireTrigger(
-                OfficeFireSceneHierarchyBuilder.EnsureChild(triggers, "Trigger_ReachedExitDoor", created, reused),
-                null,
-                ArchiveRoomScenarioController.Actions.ReachedExitDoor,
-                componentsAdded,
-                componentsAlreadyPresent,
-                componentWarnings);
-            WireTrigger(
-                OfficeFireSceneHierarchyBuilder.EnsureChild(triggers, "Trigger_AssemblyArea", created, reused),
-                null,
-                ArchiveRoomScenarioController.Actions.ReachAssemblyArea,
-                componentsAdded,
-                componentsAlreadyPresent,
-                componentWarnings);
-            WireTrigger(
                 OfficeFireSceneHierarchyBuilder.EnsureChild(triggers, "Trigger_AssemblyAreaDoor", created, reused),
                 null,
                 ArchiveRoomScenarioController.Actions.ReachedAssemblyAreaDoor,
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
-            WireTrigger(
-                OfficeFireSceneHierarchyBuilder.EnsureChild(triggers, "Trigger_Elevator_A", created, reused),
-                null,
-                ArchiveRoomScenarioController.Actions.ElevatorProximity,
-                componentsAdded,
-                componentsAlreadyPresent,
-                componentWarnings);
-            WireTrigger(
-                OfficeFireSceneHierarchyBuilder.EnsureChild(triggers, "Trigger_Elevator_B", created, reused),
-                null,
-                ArchiveRoomScenarioController.Actions.ElevatorProximity,
-                componentsAdded,
-                componentsAlreadyPresent,
-                componentWarnings);
+
+            OfficeFireSharedEvacuationTriggersBuilder.EnsureSharedEvacuationTriggersInScene(scene);
 
             OfficeFireSceneHierarchyBuilder.EnsureChild(guidance, "EmergencyLights", created, reused);
             OfficeFireSceneHierarchyBuilder.EnsureChild(guidance, "ExitSigns", created, reused);
@@ -519,7 +408,22 @@ namespace Woi.OfficeFire.Editor
             ScenarioTriggerVolume[] triggerVolumes = archiveRoot.GetComponentsInChildren<ScenarioTriggerVolume>(true);
             for (int i = 0; i < triggerVolumes.Length; i++)
             {
-                WireTriggerTarget(triggerVolumes[i], archiveController, componentWarnings);
+                ScenarioTriggerVolume triggerVolume = triggerVolumes[i];
+                if (triggerVolume == null)
+                {
+                    continue;
+                }
+
+                SerializedObject triggerSo = new SerializedObject(triggerVolume);
+                SerializedProperty actionIdProp = triggerSo.FindProperty("actionId");
+                string actionId = actionIdProp != null ? actionIdProp.stringValue : string.Empty;
+                if (OfficeFireSharedEvacuationTriggersBuilder.IsSharedEvacuationActionId(actionId)
+                    || OfficeFireSharedEvacuationTriggersBuilder.IsSharedEvacuationTriggerName(triggerVolume.name))
+                {
+                    continue;
+                }
+
+                WireTriggerTarget(triggerVolume, archiveController, componentWarnings);
             }
 
             Alarm[] alarms = archiveRoot.GetComponentsInChildren<Alarm>(true);
@@ -553,65 +457,6 @@ namespace Woi.OfficeFire.Editor
             }
 
             return scenarios.Find("ArchiveRoom");
-        }
-
-        private static Transform FindOrCreateTriggersFolder(
-            Transform archiveRoot,
-            List<string> created,
-            List<string> reused)
-        {
-            Transform triggers = archiveRoot.Find("Triggers");
-            if (triggers != null)
-            {
-                reused.Add(OfficeFireSceneHierarchyBuilder.FullPath(triggers));
-                return triggers;
-            }
-
-            GameObject triggersGo = new GameObject("Triggers");
-            Undo.RegisterCreatedObjectUndo(triggersGo, "Office Fire: Create Triggers folder");
-            triggersGo.transform.SetParent(archiveRoot, false);
-            triggersGo.transform.localPosition = Vector3.zero;
-            triggersGo.transform.localRotation = Quaternion.identity;
-            triggersGo.transform.localScale = Vector3.one;
-            created.Add(OfficeFireSceneHierarchyBuilder.FullPath(triggersGo.transform));
-            return triggersGo.transform;
-        }
-
-        private static void EnsureEvacuationTrigger(
-            Transform triggers,
-            string triggerName,
-            string actionId,
-            ArchiveRoomScenarioController archiveController,
-            List<string> created,
-            List<string> reused,
-            List<string> componentsAdded,
-            List<string> componentsAlreadyPresent,
-            List<string> componentWarnings)
-        {
-            Transform triggerTransform = triggers.Find(triggerName);
-            if (triggerTransform == null)
-            {
-                GameObject triggerGo = new GameObject(triggerName);
-                Undo.RegisterCreatedObjectUndo(triggerGo, "Office Fire: Create " + triggerName);
-                triggerGo.transform.SetParent(triggers, false);
-                triggerGo.transform.localPosition = Vector3.zero;
-                triggerGo.transform.localRotation = Quaternion.identity;
-                triggerGo.transform.localScale = Vector3.one;
-                triggerTransform = triggerGo.transform;
-                created.Add(OfficeFireSceneHierarchyBuilder.FullPath(triggerTransform));
-            }
-            else
-            {
-                reused.Add(OfficeFireSceneHierarchyBuilder.FullPath(triggerTransform));
-            }
-
-            WireTrigger(
-                triggerTransform,
-                archiveController,
-                actionId,
-                componentsAdded,
-                componentsAlreadyPresent,
-                componentWarnings);
         }
 
         private static GameObject FindSceneRootByName(Scene scene, string name)

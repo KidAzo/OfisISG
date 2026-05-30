@@ -18,7 +18,9 @@ namespace Woi.OfficeFire
             public const string PlaceBlanketWrong = "place_blanket_wrong";
             public const string TurnOffStove = "turn_off_stove";
             public const string PressAlarm = "press_alarm";
-            public const string ReachAssemblyArea = "reach_assembly_area";
+            public const string ReachAssemblyArea = OfficeFireSharedScenarioActions.ReachAssemblyArea;
+            public const string ReachedExitDoor = OfficeFireSharedScenarioActions.ReachedExitDoor;
+            public const string ElevatorProximity = OfficeFireSharedScenarioActions.ElevatorProximity;
         }
 
         [Header("Kitchen Fire State")]
@@ -209,6 +211,11 @@ namespace Woi.OfficeFire
             }
 
             if (_stateMachine == null)
+            {
+                return;
+            }
+
+            if (actionId == Actions.ReachedExitDoor)
             {
                 return;
             }
@@ -792,6 +799,8 @@ namespace Woi.OfficeFire
                         Kitchen.MarkEvacuated();
                         Kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.ReachedAssemblyArea);
                         GoTo(KitchenCafeState.Completed);
+                        break;
+                    case Actions.ElevatorProximity:
                         break;
                     default:
                         LogUnknownAction(actionId);

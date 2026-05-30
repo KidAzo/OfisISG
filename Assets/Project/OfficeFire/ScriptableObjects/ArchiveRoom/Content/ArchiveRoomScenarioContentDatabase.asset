@@ -148,17 +148,64 @@ MonoBehaviour:
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.
     Voice: {fileID: 0}
-  - Id: 310
+  - Id: 16
     Popup:
-      TurkishTitle: EstinguisherHandled
-      TurkishBody: "S\xF6nd\xFCr\xFCc\xFC al\u0131nd\u0131."
-      EnglishTitle: EstinguisherHandled
-      EnglishBody: Extinguisher picked up.
-    Voice: {fileID: 11400000, guid: e8e865d8431349c8be82a5cdbf020f03, type: 2}
-  - Id: 0
+      TurkishTitle: ScenarioCompleted
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ScenarioCompleted
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
+    Voice: {fileID: 0}
+  - Id: 100
     Popup:
-      TurkishTitle: 
-      TurkishBody: 
-      EnglishTitle: 
-      EnglishBody: 
+      TurkishTitle: "Ar\u015Fiv olay\u0131"
+      TurkishBody: "Ar\u015Fiv odas\u0131n\u0131 kontrol edin."
+      EnglishTitle: Archive incident
+      EnglishBody: Inspect the archive room.
+    Voice: {fileID: 0}
+  - Id: 101
+    Popup:
+      TurkishTitle: ArchiveElectricalFireWarning
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveElectricalFireWarning
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
+    Voice: {fileID: 0}
+  - Id: 102
+    Popup:
+      TurkishTitle: ArchiveWaterMistake
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveWaterMistake
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
+    Voice: {fileID: 0}
+  - Id: 104
+    Popup:
+      TurkishTitle: ArchiveCutPowerInstruction
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchiveCutPowerInstruction
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
+    Voice: {fileID: 0}
+  - Id: 105
+    Popup:
+      TurkishTitle: ArchivePowerCutSuccess
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ArchivePowerCutSuccess
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
+    Voice: {fileID: 0}
+  - Id: 316
+    Popup:
+      TurkishTitle: ReachedAssemblyAreaDoor
+      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
+        \xFCzerinden d\xFCzenleyin."
+      EnglishTitle: ReachedAssemblyAreaDoor
+      EnglishBody: Assign a Localized Sound Definition and edit this text in the
+        content database.
     Voice: {fileID: 0}

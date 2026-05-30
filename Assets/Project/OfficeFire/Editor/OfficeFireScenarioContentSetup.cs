@@ -29,6 +29,9 @@ namespace Woi.OfficeFire.Editor
                 ServerAssetPath,
                 OfficeFireScenarioId.ServerRoom);
 
+            OfficeFireScenarioContentDatabaseSync.SyncServerFromArchive();
+            serverDb = AssetDatabase.LoadAssetAtPath<OfficeFireVoiceLineContentDatabase>(ServerAssetPath);
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 

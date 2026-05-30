@@ -106,14 +106,25 @@ namespace Woi.OfficeFire
 
         private bool DispatchAction()
         {
-            if (targetScenario == null)
+            if (!TryResolveScenario(out OfficeFireScenarioController scenario))
             {
-                Debug.LogWarning("[ScenarioTriggerVolume] Missing targetScenario.", this);
+                Debug.LogWarning("[ScenarioTriggerVolume] No target scenario (assign targetScenario or start a scenario).", this);
                 return false;
             }
 
-            targetScenario.HandleAction(actionId);
+            scenario.HandleAction(actionId);
             return true;
+        }
+
+        private bool TryResolveScenario(out OfficeFireScenarioController scenario)
+        {
+            if (targetScenario != null)
+            {
+                scenario = targetScenario;
+                return true;
+            }
+
+            return OfficeFireActiveScenarioLocator.TryGetActive(out scenario);
         }
 
         private void Reset()

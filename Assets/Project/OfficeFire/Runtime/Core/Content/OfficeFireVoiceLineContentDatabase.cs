@@ -107,13 +107,81 @@ namespace Woi.OfficeFire
         private static bool IsSharedVoiceLine(OfficeFireVoiceLineId id)
         {
             int value = (int)id;
-            return value >= 10 && value < 100;
+            return value >= 10 && value < 100 || value >= 309 && value <= 316;
         }
 
 #if UNITY_EDITOR
         public void EditorSetScenario(OfficeFireScenarioId scenario)
         {
             scenarioId = scenario;
+            EditorUtility.SetDirty(this);
+        }
+
+        public bool EditorTryGetEntry(OfficeFireVoiceLineId id, out OfficeFireVoiceLineEntry entry)
+        {
+            return TryFindEntry(id, out entry);
+        }
+
+        public void EditorUpsertEntry(OfficeFireVoiceLineEntry source)
+        {
+            if (source == null || source.Id == OfficeFireVoiceLineId.None)
+            {
+                return;
+            }
+
+            if (entries == null)
+            {
+                entries = new List<OfficeFireVoiceLineEntry>();
+            }
+
+            if (TryFindEntry(source.Id, out OfficeFireVoiceLineEntry existing))
+            {
+                existing.Popup = ClonePopup(source.Popup);
+                existing.Voice = source.Voice;
+            }
+            else
+            {
+                entries.Add(
+                    new OfficeFireVoiceLineEntry
+                    {
+                        Id = source.Id,
+                        Popup = ClonePopup(source.Popup),
+                        Voice = source.Voice,
+                    });
+            }
+
+            EditorUtility.SetDirty(this);
+        }
+
+        public void EditorRemoveDuplicateAndEmptyEntries()
+        {
+            if (entries == null || entries.Count == 0)
+            {
+                return;
+            }
+
+            var bestById = new Dictionary<OfficeFireVoiceLineId, OfficeFireVoiceLineEntry>();
+            for (int i = 0; i < entries.Count; i++)
+            {
+                OfficeFireVoiceLineEntry entry = entries[i];
+                if (entry == null || entry.Id == OfficeFireVoiceLineId.None)
+                {
+                    continue;
+                }
+
+                if (!bestById.TryGetValue(entry.Id, out OfficeFireVoiceLineEntry current) ||
+                    EntryQuality(entry) > EntryQuality(current))
+                {
+                    bestById[entry.Id] = entry;
+                }
+            }
+
+            entries.Clear();
+            foreach (OfficeFireVoiceLineEntry entry in bestById.Values)
+            {
+                entries.Add(entry);
+            }
+
             EditorUtility.SetDirty(this);
         }
 
@@ -124,6 +192,8 @@ namespace Woi.OfficeFire
             {
                 entries = new List<OfficeFireVoiceLineEntry>();
             }
+
+            EditorRemoveDuplicateAndEmptyEntries();
 
             OfficeFireVoiceLineId[] ids = (OfficeFireVoiceLineId[])Enum.GetValues(typeof(OfficeFireVoiceLineId));
             for (int i = 0; i < ids.Length; i++)
@@ -148,6 +218,61 @@ namespace Woi.OfficeFire
             }
 
             EditorUtility.SetDirty(this);
+        }
+
+        private static int EntryQuality(OfficeFireVoiceLineEntry entry)
+        {
+            if (entry == null)
+            {
+                return 0;
+            }
+
+            int score = 0;
+            if (entry.Voice != null)
+            {
+                score += 4;
+            }
+
+            if (entry.Popup != null)
+            {
+                if (!string.IsNullOrWhiteSpace(entry.Popup.TurkishTitle))
+                {
+                    score += 1;
+                }
+
+                if (!string.IsNullOrWhiteSpace(entry.Popup.TurkishBody))
+                {
+                    score += 1;
+                }
+
+                if (!string.IsNullOrWhiteSpace(entry.Popup.EnglishTitle))
+                {
+                    score += 1;
+                }
+
+                if (!string.IsNullOrWhiteSpace(entry.Popup.EnglishBody))
+                {
+                    score += 1;
+                }
+            }
+
+            return score;
+        }
+
+        private static OfficeFireVoiceLinePopupText ClonePopup(OfficeFireVoiceLinePopupText source)
+        {
+            if (source == null)
+            {
+                return BuildDefaultPopupText(OfficeFireVoiceLineId.None);
+            }
+
+            return new OfficeFireVoiceLinePopupText
+            {
+                TurkishTitle = source.TurkishTitle,
+                TurkishBody = source.TurkishBody,
+                EnglishTitle = source.EnglishTitle,
+                EnglishBody = source.EnglishBody,
+            };
         }
 
         private static OfficeFireVoiceLinePopupText BuildDefaultPopupText(OfficeFireVoiceLineId id)
@@ -195,6 +320,85 @@ namespace Woi.OfficeFire
                     enBody = "Activate the suppression system first.";
                     trBody = "Önce baskılama sistemini devreye alın.";
                     break;
+                case OfficeFireVoiceLineId.LeanCorrectly:
+                    enTitle = "Crouch";
+                    trTitle = "Eğilin";
+                    enBody = "Crouch to reduce smoke exposure.";
+                    trBody = "Dumandan daha az etkilenmek için eğilmeniz gerekli.";
+                    break;
+                case OfficeFireVoiceLineId.EstinguisherHandled:
+                    enTitle = "Extinguisher picked up";
+                    trTitle = "Tüp alındı";
+                    enBody = "Extinguisher picked up.";
+                    trBody = "Söndürücü alındı.";
+                    break;
+                case OfficeFireVoiceLineId.EstinguishingStarted:
+                    enTitle = "Extinguishing started";
+                    trTitle = "Söndürme başladı";
+                    enBody = "Use the extinguisher on the fire source.";
+                    trBody = "Söndürücüyü yangın kaynağına yönelterek kullanın.";
+                    break;
+                case OfficeFireVoiceLineId.ReachAssemblyArea:
+                    enTitle = "Go to assembly area";
+                    trTitle = "Toplanma alanına gidin";
+                    enBody = "Proceed to the designated assembly area.";
+                    trBody = "Belirlenen toplanma alanına ilerleyin.";
+                    break;
+                case OfficeFireVoiceLineId.ReachedExitDoor:
+                    enTitle = "Exit door reached";
+                    trTitle = "Çıkış kapısına ulaşıldı";
+                    enBody = "Continue to the assembly area.";
+                    trBody = "Toplanma alanına devam edin.";
+                    break;
+                case OfficeFireVoiceLineId.ExittedArchiveRoom:
+                case OfficeFireVoiceLineId.ServerGasActiveLeaveArea:
+                    enTitle = "Leave the area";
+                    trTitle = "Alanı terk edin";
+                    enBody = "Leave the area for your safety.";
+                    trBody = "Güvenliğiniz için alanı terk edin.";
+                    break;
+                case OfficeFireVoiceLineId.ArchiveFireGrowth:
+                    enTitle = "Fire is spreading";
+                    trTitle = "Yangın büyüyor";
+                    enBody = "Leave the area immediately.";
+                    trBody = "Alanı derhal terk edin.";
+                    break;
+                case OfficeFireVoiceLineId.ServerIncidentDetected:
+                    enTitle = "Server room incident";
+                    trTitle = "Sunucu odası olayı";
+                    enBody = "Inspect the server room.";
+                    trBody = "Sunucu odasını kontrol edin.";
+                    break;
+                case OfficeFireVoiceLineId.ServerElectronicFireWarning:
+                    enTitle = "Electronic fire risk";
+                    trTitle = "Elektronik yangın riski";
+                    enBody = "Do not use water on electrical equipment.";
+                    trBody = "Elektrikli ekipmanlarda su kullanmayın.";
+                    break;
+                case OfficeFireVoiceLineId.ServerSuppressionInstruction:
+                    enTitle = "Activate suppression";
+                    trTitle = "Baskılamayı devreye alın";
+                    enBody = "Use the suppression system before manual extinguishing.";
+                    trBody = "Manuel söndürmeden önce baskılama sistemini kullanın.";
+                    break;
+                case OfficeFireVoiceLineId.ServerSuppressionCountdown:
+                    enTitle = "Suppression countdown";
+                    trTitle = "Baskılama geri sayımı";
+                    enBody = "Wait for the suppression cycle to complete.";
+                    trBody = "Baskılama döngüsünün tamamlanmasını bekleyin.";
+                    break;
+                case OfficeFireVoiceLineId.ServerFireControlled:
+                case OfficeFireVoiceLineId.ArchiveFireControlled:
+                    enTitle = "Fire controlled";
+                    trTitle = "Yangın kontrol altında";
+                    enBody = "The fire has been brought under control.";
+                    trBody = "Yangın kontrol altına alındı.";
+                    break;
+            }
+
+            if (id == OfficeFireVoiceLineId.None)
+            {
+                return new OfficeFireVoiceLinePopupText();
             }
 
             return new OfficeFireVoiceLinePopupText
