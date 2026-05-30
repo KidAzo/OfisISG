@@ -4,10 +4,12 @@ namespace Woi.OfficeFire
     {
         None = 0,
         WaitingForSmokeNotice = 1,
-        WaitingForEntry = 2,
-        WaitingForSuppressionActivation = 3,
+        WaitingForDoorOpen = 2,
+        Intervention = 3,
         WaitingForExitRoom = 4,
         WaitingForAssemblyArea = 5,
         Completed = 6,
+        WaitingForExtinguisherUse = 7,
+        WaitingForPowerCut = 8,
     }
 }

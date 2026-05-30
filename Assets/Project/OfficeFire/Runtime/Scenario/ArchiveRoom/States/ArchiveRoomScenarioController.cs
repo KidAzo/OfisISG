@@ -90,7 +90,7 @@ namespace Woi.OfficeFire
 
         [Header("Archive — fire growth")]
         [SerializeField]
-        private ArchiveRoomFireGrowthController fireGrowthController;
+        private ScenarioFireGrowthController fireGrowthController;
 
         [Tooltip("Seconds between ArchiveFireGrowth reminders while in WaitingForExitRoom after all growth stages complete.")]
         [SerializeField]
@@ -217,10 +217,10 @@ namespace Woi.OfficeFire
                 _stateMachine.StateChanged -= HandleArchiveStateChanged;
             }
 
-            ArchiveRoomFireGrowthController growth = fireGrowthController;
+            ScenarioFireGrowthController growth = fireGrowthController;
             if (growth == null && ScenarioRoot != null)
             {
-                growth = ScenarioRoot.GetComponentInChildren<ArchiveRoomFireGrowthController>(true);
+                growth = ScenarioRoot.GetComponentInChildren<ScenarioFireGrowthController>(true);
             }
 
             if (growth != null)
@@ -360,7 +360,7 @@ namespace Woi.OfficeFire
 
         public void BeginArchiveFireGrowth()
         {
-            ArchiveRoomFireGrowthController growth = ResolveFireGrowthController();
+            ScenarioFireGrowthController growth = ResolveFireGrowthController();
             if (growth == null)
             {
                 if (enableFireExtinguishDebugLogs)
@@ -495,14 +495,14 @@ namespace Woi.OfficeFire
             }
         }
 
-        private ArchiveRoomFireGrowthController ResolveFireGrowthController()
+        private ScenarioFireGrowthController ResolveFireGrowthController()
         {
             if (fireGrowthController != null)
             {
                 return fireGrowthController;
             }
 
-            fireGrowthController = GetComponent<ArchiveRoomFireGrowthController>();
+            fireGrowthController = GetComponent<ScenarioFireGrowthController>();
             if (fireGrowthController != null)
             {
                 return fireGrowthController;
@@ -513,7 +513,7 @@ namespace Woi.OfficeFire
                 return null;
             }
 
-            fireGrowthController = ScenarioRoot.GetComponentInChildren<ArchiveRoomFireGrowthController>(true);
+            fireGrowthController = ScenarioRoot.GetComponentInChildren<ScenarioFireGrowthController>(true);
             return fireGrowthController;
         }
 

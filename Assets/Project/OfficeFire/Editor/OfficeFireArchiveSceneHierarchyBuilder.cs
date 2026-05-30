@@ -224,9 +224,9 @@ namespace Woi.OfficeFire.Editor
 
             OfficeFireSceneHierarchyBuilder.EnsureChild(effectsFolder, "Smoke", created, reused);
             Transform fireGrowthHost = OfficeFireSceneHierarchyBuilder.EnsureChild(effectsFolder, "FireGrowth", created, reused);
-            OfficeFireSceneHierarchyBuilder.TryAddComponent<ArchiveRoomFireGrowthController>(
+            OfficeFireSceneHierarchyBuilder.TryAddComponent<ScenarioFireGrowthController>(
                 fireGrowthHost.gameObject,
-                "ArchiveRoomFireGrowthController",
+                "ScenarioFireGrowthController",
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
@@ -479,8 +479,8 @@ namespace Woi.OfficeFire.Editor
                 componentWarnings.Add("ArchiveRoomScenarioController: serialized field 'evacuationNpcDirector' not found.");
             }
 
-            ArchiveRoomFireGrowthController fireGrowth =
-                archiveRoot.GetComponentInChildren<ArchiveRoomFireGrowthController>(true);
+            ScenarioFireGrowthController fireGrowth =
+                archiveRoot.GetComponentInChildren<ScenarioFireGrowthController>(true);
             SerializedProperty fireGrowthProp = so.FindProperty("fireGrowthController");
             if (fireGrowthProp != null)
             {

@@ -470,6 +470,13 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-2-2a034a5d92c28e444a1e19d5ef67d9f3-1768392005-0
         - globalObjectIdString: GlobalObjectId_V1-2-2a034a5d92c28e444a1e19d5ef67d9f3-990815689-0
         - globalObjectIdString: GlobalObjectId_V1-2-2a034a5d92c28e444a1e19d5ef67d9f3-453512310-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2a034a5d92c28e444a1e19d5ef67d9f3-1833278766-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2a034a5d92c28e444a1e19d5ef67d9f3-2130515278-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2a034a5d92c28e444a1e19d5ef67d9f3-988746842-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2a034a5d92c28e444a1e19d5ef67d9f3-1686573119-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2a034a5d92c28e444a1e19d5ef67d9f3-1753226831-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2a034a5d92c28e444a1e19d5ef67d9f3-2100921740-0
+        - globalObjectIdString: GlobalObjectId_V1-2-2a034a5d92c28e444a1e19d5ef67d9f3-659889780-0
         values:
         - colorIndex: 3
           iconNameOrGuid: 
@@ -680,6 +687,34 @@ MonoBehaviour:
           isIconRecursive: 0
           isColorRecursive: 1
         - colorIndex: 6
+          iconNameOrGuid: 
+          isIconRecursive: 0
+          isColorRecursive: 0
+        - colorIndex: 3
+          iconNameOrGuid: 
+          isIconRecursive: 0
+          isColorRecursive: 0
+        - colorIndex: 3
+          iconNameOrGuid: 
+          isIconRecursive: 0
+          isColorRecursive: 0
+        - colorIndex: 2
+          iconNameOrGuid: 
+          isIconRecursive: 0
+          isColorRecursive: 0
+        - colorIndex: 2
+          iconNameOrGuid: 
+          isIconRecursive: 0
+          isColorRecursive: 1
+        - colorIndex: 2
+          iconNameOrGuid: 
+          isIconRecursive: 0
+          isColorRecursive: 1
+        - colorIndex: 2
+          iconNameOrGuid: 
+          isIconRecursive: 0
+          isColorRecursive: 0
+        - colorIndex: 5
           iconNameOrGuid: 
           isIconRecursive: 0
           isColorRecursive: 0
