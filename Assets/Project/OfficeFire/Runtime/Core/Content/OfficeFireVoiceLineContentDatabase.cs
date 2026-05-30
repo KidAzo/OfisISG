@@ -96,7 +96,7 @@ namespace Woi.OfficeFire
                 case OfficeFireScenarioId.ArchiveRoom:
                     return value >= 100 && value < 200 || IsSharedVoiceLine(id);
                 case OfficeFireScenarioId.ServerRoom:
-                    return value >= 200 && value < 300 || IsSharedVoiceLine(id);
+                    return value >= 200 && value < 300 || IsSharedVoiceLine(id) || IsParallelArchiveAnnouncementLine(id);
                 case OfficeFireScenarioId.KitchenCafe:
                     return value >= 300 && value < 400 || IsSharedVoiceLine(id);
                 default:
@@ -108,6 +108,13 @@ namespace Woi.OfficeFire
         {
             int value = (int)id;
             return value >= 10 && value < 100 || value >= 309 && value <= 316;
+        }
+
+        private static bool IsParallelArchiveAnnouncementLine(OfficeFireVoiceLineId id)
+        {
+            int value = (int)id;
+            return value >= 100 && value <= 108 || id == OfficeFireVoiceLineId.ArchiveFireGrowth
+                   || id == OfficeFireVoiceLineId.ExittedArchiveRoom;
         }
 
 #if UNITY_EDITOR

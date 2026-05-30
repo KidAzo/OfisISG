@@ -64,7 +64,7 @@ namespace Woi.OfficeFire
         private float smokeNoticeReminderIntervalSeconds = 15f;
 
         [SerializeField]
-        private OfficeFireVoiceLineId smokeNoticeReminderVoiceLine = OfficeFireVoiceLineId.ServerIncidentDetected;
+        private OfficeFireVoiceLineId smokeNoticeReminderVoiceLine = OfficeFireVoiceLineId.ArchiveIncidentDetected;
 
         [Header("Server — evacuation NPCs")]
         [SerializeField]
@@ -339,7 +339,7 @@ namespace Woi.OfficeFire
             MarkFireControlled();
             RegisterCorrectAction(OfficeFireCorrectActionId.UsedExtinguisherCorrectly);
             RegisterCorrectAction(OfficeFireCorrectActionId.ControlledServerFire);
-            PlayAnnouncement(OfficeFireVoiceLineId.ServerFireControlled);
+            PlayAnnouncement(OfficeFireVoiceLineId.ArchiveFireControlled);
             InvokeFireControlled();
             ChangeState(ServerRoomState.WaitingForExitRoom);
         }
@@ -414,7 +414,7 @@ namespace Woi.OfficeFire
                    && CurrentState == ServerRoomState.WaitingForExitRoom
                    && _fireGrowthCompleted)
             {
-                PlayAnnouncement(OfficeFireVoiceLineId.ServerGasActiveLeaveArea);
+                PlayAnnouncement(OfficeFireVoiceLineId.ArchiveFireGrowth);
                 yield return new WaitForSeconds(fireGrowthReminderIntervalSeconds);
             }
         }
@@ -838,7 +838,7 @@ namespace Woi.OfficeFire
             public override void Enter()
             {
                 _server.SetObjective(OfficeFireObjectiveId.CheckServerRoom);
-                _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerIncidentDetected);
+                _server.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveIncidentDetected);
                 _server.BeginSmokeNoticeReminder();
             }
 
@@ -867,7 +867,7 @@ namespace Woi.OfficeFire
                         break;
                     case Actions.EnterServerRoom:
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.EnteredServerRoomSafely);
-                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerElectronicFireWarning);
+                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveElectricalFireWarning);
                         _server.InvokeDoorOpened();
                         _server.ChangeState(ServerRoomState.Intervention);
                         break;
@@ -930,7 +930,7 @@ namespace Woi.OfficeFire
             public override void Enter()
             {
                 _server.SetObjective(OfficeFireObjectiveId.ActivateServerSuppression);
-                _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerSuppressionInstruction);
+                _server.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
                 _server.AllowExtinguisherSpray();
                 _server.BeginServerFireGrowth();
             }
@@ -951,7 +951,7 @@ namespace Woi.OfficeFire
                         break;
                     case Actions.UseWater:
                         _server.RegisterMistake(OfficeFireMistakeId.UsedWaterOnServerFire);
-                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerWaterMistake);
+                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveWaterMistake);
                         _server.InvokeWaterMistake();
                         break;
                     case Actions.GrabExtinguisher:
@@ -987,7 +987,7 @@ namespace Woi.OfficeFire
             {
                 _server.AllowExtinguisherSpray();
                 _server.SetObjective(OfficeFireObjectiveId.LeaveServerRoom);
-                _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerSuppressionCountdown);
+                _server.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveUseExtinguisherInstruction);
                 _server.LogFireExtinguishStatus("Baski dusurme sonrasi asama — yangin sondurulebilir");
             }
 
@@ -1001,7 +1001,7 @@ namespace Woi.OfficeFire
                         break;
                     case Actions.UseWater:
                         _server.RegisterMistake(OfficeFireMistakeId.UsedWaterOnServerFire);
-                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerWaterMistake);
+                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveWaterMistake);
                         _server.InvokeWaterMistake();
                         break;
                     case Actions.GrabExtinguisher:
@@ -1046,7 +1046,7 @@ namespace Woi.OfficeFire
                 {
                     case Actions.LeaveServerRoom:
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.LeftServerRoomBeforeGas);
-                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerGasActiveLeaveArea);
+                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
                         _server.InvokeEvacuationStarted();
                         _server.StartEvacuationNpcs();
                         _server.ChangeState(ServerRoomState.WaitingForAssemblyArea);

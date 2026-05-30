@@ -70,7 +70,13 @@ namespace Woi.OfficeFire.Editor
             if (controller != null)
             {
                 EnsureControllerComponents(controller, componentsAdded, componentsAlreadyPresent, componentWarnings);
-                WireServerScenario(controller, serverRoot, evacuation, componentWarnings);
+                WireServerScenario(
+                    controller,
+                    serverRoot,
+                    evacuation,
+                    created,
+                    reused,
+                    componentWarnings);
                 EnsureServerTriggers(triggers, controller, created, reused, componentsAdded, componentsAlreadyPresent, componentWarnings);
                 EnsureServerInteractables(interactables, controller, created, reused, componentsAdded, componentsAlreadyPresent, componentWarnings);
                 FixSuppressionAlarms(serverRoot, controller, componentWarnings);
@@ -163,6 +169,8 @@ namespace Woi.OfficeFire.Editor
             ServerRoomScenarioController controller,
             Transform serverRoot,
             Transform evacuationRoot,
+            List<string> created,
+            List<string> reused,
             List<string> componentWarnings)
         {
             Undo.RecordObject(controller, "Office Fire: Wire ServerRoomScenarioController");
@@ -195,7 +203,86 @@ namespace Woi.OfficeFire.Editor
                 fireGrowthProp.objectReferenceValue = fireGrowth;
             }
 
+            GameObject evacuationNpcsRoot = EnsureEvacuationNpcsRoot(evacuationRoot, created, reused);
+            WireEvacuationStarted(controller, evacuationNpcsRoot, componentWarnings);
             WireVoicePresenter(controller, componentWarnings);
+            so.ApplyModifiedProperties();
+        }
+
+        private static GameObject EnsureEvacuationNpcsRoot(
+            Transform evacuationRoot,
+            List<string> created,
+            List<string> reused)
+        {
+            EnsureChild(evacuationRoot, "Paths", created, reused);
+            Transform npcs = EnsureChild(evacuationRoot, "Npcs", created, reused);
+            if (npcs.gameObject.activeSelf)
+            {
+                Undo.RecordObject(npcs.gameObject, "Office Fire: Deactivate Server evacuation Npcs");
+                npcs.gameObject.SetActive(false);
+            }
+
+            return npcs.gameObject;
+        }
+
+        private static void WireEvacuationStarted(
+            ServerRoomScenarioController controller,
+            GameObject evacuationNpcsRoot,
+            List<string> componentWarnings)
+        {
+            if (controller == null)
+            {
+                return;
+            }
+
+            if (evacuationNpcsRoot == null)
+            {
+                componentWarnings.Add("Server evacuation Npcs root missing — onEvacuationStarted not wired.");
+                return;
+            }
+
+            Undo.RecordObject(controller, "Office Fire: Wire Server onEvacuationStarted");
+            SerializedObject so = new SerializedObject(controller);
+            SerializedProperty eventProp = so.FindProperty("onEvacuationStarted");
+            if (eventProp == null)
+            {
+                componentWarnings.Add("ServerRoomScenarioController: onEvacuationStarted not found.");
+                return;
+            }
+
+            SerializedProperty callsProp = eventProp.FindPropertyRelative("m_PersistentCalls.m_Calls");
+            if (callsProp == null)
+            {
+                componentWarnings.Add("ServerRoomScenarioController: onEvacuationStarted calls not found.");
+                return;
+            }
+
+            for (int i = callsProp.arraySize - 1; i >= 0; i--)
+            {
+                SerializedProperty call = callsProp.GetArrayElementAtIndex(i);
+                SerializedProperty target = call.FindPropertyRelative("m_Target");
+                if (target != null && target.objectReferenceValue == evacuationNpcsRoot)
+                {
+                    so.ApplyModifiedProperties();
+                    return;
+                }
+            }
+
+            int index = callsProp.arraySize;
+            callsProp.InsertArrayElementAtIndex(index);
+            SerializedProperty newCall = callsProp.GetArrayElementAtIndex(index);
+            newCall.FindPropertyRelative("m_Target").objectReferenceValue = evacuationNpcsRoot;
+            newCall.FindPropertyRelative("m_TargetAssemblyTypeName").stringValue =
+                "UnityEngine.GameObject, UnityEngine";
+            newCall.FindPropertyRelative("m_MethodName").stringValue = "SetActive";
+            newCall.FindPropertyRelative("m_Mode").enumValueIndex = 6;
+            newCall.FindPropertyRelative("m_CallState").enumValueIndex = 2;
+            SerializedProperty arguments = newCall.FindPropertyRelative("m_Arguments");
+            if (arguments != null)
+            {
+                arguments.FindPropertyRelative("m_BoolArgument").boolValue = true;
+            }
+
             so.ApplyModifiedProperties();
         }
 
@@ -291,6 +378,14 @@ namespace Woi.OfficeFire.Editor
                 EnsureChild(interactables, "WaterSource", created, reused),
                 controller,
                 ServerRoomScenarioController.Actions.UseWater,
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            WireSelectable(
+                EnsureChild(interactables, "ExtinguisherUse", created, reused),
+                controller,
+                ServerRoomScenarioController.Actions.UseExtinguisher,
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
@@ -688,6 +783,18 @@ namespace Woi.OfficeFire.Editor
             {
                 sb.AppendLine("  - " + items[i]);
             }
+        }
+
+        /// <summary>
+        /// Invoked from Unity batch mode:
+        /// -executeMethod Woi.OfficeFire.Editor.OfficeFireServerSceneHierarchyBuilder.BatchEnsureServerRoomSetup
+        /// </summary>
+        public static void BatchEnsureServerRoomSetup()
+        {
+            const string scenePath = "Assets/Project/Scenes/FireModule/FireModule_Office.unity";
+            Scene scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            EnsureServerRoomSetupInScene(scene);
+            EditorSceneManager.SaveScene(scene);
         }
     }
 }

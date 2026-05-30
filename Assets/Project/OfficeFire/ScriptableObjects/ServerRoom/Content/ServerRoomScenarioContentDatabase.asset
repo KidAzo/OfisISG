@@ -209,3 +209,60 @@ MonoBehaviour:
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.
     Voice: {fileID: 0}
+  - Id: 200
+    Popup:
+      TurkishTitle: "Sunucu odas\u0131 olay\u0131"
+      TurkishBody: "Sunucu odas\u0131n\u0131 kontrol edin."
+      EnglishTitle: Server room incident
+      EnglishBody: Inspect the server room.
+    Voice: {fileID: 11400000, guid: 949f1f0fd7ce4498b2a8d77253e6b380, type: 2}
+  - Id: 201
+    Popup:
+      TurkishTitle: "Elektronik yang\u0131n riski"
+      TurkishBody: "Elektrikli ekipmanlarda su kullanmay\u0131n."
+      EnglishTitle: Electronic fire risk
+      EnglishBody: Do not use water on electrical equipment.
+    Voice: {fileID: 11400000, guid: e35aad4b20f04060b1a4014a86bc563f, type: 2}
+  - Id: 202
+    Popup:
+      TurkishTitle: "Su kullanmay\u0131n"
+      TurkishBody: "Bu yang\u0131n t\xFCr\xFCnde su kullanmak g\xFCvenli de\u011Fildir."
+      EnglishTitle: Do not use water
+      EnglishBody: Water is not safe on this type of fire.
+    Voice: {fileID: 11400000, guid: a3fd4b27fb814f6bbd8ae889e763dde7, type: 2}
+  - Id: 203
+    Popup:
+      TurkishTitle: "Hen\xFCz s\xF6nd\xFCr\xFCc\xFC kullanmay\u0131n"
+      TurkishBody: "\xD6nce bask\u0131lama sistemini devreye al\u0131n."
+      EnglishTitle: Do not use extinguisher yet
+      EnglishBody: Activate the suppression system first.
+    Voice: {fileID: 11400000, guid: 3aefa70408cdef04e9d5a7033d01135c, type: 2}
+  - Id: 204
+    Popup:
+      TurkishTitle: "Bask\u0131lamay\u0131 devreye al\u0131n"
+      TurkishBody: "Manuel s\xF6nd\xFCrmeden \xF6nce bask\u0131lama sistemini kullan\u0131n."
+      EnglishTitle: Activate suppression
+      EnglishBody: Use the suppression system before manual extinguishing.
+    Voice: {fileID: 11400000, guid: 3aefa70408cdef04e9d5a7033d01135c, type: 2}
+  - Id: 205
+    Popup:
+      TurkishTitle: "Bask\u0131lama geri say\u0131m\u0131"
+      TurkishBody: "Bask\u0131lama d\xF6ng\xFCs\xFCn\xFCn tamamlanmas\u0131n\u0131
+        bekleyin."
+      EnglishTitle: Suppression countdown
+      EnglishBody: Wait for the suppression cycle to complete.
+    Voice: {fileID: 11400000, guid: 2b375e05c71a429db530f2050e079c29, type: 2}
+  - Id: 206
+    Popup:
+      TurkishTitle: "Alan\u0131 terk edin"
+      TurkishBody: "G\xFCvenli\u011Finiz i\xE7in alan\u0131 terk edin."
+      EnglishTitle: Leave the area
+      EnglishBody: Leave the area for your safety.
+    Voice: {fileID: 11400000, guid: a3fd4b27fb814f6bbd8ae889e763dde7, type: 2}
+  - Id: 207
+    Popup:
+      TurkishTitle: "Yang\u0131n kontrol alt\u0131nda"
+      TurkishBody: "Yang\u0131n kontrol alt\u0131na al\u0131nd\u0131."
+      EnglishTitle: Fire controlled
+      EnglishBody: The fire has been brought under control.
+    Voice: {fileID: 11400000, guid: 1d57c12b1dd74b0fb34fc5efede6ecf2, type: 2}

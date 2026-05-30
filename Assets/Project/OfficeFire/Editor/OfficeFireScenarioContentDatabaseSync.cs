@@ -16,6 +16,21 @@ namespace Woi.OfficeFire.Editor
         const string ServerAssetPath =
             "Assets/Project/OfficeFire/ScriptableObjects/ServerRoom/Content/ServerRoomScenarioContentDatabase.asset";
 
+        static readonly OfficeFireVoiceLineId[] ParallelArchiveVoiceLineIds =
+        {
+            OfficeFireVoiceLineId.ArchiveIncidentDetected,
+            OfficeFireVoiceLineId.ArchiveElectricalFireWarning,
+            OfficeFireVoiceLineId.ArchiveWaterMistake,
+            OfficeFireVoiceLineId.ArchivePressAlarmInstruction,
+            OfficeFireVoiceLineId.ArchiveCutPowerInstruction,
+            OfficeFireVoiceLineId.ArchivePowerCutSuccess,
+            OfficeFireVoiceLineId.ArchiveUseExtinguisherInstruction,
+            OfficeFireVoiceLineId.ArchiveFireControlled,
+            OfficeFireVoiceLineId.ArchiveFireNotControlledEvacuate,
+            OfficeFireVoiceLineId.ArchiveFireGrowth,
+            OfficeFireVoiceLineId.ExittedArchiveRoom,
+        };
+
         static readonly OfficeFireVoiceLineId[] SharedVoiceLineIds =
         {
             OfficeFireVoiceLineId.SmokeWarning,
@@ -131,6 +146,7 @@ namespace Woi.OfficeFire.Editor
             archiveDb.EditorRemoveDuplicateAndEmptyEntries();
 
             CopySharedVoiceLines(archiveDb, serverDb);
+            CopyParallelArchiveVoiceLines(archiveDb, serverDb);
             CopyServerSpecificVoiceLines(archiveDb, serverDb);
             serverDb.EditorRemoveDuplicateAndEmptyEntries();
 
@@ -151,6 +167,22 @@ namespace Woi.OfficeFire.Editor
             for (int i = 0; i < SharedVoiceLineIds.Length; i++)
             {
                 OfficeFireVoiceLineId id = SharedVoiceLineIds[i];
+                if (!archiveDb.EditorTryGetEntry(id, out OfficeFireVoiceLineEntry archiveEntry))
+                {
+                    continue;
+                }
+
+                serverDb.EditorUpsertEntry(archiveEntry);
+            }
+        }
+
+        static void CopyParallelArchiveVoiceLines(
+            OfficeFireVoiceLineContentDatabase archiveDb,
+            OfficeFireVoiceLineContentDatabase serverDb)
+        {
+            for (int i = 0; i < ParallelArchiveVoiceLineIds.Length; i++)
+            {
+                OfficeFireVoiceLineId id = ParallelArchiveVoiceLineIds[i];
                 if (!archiveDb.EditorTryGetEntry(id, out OfficeFireVoiceLineEntry archiveEntry))
                 {
                     continue;
