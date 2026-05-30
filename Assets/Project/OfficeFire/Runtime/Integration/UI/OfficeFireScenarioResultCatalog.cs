@@ -107,6 +107,12 @@ namespace Woi.OfficeFire
                 OfficeFireObjectiveId.ActivateServerSuppression,
                 report => HasAction(report, OfficeFireCorrectActionId.ActivatedSuppressionSystem)),
             new ObjectiveRule(
+                OfficeFireObjectiveId.GetFireBlanket,
+                report => HasAction(report, OfficeFireCorrectActionId.SelectedFireBlanket)),
+            new ObjectiveRule(
+                OfficeFireObjectiveId.UseServerFireBlanket,
+                report => HasAction(report, OfficeFireCorrectActionId.PlacedFireBlanketCorrectly)),
+            new ObjectiveRule(
                 OfficeFireObjectiveId.LeaveServerRoom,
                 report => HasAction(report, OfficeFireCorrectActionId.LeftServerRoomBeforeGas)),
             new ObjectiveRule(

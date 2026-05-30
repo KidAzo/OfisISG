@@ -16,7 +16,9 @@ namespace Woi.OfficeFire
             public const string UseWater = "use_water";
             public const string PressSuppressionButton = "press_suppression_button";
             public const string GrabExtinguisher = "grab_extinguisher";
+            public const string GrabBlanket = "grab_blanket";
             public const string UseExtinguisher = "use_extinguisher";
+            public const string UseBlanket = "use_blanket";
             public const string LeaveServerRoom = "leave_server_room";
             public const string ReachAssemblyArea = "reach_assembly_area";
             public const string PlayerLeaned = "player_leaned";
@@ -43,6 +45,9 @@ namespace Woi.OfficeFire
 
         [SerializeField]
         private UnityEvent onFireControlled = new UnityEvent();
+
+        [SerializeField]
+        private UnityEvent onBlanketUsed = new UnityEvent();
 
         [SerializeField]
         private UnityEvent onEvacuationStarted = new UnityEvent();
@@ -533,6 +538,26 @@ namespace Woi.OfficeFire
             onFireControlled?.Invoke();
         }
 
+        public void InvokeBlanketUsed()
+        {
+            onBlanketUsed?.Invoke();
+        }
+
+        public void HandleBlanketGrabbed()
+        {
+            RegisterCorrectAction(OfficeFireCorrectActionId.SelectedFireBlanket);
+            SetObjective(OfficeFireObjectiveId.PlaceFireBlanket);
+        }
+
+        public void HandleBlanketUsed()
+        {
+            RegisterCorrectAction(OfficeFireCorrectActionId.PlacedFireBlanketCorrectly);
+            SetObjective(OfficeFireObjectiveId.UseServerFireBlanket);
+            MarkFireControlled();
+            InvokeBlanketUsed();
+            InvokeFireControlled();
+        }
+
         public void InvokeEvacuationStarted()
         {
             onEvacuationStarted?.Invoke();
@@ -649,6 +674,18 @@ namespace Woi.OfficeFire
             if (actionId == Actions.ReachedAssemblyAreaDoor)
             {
                 HandleReachedAssemblyAreaDoor();
+                return;
+            }
+
+            if (actionId == Actions.GrabBlanket)
+            {
+                HandleBlanketGrabbed();
+                return;
+            }
+
+            if (actionId == Actions.UseBlanket)
+            {
+                HandleBlanketUsed();
                 return;
             }
 

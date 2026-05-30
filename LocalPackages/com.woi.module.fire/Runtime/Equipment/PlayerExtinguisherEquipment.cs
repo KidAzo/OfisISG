@@ -103,6 +103,9 @@ namespace Woi.Equipment
         /// <summary>Pickup için InteractionRaySource yedek kökü; genelde ana kamera.</summary>
         public Camera PlayerCamera => _playerCamera;
 
+        /// <summary>Gameplay input asset (E interact, drop, pin pull).</summary>
+        public GameplayInputContext InputContext => _inputContext;
+
         /// <summary>
         /// Raised whenever the equipped extinguisher changes.
         /// Argument is the newly equipped item, or <c>null</c> when the slot becomes empty.

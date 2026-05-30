@@ -81,6 +81,9 @@ namespace Woi.OfficeFire.Editor
                 EnsureServerInteractables(interactables, controller, created, reused, componentsAdded, componentsAlreadyPresent, componentWarnings);
                 FixSuppressionAlarms(serverRoot, controller, componentWarnings);
                 WireExtinguisherWallPickup(serverRoot, componentWarnings, componentsAdded, componentsAlreadyPresent);
+                OfficeFireServerBlanketSetup.WireBlanketHoverOutlinesUnder(serverRoot);
+                OfficeFireServerBlanketSetup.WirePlayerBlanketEquipment(controller);
+                OfficeFireServerBlanketSetup.WireScenarioBridge(controller);
                 RewireServerInteractions(serverRoot, controller, componentWarnings);
             }
 
@@ -126,6 +129,13 @@ namespace Woi.OfficeFire.Editor
             OfficeFireSceneHierarchyBuilder.TryAddComponent<OfficeFireServerExtinguisherHudBridge>(
                 controller.gameObject,
                 "OfficeFireServerExtinguisherHudBridge",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
+            OfficeFireSceneHierarchyBuilder.TryAddComponent<OfficeFireServerBlanketScenarioBridge>(
+                controller.gameObject,
+                "OfficeFireServerBlanketScenarioBridge",
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);

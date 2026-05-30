@@ -82,6 +82,7 @@ namespace Woi.OfficeFire
                 OfficeFireObjectiveId.ActivateServerSuppression => ("Activate suppression system", "Söndürme sistemini devreye alın"),
                 OfficeFireObjectiveId.EvacuateServerRoom => ("Evacuate the server room", "Sunucu odasını tahliye edin"),
                 OfficeFireObjectiveId.LeaveServerRoom => ("Leave the server room", "Sunucu odasından çıkın"),
+                OfficeFireObjectiveId.UseServerFireBlanket => ("Use the fire blanket", "Yangın battaniyesini kullanın"),
                 OfficeFireObjectiveId.CheckKitchenArea => ("Check the kitchen area", "Mutfak alanını kontrol edin"),
                 OfficeFireObjectiveId.EnterKitchenCafe => ("Enter the kitchen area", "Mutfak alanına girin"),
                 OfficeFireObjectiveId.GetFireBlanket => ("Get the fire blanket", "Yangın battaniyesini alın"),

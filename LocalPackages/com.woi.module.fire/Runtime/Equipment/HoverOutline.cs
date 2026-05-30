@@ -19,13 +19,44 @@ namespace Woi.Game
         [SerializeField, Min(0f)] private float _hoverRange = 5f;
         [SerializeField] private LayerMask _hoverLayerMask = Physics.AllLayers;
         [SerializeField] private bool _enableOnStart;
+        [SerializeField] private bool _useOutlineWidth;
+        [SerializeField, Min(0f)] private float _hoverOutlineWidth = 5f;
 
         private bool _isHovered;
         private bool _loggedMissingOutline;
         private bool _loggedMissingRayOrigin;
         private Camera _resolvedCamera;
+        private float _defaultOutlineWidth;
 
         public bool IsHovered => _isHovered;
+
+        public void ConfigurePickupHover(
+            Transform rayOrigin,
+            Outline outline,
+            float hoverRange = 5f,
+            bool useOutlineWidth = false,
+            float hoverOutlineWidth = 5f)
+        {
+            _rayOrigin = rayOrigin;
+            _outline = outline;
+            _hoverRange = hoverRange;
+            _useOutlineWidth = useOutlineWidth;
+            _hoverOutlineWidth = hoverOutlineWidth;
+
+            int extinguisherLayer = LayerMask.NameToLayer("Estinguisher");
+            if (extinguisherLayer >= 0)
+            {
+                _hoverLayerMask = 1 << extinguisherLayer;
+            }
+
+            EnsureOutlineBinding();
+            if (_outline != null)
+            {
+                _defaultOutlineWidth = _outline.OutlineWidth;
+            }
+
+            ApplyInitialState();
+        }
 
         private void Awake()
         {
@@ -49,7 +80,29 @@ namespace Woi.Game
                 return;
 
             _isHovered = hovered;
-            _outline.enabled = _isHovered;
+            ApplyOutlineVisual(hovered);
+        }
+
+        private void ApplyOutlineVisual(bool isHovered)
+        {
+            if (_outline == null)
+            {
+                return;
+            }
+
+            if (_defaultOutlineWidth <= 0f)
+            {
+                _defaultOutlineWidth = _outline.OutlineWidth;
+            }
+
+            if (_useOutlineWidth)
+            {
+                _outline.enabled = isHovered;
+                _outline.OutlineWidth = isHovered ? _hoverOutlineWidth : _defaultOutlineWidth;
+                return;
+            }
+
+            _outline.enabled = isHovered;
         }
 
         private void ApplyInitialState()
@@ -57,16 +110,14 @@ namespace Woi.Game
             if (!ValidateOutline())
                 return;
 
-            _outline.enabled = _enableOnStart;
+            ApplyOutlineVisual(_enableOnStart);
             _isHovered = _enableOnStart;
         }
 
         public void ResetHover()
         {
             _isHovered = false;
-
-            if (_outline != null)
-                _outline.enabled = false;
+            ApplyOutlineVisual(false);
         }
 
         private bool IsRayHoveringThisObject()
@@ -91,6 +142,7 @@ namespace Woi.Game
 
             Transform vrSkipRoot = FireVrGameplayInteractionRay.RegisteredRayOriginOrNull;
             ExtinguisherPickupItem pickup = GetComponentInParent<ExtinguisherPickupItem>();
+            IHoverOutlineTarget hoverTarget = pickup == null ? GetComponentInParent<IHoverOutlineTarget>() : null;
 
             foreach (RaycastHit hit in hits)
             {
@@ -104,7 +156,18 @@ namespace Woi.Game
                 if (pickup != null)
                 {
                     ExtinguisherPickupItem hitPickup = hitTransform.GetComponentInParent<ExtinguisherPickupItem>();
-                    return hitPickup != null && hitPickup == pickup;
+                    if (hitPickup != null && hitPickup == pickup)
+                        return true;
+
+                    continue;
+                }
+
+                if (hoverTarget != null)
+                {
+                    if (hoverTarget.IsHoveredCollider(hitTransform))
+                        return true;
+
+                    continue;
                 }
 
                 if (IsHitRelevantToThisObject(hitTransform))
@@ -272,4 +335,4 @@ namespace Woi.Game
         }
     }
 }
-
+
