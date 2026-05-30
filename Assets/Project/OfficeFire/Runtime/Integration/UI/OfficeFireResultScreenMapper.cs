@@ -83,11 +83,14 @@ namespace Woi.OfficeFire
                 OfficeFireObjectiveId.EvacuateServerRoom => ("Evacuate the server room", "Sunucu odasını tahliye edin"),
                 OfficeFireObjectiveId.LeaveServerRoom => ("Leave the server room", "Sunucu odasından çıkın"),
                 OfficeFireObjectiveId.CheckKitchenArea => ("Check the kitchen area", "Mutfak alanını kontrol edin"),
+                OfficeFireObjectiveId.EnterKitchenCafe => ("Enter the kitchen area", "Mutfak alanına girin"),
                 OfficeFireObjectiveId.GetFireBlanket => ("Get the fire blanket", "Yangın battaniyesini alın"),
                 OfficeFireObjectiveId.PlaceFireBlanket => ("Place the fire blanket", "Yangın battaniyesini yerleştirin"),
                 OfficeFireObjectiveId.TurnOffStove => ("Turn off the stove", "Ocağı kapatın"),
                 OfficeFireObjectiveId.PressKitchenAlarm => ("Press the kitchen alarm", "Mutfak alarmını çalıştırın"),
                 OfficeFireObjectiveId.ExitKitchenArea => ("Exit the kitchen area", "Mutfak alanından çıkın"),
+                OfficeFireObjectiveId.ActivateKitchenSuppression => ("Activate suppression system", "Söndürme sistemini devreye alın"),
+                OfficeFireObjectiveId.LeaveKitchenCafe => ("Leave the kitchen area", "Mutfak alanından çıkın"),
                 _ => (id.ToString(), id.ToString()),
             };
 
@@ -160,6 +163,7 @@ namespace Woi.OfficeFire
                 OfficeFireMistakeId.WrongExtinguisherDistance => ("Wrong extinguisher distance", "Yanlış söndürücü mesafesi"),
                 OfficeFireMistakeId.WrongExtinguisherAngle => ("Wrong extinguisher angle", "Yanlış söndürücü açısı"),
                 OfficeFireMistakeId.UsedWaterOnServerFire => ("Used water on server fire", "Sunucu yangınına su kullanıldı"),
+                OfficeFireMistakeId.UsedWaterOnKitchenFire => ("Used water on kitchen fire", "Mutfak yangınına su kullanıldı"),
                 OfficeFireMistakeId.UsedManualExtinguisherBeforeSuppression => ("Used manual extinguisher before suppression", "Sistem devreye alınmadan manuel söndürücü kullanıldı"),
                 OfficeFireMistakeId.StayedInsideDuringGasSuppression => ("Stayed inside during gas suppression", "Gazlı söndürme sırasında içeride kalındı"),
                 OfficeFireMistakeId.UsedWaterOnOilFire => ("Used water on oil fire", "Yağ yangınına su kullanıldı"),

@@ -9,8 +9,8 @@ namespace Woi.OfficeFire.Editor
 {
     public static class OfficeFireScenarioContentSetup
     {
-        const string KitchenAssetPath =
-            "Assets/Project/OfficeFire/ScriptableObjects/KitchenCafe/Content/KitchenCafeScenarioContentDatabase.asset";
+        const string KitchenVoiceLineAssetPath =
+            "Assets/Project/OfficeFire/ScriptableObjects/KitchenCafe/Content/KitchenCafeVoiceLineContentDatabase.asset";
 
         const string ArchiveAssetPath =
             "Assets/Project/OfficeFire/ScriptableObjects/ArchiveRoom/Content/ArchiveRoomScenarioContentDatabase.asset";
@@ -21,16 +21,20 @@ namespace Woi.OfficeFire.Editor
         [MenuItem("Woi/Office Fire/Create And Wire Scenario Content Databases")]
         public static void CreateAndWireAll()
         {
-            KitchenCafeScenarioContentDatabase kitchenDb = CreateOrLoadKitchenDatabase();
             OfficeFireVoiceLineContentDatabase archiveDb = CreateOrLoadVoiceDatabase(
                 ArchiveAssetPath,
                 OfficeFireScenarioId.ArchiveRoom);
             OfficeFireVoiceLineContentDatabase serverDb = CreateOrLoadVoiceDatabase(
                 ServerAssetPath,
                 OfficeFireScenarioId.ServerRoom);
+            OfficeFireVoiceLineContentDatabase kitchenVoiceDb = CreateOrLoadVoiceDatabase(
+                KitchenVoiceLineAssetPath,
+                OfficeFireScenarioId.KitchenCafe);
 
             OfficeFireScenarioContentDatabaseSync.SyncServerFromArchive();
+            OfficeFireScenarioContentDatabaseSync.SyncKitchenFromServer();
             serverDb = AssetDatabase.LoadAssetAtPath<OfficeFireVoiceLineContentDatabase>(ServerAssetPath);
+            kitchenVoiceDb = AssetDatabase.LoadAssetAtPath<OfficeFireVoiceLineContentDatabase>(KitchenVoiceLineAssetPath);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -43,31 +47,14 @@ namespace Woi.OfficeFire.Editor
                     continue;
                 }
 
-                WireScene(scene, kitchenDb, archiveDb, serverDb);
+                WireScene(scene, kitchenVoiceDb, archiveDb, serverDb);
             }
 
             Debug.Log(
                 "[OfficeFire] Scenario content databases created/updated and wired.\n" +
-                $"- Kitchen: {KitchenAssetPath}\n" +
+                $"- Kitchen voice: {KitchenVoiceLineAssetPath}\n" +
                 $"- Archive: {ArchiveAssetPath}\n" +
                 $"- Server: {ServerAssetPath}");
-        }
-
-        static KitchenCafeScenarioContentDatabase CreateOrLoadKitchenDatabase()
-        {
-            var existing = AssetDatabase.LoadAssetAtPath<KitchenCafeScenarioContentDatabase>(KitchenAssetPath);
-            if (existing != null)
-            {
-                existing.EditorEnsureAllDefaults();
-                EditorUtility.SetDirty(existing);
-                return existing;
-            }
-
-            EnsureFolder("Assets/Project/OfficeFire/ScriptableObjects/KitchenCafe/Content");
-            var db = ScriptableObject.CreateInstance<KitchenCafeScenarioContentDatabase>();
-            db.EditorEnsureAllDefaults();
-            AssetDatabase.CreateAsset(db, KitchenAssetPath);
-            return db;
         }
 
         static OfficeFireVoiceLineContentDatabase CreateOrLoadVoiceDatabase(
@@ -111,7 +98,7 @@ namespace Woi.OfficeFire.Editor
 
         static void WireScene(
             Scene scene,
-            KitchenCafeScenarioContentDatabase kitchenDb,
+            OfficeFireVoiceLineContentDatabase kitchenVoiceDb,
             OfficeFireVoiceLineContentDatabase archiveDb,
             OfficeFireVoiceLineContentDatabase serverDb)
         {
@@ -121,7 +108,11 @@ namespace Woi.OfficeFire.Editor
                 return;
             }
 
-            WireKitchen(contentRoot, kitchenDb);
+            WireVoicePresenter(
+                contentRoot,
+                "KitchenCafeContentPresenter",
+                kitchenVoiceDb,
+                FindController<KitchenCafeScenarioController>(scene));
             WireVoicePresenter(
                 contentRoot,
                 "ArchiveRoomContentPresenter",
@@ -134,39 +125,6 @@ namespace Woi.OfficeFire.Editor
                 FindController<ServerRoomScenarioController>(scene));
 
             EditorSceneManager.MarkSceneDirty(scene);
-        }
-
-        static void WireKitchen(Transform contentRoot, KitchenCafeScenarioContentDatabase kitchenDb)
-        {
-            KitchenCafeContentPresenter presenter = FindOrCreatePresenter<KitchenCafeContentPresenter>(
-                contentRoot,
-                "KitchenCafeContentPresenter");
-            if (presenter == null || kitchenDb == null)
-            {
-                return;
-            }
-
-            Undo.RecordObject(presenter, "Wire Kitchen Content Presenter");
-            SerializedObject presenterSo = new SerializedObject(presenter);
-            presenterSo.FindProperty("database").objectReferenceValue = kitchenDb;
-            EnsureAnnouncementAudioAdapter(presenter.gameObject, presenterSo.FindProperty("announcementAudioAdapter"));
-            presenterSo.ApplyModifiedProperties();
-
-            KitchenCafeScenarioController kitchenController = FindController<KitchenCafeScenarioController>(
-                presenter.gameObject.scene);
-            if (kitchenController == null)
-            {
-                return;
-            }
-
-            if (!HasPersistentListener(kitchenController.OnContentCueRequested, presenter, nameof(KitchenCafeContentPresenter.PlayContentCue)))
-            {
-                UnityEventTools.AddPersistentListener(
-                    kitchenController.OnContentCueRequested,
-                    presenter.PlayContentCue);
-            }
-
-            EditorUtility.SetDirty(kitchenController);
         }
 
         static void WireVoicePresenter<TController>(

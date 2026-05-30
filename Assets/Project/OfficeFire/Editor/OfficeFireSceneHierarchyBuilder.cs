@@ -55,29 +55,23 @@ namespace Woi.OfficeFire.Editor
 
             Transform kitchenRoot = EnsureChild(t03, "KitchenCafe", created, reused);
             Transform controllerFolder = EnsureChild(kitchenRoot, "Controller", created, reused);
-            Transform fireFolder = EnsureChild(kitchenRoot, "Fire", created, reused);
             Transform interactables = EnsureChild(kitchenRoot, "Interactables", created, reused);
             Transform triggers = EnsureChild(kitchenRoot, "Triggers", created, reused);
-            Transform guidance = EnsureChild(kitchenRoot, "Guidance", created, reused);
+            Transform evacuation = EnsureChild(kitchenRoot, "Evacuation", created, reused);
 
-            EnsureChild(interactables, "Pitcher", created, reused);
-            EnsureChild(interactables, "FireBlanket", created, reused);
-            EnsureChild(interactables, "Extinguisher", created, reused);
-            EnsureChild(interactables, "Pan", created, reused);
-            EnsureChild(interactables, "StoveSwitch", created, reused);
-            EnsureChild(interactables, "AlarmButton", created, reused);
+            EnsureChild(interactables, "ExtinguisherPickup", created, reused);
+            EnsureChild(interactables, "WaterSource", created, reused);
+            EnsureChild(interactables, "ExtinguisherUse", created, reused);
 
-            EnsureChild(triggers, "Trigger_NoticeFire", created, reused);
-            EnsureChild(triggers, "Trigger_EnterKitchen", created, reused);
-
-            EnsureChild(guidance, "EmergencyLights", created, reused);
-            EnsureChild(guidance, "ExitSigns", created, reused);
+            EnsureChild(triggers, "Trigger_RoomProximity", created, reused);
+            EnsureChild(triggers, "Trigger_RoomEntered", created, reused);
+            EnsureChild(triggers, "Trigger_LeaveKitchenCafe", created, reused);
+            EnsureChild(triggers, "Trigger_AssemblyAreaDoor", created, reused);
 
             Transform tBootstrap = EnsureChild(t00, "OfficeFireScenarioBootstrapper", created, reused);
             Transform tInit = EnsureChild(t00, "OfficeFirePlayerInitializer", created, reused);
             Transform tPresenter = EnsureChild(t02, "KitchenCafeContentPresenter", created, reused);
             Transform tKitchenController = EnsureChild(controllerFolder, "KitchenCafeScenarioController", created, reused);
-            Transform tFireController = EnsureChild(fireFolder, "KitchenFireStateController", created, reused);
             Transform tPcInteractor = EnsureChild(t04, "PCSelectableInteractor", created, reused);
 
             EnsureChild(t05, "Popup", created, reused);
@@ -96,21 +90,15 @@ namespace Woi.OfficeFire.Editor
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
-            TryAddComponent<KitchenCafeContentPresenter>(
+            TryAddComponent<OfficeFireVoiceLineContentPresenter>(
                 tPresenter.gameObject,
-                "KitchenCafeContentPresenter",
+                "OfficeFireVoiceLineContentPresenter",
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
             KitchenCafeScenarioController kitchenController = TryAddComponent<KitchenCafeScenarioController>(
                 tKitchenController.gameObject,
                 "KitchenCafeScenarioController",
-                componentsAdded,
-                componentsAlreadyPresent,
-                componentWarnings);
-            KitchenFireStateController fireController = TryAddComponent<KitchenFireStateController>(
-                tFireController.gameObject,
-                "KitchenFireStateController",
                 componentsAdded,
                 componentsAlreadyPresent,
                 componentWarnings);
@@ -121,7 +109,7 @@ namespace Woi.OfficeFire.Editor
                 componentsAlreadyPresent,
                 componentWarnings);
 
-            WireKitchenScenario(kitchenController, kitchenRoot, fireController, componentWarnings);
+            WireKitchenScenario(kitchenController, kitchenRoot, componentWarnings);
             WireSpawnPoint(tInit.gameObject, spawnKitchen, OfficeFireScenarioId.KitchenCafe, componentWarnings);
             WireBootstrapperController(
                 tBootstrap.gameObject,
@@ -274,7 +262,6 @@ namespace Woi.OfficeFire.Editor
         private static void WireKitchenScenario(
             KitchenCafeScenarioController kitchenController,
             Transform kitchenRoot,
-            KitchenFireStateController fireController,
             List<string> componentWarnings)
         {
             if (kitchenController == null || kitchenRoot == null)
@@ -292,19 +279,6 @@ namespace Woi.OfficeFire.Editor
             else
             {
                 componentWarnings.Add("KitchenCafeScenarioController: serialized field 'scenarioRoot' not found.");
-            }
-
-            if (fireController != null)
-            {
-                SerializedProperty fireProp = so.FindProperty("fireStateController");
-                if (fireProp != null)
-                {
-                    fireProp.objectReferenceValue = fireController;
-                }
-                else
-                {
-                    componentWarnings.Add("KitchenCafeScenarioController: serialized field 'fireStateController' not found.");
-                }
             }
 
             so.ApplyModifiedProperties();

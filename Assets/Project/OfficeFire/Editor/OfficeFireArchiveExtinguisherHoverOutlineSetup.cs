@@ -55,7 +55,27 @@ namespace Woi.OfficeFire.Editor
             Debug.Log($"[Office Fire Scene] Wired hover outline on {wired}/{items.Length} extinguisher(s) in '{scene.path}'.");
         }
 
-        private static bool TryWireItem(ExtinguisherPickupItem item)
+        public static int WireExtinguisherHoverOutlinesUnder(Transform root)
+        {
+            if (root == null)
+            {
+                return 0;
+            }
+
+            ExtinguisherPickupItem[] items = root.GetComponentsInChildren<ExtinguisherPickupItem>(true);
+            int wired = 0;
+            for (int i = 0; i < items.Length; i++)
+            {
+                if (TryWireItem(items[i]))
+                {
+                    wired++;
+                }
+            }
+
+            return wired;
+        }
+
+        public static bool TryWireItem(ExtinguisherPickupItem item)
         {
             if (item == null)
             {

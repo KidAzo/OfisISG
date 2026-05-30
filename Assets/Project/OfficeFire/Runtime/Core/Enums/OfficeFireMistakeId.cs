@@ -26,5 +26,6 @@ namespace Woi.OfficeFire
         UsedExtinguisherUncontrolled = 303,
         FailedToCoverPanWithBlanket = 304,
         ForgotToTurnOffStove = 305,
+        UsedWaterOnKitchenFire = 306,
     }
 }

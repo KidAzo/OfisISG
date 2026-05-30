@@ -118,21 +118,16 @@ namespace Woi.OfficeFire
         {
             new ObjectiveRule(
                 OfficeFireObjectiveId.CheckKitchenArea,
-                report => report.reactionTime > 0.01f || report.correctActions.Count > 0),
+                report => HasAction(report, OfficeFireCorrectActionId.NoticedSmoke)),
             new ObjectiveRule(
-                OfficeFireObjectiveId.GetFireBlanket,
-                report => HasAction(report, OfficeFireCorrectActionId.SelectedFireBlanket)),
+                OfficeFireObjectiveId.EnterKitchenCafe,
+                report => HasAction(report, OfficeFireCorrectActionId.EnteredKitchenCafeSafely)),
             new ObjectiveRule(
-                OfficeFireObjectiveId.PlaceFireBlanket,
-                report => HasAction(report, OfficeFireCorrectActionId.PlacedFireBlanketCorrectly)
-                    || HasAction(report, OfficeFireCorrectActionId.ControlledKitchenFire)
-                    || report.fireControlled),
+                OfficeFireObjectiveId.ActivateKitchenSuppression,
+                report => HasAction(report, OfficeFireCorrectActionId.ActivatedSuppressionSystem)),
             new ObjectiveRule(
-                OfficeFireObjectiveId.TurnOffStove,
-                report => HasAction(report, OfficeFireCorrectActionId.TurnedOffStove)),
-            new ObjectiveRule(
-                OfficeFireObjectiveId.PressKitchenAlarm,
-                report => HasAction(report, OfficeFireCorrectActionId.PressedAlarm)),
+                OfficeFireObjectiveId.LeaveKitchenCafe,
+                report => HasAction(report, OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas)),
             new ObjectiveRule(
                 OfficeFireObjectiveId.GoToAssemblyArea,
                 report => HasAction(report, OfficeFireCorrectActionId.ReachedAssemblyArea) || report.evacuated),

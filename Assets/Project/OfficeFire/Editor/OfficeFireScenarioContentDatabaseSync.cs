@@ -16,6 +16,9 @@ namespace Woi.OfficeFire.Editor
         const string ServerAssetPath =
             "Assets/Project/OfficeFire/ScriptableObjects/ServerRoom/Content/ServerRoomScenarioContentDatabase.asset";
 
+        const string KitchenAssetPath =
+            "Assets/Project/OfficeFire/ScriptableObjects/KitchenCafe/Content/KitchenCafeVoiceLineContentDatabase.asset";
+
         static readonly OfficeFireVoiceLineId[] ParallelArchiveVoiceLineIds =
         {
             OfficeFireVoiceLineId.ArchiveIncidentDetected,
@@ -124,6 +127,12 @@ namespace Woi.OfficeFire.Editor
             SyncServerFromArchive();
         }
 
+        [MenuItem("Woi/Office Fire/Sync Kitchen Content Database From Server")]
+        public static void SyncKitchenFromServerMenu()
+        {
+            SyncKitchenFromServer();
+        }
+
         public static void SyncServerFromArchive()
         {
             OfficeFireVoiceLineContentDatabase archiveDb =
@@ -158,6 +167,44 @@ namespace Woi.OfficeFire.Editor
                 "[OfficeFire] ServerRoomScenarioContentDatabase synced from ArchiveRoomScenarioContentDatabase.\n" +
                 $"- Source: {ArchiveAssetPath}\n" +
                 $"- Target: {ServerAssetPath}");
+        }
+
+        public static void SyncKitchenFromServer()
+        {
+            OfficeFireVoiceLineContentDatabase serverDb =
+                AssetDatabase.LoadAssetAtPath<OfficeFireVoiceLineContentDatabase>(ServerAssetPath);
+            OfficeFireVoiceLineContentDatabase kitchenDb =
+                AssetDatabase.LoadAssetAtPath<OfficeFireVoiceLineContentDatabase>(KitchenAssetPath);
+
+            if (serverDb == null || kitchenDb == null)
+            {
+                Debug.LogError(
+                    "[OfficeFire] Could not load Server/Kitchen voice line content databases. " +
+                    "Ensure KitchenCafeVoiceLineContentDatabase.asset exists.");
+                return;
+            }
+
+            kitchenDb.EditorSetScenario(OfficeFireScenarioId.KitchenCafe);
+            kitchenDb.EditorFillForAssignedScenario();
+
+            foreach (OfficeFireVoiceLineId id in System.Enum.GetValues(typeof(OfficeFireVoiceLineId)))
+            {
+                if (id == OfficeFireVoiceLineId.None || !serverDb.EditorTryGetEntry(id, out OfficeFireVoiceLineEntry entry))
+                {
+                    continue;
+                }
+
+                kitchenDb.EditorUpsertEntry(entry);
+            }
+
+            kitchenDb.EditorRemoveDuplicateAndEmptyEntries();
+            EditorUtility.SetDirty(kitchenDb);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log(
+                "[OfficeFire] KitchenCafeVoiceLineContentDatabase synced from ServerRoomScenarioContentDatabase.\n" +
+                $"- Source: {ServerAssetPath}\n" +
+                $"- Target: {KitchenAssetPath}");
         }
 
         static void CopySharedVoiceLines(

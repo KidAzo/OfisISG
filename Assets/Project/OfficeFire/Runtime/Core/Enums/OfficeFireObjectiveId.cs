@@ -28,5 +28,8 @@ namespace Woi.OfficeFire
         TurnOffStove = 303,
         PressKitchenAlarm = 304,
         ExitKitchenArea = 305,
+        ActivateKitchenSuppression = 306,
+        LeaveKitchenCafe = 307,
+        EnterKitchenCafe = 308,
     }
 }

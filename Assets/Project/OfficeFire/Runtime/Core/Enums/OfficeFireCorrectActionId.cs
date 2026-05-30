@@ -27,5 +27,7 @@ namespace Woi.OfficeFire
         LeanedCorrectly = 305,
         ReachedExitDoor = 306,
         ExitedArchiveRoom = 307,
+        EnteredKitchenCafeSafely = 308,
+        LeftKitchenCafeBeforeGas = 309,
     }
 }
