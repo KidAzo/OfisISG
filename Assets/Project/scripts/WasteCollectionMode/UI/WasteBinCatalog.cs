@@ -5,6 +5,25 @@ namespace Woi.WasteCollectionMode
 {
     public static class WasteBinCatalog
     {
+        private static readonly Dictionary<string, string> BinNamesEn = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["1"] = "Paper Waste",
+            ["2"] = "Cardboard Waste",
+            ["3"] = "Plastic Waste",
+            ["4"] = "Glass Waste",
+            ["5"] = "Organic Food",
+            ["6"] = "Used Battery",
+            ["7"] = "Toner & Cartridge",
+            ["8"] = "Electronic Waste",
+            ["9"] = "Plastic Cap",
+            ["10"] = "Metal Can",
+            ["11"] = "Cigarette Butt",
+            ["12"] = "Non-Recyclable",
+            ["13"] = "Hazardous Waste",
+            ["14"] = "Medical Waste",
+            ["15"] = "Bulb/Fluorescent",
+        };
+
         private static readonly Dictionary<string, string> BinNames = new(StringComparer.OrdinalIgnoreCase)
         {
             ["1"] = "Kağıt Atıklar",
@@ -47,12 +66,17 @@ namespace Woi.WasteCollectionMode
             if (string.IsNullOrWhiteSpace(binId))
                 return "-";
 
+            if (WasteCollectionLocalization.IsEnglish &&
+                BinNamesEn.TryGetValue(binId, out string englishName))
+                return englishName;
+
             return BinNames.TryGetValue(binId, out string name) ? name : binId;
         }
 
         public static string GetCorrectBinId(string wasteName, WasteType wasteType)
         {
-            if (!string.IsNullOrWhiteSpace(wasteName) && WasteNameToBinId.TryGetValue(wasteName, out string binId))
+            string key = WasteNameCatalog.NormalizeKey(wasteName);
+            if (!string.IsNullOrWhiteSpace(key) && WasteNameToBinId.TryGetValue(key, out string binId))
                 return binId;
 
             return wasteType switch

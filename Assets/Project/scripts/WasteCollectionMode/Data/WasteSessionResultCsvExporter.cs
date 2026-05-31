@@ -9,8 +9,9 @@ using Woi.Events.Data;
 namespace Woi.WasteCollectionMode
 {
     /// <summary>
-    /// Appends Excel-friendly session reports to Desktop/AtıkToplamaOyuncuSonucları.
-    /// Uses semicolon delimiter and a two-section layout (report summary + waste detail table).
+    /// Appends Excel-friendly flat session rows to Desktop/AtıkToplamaOyuncuSonucları.
+    /// Player summary is written once on the first row; following rows in the same session
+    /// contain only waste detail columns. Each new session appends below the previous one.
     /// </summary>
     public static class WasteSessionResultCsvExporter
     {
@@ -46,10 +47,12 @@ namespace Woi.WasteCollectionMode
                     append: true,
                     encoding: new UTF8Encoding(encoderShouldEmitUTF8Identifier: !fileExists));
 
-                if (fileExists)
+                if (!fileExists)
+                    WriteHeaderRow(writer);
+                else
                     writer.WriteLine();
 
-                WriteReportSection(
+                WriteSessionRows(
                     writer,
                     timestamp,
                     userName,
@@ -58,10 +61,8 @@ namespace Woi.WasteCollectionMode
                     correct,
                     incorrect,
                     successPercent,
-                    overall);
-
-                writer.WriteLine();
-                WriteDetailSection(writer, classifications);
+                    overall,
+                    classifications);
 
                 Debug.Log($"[WasteSessionResultCsvExporter] Session exported → {filePath}");
                 return filePath;
@@ -82,18 +83,8 @@ namespace Woi.WasteCollectionMode
             return Path.Combine(desktop, DesktopFolderName);
         }
 
-        private static void WriteReportSection(
-            TextWriter writer,
-            string timestamp,
-            string userName,
-            string userId,
-            int total,
-            int correct,
-            int incorrect,
-            int successPercent,
-            string overall)
+        private static void WriteHeaderRow(TextWriter writer)
         {
-            WriteSectionHeader(writer, "Rapor Bilgisi");
             WriteRow(
                 writer,
                 "Rapor Tarihi",
@@ -103,23 +94,29 @@ namespace Woi.WasteCollectionMode
                 "Doğru Sayısı",
                 "Hatalı Sayısı",
                 "Başarı Oranı",
-                "Genel Sonuç");
-            WriteRow(
-                writer,
-                timestamp,
-                userName,
-                userId,
-                total.ToString(CultureInfo.InvariantCulture),
-                correct.ToString(CultureInfo.InvariantCulture),
-                incorrect.ToString(CultureInfo.InvariantCulture),
-                $"%{successPercent}",
-                overall);
+                "Genel Sonuç",
+                "Atık Adı",
+                "Atılan Kutu",
+                "Doğru Atılması Gereken Yer",
+                "Durum");
         }
 
-        private static void WriteDetailSection(TextWriter writer, IReadOnlyList<WasteClassificationRecord> classifications)
+        private static void WriteSessionRows(
+            TextWriter writer,
+            string timestamp,
+            string userName,
+            string userId,
+            int total,
+            int correct,
+            int incorrect,
+            int successPercent,
+            string overall,
+            IReadOnlyList<WasteClassificationRecord> classifications)
         {
-            WriteSectionHeader(writer, "Atık Detayları");
-            WriteRow(writer, "Atık Adı", "Atılan Kutu", "Doğru Atılması Gereken Yer", "Durum");
+            string totalText = total.ToString(CultureInfo.InvariantCulture);
+            string correctText = correct.ToString(CultureInfo.InvariantCulture);
+            string incorrectText = incorrect.ToString(CultureInfo.InvariantCulture);
+            string successText = $"%{successPercent}";
 
             for (int i = 0; i < classifications.Count; i++)
             {
@@ -129,19 +126,46 @@ namespace Woi.WasteCollectionMode
                 string correctBin = ResolveCorrectBinName(record);
                 string status = FormatStatus(record.isCorrect);
 
-                WriteRow(writer, wasteName, selectedBin, correctBin, status);
+                if (i == 0)
+                {
+                    WriteRow(
+                        writer,
+                        timestamp,
+                        userName,
+                        userId,
+                        totalText,
+                        correctText,
+                        incorrectText,
+                        successText,
+                        overall,
+                        wasteName,
+                        selectedBin,
+                        correctBin,
+                        status);
+                }
+                else
+                {
+                    WriteRow(
+                        writer,
+                        string.Empty,
+                        string.Empty,
+                        string.Empty,
+                        string.Empty,
+                        string.Empty,
+                        string.Empty,
+                        string.Empty,
+                        string.Empty,
+                        wasteName,
+                        selectedBin,
+                        correctBin,
+                        status);
+                }
             }
         }
 
         private static string FormatStatus(bool isCorrect)
         {
             return isCorrect ? StatusCorrect : StatusIncorrect;
-        }
-
-        private static void WriteSectionHeader(TextWriter writer, string title)
-        {
-            writer.Write(EscapeField(title));
-            writer.WriteLine(Delimiter);
         }
 
         private static void WriteRow(TextWriter writer, params string[] cells)
@@ -226,10 +250,7 @@ namespace Woi.WasteCollectionMode
 
         private static string FormatWasteName(string wasteName)
         {
-            if (string.IsNullOrWhiteSpace(wasteName))
-                return "Bilinmeyen Atık";
-
-            return wasteName;
+            return WasteNameCatalog.GetDisplayName(wasteName);
         }
 
         private static string EscapeField(string value)

@@ -17,18 +17,18 @@
                 <ui:VisualElement class="login-icon-box flex-center">
                     <ui:VisualElement name="LoginIconHost" class="login-icon" />
                 </ui:VisualElement>
-                    <ui:Label text="ATIK TOPLAMA" class="login-title-sub accent-color" />
-                    <ui:Label text="EĞİTİM SİMÜLATÖRÜ" class="login-title-main" />
+                    <ui:Label name="LoginTitleSub" text="ATIK TOPLAMA" class="login-title-sub accent-color" />
+                    <ui:Label name="LoginTitleMain" text="EĞİTİM SİMÜLATÖRÜ" class="login-title-main" />
                 </ui:VisualElement>
 
                 <ui:VisualElement class="login-section">
-                    <ui:Label text="KULLANICI PROFİLİ" class="login-section-label" />
+                    <ui:Label name="ProfileSectionLabel" text="KULLANICI PROFİLİ" class="login-section-label" />
                     <ui:TextField name="UserNameField" label="Ad Soyad" class="login-field" />
                     <ui:TextField name="UserIdField" label="Kullanıcı ID" class="login-field" />
                 </ui:VisualElement>
 
                 <ui:VisualElement class="login-section">
-                    <ui:Label text="DİL" class="login-section-label" />
+                    <ui:Label name="LanguageSectionLabel" text="DİL" class="login-section-label" />
                     <ui:DropdownField name="LanguageDropdown" choices="Türkçe,English" value="Türkçe" class="login-dropdown" />
                 </ui:VisualElement>
 

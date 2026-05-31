@@ -38,12 +38,21 @@ namespace Woi.WasteCollectionMode
 
         private VisualElement exitOverlay;
         private Image exitIcon;
+        private Label exitTitle;
         private Button cancelButton;
         private Button confirmExitButton;
 
         private VisualElement overlay;
+        private Label resultTitle;
+        private Label resultSubtitle;
         private Label correctCountLabel;
+        private Label correctStatLabel;
         private Label incorrectCountLabel;
+        private Label incorrectStatLabel;
+        private Label tableWasteHeader;
+        private Label tableSelectedHeader;
+        private Label tableCorrectHeader;
+        private Label tableStatusHeader;
         private ScrollView tableBody;
         private Button restartButton;
 
@@ -163,11 +172,20 @@ namespace Woi.WasteCollectionMode
             VisualElement root = uiDocument.rootVisualElement;
             exitOverlay = root.Q<VisualElement>("ExitOverlay");
             exitIcon = root.Q<Image>("ExitIcon");
+            exitTitle = root.Q<Label>("ExitTitle");
             cancelButton = root.Q<Button>("CancelButton");
             confirmExitButton = root.Q<Button>("ConfirmExitButton");
             overlay = root.Q<VisualElement>("ResultOverlay");
+            resultTitle = root.Q<Label>("ResultTitle");
+            resultSubtitle = root.Q<Label>("ResultSubtitle");
             correctCountLabel = root.Q<Label>("CorrectCount");
+            correctStatLabel = root.Q<Label>("CorrectStatLabel");
             incorrectCountLabel = root.Q<Label>("IncorrectCount");
+            incorrectStatLabel = root.Q<Label>("IncorrectStatLabel");
+            tableWasteHeader = root.Q<Label>("TableWasteHeader");
+            tableSelectedHeader = root.Q<Label>("TableSelectedHeader");
+            tableCorrectHeader = root.Q<Label>("TableCorrectHeader");
+            tableStatusHeader = root.Q<Label>("TableStatusHeader");
             tableBody = root.Q<ScrollView>("TableBody");
             restartButton = root.Q<Button>("RestartButton");
 
@@ -209,7 +227,49 @@ namespace Woi.WasteCollectionMode
                 restartButton.clicked += OnRestartClicked;
             }
 
+            ApplyLocalizedTexts();
             return true;
+        }
+
+        private void ApplyLocalizedTexts()
+        {
+            bool english = WasteCollectionLocalization.IsEnglish;
+
+            if (exitTitle != null)
+                exitTitle.text = WasteCollectionLocalization.ExitTitle(english);
+
+            if (cancelButton != null)
+                cancelButton.text = WasteCollectionLocalization.CancelButton(english);
+
+            if (confirmExitButton != null)
+                confirmExitButton.text = WasteCollectionLocalization.ConfirmExitButton(english);
+
+            if (resultTitle != null)
+                resultTitle.text = WasteCollectionLocalization.ResultTitle(english);
+
+            if (resultSubtitle != null)
+                resultSubtitle.text = WasteCollectionLocalization.ResultSubtitle(english);
+
+            if (correctStatLabel != null)
+                correctStatLabel.text = WasteCollectionLocalization.CorrectStatLabel(english);
+
+            if (incorrectStatLabel != null)
+                incorrectStatLabel.text = WasteCollectionLocalization.IncorrectStatLabel(english);
+
+            if (tableWasteHeader != null)
+                tableWasteHeader.text = WasteCollectionLocalization.TableWasteHeader(english);
+
+            if (tableSelectedHeader != null)
+                tableSelectedHeader.text = WasteCollectionLocalization.TableSelectedHeader(english);
+
+            if (tableCorrectHeader != null)
+                tableCorrectHeader.text = WasteCollectionLocalization.TableCorrectHeader(english);
+
+            if (tableStatusHeader != null)
+                tableStatusHeader.text = WasteCollectionLocalization.TableStatusHeader(english);
+
+            if (restartButton != null)
+                restartButton.text = WasteCollectionLocalization.RestartButton(english);
         }
 
         public void Show()
@@ -357,7 +417,7 @@ namespace Woi.WasteCollectionMode
 
             if (records.Count == 0)
             {
-                tableBody.Add(CreateEmptyRow("Henüz sınıflandırma yapılmadı."));
+                tableBody.Add(CreateEmptyRow(WasteCollectionLocalization.EmptyClassification(WasteCollectionLocalization.IsEnglish)));
                 return;
             }
 
@@ -382,7 +442,7 @@ namespace Woi.WasteCollectionMode
             var row = new VisualElement();
             row.AddToClassList("table-row");
 
-            row.Add(CreateTableCell(record.wasteName, "col-1"));
+            row.Add(CreateTableCell(WasteNameCatalog.GetDisplayName(record.wasteName), "col-1"));
             row.Add(CreateTableCell(WasteBinCatalog.GetBinName(record.selectedBinId), "col-2"));
             row.Add(CreateTableCell(WasteBinCatalog.GetBinName(record.correctBinId), "col-3"));
             row.Add(CreateStatusCell(record.isCorrect));
@@ -425,7 +485,9 @@ namespace Woi.WasteCollectionMode
                 badge.Add(icon);
             }
 
-            var statusText = new Label(isCorrect ? "DOĞRU" : "HATALI");
+            var statusText = new Label(isCorrect
+                ? WasteCollectionLocalization.StatusCorrect(WasteCollectionLocalization.IsEnglish)
+                : WasteCollectionLocalization.StatusIncorrect(WasteCollectionLocalization.IsEnglish));
             statusText.AddToClassList("status-badge-text");
             statusText.AddToClassList(isCorrect ? "success" : "danger");
             badge.Add(statusText);

@@ -19,9 +19,6 @@ namespace Woi.WasteCollectionMode
             "Assets/Project/WasteCollection/UI/IconsPng/trash-2.png";
         private const string TargetSceneGroup = OfficeGameModulesBootstrapper.WasteCollectorSceneGroup;
 
-        private const string LangEnglish = "en";
-        private const string LangTurkish = "tr";
-
         private static readonly Color LoginIconTint = new(0f, 1f, 0.698f, 1f);
 
         [SerializeField] private UIDocument uiDocument;
@@ -33,6 +30,10 @@ namespace Woi.WasteCollectionMode
         private Button startButton;
         private Label errorLabel;
         private VisualElement loginIconHost;
+        private Label loginTitleSub;
+        private Label loginTitleMain;
+        private Label profileSectionLabel;
+        private Label languageSectionLabel;
         private Label leaderboardTitle;
         private VisualElement leaderboardRows;
         private Coroutine bindRoutine;
@@ -128,6 +129,10 @@ namespace Woi.WasteCollectionMode
             startButton = root.Q<Button>("StartButton");
             errorLabel = root.Q<Label>("LoginErrorLabel");
             loginIconHost = root.Q<VisualElement>("LoginIconHost");
+            loginTitleSub = root.Q<Label>("LoginTitleSub");
+            loginTitleMain = root.Q<Label>("LoginTitleMain");
+            profileSectionLabel = root.Q<Label>("ProfileSectionLabel");
+            languageSectionLabel = root.Q<Label>("LanguageSectionLabel");
             leaderboardTitle = root.Q<Label>("LeaderboardTitle");
             leaderboardRows = root.Q<VisualElement>("leaderboard-rows");
 
@@ -156,19 +161,31 @@ namespace Woi.WasteCollectionMode
 
         private void ApplyLanguage(string dropdownLabel)
         {
-            bool isTurkish = LanguageCodeFromDropdownLabel(dropdownLabel) == LangTurkish;
+            bool english = WasteCollectionLocalization.IsEnglishFromDropdown(dropdownLabel);
+
+            if (loginTitleSub != null)
+                loginTitleSub.text = WasteCollectionLocalization.LoginTitleSub(english);
+
+            if (loginTitleMain != null)
+                loginTitleMain.text = WasteCollectionLocalization.LoginTitleMain(english);
+
+            if (profileSectionLabel != null)
+                profileSectionLabel.text = WasteCollectionLocalization.ProfileSection(english);
+
+            if (languageSectionLabel != null)
+                languageSectionLabel.text = WasteCollectionLocalization.LanguageSection(english);
 
             if (userNameField != null)
-                userNameField.label = isTurkish ? "Ad Soyad" : "Full Name";
+                userNameField.label = WasteCollectionLocalization.UserNameLabel(english);
 
             if (userIdField != null)
-                userIdField.label = isTurkish ? "Kullanıcı ID" : "User ID";
+                userIdField.label = WasteCollectionLocalization.UserIdLabel(english);
 
             if (startButton != null)
-                startButton.text = isTurkish ? "OYUNU BAŞLAT" : "START GAME";
+                startButton.text = WasteCollectionLocalization.StartButton(english);
 
             if (leaderboardTitle != null)
-                leaderboardTitle.text = isTurkish ? "BAŞARI TABLOSU" : "LEADERBOARD";
+                leaderboardTitle.text = WasteCollectionLocalization.LeaderboardTitle(english);
         }
 
         private void OnStartClicked()
@@ -180,20 +197,17 @@ namespace Woi.WasteCollectionMode
             string userId = userIdField != null ? userIdField.value.Trim() : string.Empty;
             string languageCode = LanguageCodeFromDropdownLabel(
                 languageDropdown != null ? languageDropdown.value : "Türkçe");
+            bool english = languageCode == WasteCollectionLocalization.LangEnglish;
 
             if (string.IsNullOrWhiteSpace(userName))
             {
-                ShowError(languageCode == LangEnglish
-                    ? "Please enter your name."
-                    : "Lütfen ad soyad girin.");
+                ShowError(WasteCollectionLocalization.ErrorNameRequired(english));
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(userId))
             {
-                ShowError(languageCode == LangEnglish
-                    ? "Please enter your user ID."
-                    : "Lütfen kullanıcı ID girin.");
+                ShowError(WasteCollectionLocalization.ErrorIdRequired(english));
                 return;
             }
 
@@ -213,7 +227,9 @@ namespace Woi.WasteCollectionMode
 
             if (!TryResolveSceneLoader(out ISceneLoaderService loader))
             {
-                ShowError("Scene loader bulunamadı. Waste Collection/Setup Login Scene menüsünü çalıştırın.");
+                bool english = languageDropdown != null &&
+                    WasteCollectionLocalization.IsEnglishFromDropdown(languageDropdown.value);
+                ShowError(WasteCollectionLocalization.ErrorSceneLoaderMissing(english));
                 isLoading = false;
                 if (startButton != null)
                     startButton.SetEnabled(true);
@@ -247,7 +263,10 @@ namespace Woi.WasteCollectionMode
 
             if (loadTask.IsFaulted)
             {
-                ShowError(loadTask.Exception?.GetBaseException().Message ?? "Sahne yüklenemedi.");
+                bool english = languageDropdown != null &&
+                    WasteCollectionLocalization.IsEnglishFromDropdown(languageDropdown.value);
+                ShowError(loadTask.Exception?.GetBaseException().Message
+                    ?? WasteCollectionLocalization.ErrorSceneLoadFailed(english));
                 isLoading = false;
                 if (startButton != null)
                     startButton.SetEnabled(true);
@@ -281,10 +300,10 @@ namespace Woi.WasteCollectionMode
 
         private static string LanguageCodeFromDropdownLabel(string label)
         {
-            if (string.Equals(label?.Trim(), "English", System.StringComparison.OrdinalIgnoreCase))
-                return LangEnglish;
+            if (WasteCollectionLocalization.IsEnglishFromDropdown(label))
+                return WasteCollectionLocalization.LangEnglish;
 
-            return LangTurkish;
+            return WasteCollectionLocalization.LangTurkish;
         }
 
         private void ShowError(string message)

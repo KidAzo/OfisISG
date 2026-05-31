@@ -17,6 +17,8 @@ namespace Woi.WasteCollectionMode
         private VisualElement headerIconHost;
         private VisualElement gridContainer;
         private Label activeItemLabel;
+        private Label headerSubtitle;
+        private Label headerDesc;
         private Button closeButton;
 
         private readonly List<WasteBinData> wasteBins = new()
@@ -61,7 +63,11 @@ namespace Woi.WasteCollectionMode
             headerIconHost = root.Q<VisualElement>("HeaderIcon");
             gridContainer = root.Q<VisualElement>("GridContainer");
             activeItemLabel = root.Q<Label>("ActiveItemName");
+            headerSubtitle = root.Q<Label>("HeaderSubtitle");
+            headerDesc = root.Q<Label>("HeaderDesc");
             closeButton = root.Q<Button>("CloseButton");
+
+            ApplyLocalizedTexts();
 
             if (closeButton != null)
                 closeButton.clicked += OnCloseClicked;
@@ -83,7 +89,11 @@ namespace Woi.WasteCollectionMode
         public void Show(string itemName)
         {
             if (activeItemLabel != null)
-                activeItemLabel.text = string.IsNullOrWhiteSpace(itemName) ? "-" : itemName;
+            {
+                activeItemLabel.text = string.IsNullOrWhiteSpace(itemName)
+                    ? "-"
+                    : WasteNameCatalog.GetDisplayName(itemName);
+            }
 
             if (overlay != null)
                 overlay.style.display = DisplayStyle.Flex;
@@ -96,6 +106,17 @@ namespace Woi.WasteCollectionMode
         }
 
         public bool IsVisible => overlay != null && overlay.style.display == DisplayStyle.Flex;
+
+        private void ApplyLocalizedTexts()
+        {
+            bool english = WasteCollectionLocalization.IsEnglish;
+
+            if (headerSubtitle != null)
+                headerSubtitle.text = WasteCollectionLocalization.SelectionHeaderSubtitle(english);
+
+            if (headerDesc != null)
+                headerDesc.text = WasteCollectionLocalization.SelectionHeaderDesc(english);
+        }
 
         private void ResolveIconLibrary()
         {
@@ -146,7 +167,7 @@ namespace Woi.WasteCollectionMode
 
                 button.Add(iconContainer);
 
-                var nameLabel = new Label(bin.Name);
+                var nameLabel = new Label(WasteBinCatalog.GetBinName(captured.Id));
                 nameLabel.AddToClassList("bin-button-text");
                 button.Add(nameLabel);
 
