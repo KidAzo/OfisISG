@@ -6,7 +6,7 @@
             <ui:VisualElement class="header-container padding-large flex-row justify-between border-bottom">
                 <ui:VisualElement class="flex-row items-center">
                     <ui:VisualElement class="header-icon-box flex-center">
-                        <ui:Label text="♻" class="header-icon-label" />
+                        <ui:VisualElement name="HeaderIcon" class="header-icon" />
                     </ui:VisualElement>
 
                     <ui:VisualElement class="header-text-block">

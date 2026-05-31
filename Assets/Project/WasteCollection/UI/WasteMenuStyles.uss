@@ -87,6 +87,11 @@
     -unity-text-align: middle-center;
 }
 
+.header-icon {
+    width: 32px;
+    height: 32px;
+}
+
 .header-subtitle {
     font-size: 11px;
     -unity-font-style: bold;
@@ -178,8 +183,6 @@
 .bin-button-icon {
     width: 28px;
     height: 28px;
-    border-radius: 6px;
-    background-color: var(--color-text-gray);
 }
 
 .bin-button-text {

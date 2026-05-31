@@ -11,9 +11,15 @@ namespace Woi.WasteCollectionMode
     /// </summary>
     public class WasteCollectionResultController : MonoBehaviour
     {
+        [Header("Player")]
+        [SerializeField] private Transform playerRoot;
+        [SerializeField] private string playerTag = "Player";
+
+        [Header("Systems")]
         [SerializeField] private SelectionSystemManager selectionSystemManager;
         [SerializeField] private WasteSelectionMenu wasteSelectionMenu;
 
+        private readonly PlayerMovementLookFreeze movementLookFreeze = new();
         private bool playerInputFrozen;
         private CursorLockMode savedCursorLockState;
         private bool savedCursorVisible;
@@ -79,6 +85,9 @@ namespace Woi.WasteCollectionMode
             if (playerInputFrozen)
                 return;
 
+            Transform root = ResolvePlayerRoot();
+            movementLookFreeze.Freeze(root);
+
             if (ServiceLocator.TryGet(out IPlayerService playerService))
                 playerService.SetPlayerInputEnabled(false);
 
@@ -94,12 +103,36 @@ namespace Woi.WasteCollectionMode
             if (!playerInputFrozen)
                 return;
 
+            movementLookFreeze.Restore();
+
             if (ServiceLocator.TryGet(out IPlayerService playerService))
                 playerService.SetPlayerInputEnabled(true);
 
             Cursor.lockState = savedCursorLockState;
             Cursor.visible = savedCursorVisible;
             playerInputFrozen = false;
+        }
+
+        private Transform ResolvePlayerRoot()
+        {
+            if (playerRoot != null)
+                return playerRoot;
+
+            if (ServiceLocator.TryGet(out IPlayerService playerService))
+            {
+                Transform serviceRoot = playerService.GetPlayerTransform();
+                if (serviceRoot != null)
+                    return serviceRoot;
+            }
+
+            if (!string.IsNullOrWhiteSpace(playerTag))
+            {
+                GameObject taggedPlayer = GameObject.FindGameObjectWithTag(playerTag);
+                if (taggedPlayer != null)
+                    return taggedPlayer.transform;
+            }
+
+            return null;
         }
     }
 }

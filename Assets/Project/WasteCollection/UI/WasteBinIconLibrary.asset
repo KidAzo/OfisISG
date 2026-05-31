@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f9fc6d11cd13ba4c8c1e6c564bdc0b3, type: 3}
+  m_Name: WasteBinIconLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::Woi.WasteCollectionMode.WasteBinIconLibrary
+  headerIcon: {fileID: 2800000, guid: 20b877d0e5a8410aae2a18a2dce8a276, type: 3}
+  icons:
+  - iconKey: file-text
+    texture: {fileID: 2800000, guid: 68fa02559082447d8c3d26f1546f144b, type: 3}
+  - iconKey: package
+    texture: {fileID: 2800000, guid: d05f98e5a8bc48318df9467339b89fd4, type: 3}
+  - iconKey: beaker
+    texture: {fileID: 2800000, guid: f0d2fc10eb5848ada0edcaa96950c149, type: 3}
+  - iconKey: glass-water
+    texture: {fileID: 2800000, guid: 2b1049c41e7142659495ef1763aee5d7, type: 3}
+  - iconKey: apple
+    texture: {fileID: 2800000, guid: 973ad165d46c461b91b4da414b9a6caa, type: 3}
+  - iconKey: battery
+    texture: {fileID: 2800000, guid: f10006e8342743608a078f06dd02bd5f, type: 3}
+  - iconKey: printer
+    texture: {fileID: 2800000, guid: 02b34600cf0845f1801ad22ae731df49, type: 3}
+  - iconKey: monitor
+    texture: {fileID: 2800000, guid: 0fc3f14b454d4770a695c704dc74754a, type: 3}
+  - iconKey: disc
+    texture: {fileID: 2800000, guid: b4d1e0e78d8443a09aeb847fe9354714, type: 3}
+  - iconKey: cylinder
+    texture: {fileID: 2800000, guid: a50f8f9343fd4911b22f4c10fe8cc725, type: 3}
+  - iconKey: flame
+    texture: {fileID: 2800000, guid: f8a30e43cc324306b3d7ee49626cd882, type: 3}
+  - iconKey: trash-2
+    texture: {fileID: 2800000, guid: 28b14a2f32ff4213a86dc6b9048639b5, type: 3}
+  - iconKey: triangle-alert
+    texture: {fileID: 2800000, guid: d17e8293f5424c888c0ec871ffae49ff, type: 3}
+  - iconKey: briefcase-medical
+    texture: {fileID: 2800000, guid: 312a2d259280464ea0d12687bfbf97b7, type: 3}
+  - iconKey: lightbulb
+    texture: {fileID: 2800000, guid: a82fcfd472e34be8827a98918cf776b0, type: 3}

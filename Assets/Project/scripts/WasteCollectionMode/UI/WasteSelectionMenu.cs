@@ -8,30 +8,34 @@ namespace Woi.WasteCollectionMode
     [RequireComponent(typeof(UIDocument))]
     public class WasteSelectionMenu : MonoBehaviour
     {
+        private const string DefaultLibraryPath = "Assets/Project/WasteCollection/UI/WasteBinIconLibrary.asset";
+
         [SerializeField] private UIDocument uiDocument;
+        [SerializeField] private WasteBinIconLibrary iconLibrary;
 
         private VisualElement overlay;
+        private VisualElement headerIconHost;
         private VisualElement gridContainer;
         private Label activeItemLabel;
         private Button closeButton;
 
         private readonly List<WasteBinData> wasteBins = new()
         {
-            new WasteBinData("1", "Kağıt Atıklar", new Color(0.14f, 0.38f, 0.88f)),
-            new WasteBinData("2", "Karton Atıklar", new Color(0.31f, 0.27f, 0.89f)),
-            new WasteBinData("3", "Plastik Atıklar", new Color(0.91f, 0.69f, 0.05f)),
-            new WasteBinData("4", "Cam Atıklar", new Color(0.02f, 0.53f, 0.40f)),
-            new WasteBinData("5", "Organik Yemek", new Color(0.57f, 0.25f, 0.11f)),
-            new WasteBinData("6", "Kullanılmış Pil", new Color(0.86f, 0.15f, 0.15f)),
-            new WasteBinData("7", "Toner & Kartuş", new Color(0.62f, 0.07f, 0.24f)),
-            new WasteBinData("8", "Elektronik Atık", new Color(0.58f, 0.19f, 0.87f)),
-            new WasteBinData("9", "Plastik Kapak", new Color(0.22f, 0.73f, 0.95f)),
-            new WasteBinData("10", "Metal Kutu", new Color(0.58f, 0.65f, 0.72f)),
-            new WasteBinData("11", "Sigara İzmariti", new Color(0.32f, 0.32f, 0.35f)),
-            new WasteBinData("12", "Geri Dönüşmez", new Color(0.15f, 0.15f, 0.15f)),
-            new WasteBinData("13", "Tehlikeli Atık", new Color(0.98f, 0.75f, 0.18f)),
-            new WasteBinData("14", "Tıbbi Atık", new Color(0.86f, 0.15f, 0.15f)),
-            new WasteBinData("15", "Ampul/Floresan", new Color(0.97f, 0.43f, 0.11f))
+            new WasteBinData("1", "Kağıt Atıklar", "file-text", new Color(0.14f, 0.38f, 0.88f)),
+            new WasteBinData("2", "Karton Atıklar", "package", new Color(0.31f, 0.27f, 0.89f)),
+            new WasteBinData("3", "Plastik Atıklar", "beaker", new Color(0.91f, 0.69f, 0.05f)),
+            new WasteBinData("4", "Cam Atıklar", "glass-water", new Color(0.02f, 0.53f, 0.40f)),
+            new WasteBinData("5", "Organik Yemek", "apple", new Color(0.57f, 0.25f, 0.11f)),
+            new WasteBinData("6", "Kullanılmış Pil", "battery", new Color(0.86f, 0.15f, 0.15f)),
+            new WasteBinData("7", "Toner & Kartuş", "printer", new Color(0.62f, 0.07f, 0.24f)),
+            new WasteBinData("8", "Elektronik Atık", "monitor", new Color(0.58f, 0.19f, 0.87f)),
+            new WasteBinData("9", "Plastik Kapak", "disc", new Color(0.22f, 0.73f, 0.95f)),
+            new WasteBinData("10", "Metal Kutu", "cylinder", new Color(0.58f, 0.65f, 0.72f)),
+            new WasteBinData("11", "Sigara İzmariti", "flame", new Color(0.32f, 0.32f, 0.35f)),
+            new WasteBinData("12", "Geri Dönüşmez", "trash-2", new Color(0.15f, 0.15f, 0.15f)),
+            new WasteBinData("13", "Tehlikeli Atık", "triangle-alert", new Color(0.98f, 0.75f, 0.18f)),
+            new WasteBinData("14", "Tıbbi Atık", "briefcase-medical", new Color(0.86f, 0.15f, 0.15f)),
+            new WasteBinData("15", "Ampul/Floresan", "lightbulb", new Color(0.97f, 0.43f, 0.11f))
         };
 
         public event Action<string> BinSelected;
@@ -41,6 +45,8 @@ namespace Woi.WasteCollectionMode
         {
             if (uiDocument == null)
                 uiDocument = GetComponent<UIDocument>();
+
+            ResolveIconLibrary();
         }
 
         private void OnEnable()
@@ -48,8 +54,11 @@ namespace Woi.WasteCollectionMode
             if (uiDocument == null || uiDocument.rootVisualElement == null)
                 return;
 
+            ResolveIconLibrary();
+
             VisualElement root = uiDocument.rootVisualElement;
             overlay = root.Q<VisualElement>("Overlay");
+            headerIconHost = root.Q<VisualElement>("HeaderIcon");
             gridContainer = root.Q<VisualElement>("GridContainer");
             activeItemLabel = root.Q<Label>("ActiveItemName");
             closeButton = root.Q<Button>("CloseButton");
@@ -57,7 +66,9 @@ namespace Woi.WasteCollectionMode
             if (closeButton != null)
                 closeButton.clicked += OnCloseClicked;
 
-            if (gridContainer != null && gridContainer.childCount == 0)
+            ApplyHeaderIcon();
+
+            if (gridContainer != null)
                 GenerateGrid();
 
             Hide();
@@ -84,6 +95,25 @@ namespace Woi.WasteCollectionMode
                 overlay.style.display = DisplayStyle.None;
         }
 
+        private void ResolveIconLibrary()
+        {
+            if (iconLibrary != null)
+                return;
+
+#if UNITY_EDITOR
+            iconLibrary = UnityEditor.AssetDatabase.LoadAssetAtPath<WasteBinIconLibrary>(DefaultLibraryPath);
+#endif
+        }
+
+        private void ApplyHeaderIcon()
+        {
+            if (headerIconHost == null || iconLibrary == null || iconLibrary.HeaderIcon == null)
+                return;
+
+            headerIconHost.Clear();
+            ApplyTextureIcon(headerIconHost, iconLibrary.HeaderIcon, new Color(0f, 1f, 0.698f, 1f), 32f);
+        }
+
         private void GenerateGrid()
         {
             gridContainer.Clear();
@@ -102,10 +132,16 @@ namespace Woi.WasteCollectionMode
 
                 var iconContainer = new VisualElement();
                 iconContainer.AddToClassList("bin-button-icon-container");
-                var icon = new VisualElement();
-                icon.AddToClassList("bin-button-icon");
-                iconContainer.Add(icon);
                 iconContainer.style.backgroundColor = bin.ThemeColor * 0.35f;
+
+                if (iconLibrary != null && iconLibrary.TryGetIcon(bin.IconKey, out Texture2D texture))
+                {
+                    var icon = new VisualElement();
+                    icon.AddToClassList("bin-button-icon");
+                    ApplyTextureIcon(icon, texture, Color.white, 28f);
+                    iconContainer.Add(icon);
+                }
+
                 button.Add(iconContainer);
 
                 var nameLabel = new Label(bin.Name);
@@ -114,6 +150,16 @@ namespace Woi.WasteCollectionMode
 
                 gridContainer.Add(button);
             }
+        }
+
+        private static void ApplyTextureIcon(VisualElement target, Texture2D texture, Color tint, float size)
+        {
+            target.style.width = size;
+            target.style.height = size;
+            target.style.flexShrink = 0;
+            target.style.backgroundImage = new StyleBackground(texture);
+            target.style.unityBackgroundImageTintColor = tint;
+            target.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Contain);
         }
 
         private void OnBinSelected(string binId)
@@ -131,15 +177,17 @@ namespace Woi.WasteCollectionMode
 
         private readonly struct WasteBinData
         {
-            public WasteBinData(string id, string name, Color themeColor)
+            public WasteBinData(string id, string name, string iconKey, Color themeColor)
             {
                 Id = id;
                 Name = name;
+                IconKey = iconKey;
                 ThemeColor = themeColor;
             }
 
             public string Id { get; }
             public string Name { get; }
+            public string IconKey { get; }
             public Color ThemeColor { get; }
         }
     }
