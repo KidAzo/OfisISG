@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Woi.WasteCollectionMode;
 
 /// <summary>
 /// Tracks collected waste items for end-of-session reporting.
@@ -27,8 +28,10 @@ public class WasteCollectTracker : MonoBehaviour
     [SerializeField] private WasteDatabase database;
 
     private readonly List<WasteCollectRecord> records = new();
+    private readonly List<WasteClassificationRecord> classifications = new();
 
     public IReadOnlyList<WasteCollectRecord> Records => records;
+    public IReadOnlyList<WasteClassificationRecord> Classifications => classifications;
 
     public static bool TryGetActive(out WasteCollectTracker tracker)
     {
@@ -77,5 +80,37 @@ public class WasteCollectTracker : MonoBehaviour
         };
 
         records.Add(record);
+    }
+
+    public void RecordClassification(string wasteName, string selectedBinId)
+    {
+        WasteType wasteType = ResolveWasteType(wasteName);
+        string correctBinId = WasteBinCatalog.GetCorrectBinId(wasteName, wasteType);
+
+        classifications.Add(new WasteClassificationRecord
+        {
+            wasteName = wasteName,
+            wasteType = wasteType,
+            selectedBinId = selectedBinId,
+            correctBinId = correctBinId,
+            isCorrect = selectedBinId == correctBinId
+        });
+    }
+
+    public void ClearSession()
+    {
+        records.Clear();
+        classifications.Clear();
+    }
+
+    private WasteType ResolveWasteType(string wasteName)
+    {
+        for (int i = records.Count - 1; i >= 0; i--)
+        {
+            if (records[i].wasteName == wasteName)
+                return records[i].wasteType;
+        }
+
+        return default;
     }
 }

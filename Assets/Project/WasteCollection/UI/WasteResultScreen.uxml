@@ -1,0 +1,38 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="WasteMenuStyles.uss" />
+
+    <ui:VisualElement name="ResultOverlay" class="result-overlay">
+        <ui:VisualElement class="result-container">
+            <ui:VisualElement name="ResultIconBox" class="result-icon-box">
+                <ui:VisualElement name="ResultIcon" class="result-icon" />
+            </ui:VisualElement>
+
+            <ui:Label text="Grup Tamamlandı" class="result-title" />
+            <ui:Label text="Atık Sınıflandırma Değerlendirme Raporu" class="result-subtitle" />
+
+            <ui:VisualElement class="stats-container">
+                <ui:VisualElement class="stat-box">
+                    <ui:Label name="CorrectCount" text="0" class="stat-value success" />
+                    <ui:Label text="DOĞRU ATIM" class="stat-label" />
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-box">
+                    <ui:Label name="IncorrectCount" text="0" class="stat-value danger" />
+                    <ui:Label text="HATALI ATIM" class="stat-label" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement class="table-container">
+                <ui:VisualElement class="table-header">
+                    <ui:Label text="ATIK" class="table-header-cell col-1" />
+                    <ui:Label text="SEÇİLEN KUTU" class="table-header-cell col-2" />
+                    <ui:Label text="DOĞRU KUTU" class="table-header-cell col-3" />
+                    <ui:Label text="DURUM" class="table-header-cell col-4" style="-unity-text-align: middle-center;" />
+                </ui:VisualElement>
+
+                <ui:ScrollView name="TableBody" style="max-height: 250px;" />
+            </ui:VisualElement>
+
+            <ui:Button name="RestartButton" text="TEKRAR BAŞLA" class="restart-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

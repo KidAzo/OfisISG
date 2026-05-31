@@ -95,6 +95,8 @@ namespace Woi.WasteCollectionMode
                 overlay.style.display = DisplayStyle.None;
         }
 
+        public bool IsVisible => overlay != null && overlay.style.display == DisplayStyle.Flex;
+
         private void ResolveIconLibrary()
         {
             if (iconLibrary != null)

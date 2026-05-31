@@ -18,15 +18,20 @@ namespace Woi.WasteCollectionMode
         [Header("Systems")]
         [SerializeField] private SelectionSystemManager selectionSystemManager;
         [SerializeField] private WasteSelectionMenu wasteSelectionMenu;
+        [SerializeField] private WasteCollectTracker collectTracker;
 
         private readonly PlayerMovementLookFreeze movementLookFreeze = new();
         private bool playerInputFrozen;
         private CursorLockMode savedCursorLockState;
         private bool savedCursorVisible;
+        private string pendingWasteName;
 
         private void OnEnable()
         {
             EventBus.Register<WasteCollectedEvent>(OnWasteCollected);
+
+            if (collectTracker == null)
+                collectTracker = FindFirstObjectByType<WasteCollectTracker>();
 
             if (wasteSelectionMenu != null)
             {
@@ -50,6 +55,7 @@ namespace Woi.WasteCollectionMode
 
         private void OnWasteCollected(WasteCollectedEvent evt)
         {
+            pendingWasteName = evt.WasteName;
             FreezePlayerInput();
 
             if (selectionSystemManager != null)
@@ -61,11 +67,18 @@ namespace Woi.WasteCollectionMode
 
         private void OnBinSelected(string binId)
         {
-            Debug.Log($"[WasteCollectionResultController] Bin selected: {binId}");
+            if (collectTracker == null)
+                collectTracker = FindFirstObjectByType<WasteCollectTracker>();
+
+            if (collectTracker != null && !string.IsNullOrWhiteSpace(pendingWasteName))
+                collectTracker.RecordClassification(pendingWasteName, binId);
+
+            pendingWasteName = null;
         }
 
         private void OnMenuDismissed()
         {
+            pendingWasteName = null;
             ResumeGameplay();
         }
 
@@ -91,10 +104,10 @@ namespace Woi.WasteCollectionMode
             if (ServiceLocator.TryGet(out IPlayerService playerService))
                 playerService.SetPlayerInputEnabled(false);
 
-            savedCursorLockState = Cursor.lockState;
-            savedCursorVisible = Cursor.visible;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            savedCursorLockState = UnityEngine.Cursor.lockState;
+            savedCursorVisible = UnityEngine.Cursor.visible;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+            UnityEngine.Cursor.visible = true;
             playerInputFrozen = true;
         }
 
@@ -108,8 +121,8 @@ namespace Woi.WasteCollectionMode
             if (ServiceLocator.TryGet(out IPlayerService playerService))
                 playerService.SetPlayerInputEnabled(true);
 
-            Cursor.lockState = savedCursorLockState;
-            Cursor.visible = savedCursorVisible;
+            UnityEngine.Cursor.lockState = savedCursorLockState;
+            UnityEngine.Cursor.visible = savedCursorVisible;
             playerInputFrozen = false;
         }
 

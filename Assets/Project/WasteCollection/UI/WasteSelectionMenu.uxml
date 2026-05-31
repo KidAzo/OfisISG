@@ -1,26 +1,71 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="WasteMenuStyles.uss" />
 
-    <ui:VisualElement name="Overlay" class="overlay flex-center">
-        <ui:VisualElement name="MenuContainer" class="menu-container">
-            <ui:VisualElement class="header-container padding-large flex-row justify-between border-bottom">
-                <ui:VisualElement class="flex-row items-center">
-                    <ui:VisualElement class="header-icon-box flex-center">
-                        <ui:VisualElement name="HeaderIcon" class="header-icon" />
+    <ui:VisualElement class="ui-root">
+        <ui:VisualElement name="Overlay" class="overlay flex-center">
+            <ui:VisualElement name="MenuContainer" class="menu-container">
+                <ui:VisualElement class="header-container padding-large flex-row justify-between border-bottom">
+                    <ui:VisualElement class="flex-row items-center">
+                        <ui:VisualElement class="header-icon-box flex-center">
+                            <ui:VisualElement name="HeaderIcon" class="header-icon" />
+                        </ui:VisualElement>
+
+                        <ui:VisualElement class="header-text-block">
+                            <ui:Label text="ELDEKİ ATIK ONAYLANDI" class="header-subtitle accent-color" />
+                            <ui:Label name="ActiveItemName" text="-" class="header-title text-white" />
+                            <ui:Label text="Hedef atık kutusunu seçin." class="header-desc text-gray" />
+                        </ui:VisualElement>
                     </ui:VisualElement>
 
-                    <ui:VisualElement class="header-text-block">
-                        <ui:Label text="ELDEKİ ATIK ONAYLANDI" class="header-subtitle accent-color" />
-                        <ui:Label name="ActiveItemName" text="-" class="header-title text-white" />
-                        <ui:Label text="Hedef atık kutusunu seçin." class="header-desc text-gray" />
+                    <ui:Button name="CloseButton" text="X" class="close-button" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="padding-large">
+                    <ui:VisualElement name="GridContainer" class="grid-container" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="ResultOverlay" class="overlay result-overlay flex-center" style="display: none;">
+            <ui:VisualElement class="result-container">
+                <ui:VisualElement name="ResultIconBox" class="result-icon-box">
+                    <ui:VisualElement name="ResultIcon" class="result-icon" />
+                </ui:VisualElement>
+
+                <ui:Label text="Grup Tamamlandı" class="result-title" />
+                <ui:Label text="Atık Sınıflandırma Değerlendirme Raporu" class="result-subtitle" />
+
+                <ui:VisualElement class="stats-container">
+                    <ui:VisualElement class="stat-box">
+                        <ui:Label name="CorrectCount" text="0" class="stat-value success" />
+                        <ui:Label text="DOĞRU ATIM" class="stat-label" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="stat-box">
+                        <ui:Label name="IncorrectCount" text="0" class="stat-value danger" />
+                        <ui:Label text="HATALI ATIM" class="stat-label" />
                     </ui:VisualElement>
                 </ui:VisualElement>
 
-                <ui:Button name="CloseButton" text="X" class="close-button" />
-            </ui:VisualElement>
+                <ui:VisualElement class="table-container">
+                    <ui:VisualElement class="table-header">
+                        <ui:VisualElement class="table-col col-1">
+                            <ui:Label text="ATIK" class="table-header-cell" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="table-col col-2">
+                            <ui:Label text="SEÇİLEN KUTU" class="table-header-cell" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="table-col col-3">
+                            <ui:Label text="DOĞRU KUTU" class="table-header-cell" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="table-col col-4">
+                            <ui:Label text="DURUM" class="table-header-cell col-4" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
 
-            <ui:VisualElement class="padding-large">
-                <ui:VisualElement name="GridContainer" class="grid-container" />
+                    <ui:ScrollView name="TableBody" style="max-height: 250px;" />
+                </ui:VisualElement>
+
+                <ui:Button name="RestartButton" text="TEKRAR BAŞLA" class="restart-button" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
