@@ -1,9 +1,12 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using Woi.OfficeFire;
 using Woi.Player;
+using Woi.Settings;
 using WOI.Modules.SDK;
 
 namespace Woi.WasteCollectionMode
@@ -45,6 +48,7 @@ namespace Woi.WasteCollectionMode
 
         private readonly PlayerMovementLookFreeze movementLookFreeze = new();
         private bool inputFrozen;
+        private bool isRestarting;
         private CursorLockMode savedCursorLockState;
         private bool savedCursorVisible;
 
@@ -374,11 +378,108 @@ namespace Woi.WasteCollectionMode
 
         private void OnRestartClicked()
         {
+            if (isRestarting)
+                return;
+
             if (collectTracker != null)
                 collectTracker.ClearSession();
 
+            HideExit();
             HideResult();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+            if (ServiceLocator.TryGet(out OfficeGameModulesBootstrapper bootstrapper) && bootstrapper != null)
+            {
+                isRestarting = true;
+                if (restartButton != null)
+                    restartButton.SetEnabled(false);
+
+                bootstrapper.LoadWasteLogin();
+                return;
+            }
+
+            StartCoroutine(RestartLoginRoutine());
+        }
+
+        private IEnumerator RestartLoginRoutine()
+        {
+            isRestarting = true;
+
+            if (restartButton != null)
+                restartButton.SetEnabled(false);
+
+            if (!TryResolveSceneLoader(out ISceneLoaderService loader))
+            {
+                Debug.LogError(
+                    "[WasteResultScreenController] Scene loader not found. Ensure SceneLoader is registered on ServiceLocator.",
+                    this);
+                isRestarting = false;
+                if (restartButton != null)
+                    restartButton.SetEnabled(true);
+                yield break;
+            }
+
+            Task loadTask;
+            try
+            {
+                loadTask = loader.LoadScene(OfficeGameModulesBootstrapper.WasteLoginSceneGroup);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[WasteResultScreenController] Restart load failed: {ex.Message}", this);
+                isRestarting = false;
+                if (restartButton != null)
+                    restartButton.SetEnabled(true);
+                yield break;
+            }
+
+            if (loadTask == null)
+            {
+                isRestarting = false;
+                if (restartButton != null)
+                    restartButton.SetEnabled(true);
+                yield break;
+            }
+
+            while (!loadTask.IsCompleted)
+                yield return null;
+
+            if (loadTask.IsFaulted)
+            {
+                Debug.LogError(
+                    "[WasteResultScreenController] Restart load task faulted.",
+                    this);
+                if (loadTask.Exception != null)
+                    Debug.LogException(loadTask.Exception.GetBaseException(), this);
+
+                isRestarting = false;
+                if (restartButton != null)
+                    restartButton.SetEnabled(true);
+            }
+        }
+
+        private static bool TryResolveSceneLoader(out ISceneLoaderService loader)
+        {
+            if (ServiceLocator.TryGet(out ISceneLoaderService service) && service != null)
+            {
+                loader = service;
+                return true;
+            }
+
+            if (ServiceLocator.TryGet(out SceneLoader concrete) && concrete != null)
+            {
+                loader = concrete;
+                return true;
+            }
+
+            SceneLoader found = FindFirstObjectByType<SceneLoader>();
+            if (found != null)
+            {
+                loader = found;
+                return true;
+            }
+
+            loader = null;
+            return false;
         }
 
         private void FreezePlayerInput()

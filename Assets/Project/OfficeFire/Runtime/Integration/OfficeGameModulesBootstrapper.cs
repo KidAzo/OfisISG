@@ -160,6 +160,14 @@ namespace Woi.OfficeFire
         }
 
         /// <summary>
+        /// Loads the waste collection login scene group.
+        /// </summary>
+        public void LoadWasteLogin()
+        {
+            LoadScene(WasteLoginSceneGroup);
+        }
+
+        /// <summary>
         /// Loads the waste collection gameplay scene group (after login).
         /// </summary>
         public void LoadWasteCollectorGameplay()
