@@ -6,7 +6,7 @@ namespace Woi.OfficeFire
 {
     /// <summary>
     /// Optional helper: registers the scene's <see cref="SceneLoader"/> on <see cref="ServiceLocator"/> as <see cref="ISceneLoaderService"/>
-    /// so <see cref="OfficeFireModuleBootstrapper"/> (and other code) can resolve it. Use when your bootstrap scene has no other registration.
+    /// so <see cref="OfficeGameModulesBootstrapper"/> (and other code) can resolve it. Use when your bootstrap scene has no other registration.
     /// </summary>
     [DefaultExecutionOrder(-100)]
     public sealed class OfficeFireSceneLoaderServiceBinder : MonoBehaviour

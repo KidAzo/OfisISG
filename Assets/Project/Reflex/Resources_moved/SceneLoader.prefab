@@ -207,6 +207,11 @@ MonoBehaviour:
     - SceneName: OutDoor
       AddressableKey: 
       SceneType: 0
+  - GroupName: WasteCollector
+    Scenes:
+    - SceneName: FireModule_Office
+      AddressableKey: 
+      SceneType: 0
   _runCatalogHealthBeforeSelectedGroups: 1
   _catalogHealthGroupNames:
   - Fire_Train

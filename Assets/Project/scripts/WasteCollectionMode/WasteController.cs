@@ -6,7 +6,6 @@ namespace Woi.WasteCollectionMode
 {
     public class WasteController : MonoBehaviour, ISelectable
     {
-            [SerializeField] private Waste waste;
             Outline outline;
 
             private void Awake()
@@ -28,7 +27,10 @@ namespace Woi.WasteCollectionMode
             public void Select()
             {
                 SetOutline();
-                EventBus.Raise(new WasteSelectedEvent(waste.name));
+
+                WasteCollectable collectable = GetComponent<WasteCollectable>();
+                if (collectable != null && WasteCollectTracker.TryGetActive(out WasteCollectTracker tracker))
+                    tracker.Collect(collectable);
             }
 
             public void Deselect()
