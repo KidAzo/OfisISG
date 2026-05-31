@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using Woi.Events.Data;
 using Woi.OfficeFire;
 using Woi.Player;
 using Woi.Settings;
@@ -49,6 +50,7 @@ namespace Woi.WasteCollectionMode
         private readonly PlayerMovementLookFreeze movementLookFreeze = new();
         private bool inputFrozen;
         private bool isRestarting;
+        private bool sessionResultsExported;
         private CursorLockMode savedCursorLockState;
         private bool savedCursorVisible;
 
@@ -124,7 +126,10 @@ namespace Woi.WasteCollectionMode
             if (confirmExitButton != null)
                 confirmExitButton.clicked -= OnConfirmExitClicked;
 
-            RestorePlayerInput();
+            if (isRestarting)
+                ApplyMenuCursorForLogin();
+            else
+                RestorePlayerInput();
         }
 
         private void Update()
@@ -243,8 +248,60 @@ namespace Woi.WasteCollectionMode
                 return;
 
             RefreshContent();
+            ExportSessionResultsIfNeeded();
             overlay.style.display = DisplayStyle.Flex;
             FreezePlayerInput();
+        }
+
+        private void ExportSessionResultsIfNeeded()
+        {
+            if (sessionResultsExported || collectTracker == null)
+                return;
+
+            IReadOnlyList<WasteClassificationRecord> classifications = collectTracker.Classifications;
+            if (classifications.Count == 0)
+                return;
+
+            string path = WasteSessionResultCsvExporter.AppendSession(classifications);
+            if (!string.IsNullOrEmpty(path))
+            {
+                sessionResultsExported = true;
+                RecordLeaderboardScore(classifications);
+            }
+        }
+
+        private static void RecordLeaderboardScore(IReadOnlyList<WasteClassificationRecord> classifications)
+        {
+            int correct = 0;
+            for (int i = 0; i < classifications.Count; i++)
+            {
+                if (classifications[i].isCorrect)
+                    correct++;
+            }
+
+            int successPercent = classifications.Count > 0
+                ? Mathf.RoundToInt(correct * 100f / classifications.Count)
+                : 0;
+
+            string userName;
+            string userId;
+            if (WasteLoginSession.IsSet)
+            {
+                userName = WasteLoginSession.UserName;
+                userId = WasteLoginSession.UserId;
+            }
+            else if (GameSessionData.IsSet)
+            {
+                userName = GameSessionData.UserName;
+                userId = GameSessionData.UserId;
+            }
+            else
+            {
+                userName = string.Empty;
+                userId = string.Empty;
+            }
+
+            WasteLeaderboardStore.TryRecordScore(userName, userId, successPercent);
         }
 
         private void HideResult()
@@ -384,8 +441,9 @@ namespace Woi.WasteCollectionMode
             if (collectTracker != null)
                 collectTracker.ClearSession();
 
-            HideExit();
-            HideResult();
+            sessionResultsExported = false;
+            HideOverlaysWithoutRestoringInput();
+            ApplyMenuCursorForLogin();
 
             if (ServiceLocator.TryGet(out OfficeGameModulesBootstrapper bootstrapper) && bootstrapper != null)
             {
@@ -400,9 +458,27 @@ namespace Woi.WasteCollectionMode
             StartCoroutine(RestartLoginRoutine());
         }
 
+        private void HideOverlaysWithoutRestoringInput()
+        {
+            if (exitOverlay != null)
+                exitOverlay.style.display = DisplayStyle.None;
+
+            if (overlay != null)
+                overlay.style.display = DisplayStyle.None;
+        }
+
+        private void ApplyMenuCursorForLogin()
+        {
+            inputFrozen = false;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+            UnityEngine.Cursor.visible = true;
+        }
+
         private IEnumerator RestartLoginRoutine()
         {
             isRestarting = true;
+            HideOverlaysWithoutRestoringInput();
+            ApplyMenuCursorForLogin();
 
             if (restartButton != null)
                 restartButton.SetEnabled(false);

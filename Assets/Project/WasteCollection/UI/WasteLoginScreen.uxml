@@ -6,6 +6,11 @@
             <ui:VisualElement class="login-glow-accent" />
         </ui:VisualElement>
 
+        <ui:VisualElement name="LeaderboardPanel" class="leaderboard-panel">
+            <ui:Label name="LeaderboardTitle" text="BAŞARI TABLOSU" class="leaderboard-title" />
+            <ui:VisualElement name="leaderboard-rows" class="leaderboard-rows" />
+        </ui:VisualElement>
+
         <ui:VisualElement class="login-screen flex-center">
             <ui:VisualElement class="login-card">
                 <ui:VisualElement class="login-header">

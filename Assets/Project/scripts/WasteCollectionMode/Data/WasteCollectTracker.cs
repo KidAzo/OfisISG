@@ -86,6 +86,8 @@ public class WasteCollectTracker : MonoBehaviour
     {
         WasteType wasteType = ResolveWasteType(wasteName);
         string correctBinId = WasteBinCatalog.GetCorrectBinId(wasteName, wasteType);
+        string selectedBinName = WasteBinCatalog.GetBinName(selectedBinId);
+        string correctBinName = WasteBinCatalog.GetBinName(correctBinId);
 
         classifications.Add(new WasteClassificationRecord
         {
@@ -93,6 +95,8 @@ public class WasteCollectTracker : MonoBehaviour
             wasteType = wasteType,
             selectedBinId = selectedBinId,
             correctBinId = correctBinId,
+            selectedBinName = selectedBinName,
+            correctBinName = correctBinName,
             isCorrect = selectedBinId == correctBinId
         });
     }

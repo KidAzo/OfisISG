@@ -196,3 +196,66 @@
     background-color: rgb(71, 85, 105);
     color: rgb(148, 163, 184);
 }
+
+.leaderboard-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    max-height: 52%;
+    background-color: var(--color-bg-panel);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 14px;
+    padding: 14px 12px 12px 12px;
+}
+
+.leaderboard-title {
+    color: var(--color-text-gray);
+    font-size: 10px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    -unity-text-align: middle-left;
+}
+
+.leaderboard-rows {
+    flex-direction: column;
+}
+
+.leaderboard-row {
+    font-size: 12px;
+    margin-bottom: 3px;
+    padding-left: 2px;
+    padding-right: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.leaderboard-row.leaderboard-row--rank-plain {
+    color: var(--color-text-white);
+}
+
+.leaderboard-row.leaderboard-row--rank1 {
+    color: rgb(255, 201, 51);
+    -unity-font-style: bold;
+    font-size: 13px;
+}
+
+.leaderboard-row.leaderboard-row--rank2 {
+    color: rgb(125, 219, 255);
+    -unity-font-style: bold;
+    font-size: 13px;
+}
+
+.leaderboard-row.leaderboard-row--rank3 {
+    color: rgb(255, 159, 90);
+    -unity-font-style: bold;
+    font-size: 13px;
+}
+
+.leaderboard-row--empty {
+    color: rgba(148, 163, 184, 0.55);
+    -unity-font-style: italic;
+}

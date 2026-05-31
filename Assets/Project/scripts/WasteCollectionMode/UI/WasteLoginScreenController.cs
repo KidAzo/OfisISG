@@ -33,6 +33,8 @@ namespace Woi.WasteCollectionMode
         private Button startButton;
         private Label errorLabel;
         private VisualElement loginIconHost;
+        private Label leaderboardTitle;
+        private VisualElement leaderboardRows;
         private Coroutine bindRoutine;
 
         private bool isLoading;
@@ -47,6 +49,8 @@ namespace Woi.WasteCollectionMode
 
         private void OnEnable()
         {
+            ApplyMenuCursor();
+
             if (bindRoutine != null)
                 StopCoroutine(bindRoutine);
 
@@ -93,7 +97,15 @@ namespace Woi.WasteCollectionMode
                 ApplyLanguage(languageDropdown.value);
             }
 
+            RefreshLeaderboard();
+            ApplyMenuCursor();
             bindRoutine = null;
+        }
+
+        private static void ApplyMenuCursor()
+        {
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+            UnityEngine.Cursor.visible = true;
         }
 
         private void ResolveLoginIcon()
@@ -116,6 +128,8 @@ namespace Woi.WasteCollectionMode
             startButton = root.Q<Button>("StartButton");
             errorLabel = root.Q<Label>("LoginErrorLabel");
             loginIconHost = root.Q<VisualElement>("LoginIconHost");
+            leaderboardTitle = root.Q<Label>("LeaderboardTitle");
+            leaderboardRows = root.Q<VisualElement>("leaderboard-rows");
 
             ApplyLoginIcon();
             ClearError();
@@ -152,6 +166,9 @@ namespace Woi.WasteCollectionMode
 
             if (startButton != null)
                 startButton.text = isTurkish ? "OYUNU BAŞLAT" : "START GAME";
+
+            if (leaderboardTitle != null)
+                leaderboardTitle.text = isTurkish ? "BAŞARI TABLOSU" : "LEADERBOARD";
         }
 
         private void OnStartClicked()
@@ -289,6 +306,43 @@ namespace Woi.WasteCollectionMode
 
             errorLabel.text = string.Empty;
             errorLabel.style.display = DisplayStyle.None;
+        }
+
+        private void RefreshLeaderboard()
+        {
+            if (leaderboardRows == null)
+                return;
+
+            leaderboardRows.Clear();
+            IReadOnlyList<string> lines = WasteLeaderboardStore.GetDisplayLines();
+            int scoreRank = 0;
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string line = lines[i];
+                var row = new Label(line);
+                row.AddToClassList("leaderboard-row");
+
+                if (string.Equals(line, WasteLeaderboardStore.EmptySlotDisplay, System.StringComparison.Ordinal))
+                {
+                    row.AddToClassList("leaderboard-row--empty");
+                }
+                else
+                {
+                    if (scoreRank == 0)
+                        row.AddToClassList("leaderboard-row--rank1");
+                    else if (scoreRank == 1)
+                        row.AddToClassList("leaderboard-row--rank2");
+                    else if (scoreRank == 2)
+                        row.AddToClassList("leaderboard-row--rank3");
+                    else
+                        row.AddToClassList("leaderboard-row--rank-plain");
+
+                    scoreRank++;
+                }
+
+                leaderboardRows.Add(row);
+            }
         }
     }
 }
