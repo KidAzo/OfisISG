@@ -3,21 +3,21 @@ using UnityEngine;
 using Woi.Events;
 using Woi.SelectionSystem;
 using WOI.Modules.SDK;
+using System.Collections.Generic;
 
 namespace Woi.WasteCollectionMode
 {
     public class WasteController : MonoBehaviour, ISelectable
     {
         [SerializeField] private float scaleDuration = 0.4f;
-
-        private Outline outline;
+        private List<Outline> outlines;
         private Vector3 initialLocalScale;
         private Tween scaleTween;
         private FeedbackManager feedbackManager;
 
         private void Awake()
         {
-            outline = GetComponent<Outline>();
+            outlines = new List<Outline>(GetComponentsInChildren<Outline>());
             initialLocalScale = transform.localScale;
         }
 
@@ -28,17 +28,15 @@ namespace Woi.WasteCollectionMode
             else    
                 Debug.LogError("FeedbackManager not found");
 
-            if (outline != null)
-                outline.enabled = false;
+            SetOutlines(false);
         }
 
-        private void SetOutline()
+        private void SetOutlines(bool enabled)
         {
-            if (outline == null)
-                return;
-
-            outline.enabled = true;
-            outline.OutlineWidth = 5f;
+            foreach (var outline in outlines){
+                outline.enabled = enabled;
+                outline.OutlineWidth = enabled ? 5f : 0f;
+            }
         }
 
         public void Select()
@@ -56,7 +54,7 @@ namespace Woi.WasteCollectionMode
 
         private void Feedback()
         {
-            SetOutline();
+            SetOutlines(true);
 
             if (feedbackManager != null)
                 feedbackManager.PlayFeedback(transform);
