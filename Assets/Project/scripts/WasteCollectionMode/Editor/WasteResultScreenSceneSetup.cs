@@ -55,6 +55,9 @@ namespace Woi.WasteCollectionMode.Editor
             serializedController.FindProperty("incorrectStatusIcon").objectReferenceValue =
                 AssetDatabase.LoadAssetAtPath<Texture2D>(
                     "Assets/Project/WasteCollection/UI/IconsPng/circle-x.png");
+            serializedController.FindProperty("exitAlertIcon").objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    "Assets/Project/WasteCollection/UI/IconsPng/triangle-alert.png");
             serializedController.FindProperty("collectTracker").objectReferenceValue = tracker;
             serializedController.FindProperty("wasteSelectionMenu").objectReferenceValue = selectionMenu;
             if (player != null)

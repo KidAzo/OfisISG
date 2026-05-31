@@ -446,3 +446,92 @@
 .restart-button:active {
     scale: 0.95;
 }
+
+.exit-overlay {
+    background-color: rgba(11, 14, 23, 0.8);
+}
+
+.exit-container {
+    width: 450px;
+    flex-direction: column;
+    background-color: var(--color-bg-result);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 24px;
+    padding: 32px;
+    align-items: center;
+}
+
+.exit-icon-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background-color: rgba(244, 63, 94, 0.1);
+    border-width: 1px;
+    border-color: rgba(244, 63, 94, 0.2);
+    margin-bottom: 24px;
+}
+
+.exit-icon {
+    width: 28px;
+    height: 28px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.exit-title {
+    font-size: 24px;
+    -unity-font-style: bold;
+    color: var(--color-text-white);
+    margin-bottom: 24px;
+    white-space: normal;
+    -unity-text-align: middle-center;
+}
+
+.exit-button-group {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.btn-cancel {
+    flex-grow: 1;
+    background-color: rgb(26, 32, 53);
+    color: var(--color-text-white);
+    border-width: 1px;
+    border-color: rgb(42, 48, 65);
+    border-radius: 12px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-right: 8px;
+    transition-duration: 0.2s;
+}
+
+.btn-cancel:hover {
+    background-color: rgb(31, 41, 55);
+    border-color: rgb(100, 116, 139);
+}
+
+.btn-exit {
+    flex-grow: 1;
+    background-color: var(--color-danger);
+    color: var(--color-text-white);
+    border-width: 0;
+    border-radius: 12px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-left: 8px;
+    transition-duration: 0.2s;
+}
+
+.btn-exit:hover {
+    background-color: rgb(225, 29, 72);
+}
+
+.btn-cancel:active,
+.btn-exit:active {
+    scale: 0.95;
+}

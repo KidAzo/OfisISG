@@ -26,6 +26,21 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
+        <ui:VisualElement name="ExitOverlay" class="overlay exit-overlay flex-center" style="display: none;">
+            <ui:VisualElement class="exit-container">
+                <ui:VisualElement class="exit-icon-box flex-center">
+                    <ui:Image name="ExitIcon" class="exit-icon" />
+                </ui:VisualElement>
+
+                <ui:Label text="Oyunu bitirmek istediğinizden emin misiniz?" class="exit-title" />
+
+                <ui:VisualElement class="exit-button-group">
+                    <ui:Button name="CancelButton" text="İPTAL" class="btn-cancel" />
+                    <ui:Button name="ConfirmExitButton" text="ÇIKIŞ YAP" class="btn-exit" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
         <ui:VisualElement name="ResultOverlay" class="overlay result-overlay flex-center" style="display: none;">
             <ui:VisualElement class="result-container">
                 <ui:VisualElement name="ResultIconBox" class="result-icon-box">

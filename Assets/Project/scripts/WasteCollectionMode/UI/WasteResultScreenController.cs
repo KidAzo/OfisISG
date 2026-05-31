@@ -15,6 +15,8 @@ namespace Woi.WasteCollectionMode
             "Assets/Project/WasteCollection/UI/IconsPng/circle-check.png";
         private const string IncorrectStatusIconPath =
             "Assets/Project/WasteCollection/UI/IconsPng/circle-x.png";
+        private const string ExitAlertIconPath =
+            "Assets/Project/WasteCollection/UI/IconsPng/triangle-alert.png";
 
         private static readonly Color CorrectStatusColor = new(0.376f, 0.647f, 0.980f, 1f);
         private static readonly Color IncorrectStatusColor = new(0.957f, 0.247f, 0.369f, 1f);
@@ -22,12 +24,18 @@ namespace Woi.WasteCollectionMode
         [SerializeField] private UIDocument uiDocument;
         [SerializeField] private Texture2D correctStatusIcon;
         [SerializeField] private Texture2D incorrectStatusIcon;
+        [SerializeField] private Texture2D exitAlertIcon;
         [SerializeField] private WasteCollectTracker collectTracker;
         [SerializeField] private WasteSelectionMenu wasteSelectionMenu;
 
         [Header("Player")]
         [SerializeField] private Transform playerRoot;
         [SerializeField] private string playerTag = "Player";
+
+        private VisualElement exitOverlay;
+        private Image exitIcon;
+        private Button cancelButton;
+        private Button confirmExitButton;
 
         private VisualElement overlay;
         private Label correctCountLabel;
@@ -40,7 +48,14 @@ namespace Woi.WasteCollectionMode
         private CursorLockMode savedCursorLockState;
         private bool savedCursorVisible;
 
-        public bool IsVisible => overlay != null && overlay.style.display == DisplayStyle.Flex;
+        public bool IsVisible =>
+            IsExitVisible || IsResultVisible;
+
+        private bool IsExitVisible =>
+            exitOverlay != null && exitOverlay.style.display == DisplayStyle.Flex;
+
+        private bool IsResultVisible =>
+            overlay != null && overlay.style.display == DisplayStyle.Flex;
 
         private void Awake()
         {
@@ -67,7 +82,19 @@ namespace Woi.WasteCollectionMode
 
             if (incorrectStatusIcon == null)
                 incorrectStatusIcon = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>(IncorrectStatusIconPath);
+
+            if (exitAlertIcon == null)
+                exitAlertIcon = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>(ExitAlertIconPath);
 #endif
+        }
+
+        private void ApplyExitIcon()
+        {
+            if (exitIcon == null || exitAlertIcon == null)
+                return;
+
+            exitIcon.image = exitAlertIcon;
+            exitIcon.tintColor = IncorrectStatusColor;
         }
 
         private void OnEnable()
@@ -78,13 +105,20 @@ namespace Woi.WasteCollectionMode
             if (!TryBindUi())
                 return;
 
-            Hide();
+            HideExit();
+            HideResult();
         }
 
         private void OnDisable()
         {
             if (restartButton != null)
                 restartButton.clicked -= OnRestartClicked;
+
+            if (cancelButton != null)
+                cancelButton.clicked -= OnCancelClicked;
+
+            if (confirmExitButton != null)
+                confirmExitButton.clicked -= OnConfirmExitClicked;
 
             RestorePlayerInput();
         }
@@ -97,10 +131,19 @@ namespace Woi.WasteCollectionMode
             if (wasteSelectionMenu != null && wasteSelectionMenu.IsVisible)
                 return;
 
-            if (IsVisible)
-                Hide();
-            else
-                Show();
+            if (IsResultVisible)
+            {
+                HideResult();
+                return;
+            }
+
+            if (IsExitVisible)
+            {
+                HideExit();
+                return;
+            }
+
+            ShowExit();
         }
 
         private bool TryBindUi()
@@ -109,6 +152,10 @@ namespace Woi.WasteCollectionMode
                 return false;
 
             VisualElement root = uiDocument.rootVisualElement;
+            exitOverlay = root.Q<VisualElement>("ExitOverlay");
+            exitIcon = root.Q<Image>("ExitIcon");
+            cancelButton = root.Q<Button>("CancelButton");
+            confirmExitButton = root.Q<Button>("ConfirmExitButton");
             overlay = root.Q<VisualElement>("ResultOverlay");
             correctCountLabel = root.Q<Label>("CorrectCount");
             incorrectCountLabel = root.Q<Label>("IncorrectCount");
@@ -124,6 +171,29 @@ namespace Woi.WasteCollectionMode
                 return false;
             }
 
+            if (exitOverlay == null)
+            {
+                Debug.LogError(
+                    "[WasteResultScreenController] ExitOverlay not found. " +
+                    "Re-run Waste Collection/Setup Result Screen In Scene after updating WasteSelectionMenu.uxml.",
+                    this);
+                return false;
+            }
+
+            if (cancelButton != null)
+            {
+                cancelButton.clicked -= OnCancelClicked;
+                cancelButton.clicked += OnCancelClicked;
+            }
+
+            if (confirmExitButton != null)
+            {
+                confirmExitButton.clicked -= OnConfirmExitClicked;
+                confirmExitButton.clicked += OnConfirmExitClicked;
+            }
+
+            ApplyExitIcon();
+
             if (restartButton != null)
             {
                 restartButton.clicked -= OnRestartClicked;
@@ -135,6 +205,36 @@ namespace Woi.WasteCollectionMode
 
         public void Show()
         {
+            ShowResult();
+        }
+
+        public void Hide()
+        {
+            HideResult();
+        }
+
+        private void ShowExit()
+        {
+            if (exitOverlay == null && !TryBindUi())
+                return;
+
+            exitOverlay.style.display = DisplayStyle.Flex;
+            FreezePlayerInput();
+        }
+
+        private void HideExit()
+        {
+            if (exitOverlay == null)
+                return;
+
+            exitOverlay.style.display = DisplayStyle.None;
+
+            if (!IsResultVisible)
+                RestorePlayerInput();
+        }
+
+        private void ShowResult()
+        {
             if (overlay == null && !TryBindUi())
                 return;
 
@@ -143,13 +243,28 @@ namespace Woi.WasteCollectionMode
             FreezePlayerInput();
         }
 
-        public void Hide()
+        private void HideResult()
         {
             if (overlay == null)
                 return;
 
             overlay.style.display = DisplayStyle.None;
-            RestorePlayerInput();
+
+            if (!IsExitVisible)
+                RestorePlayerInput();
+        }
+
+        private void OnCancelClicked()
+        {
+            HideExit();
+        }
+
+        private void OnConfirmExitClicked()
+        {
+            if (exitOverlay != null)
+                exitOverlay.style.display = DisplayStyle.None;
+
+            ShowResult();
         }
 
         private void RefreshContent()
@@ -262,7 +377,7 @@ namespace Woi.WasteCollectionMode
             if (collectTracker != null)
                 collectTracker.ClearSession();
 
-            Hide();
+            HideResult();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
