@@ -1,5 +1,6 @@
 using PrimeTween;
 using UnityEngine;
+using Woi.Events;
 using Woi.SelectionSystem;
 using WOI.Modules.SDK;
 
@@ -57,14 +58,28 @@ namespace Woi.WasteCollectionMode
         {
             SetOutline();
 
-            feedbackManager.PlayFeedback(transform);
+            if (feedbackManager != null)
+                feedbackManager.PlayFeedback(transform);
+
+            WasteCollectable collectable = GetComponent<WasteCollectable>();
+            string wasteName = collectable != null && collectable.Definition != null
+                ? collectable.Definition.Name
+                : string.Empty;
 
             if (scaleTween.isAlive)
                 scaleTween.Stop();
 
             transform.localScale = initialLocalScale;
             scaleTween = Tween.Scale(transform, Vector3.zero, scaleDuration, Ease.InBack)
-                .OnComplete(gameObject, go => go.SetActive(false));
+                .OnComplete(gameObject, _ =>
+                {
+                    int totalCollected = 0;
+                    if (WasteCollectTracker.TryGetActive(out WasteCollectTracker tracker))
+                        totalCollected = tracker.Records.Count;
+
+                    EventBus.Raise(new WasteCollectedEvent(wasteName, totalCollected));
+                    gameObject.SetActive(false);
+                });
         }
     }
 }

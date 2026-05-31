@@ -40,6 +40,21 @@ namespace Woi.Player
         private Vector3 _velocity;
         private float _cameraPitch;
         private bool _lookArmed;
+        private bool _inputEnabled = true;
+
+        public bool InputEnabled => _inputEnabled;
+
+        public void SetInputEnabled(bool enabled)
+        {
+            _inputEnabled = enabled;
+
+            if (enabled)
+                return;
+
+            _moveInput = Vector2.zero;
+            _lookInput = Vector2.zero;
+            _isSprinting = false;
+        }
 
         private void Awake()
         {
@@ -86,6 +101,9 @@ namespace Woi.Player
 
         private void HandleMovement()
         {
+            if (!_inputEnabled)
+                return;
+
             float currentSpeed = _isSprinting ? _sprintSpeed : _walkSpeed;
 
             Vector3 move = transform.right * _moveInput.x + transform.forward * _moveInput.y;
@@ -94,7 +112,8 @@ namespace Woi.Player
 
         private void HandleLook()
         {
-            if(!_lookArmed) return;
+            if (!_inputEnabled || !_lookArmed)
+                return;
 
             float yaw = _lookInput.x * _mouseSensitivity;
             transform.Rotate(Vector3.up * yaw);
@@ -144,6 +163,7 @@ namespace Woi.Player
         Transform GetPlayerTransform();
         void SetPlayerLocomotion(Vector3 position);
         void RegisterPlayer(PlayerController player);
+        void SetPlayerInputEnabled(bool enabled);
         event Action OnPlayerRegistered;
     }
 
@@ -191,6 +211,11 @@ namespace Woi.Player
             _playerTransform = player.transform;
             ch = player.GetComponent<CharacterController>();
             OnPlayerRegistered?.Invoke();
+        }
+
+        public void SetPlayerInputEnabled(bool enabled)
+        {
+            _playerController?.SetInputEnabled(enabled);
         }
 
         public void SetPlayerLocomotion(Vector3 position)

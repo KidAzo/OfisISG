@@ -20,7 +20,18 @@ namespace Woi.SelectionSystem
 
         void OnDisable()
         {
-            selectionInputController.Disable();
+            selectionInputController?.Disable();
+        }
+
+        public void SetSelectionInputEnabled(bool enabled)
+        {
+            if (selectionInputController == null)
+                return;
+
+            if (enabled)
+                selectionInputController.Enable();
+            else
+                selectionInputController.Disable();
         }
     }
 }
