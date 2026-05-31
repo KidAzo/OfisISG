@@ -2,6 +2,11 @@
     <Style src="WasteMenuStyles.uss" />
 
     <ui:VisualElement class="ui-root">
+        <ui:VisualElement name="WasteCounterHud" class="waste-counter-hud">
+            <ui:Image name="WasteCounterIcon" class="waste-counter-icon" />
+            <ui:Label name="WasteCounterLabel" text="0/0" class="waste-counter-label" />
+        </ui:VisualElement>
+
         <ui:VisualElement name="Overlay" class="overlay flex-center">
             <ui:VisualElement name="MenuContainer" class="menu-container">
                 <ui:VisualElement class="header-container padding-large flex-row justify-between border-bottom">

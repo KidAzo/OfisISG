@@ -207,6 +207,11 @@ MonoBehaviour:
     - SceneName: OutDoor
       AddressableKey: 
       SceneType: 0
+  - GroupName: WasteLogin
+    Scenes:
+    - SceneName: WasteLogin
+      AddressableKey: 
+      SceneType: 0
   - GroupName: WasteCollector
     Scenes:
     - SceneName: FireModule_Office

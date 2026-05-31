@@ -16,8 +16,10 @@ namespace Woi.OfficeFire
     /// </summary>
     public sealed class OfficeGameModulesBootstrapper : MonoBehaviour
     {
+        public const string WasteLoginSceneGroup = "WasteLogin";
+        public const string WasteCollectorSceneGroup = "WasteCollector";
         [Header("Scene")]
-        [Tooltip("FireTraining loads the FireModule_Office scene group; WasteCollector loads the WasteCollector scene group.")]
+        [Tooltip("FireTraining loads FireModule_Office. WasteCollector loads WasteLogin first; gameplay loads after login.")]
         [SerializeField]
         private OfficeGameModule gameModule = OfficeGameModule.FireTraining;
 
@@ -152,9 +154,17 @@ namespace Woi.OfficeFire
             return module switch
             {
                 OfficeGameModule.FireTraining => "FireModule_Office",
-                OfficeGameModule.WasteCollector => "WasteCollector",
+                OfficeGameModule.WasteCollector => WasteLoginSceneGroup,
                 _ => "FireModule_Office",
             };
+        }
+
+        /// <summary>
+        /// Loads the waste collection gameplay scene group (after login).
+        /// </summary>
+        public void LoadWasteCollectorGameplay()
+        {
+            LoadScene(WasteCollectorSceneGroup);
         }
 
         /// <summary>

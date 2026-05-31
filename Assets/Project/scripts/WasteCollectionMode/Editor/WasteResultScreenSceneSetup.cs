@@ -42,6 +42,10 @@ namespace Woi.WasteCollectionMode.Editor
             if (controller == null)
                 controller = Undo.AddComponent<WasteResultScreenController>(host);
 
+            WasteCollectionCounterUI counterUi = host.GetComponent<WasteCollectionCounterUI>();
+            if (counterUi == null)
+                counterUi = Undo.AddComponent<WasteCollectionCounterUI>(host);
+
             WasteCollectTracker tracker = FindTracker();
             WasteCollectionResultController flowController = host.GetComponent<WasteCollectionResultController>();
             UIDocument sharedDocument = selectionMenu.GetComponent<UIDocument>();
@@ -63,6 +67,13 @@ namespace Woi.WasteCollectionMode.Editor
             if (player != null)
                 serializedController.FindProperty("playerRoot").objectReferenceValue = player;
             serializedController.ApplyModifiedPropertiesWithoutUndo();
+
+            SerializedObject serializedCounter = new SerializedObject(counterUi);
+            serializedCounter.FindProperty("uiDocument").objectReferenceValue = sharedDocument;
+            serializedCounter.FindProperty("counterIcon").objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    "Assets/Project/WasteCollection/UI/IconsPng/trash-2.png");
+            serializedCounter.ApplyModifiedPropertiesWithoutUndo();
 
             WireFlowController(flowController, tracker, player, selectionMenu);
 
@@ -102,6 +113,7 @@ namespace Woi.WasteCollectionMode.Editor
 
             WasteSelectionMenu selectionMenu = Undo.AddComponent<WasteSelectionMenu>(host);
             Undo.AddComponent<WasteCollectionResultController>(host);
+            Undo.AddComponent<WasteCollectionCounterUI>(host);
 
             SerializedObject serializedMenu = new SerializedObject(selectionMenu);
             serializedMenu.FindProperty("uiDocument").objectReferenceValue = selectionDocument;
