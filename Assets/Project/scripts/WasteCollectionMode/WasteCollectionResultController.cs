@@ -7,31 +7,38 @@ using WOI.Modules.SDK;
 namespace Woi.WasteCollectionMode
 {
     /// <summary>
-    /// Listens for <see cref="WasteCollectedEvent"/>, blocks player look/movement and opens the result UI.
+    /// Listens for <see cref="WasteCollectedEvent"/>, blocks player input and opens the waste bin selection UI.
     /// </summary>
     public class WasteCollectionResultController : MonoBehaviour
     {
         [SerializeField] private SelectionSystemManager selectionSystemManager;
-        [SerializeField] private GameObject resultPanel;
+        [SerializeField] private WasteSelectionMenu wasteSelectionMenu;
 
         private bool playerInputFrozen;
         private CursorLockMode savedCursorLockState;
         private bool savedCursorVisible;
 
-        private void Awake()
-        {
-            if (resultPanel != null)
-                resultPanel.SetActive(false);
-        }
-
         private void OnEnable()
         {
             EventBus.Register<WasteCollectedEvent>(OnWasteCollected);
+
+            if (wasteSelectionMenu != null)
+            {
+                wasteSelectionMenu.Dismissed += OnMenuDismissed;
+                wasteSelectionMenu.BinSelected += OnBinSelected;
+            }
         }
 
         private void OnDisable()
         {
             EventBus.Deregister<WasteCollectedEvent>(OnWasteCollected);
+
+            if (wasteSelectionMenu != null)
+            {
+                wasteSelectionMenu.Dismissed -= OnMenuDismissed;
+                wasteSelectionMenu.BinSelected -= OnBinSelected;
+            }
+
             RestorePlayerInput();
         }
 
@@ -42,17 +49,24 @@ namespace Woi.WasteCollectionMode
             if (selectionSystemManager != null)
                 selectionSystemManager.SetSelectionInputEnabled(false);
 
-            if (resultPanel != null)
-                resultPanel.SetActive(true);
+            if (wasteSelectionMenu != null)
+                wasteSelectionMenu.Show(evt.WasteName);
         }
 
-        /// <summary>
-        /// Call from UI close button when the result screen is dismissed.
-        /// </summary>
-        public void CloseResultPanel()
+        private void OnBinSelected(string binId)
         {
-            if (resultPanel != null)
-                resultPanel.SetActive(false);
+            Debug.Log($"[WasteCollectionResultController] Bin selected: {binId}");
+        }
+
+        private void OnMenuDismissed()
+        {
+            ResumeGameplay();
+        }
+
+        private void ResumeGameplay()
+        {
+            if (wasteSelectionMenu != null)
+                wasteSelectionMenu.Hide();
 
             RestorePlayerInput();
 

@@ -1,0 +1,27 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="WasteMenuStyles.uss" />
+
+    <ui:VisualElement name="Overlay" class="overlay flex-center">
+        <ui:VisualElement name="MenuContainer" class="menu-container">
+            <ui:VisualElement class="header-container padding-large flex-row justify-between border-bottom">
+                <ui:VisualElement class="flex-row items-center">
+                    <ui:VisualElement class="header-icon-box flex-center">
+                        <ui:Label text="♻" class="header-icon-label" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="header-text-block">
+                        <ui:Label text="ELDEKİ ATIK ONAYLANDI" class="header-subtitle accent-color" />
+                        <ui:Label name="ActiveItemName" text="-" class="header-title text-white" />
+                        <ui:Label text="Hedef atık kutusunu seçin." class="header-desc text-gray" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:Button name="CloseButton" text="X" class="close-button" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="padding-large">
+                <ui:VisualElement name="GridContainer" class="grid-container" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

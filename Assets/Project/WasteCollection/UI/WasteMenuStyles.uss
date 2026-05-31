@@ -1,0 +1,195 @@
+:root {
+    --color-bg-dark: rgb(11, 14, 23);
+    --color-bg-panel: rgba(11, 14, 23, 0.95);
+    --color-bg-header: rgb(21, 27, 43);
+    --color-border: rgb(31, 41, 55);
+    --color-accent: rgb(0, 255, 178);
+    --color-text-white: white;
+    --color-text-gray: rgb(148, 163, 184);
+}
+
+.flex-center {
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.padding-large {
+    padding: 32px;
+}
+
+.border-bottom {
+    border-bottom-width: 1px;
+    border-bottom-color: var(--color-border);
+}
+
+.text-white {
+    color: var(--color-text-white);
+}
+
+.text-gray {
+    color: var(--color-text-gray);
+}
+
+.accent-color {
+    color: var(--color-accent);
+}
+
+.overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.menu-container {
+    width: 850px;
+    background-color: var(--color-bg-panel);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.header-container {
+    background-color: var(--color-bg-header);
+}
+
+.header-text-block {
+    margin-left: 16px;
+}
+
+.header-icon-box {
+    width: 64px;
+    height: 64px;
+    background-color: rgb(17, 22, 35);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 16px;
+}
+
+.header-icon-label {
+    font-size: 28px;
+    color: var(--color-accent);
+    -unity-text-align: middle-center;
+}
+
+.header-subtitle {
+    font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+}
+
+.header-title {
+    font-size: 24px;
+    -unity-font-style: bold;
+    margin-bottom: 2px;
+}
+
+.header-desc {
+    font-size: 14px;
+}
+
+.close-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background-color: rgba(31, 41, 55, 0.5);
+    border-width: 0;
+    color: var(--color-text-gray);
+    -unity-font-style: bold;
+    font-size: 18px;
+    transition-duration: 0.2s;
+}
+
+.close-button:hover {
+    background-color: rgba(244, 63, 94, 0.2);
+    color: rgb(251, 113, 133);
+}
+
+.grid-container {
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.bin-button {
+    width: 18%;
+    height: 140px;
+    margin-bottom: 16px;
+    background-color: rgb(17, 22, 35);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 16px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    transition-duration: 0.2s;
+    transition-property: scale, border-color, background-color;
+    overflow: hidden;
+}
+
+.bin-button:hover {
+    background-color: rgb(21, 27, 43);
+    border-color: rgba(0, 255, 178, 0.7);
+    scale: 1.05 1.05;
+}
+
+.bin-button:active {
+    scale: 0.97 0.97;
+}
+
+.bin-button-color-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    opacity: 0.9;
+}
+
+.bin-button-icon-container {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background-color: rgb(26, 32, 53);
+    border-width: 1px;
+    border-color: rgb(42, 48, 65);
+    margin-bottom: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+.bin-button-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background-color: var(--color-text-gray);
+}
+
+.bin-button-text {
+    font-size: 12px;
+    -unity-font-style: bold;
+    color: var(--color-text-gray);
+    white-space: normal;
+    -unity-text-align: middle-center;
+}
+
+.bin-button:hover .bin-button-text {
+    color: var(--color-text-white);
+}
