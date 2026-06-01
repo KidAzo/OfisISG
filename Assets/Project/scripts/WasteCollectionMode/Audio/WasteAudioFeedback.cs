@@ -46,8 +46,12 @@ namespace Woi.WasteCollectionMode
         public void PlayWasteSelected(WasteDefinition definition, Vector3 position)
         {
             if (definition == null)
+            {
+                Debug.LogWarning("[WasteAudioFeedback] PlayWasteSelected: WasteDefinition is NULL.", this);
                 return;
+            }
 
+            Debug.Log($"[WasteAudioFeedback] PlayWasteSelected for '{definition.Name}', SelectSound={(definition.SelectSound != null ? definition.SelectSound.name : "NULL")}.", this);
             PlayLocalized(definition.SelectSound, position, true);
         }
 
@@ -82,10 +86,12 @@ namespace Woi.WasteCollectionMode
 
             if (sound == null || audioSystem == null)
             {
+                Debug.LogWarning($"[WasteAudioFeedback] PlayLocalizedThen skipped: localized={(localized != null ? localized.name : "NULL")}, sound={(sound != null ? sound.name : "NULL")}, audioSystem={(audioSystem != null ? "ok" : "NULL")}.", this);
                 onComplete?.Invoke();
                 return;
             }
 
+            Debug.Log($"[WasteAudioFeedback] PlayLocalizedThen playing '{sound.name}'.", this);
             AudioVoice voice = audioSystem.Play(sound);
             if (voice != null)
             {
@@ -137,15 +143,26 @@ namespace Woi.WasteCollectionMode
         private void PlayLocalized(LocalizedWasteSound localized, Vector3 position, bool positional)
         {
             if (localized == null)
+            {
+                Debug.LogWarning("[WasteAudioFeedback] PlayLocalized: LocalizedWasteSound is NULL (not assigned).", this);
                 return;
+            }
 
             EnsureAudioSystem();
             if (audioSystem == null)
+            {
+                Debug.LogWarning("[WasteAudioFeedback] PlayLocalized: AudioSystem is NULL.", this);
                 return;
+            }
 
             SoundDefinition sound = localized.Resolve();
             if (sound == null)
+            {
+                Debug.LogWarning($"[WasteAudioFeedback] PlayLocalized: Resolve() returned NULL on '{localized.name}'.", this);
                 return;
+            }
+
+            Debug.Log($"[WasteAudioFeedback] Playing '{sound.name}' (positional={positional}).", this);
 
             if (positional)
                 audioSystem.Play(sound, PlayContext.At(position));

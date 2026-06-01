@@ -40,6 +40,10 @@ namespace Woi.WasteCollectionMode
 
             "Assets/Project/OfficeFire/UI/InteractHoverWorldPanelSettings.asset";
 
+        private const string ScreenPanelSettingsPath =
+
+            "Assets/UI Toolkit/PanelSettings.asset";
+
 
 
         [SerializeField] private UIDocument uiDocument;
@@ -766,11 +770,16 @@ namespace Woi.WasteCollectionMode
 
             {
 
-                ResolveWorldPanelSettings();
+                // Keep the shared document on the SCREEN panel in edit mode so PC renders correctly.
+                // VR applies its own world panel at runtime (ConfigureForVr); use the
+                // "Apply VR World Space Layout (Editor Preview)" context menu for a manual world preview.
+                PanelSettings screenPanel =
+                    UnityEditor.AssetDatabase.LoadAssetAtPath<PanelSettings>(ScreenPanelSettingsPath);
 
-                if (worldPanelSettingsSource != null)
+                if (screenPanel != null)
+                    uiDocument.panelSettings = screenPanel;
 
-                    uiDocument.panelSettings = worldPanelSettingsSource;
+                return;
 
             }
 

@@ -70,10 +70,10 @@ namespace Woi.WasteCollectionMode.Editor
             new CategoryEntry(8, "Elektronik", "8",
                 "Bilişim ve telekomünikasyon ekipmanları vb. atıkları 'Atık Elektrikli ve Elektronik Eşyalar' atık kutusuna atılmalıdır.",
                 "IT and telecommunications equipment waste should be placed in the 'Waste Electrical and Electronic Equipment' bin."),
-            new CategoryEntry(9, "Kompozit", "",
+            new CategoryEntry(9, "Kompozit", "15",
                 "Meyve suyu kutusu, cips paketi gibi kompozit ambalajlar 'Kompozit Atıklar' atık kutusuna atılmalıdır.",
                 "Juice boxes, chip packets, and similar composite packaging should be placed in the 'Composite Waste' bin."),
-            new CategoryEntry(10, "GeriKazanilabilir", "",
+            new CategoryEntry(10, "GeriKazanilabilir", "12",
                 "Kağıt, cam, plastik ve metal gibi karışık ambalajlar 'Geri Kazanılabilir Atıklar' atık kutusuna atılmalıdır.",
                 "Paper, glass, plastic, and metal packaging should be placed in the 'Recyclable Waste' bin."),
             new CategoryEntry(11, "Tibbi", "14",
@@ -85,41 +85,32 @@ namespace Woi.WasteCollectionMode.Editor
         };
 
         // Maps a WasteDefinition's correct bin id to the Excel/sound number above.
-        // Bins without a matching sound (2 Karton, 11 Sigara, 12 Geri Dönüşmez, 15 Ampul) are absent.
+        // Final 12-type scheme: Toner(7) merged into Electronic, Sigara(11) removed,
+        // bin 12 is now Geri Kazanılabilir (sound 10), bin 15 is now Kompozit (sound 9).
+        // Only bin 2 (Karton) has no recorded voice.
         private static readonly Dictionary<string, int> BinIdToIndex = new()
         {
             ["1"] = 1,   // Kağıt
             ["3"] = 2,   // Plastik
             ["4"] = 3,   // Cam
             ["10"] = 4,  // Metal
-            ["5"] = 5,   // Organik / Bio
+            ["5"] = 5,   // Bio-Bozunur (Cigarette de buraya düşer)
             ["6"] = 6,   // Pil
-            ["7"] = 7,   // Toner & Kartuş
-            ["8"] = 8,   // Elektronik
-            ["14"] = 11, // Tıbbi
+            ["8"] = 8,   // Elektronik (Cartridge de buraya düşer)
             ["9"] = 12,  // Plastik Kapak
+            ["12"] = 10, // Geri Kazanılabilir
+            ["14"] = 11, // Tıbbi
+            ["15"] = 9,  // Kompozit
         };
 
-        // Bins with no recorded voice (only 12 categories were delivered). These still get the
-        // explanation text from the Excel so the popup has something to show; no sound is assigned.
+        // Bins with no recorded voice. Only Karton (2) lacks a sound; it still gets the
+        // explanation text from the Excel so the popup has something to show.
         private static readonly Dictionary<string, (string Tr, string En)> TextOnlyByBin = new()
         {
             // 2 = Karton
             ["2"] = (
                 "Karton kutular, mukavva ambalajlar ve karton paketler 'Karton Atıklar' atık kutusuna atılmalıdır.",
                 "Cardboard boxes, corrugated packaging and carton packets should be placed in the 'Cardboard Waste' bin."),
-            // 11 = Sigara İzmariti
-            ["11"] = (
-                "Sigara izmaritleri 'Sigara İzmariti' atık kutusuna atılmalıdır.",
-                "Cigarette butts should be placed in the 'Cigarette Butt' bin."),
-            // 12 = Geri Dönüşmez
-            ["12"] = (
-                "Kirlenmiş ambalajlar, peçeteler ve geri dönüşüme uygun olmayan diğer atıklar 'Geri Dönüşmez' atık kutusuna atılmalıdır.",
-                "Contaminated packaging, napkins and other non-recyclable waste should be placed in the 'Non-Recyclable' bin."),
-            // 15 = Ampul/Floresan
-            ["15"] = (
-                "Kullanılmış ampuller 'Ampul/Floresan' atık kutusuna atılmalıdır.",
-                "Used bulbs should be placed in the 'Bulb/Fluorescent' bin."),
         };
 
         [MenuItem("Waste Collection/Build Waste Audio (Excel + Sounds)")]

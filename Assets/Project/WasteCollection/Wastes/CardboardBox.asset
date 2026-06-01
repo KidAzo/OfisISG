@@ -17,8 +17,7 @@ MonoBehaviour:
     type: 1
   selectSound: {fileID: 11400000, guid: 017a7036f8c890f438089dcab06388d8, type: 2}
   explanationSound: {fileID: 11400000, guid: 7c91928650b5a4447b676730c57289e0, type: 2}
-  explanationTurkish: "Gazeteler, dergiler, yaz\u0131 ve \xE7izim k\xE2\u011F\u0131tlar\u0131
-    ka\u011F\u0131t-karton at\u0131klar\u0131 'Ka\u011F\u0131t At\u0131klar' at\u0131k
-    kutusuna at\u0131lmal\u0131d\u0131r."
-  explanationEnglish: Newspapers, magazines, writing and drawing papers should be
-    placed in the 'Paper Waste' bin.
+  explanationTurkish: "Karton kutular, mukavva ambalajlar ve karton paketler 'Karton
+    At\u0131klar' at\u0131k kutusuna at\u0131lmal\u0131d\u0131r."
+  explanationEnglish: Cardboard boxes, corrugated packaging and carton packets should
+    be placed in the 'Cardboard Waste' bin.

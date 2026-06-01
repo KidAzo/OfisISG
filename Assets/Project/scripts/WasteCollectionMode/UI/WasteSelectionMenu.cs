@@ -27,17 +27,14 @@ namespace Woi.WasteCollectionMode
             new WasteBinData("2", "Karton Atıklar", "package", new Color(0.31f, 0.27f, 0.89f)),
             new WasteBinData("3", "Plastik Atıklar", "beaker", new Color(0.91f, 0.69f, 0.05f)),
             new WasteBinData("4", "Cam Atıklar", "glass-water", new Color(0.02f, 0.53f, 0.40f)),
-            new WasteBinData("5", "Organik Yemek", "apple", new Color(0.57f, 0.25f, 0.11f)),
+            new WasteBinData("5", "Bio-Bozunur Atıklar", "apple", new Color(0.57f, 0.25f, 0.11f)),
             new WasteBinData("6", "Kullanılmış Pil", "battery", new Color(0.86f, 0.15f, 0.15f)),
-            new WasteBinData("7", "Toner & Kartuş", "printer", new Color(0.62f, 0.07f, 0.24f)),
             new WasteBinData("8", "Elektronik Atık", "monitor", new Color(0.58f, 0.19f, 0.87f)),
             new WasteBinData("9", "Plastik Kapak", "disc", new Color(0.22f, 0.73f, 0.95f)),
             new WasteBinData("10", "Metal Kutu", "cylinder", new Color(0.58f, 0.65f, 0.72f)),
-            new WasteBinData("11", "Sigara İzmariti", "flame", new Color(0.32f, 0.32f, 0.35f)),
-            new WasteBinData("12", "Geri Dönüşmez", "trash-2", new Color(0.15f, 0.15f, 0.15f)),
-            new WasteBinData("13", "Tehlikeli Atık", "triangle-alert", new Color(0.98f, 0.75f, 0.18f)),
+            new WasteBinData("12", "Geri Kazanılabilir", "trash-2", new Color(0.13f, 0.60f, 0.30f)),
             new WasteBinData("14", "Tıbbi Atık", "briefcase-medical", new Color(0.86f, 0.15f, 0.15f)),
-            new WasteBinData("15", "Ampul/Floresan", "lightbulb", new Color(0.97f, 0.43f, 0.11f))
+            new WasteBinData("15", "Kompozit Atık", "package", new Color(0.72f, 0.45f, 0.20f))
         };
 
         public event Action<string> BinSelected;

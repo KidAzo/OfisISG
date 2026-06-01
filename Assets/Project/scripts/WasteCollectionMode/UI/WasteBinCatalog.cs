@@ -11,17 +11,17 @@ namespace Woi.WasteCollectionMode
             ["2"] = "Cardboard Waste",
             ["3"] = "Plastic Waste",
             ["4"] = "Glass Waste",
-            ["5"] = "Organic Food",
+            ["5"] = "Biodegradable Waste",
             ["6"] = "Used Battery",
             ["7"] = "Toner & Cartridge",
             ["8"] = "Electronic Waste",
             ["9"] = "Plastic Cap",
             ["10"] = "Metal Can",
             ["11"] = "Cigarette Butt",
-            ["12"] = "Non-Recyclable",
+            ["12"] = "Recyclable Waste",
             ["13"] = "Hazardous Waste",
             ["14"] = "Medical Waste",
-            ["15"] = "Bulb/Fluorescent",
+            ["15"] = "Composite Waste",
         };
 
         private static readonly Dictionary<string, string> BinNames = new(StringComparer.OrdinalIgnoreCase)
@@ -30,17 +30,17 @@ namespace Woi.WasteCollectionMode
             ["2"] = "Karton Atıklar",
             ["3"] = "Plastik Atıklar",
             ["4"] = "Cam Atıklar",
-            ["5"] = "Organik Yemek",
+            ["5"] = "Bio-Bozunur Atıklar",
             ["6"] = "Kullanılmış Pil",
             ["7"] = "Toner & Kartuş",
             ["8"] = "Elektronik Atık",
             ["9"] = "Plastik Kapak",
             ["10"] = "Metal Kutu",
             ["11"] = "Sigara İzmariti",
-            ["12"] = "Geri Dönüşmez",
+            ["12"] = "Geri Kazanılabilir",
             ["13"] = "Tehlikeli Atık",
             ["14"] = "Tıbbi Atık",
-            ["15"] = "Ampul/Floresan",
+            ["15"] = "Kompozit Atık",
         };
 
         private static readonly Dictionary<string, string> WasteNameToBinId = new(StringComparer.OrdinalIgnoreCase)
@@ -48,17 +48,17 @@ namespace Woi.WasteCollectionMode
             ["Paper"] = "1",
             ["CardboardBox"] = "2",
             ["WaterBottle"] = "3",
-            ["BabyWipe"] = "12",
+            ["BabyWipe"] = "12",      // Geri Kazanılabilir
             ["WBCap"] = "9",
             ["GlassBottle"] = "4",
             ["Chicken_Pile"] = "5",
             ["Battery"] = "6",
-            ["Cartridge"] = "7",
+            ["Cartridge"] = "8",      // Toner kaldırıldı → Elektronik kapsamında
             ["Keyboard"] = "8",
             ["Soda"] = "10",
-            ["Cigarette"] = "11",
+            ["Cigarette"] = "5",      // Sigara kutusu kaldırıldı → Bio-Bozunur
             ["Mask"] = "14",
-            ["Bulp"] = "15",
+            ["Bulp"] = "15",          // Kompozit
         };
 
         public static string GetBinName(string binId)

@@ -17,12 +17,33 @@ namespace Woi.WasteCollectionMode
 
         public static bool IsPC => !ShouldUseVrPresentation();
 
+        private const string PortingVariablePath =
+            "Packages/com.woi.module.fire/Runtime/Porting/PortingVariable.asset";
+
         public static bool ShouldUseVrPresentation()
         {
-            if (IsPortingVr)
-                return true;
+            EnsurePortingInitialized();
 
+            // The porting asset is the source of truth once initialized: PC stays PC even
+            // if an XR rig/head camera happens to exist in the scene.
+            if (FirePlatformRuntime.IsSourceInitialized)
+                return FirePlatformRuntime.IsVR;
+
+            // Porting truly unavailable → infer from an active XR rig + head camera.
             return WasteVrHeadCameraResolver.TryGetHeadCamera(null, out _);
+        }
+
+        private static void EnsurePortingInitialized()
+        {
+            if (FirePlatformRuntime.IsSourceInitialized)
+                return;
+
+#if UNITY_EDITOR
+            var porting = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableEnumPortingVariable>(
+                PortingVariablePath);
+            if (porting != null)
+                FirePlatformRuntime.TryInitialize(porting);
+#endif
         }
     }
 }

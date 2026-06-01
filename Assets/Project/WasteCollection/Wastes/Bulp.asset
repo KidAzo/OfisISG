@@ -15,9 +15,9 @@ MonoBehaviour:
   waste:
     name: Bulp
     type: 2
-  selectSound: {fileID: 11400000, guid: 9c804b04fe834df4dbcd621df357c766, type: 2}
-  explanationSound: {fileID: 11400000, guid: 145d57e40e1ff2549b8a10d160e2c9c9, type: 2}
-  explanationTurkish: "Cam i\xE7ecek ve g\u0131da \u015Fi\u015Feleri 'Cam At\u0131klar'
-    at\u0131k kutusuna at\u0131lmal\u0131d\u0131r."
-  explanationEnglish: Newspapers, magazines, writing and drawing papers should be
-    placed in the 'Paper Waste' bin.
+  selectSound: {fileID: 11400000, guid: 0fda60dfb730eea438bbdde03dac466f, type: 2}
+  explanationSound: {fileID: 11400000, guid: 18e9e9fb5cdffc649bd892feb265cb75, type: 2}
+  explanationTurkish: "Meyve suyu kutusu, cips paketi gibi kompozit ambalajlar 'Kompozit
+    At\u0131klar' at\u0131k kutusuna at\u0131lmal\u0131d\u0131r."
+  explanationEnglish: Juice boxes, chip packets, and similar composite packaging
+    should be placed in the 'Composite Waste' bin.

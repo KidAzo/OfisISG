@@ -15,9 +15,9 @@ MonoBehaviour:
   waste:
     name: Cartridge
     type: 3
-  selectSound: {fileID: 11400000, guid: 7e1a81173e2b8e54f952fedd0e7d55b2, type: 2}
-  explanationSound: {fileID: 11400000, guid: 6c190fd05c644b54a912441b5cc1132e, type: 2}
-  explanationTurkish: "Kullan\u0131lm\u0131\u015F yaz\u0131c\u0131 tonerleri ve kartu\u015Flar\u0131
-    'Toner - Kartu\u015F' at\u0131k kutusuna at\u0131lmal\u0131d\u0131r."
-  explanationEnglish: Used printer toner and ink cartridges should be placed in the
-    'Toner & Cartridge Waste' bin.
+  selectSound: {fileID: 11400000, guid: 15800bc6357387e44b39aa135afea957, type: 2}
+  explanationSound: {fileID: 11400000, guid: 83357ca355d46b743b2029c9ade2bd80, type: 2}
+  explanationTurkish: "Bili\u015Fim ve telekom\xFCnikasyon ekipmanlar\u0131 vb. at\u0131klar\u0131
+    'At\u0131k Elektrikli ve Elektronik E\u015Fyalar' at\u0131k kutusuna at\u0131lmal\u0131d\u0131r."
+  explanationEnglish: IT and telecommunications equipment waste should be placed
+    in the 'Waste Electrical and Electronic Equipment' bin.
