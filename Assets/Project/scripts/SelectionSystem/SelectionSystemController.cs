@@ -7,56 +7,50 @@ namespace Woi.SelectionSystem
     public class SelectionSystemController
     {
         private readonly Camera mainCamera;
+        private readonly float maxDistance;
+        private readonly LayerMask layerMask;
+        private readonly QueryTriggerInteraction triggerInteraction;
 
-        public SelectionSystemController(Camera mainCamera)
+        public SelectionSystemController(
+            Camera mainCamera,
+            float maxDistance = Mathf.Infinity,
+            LayerMask layerMask = default,
+            QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Collide)
         {
             this.mainCamera = mainCamera;
+            this.maxDistance = maxDistance;
+            this.layerMask = layerMask.value == 0 ? Physics.DefaultRaycastLayers : layerMask;
+            this.triggerInteraction = triggerInteraction;
         }
 
-        public ISelectable SelectObject()
+        public ISelectable SelectFromMouse()
         {
-            return RaycastFirstSelectable(out _);
+            if (mainCamera == null)
+                return null;
+
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            return RaycastFirstSelectable(ray.origin, ray.direction, out _, skipHierarchyRoot: null);
+        }
+
+        public ISelectable SelectFromWorldRay(Vector3 origin, Vector3 direction, Transform skipHierarchyRoot)
+        {
+            return RaycastFirstSelectable(origin, direction, out _, skipHierarchyRoot);
         }
 
         public ISelectable RaycastFirstSelectable(
+            Vector3 origin,
+            Vector3 direction,
             out RaycastHit hit,
-            float maxDistance = Mathf.Infinity,
-            int layerMask = Physics.DefaultRaycastLayers)
+            Transform skipHierarchyRoot)
         {
-            hit = default;
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit[] hits = Physics.RaycastAll(
-                ray,
+            return SelectionRaycast.RaycastFirstSelectable(
+                origin,
+                direction,
+                out hit,
                 maxDistance,
                 layerMask,
-                QueryTriggerInteraction.Collide);
-
-            if (hits == null || hits.Length == 0)
-            {
-                return null;
-            }
-
-            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-
-            for (int i = 0; i < hits.Length; i++)
-            {
-                Collider collider = hits[i].collider;
-                if (collider == null)
-                {
-                    continue;
-                }
-
-                ISelectable selectable = collider.GetComponentInParent<ISelectable>();
-                if (selectable == null)
-                {
-                    continue;
-                }
-
-                hit = hits[i];
-                return selectable;
-            }
-
-            return null;
+                triggerInteraction,
+                skipHierarchyRoot);
         }
     }
 
@@ -69,12 +63,17 @@ namespace Woi.SelectionSystem
     public class SelectionInputController
     {
         private readonly SelectionSystemController selectionSystemController;
-        private InputAction mouseLeftClick;
-        
-        public SelectionInputController(SelectionSystemController selectionSystemController, InputAction mouseLeftClick)
+        private readonly InputAction mouseLeftClick;
+        private readonly Func<bool> canSelect;
+
+        public SelectionInputController(
+            SelectionSystemController selectionSystemController,
+            InputAction mouseLeftClick,
+            Func<bool> canSelect = null)
         {
             this.selectionSystemController = selectionSystemController;
             this.mouseLeftClick = mouseLeftClick;
+            this.canSelect = canSelect;
         }
 
         public void Enable()
@@ -91,8 +90,10 @@ namespace Woi.SelectionSystem
 
         private void OnMouseLeftClickPerformed(InputAction.CallbackContext context)
         {
-            Debug.Log("Mouse left click pressed");
-            var selected = selectionSystemController.SelectObject();
+            if (canSelect != null && !canSelect())
+                return;
+
+            ISelectable selected = selectionSystemController.SelectFromMouse();
             selected?.Select();
         }
     }

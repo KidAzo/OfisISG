@@ -1,10 +1,9 @@
 using UnityEngine;
-using Woi.SelectionSystem;
 
 namespace Woi.WasteCollectionMode
 {
     /// <summary>
-    /// VR entry: skip login session defaults, disable PC mouse picker, enable world UI.
+    /// VR entry: skip login session defaults. Selection uses <see cref="SelectionSystemManager"/> (trigger + right-controller ray).
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class WasteCollectionVrBootstrap : MonoBehaviour
@@ -13,9 +12,6 @@ namespace Woi.WasteCollectionMode
         [SerializeField] private string defaultUserName = "VR Trainee";
         [SerializeField] private string defaultUserId = "vr-trainee";
         [SerializeField] private string defaultLanguageCode = "tr";
-
-        [Header("PC systems to disable in VR")]
-        [SerializeField] private SelectionSystemManager selectionSystemManager;
 
         private void Awake()
         {
@@ -26,7 +22,6 @@ namespace Woi.WasteCollectionMode
             }
 
             EnsureVrSession();
-            DisablePcSelection();
         }
 
         private void EnsureVrSession()
@@ -35,15 +30,6 @@ namespace Woi.WasteCollectionMode
                 return;
 
             WasteLoginSession.Set(defaultUserName, defaultUserId, defaultLanguageCode);
-        }
-
-        private void DisablePcSelection()
-        {
-            if (selectionSystemManager == null)
-                selectionSystemManager = FindFirstObjectByType<SelectionSystemManager>();
-
-            if (selectionSystemManager != null)
-                selectionSystemManager.enabled = false;
         }
     }
 }

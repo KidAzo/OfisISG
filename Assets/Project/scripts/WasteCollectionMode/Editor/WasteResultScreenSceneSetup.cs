@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using Obvious.Soap;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -76,6 +77,7 @@ namespace Woi.WasteCollectionMode.Editor
             serializedCounter.ApplyModifiedPropertiesWithoutUndo();
 
             WireFlowController(flowController, tracker, player, selectionMenu);
+            WireSelectionSystem(host, controller);
             EnsureVrComponents(host, controller, flowController);
 
             EditorUtility.SetDirty(host);
@@ -240,17 +242,70 @@ namespace Woi.WasteCollectionMode.Editor
             if (rigController == null)
                 rigController = Undo.AddComponent<WasteCollectionPlayerRigController>(bootstrapObject);
 
-            SerializedObject serializedBootstrap = new SerializedObject(
-                bootstrapObject.GetComponent<WasteCollectionVrBootstrap>());
+            WirePlayerRigController(rigController);
+            EnsureSelectionVrRay();
+        }
+
+        private static void WireSelectionSystem(
+            GameObject wasteUiHost,
+            WasteResultScreenController resultController)
+        {
             SelectionSystemManager selectionSystem = Object.FindFirstObjectByType<SelectionSystemManager>();
-            if (selectionSystem != null)
+            if (selectionSystem == null)
+                return;
+
+            if (wasteUiHost.GetComponent<WasteSelectionInputGate>() == null)
+                Undo.AddComponent<WasteSelectionInputGate>(wasteUiHost);
+
+            WasteSelectionInputGate gate = wasteUiHost.GetComponent<WasteSelectionInputGate>();
+            SerializedObject serializedGate = new SerializedObject(gate);
+            serializedGate.FindProperty("selectionMenu").objectReferenceValue =
+                wasteUiHost.GetComponent<WasteSelectionMenu>();
+            serializedGate.FindProperty("resultScreen").objectReferenceValue = resultController;
+            serializedGate.ApplyModifiedPropertiesWithoutUndo();
+
+            SelectionVrInteractionRay vrRay = Object.FindFirstObjectByType<SelectionVrInteractionRay>(FindObjectsInactive.Include);
+
+            SerializedObject serializedSelection = new SerializedObject(selectionSystem);
+            SerializedProperty gates = serializedSelection.FindProperty("selectionGates");
+            gates.ClearArray();
+            gates.InsertArrayElementAtIndex(0);
+            gates.GetArrayElementAtIndex(0).objectReferenceValue = gate;
+
+            if (vrRay != null)
+                serializedSelection.FindProperty("vrInteractionRay").objectReferenceValue = vrRay;
+
+            ScriptableEventNoParam interact = AssetDatabase.LoadAssetAtPath<ScriptableEventNoParam>(
+                "Packages/com.woi.module.fire/Runtime/InputSystem/InputsSO/InputEvents/onInteractInput.asset");
+            if (interact != null)
+                serializedSelection.FindProperty("interactInputEvent").objectReferenceValue = interact;
+
+            serializedSelection.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void EnsureSelectionVrRay()
+        {
+            SelectionVrInteractionRay existing =
+                Object.FindFirstObjectByType<SelectionVrInteractionRay>(FindObjectsInactive.Include);
+            if (existing != null)
+                return;
+
+            Transform rightController = SelectionVrInteractionRay.FindRightControllerTransform("Right");
+            if (rightController == null)
             {
-                serializedBootstrap.FindProperty("selectionSystemManager").objectReferenceValue =
-                    selectionSystem;
+                Debug.LogWarning(
+                    "[WasteResultScreenSceneSetup] Right Controller not found — add SelectionVrInteractionRay manually under XR rig.");
+                return;
             }
 
-            serializedBootstrap.ApplyModifiedPropertiesWithoutUndo();
-            WirePlayerRigController(rigController);
+            SelectionVrInteractionRay raycaster = rightController.GetComponent<SelectionVrInteractionRay>();
+            if (raycaster == null)
+                raycaster = Undo.AddComponent<SelectionVrInteractionRay>(rightController.gameObject);
+
+            SerializedObject serializedRay = new SerializedObject(raycaster);
+            serializedRay.FindProperty("rayOrigin").objectReferenceValue = rightController;
+            serializedRay.FindProperty("drawWorldRayLine").boolValue = true;
+            serializedRay.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static void WirePlayerRigController(WasteCollectionPlayerRigController rigController)
@@ -306,9 +361,6 @@ namespace Woi.WasteCollectionMode.Editor
         {
             if (host.GetComponent<WasteWorldUiPresenter>() == null)
                 Undo.AddComponent<WasteWorldUiPresenter>(host);
-
-            if (host.GetComponent<WasteVrWastePicker>() == null)
-                Undo.AddComponent<WasteVrWastePicker>(host);
 
             if (host.GetComponent<WasteVrExitInput>() == null)
                 Undo.AddComponent<WasteVrExitInput>(host);
