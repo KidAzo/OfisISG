@@ -32,6 +32,9 @@ namespace Woi.WasteCollectionMode
         [SerializeField] private WasteCollectTracker collectTracker;
         [SerializeField] private WasteSelectionMenu wasteSelectionMenu;
 
+        [Header("VR")]
+        [SerializeField] private WasteVrLocomotionGate vrLocomotionGate;
+
         [Header("Player")]
         [SerializeField] private Transform playerRoot;
         [SerializeField] private string playerTag = "Player";
@@ -85,6 +88,9 @@ namespace Woi.WasteCollectionMode
 
             if (collectTracker == null)
                 collectTracker = FindFirstObjectByType<WasteCollectTracker>();
+
+            if (vrLocomotionGate == null)
+                vrLocomotionGate = GetComponent<WasteVrLocomotionGate>();
 
             ResolveStatusIcons();
         }
@@ -143,6 +149,9 @@ namespace Woi.WasteCollectionMode
 
         private void Update()
         {
+            if (!WasteCollectionPlatform.IsPC)
+                return;
+
             if (Keyboard.current == null || !Keyboard.current.tabKey.wasPressedThisFrame)
                 return;
 
@@ -280,6 +289,26 @@ namespace Woi.WasteCollectionMode
         public void Hide()
         {
             HideResult();
+        }
+
+        public void ToggleExitOverlay()
+        {
+            if (wasteSelectionMenu != null && wasteSelectionMenu.IsVisible)
+                return;
+
+            if (IsResultVisible)
+            {
+                HideResult();
+                return;
+            }
+
+            if (IsExitVisible)
+            {
+                HideExit();
+                return;
+            }
+
+            ShowExit();
         }
 
         private void ShowExit()
@@ -513,7 +542,11 @@ namespace Woi.WasteCollectionMode
                 if (restartButton != null)
                     restartButton.SetEnabled(false);
 
-                bootstrapper.LoadWasteLogin();
+                if (WasteCollectionPlatform.IsVR)
+                    bootstrapper.LoadWasteCollectorGameplay();
+                else
+                    bootstrapper.LoadWasteLogin();
+
                 return;
             }
 
@@ -559,7 +592,10 @@ namespace Woi.WasteCollectionMode
             Task loadTask;
             try
             {
-                loadTask = loader.LoadScene(OfficeGameModulesBootstrapper.WasteLoginSceneGroup);
+                string sceneGroup = WasteCollectionPlatform.IsVR
+                    ? OfficeGameModulesBootstrapper.WasteCollectorSceneGroup
+                    : OfficeGameModulesBootstrapper.WasteLoginSceneGroup;
+                loadTask = loader.LoadScene(sceneGroup);
             }
             catch (System.Exception ex)
             {
@@ -625,6 +661,15 @@ namespace Woi.WasteCollectionMode
             if (inputFrozen)
                 return;
 
+            if (WasteCollectionPlatform.IsVR)
+            {
+                if (vrLocomotionGate != null)
+                    vrLocomotionGate.SetLocomotionEnabled(false);
+
+                inputFrozen = true;
+                return;
+            }
+
             Transform root = ResolvePlayerRoot();
             movementLookFreeze.Freeze(root);
 
@@ -642,6 +687,15 @@ namespace Woi.WasteCollectionMode
         {
             if (!inputFrozen)
                 return;
+
+            if (WasteCollectionPlatform.IsVR)
+            {
+                if (vrLocomotionGate != null)
+                    vrLocomotionGate.SetLocomotionEnabled(true);
+
+                inputFrozen = false;
+                return;
+            }
 
             movementLookFreeze.Restore();
 

@@ -76,6 +76,7 @@ namespace Woi.WasteCollectionMode.Editor
             serializedCounter.ApplyModifiedPropertiesWithoutUndo();
 
             WireFlowController(flowController, tracker, player, selectionMenu);
+            EnsureVrComponents(host, controller, flowController);
 
             EditorUtility.SetDirty(host);
             EditorSceneManager.MarkSceneDirty(host.scene);
@@ -114,6 +115,7 @@ namespace Woi.WasteCollectionMode.Editor
             WasteSelectionMenu selectionMenu = Undo.AddComponent<WasteSelectionMenu>(host);
             Undo.AddComponent<WasteCollectionResultController>(host);
             Undo.AddComponent<WasteCollectionCounterUI>(host);
+            EnsureVrComponents(host, null, host.GetComponent<WasteCollectionResultController>());
 
             SerializedObject serializedMenu = new SerializedObject(selectionMenu);
             serializedMenu.FindProperty("uiDocument").objectReferenceValue = selectionDocument;
@@ -210,6 +212,126 @@ namespace Woi.WasteCollectionMode.Editor
                 serializedFlow.FindProperty("selectionSystemManager").objectReferenceValue = selectionSystem;
 
             serializedFlow.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void EnsureWasteCollectionBootstrap()
+        {
+            GameObject bootstrapObject = null;
+            WasteCollectionVrBootstrap existingBootstrap = Object.FindFirstObjectByType<WasteCollectionVrBootstrap>();
+            if (existingBootstrap != null)
+                bootstrapObject = existingBootstrap.gameObject;
+
+            WasteCollectionPlayerRigController existingRig =
+                Object.FindFirstObjectByType<WasteCollectionPlayerRigController>();
+            if (bootstrapObject == null && existingRig != null)
+                bootstrapObject = existingRig.gameObject;
+
+            if (bootstrapObject == null)
+            {
+                bootstrapObject = new GameObject("WasteCollectionBootstrap");
+                Undo.RegisterCreatedObjectUndo(bootstrapObject, "Create WasteCollectionBootstrap");
+            }
+
+            if (bootstrapObject.GetComponent<WasteCollectionVrBootstrap>() == null)
+                Undo.AddComponent<WasteCollectionVrBootstrap>(bootstrapObject);
+
+            WasteCollectionPlayerRigController rigController =
+                bootstrapObject.GetComponent<WasteCollectionPlayerRigController>();
+            if (rigController == null)
+                rigController = Undo.AddComponent<WasteCollectionPlayerRigController>(bootstrapObject);
+
+            SerializedObject serializedBootstrap = new SerializedObject(
+                bootstrapObject.GetComponent<WasteCollectionVrBootstrap>());
+            SelectionSystemManager selectionSystem = Object.FindFirstObjectByType<SelectionSystemManager>();
+            if (selectionSystem != null)
+            {
+                serializedBootstrap.FindProperty("selectionSystemManager").objectReferenceValue =
+                    selectionSystem;
+            }
+
+            serializedBootstrap.ApplyModifiedPropertiesWithoutUndo();
+            WirePlayerRigController(rigController);
+        }
+
+        private static void WirePlayerRigController(WasteCollectionPlayerRigController rigController)
+        {
+            if (rigController == null)
+                return;
+
+            SerializedObject serializedRig = new SerializedObject(rigController);
+            SerializedProperty pcRoots = serializedRig.FindProperty("pcPlayerRoots");
+            SerializedProperty xrRoots = serializedRig.FindProperty("xrOriginRoots");
+
+            pcRoots.ClearArray();
+            xrRoots.ClearArray();
+
+            System.Type xrOriginType = System.Type.GetType("Unity.XR.CoreUtils.XROrigin, Unity.XR.CoreUtils");
+
+            int pcIndex = 0;
+            int xrIndex = 0;
+            GameObject[] all = Object.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < all.Length; i++)
+            {
+                GameObject go = all[i];
+                if (go == null || !go.scene.IsValid())
+                    continue;
+
+                if (go.name == "PC-Player")
+                {
+                    pcRoots.InsertArrayElementAtIndex(pcIndex++);
+                    pcRoots.GetArrayElementAtIndex(pcIndex - 1).objectReferenceValue = go;
+                    continue;
+                }
+
+                if (xrOriginType != null && go.GetComponent(xrOriginType) != null)
+                {
+                    xrRoots.InsertArrayElementAtIndex(xrIndex++);
+                    xrRoots.GetArrayElementAtIndex(xrIndex - 1).objectReferenceValue = go;
+                }
+            }
+
+            ScriptableEnumPortingVariable porting = AssetDatabase.LoadAssetAtPath<ScriptableEnumPortingVariable>(
+                "Packages/com.woi.module.fire/Runtime/Porting/PortingVariable.asset");
+            if (porting != null)
+                serializedRig.FindProperty("portingVariable").objectReferenceValue = porting;
+
+            serializedRig.FindProperty("logAppliedState").boolValue = true;
+            serializedRig.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void EnsureVrComponents(
+            GameObject host,
+            WasteResultScreenController resultController,
+            WasteCollectionResultController flowController)
+        {
+            if (host.GetComponent<WasteWorldUiPresenter>() == null)
+                Undo.AddComponent<WasteWorldUiPresenter>(host);
+
+            if (host.GetComponent<WasteVrWastePicker>() == null)
+                Undo.AddComponent<WasteVrWastePicker>(host);
+
+            if (host.GetComponent<WasteVrExitInput>() == null)
+                Undo.AddComponent<WasteVrExitInput>(host);
+
+            WasteVrLocomotionGate locomotionGate = host.GetComponent<WasteVrLocomotionGate>();
+            if (locomotionGate == null)
+                locomotionGate = Undo.AddComponent<WasteVrLocomotionGate>(host);
+
+            EnsureWasteCollectionBootstrap();
+
+            if (resultController != null)
+            {
+                SerializedObject serializedResult = new SerializedObject(resultController);
+                serializedResult.FindProperty("vrLocomotionGate").objectReferenceValue = locomotionGate;
+                serializedResult.ApplyModifiedPropertiesWithoutUndo();
+            }
+
+            if (flowController != null)
+            {
+                SerializedObject serializedFlow = new SerializedObject(flowController);
+                serializedFlow.FindProperty("vrLocomotionGate").objectReferenceValue = locomotionGate;
+                serializedFlow.ApplyModifiedPropertiesWithoutUndo();
+            }
         }
     }
 }

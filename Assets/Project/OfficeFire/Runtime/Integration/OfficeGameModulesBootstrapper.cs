@@ -19,7 +19,7 @@ namespace Woi.OfficeFire
         public const string WasteLoginSceneGroup = "WasteLogin";
         public const string WasteCollectorSceneGroup = "WasteCollector";
         [Header("Scene")]
-        [Tooltip("FireTraining loads FireModule_Office. WasteCollector loads WasteLogin first; gameplay loads after login.")]
+        [Tooltip("FireTraining loads FireModule_Office. WasteCollector: PC → WasteLogin, VR → FireModule_Office directly.")]
         [SerializeField]
         private OfficeGameModule gameModule = OfficeGameModule.FireTraining;
 
@@ -154,9 +154,17 @@ namespace Woi.OfficeFire
             return module switch
             {
                 OfficeGameModule.FireTraining => "FireModule_Office",
-                OfficeGameModule.WasteCollector => WasteLoginSceneGroup,
+                OfficeGameModule.WasteCollector => ResolveWasteCollectorEntryScene(),
                 _ => "FireModule_Office",
             };
+        }
+
+        private static string ResolveWasteCollectorEntryScene()
+        {
+            if (FirePlatformRuntime.IsSourceInitialized && FirePlatformRuntime.IsVR)
+                return WasteCollectorSceneGroup;
+
+            return WasteLoginSceneGroup;
         }
 
         /// <summary>

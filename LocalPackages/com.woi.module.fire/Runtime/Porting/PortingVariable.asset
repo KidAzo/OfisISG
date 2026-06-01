@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: PortingVariable
   m_EditorClassIdentifier: WoiPortingChange::Woi.Porting.ScriptableEnumPortingVariable
   serializationData:
-    SerializedFormat: 0
-    SerializedBytes: 2d010e000000520065007000610069006e0074005200650071007500650073007400
+    SerializedFormat: 2
+    SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: RepaintRequest
+      Entry: 6
+      Data: 
   TagIndex: 0
   Description: 
-  _currentValue: 0
+  _currentValue: 1

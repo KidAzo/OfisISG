@@ -34,3 +34,10 @@ MonoBehaviour:
     isAsset: 1
     _typeString: Woi.OfficeFire.OfficeFireVoiceLineContentDatabase, Woi.OfficeFire.Core,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - _obj: {fileID: 11400000, guid: d6a0c74088c2fa747a9332d4158c4dfa, type: 2}
+    globalId:
+      globalObjectIdString: GlobalObjectId_V1-3-d6a0c74088c2fa747a9332d4158c4dfa-11400000-0
+    isSceneGameObject: 0
+    isAsset: 1
+    _typeString: ScriptableEnumPortingVariable, Woi.Porting, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null

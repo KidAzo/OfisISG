@@ -20,6 +20,9 @@ namespace Woi.WasteCollectionMode
         [SerializeField] private WasteSelectionMenu wasteSelectionMenu;
         [SerializeField] private WasteCollectTracker collectTracker;
 
+        [Header("VR")]
+        [SerializeField] private WasteVrLocomotionGate vrLocomotionGate;
+
         private readonly PlayerMovementLookFreeze movementLookFreeze = new();
         private bool playerInputFrozen;
         private CursorLockMode savedCursorLockState;
@@ -32,6 +35,9 @@ namespace Woi.WasteCollectionMode
 
             if (collectTracker == null)
                 collectTracker = FindFirstObjectByType<WasteCollectTracker>();
+
+            if (vrLocomotionGate == null)
+                vrLocomotionGate = FindFirstObjectByType<WasteVrLocomotionGate>();
 
             if (wasteSelectionMenu != null)
             {
@@ -98,6 +104,15 @@ namespace Woi.WasteCollectionMode
             if (playerInputFrozen)
                 return;
 
+            if (WasteCollectionPlatform.IsVR)
+            {
+                if (vrLocomotionGate != null)
+                    vrLocomotionGate.SetLocomotionEnabled(false);
+
+                playerInputFrozen = true;
+                return;
+            }
+
             Transform root = ResolvePlayerRoot();
             movementLookFreeze.Freeze(root);
 
@@ -115,6 +130,15 @@ namespace Woi.WasteCollectionMode
         {
             if (!playerInputFrozen)
                 return;
+
+            if (WasteCollectionPlatform.IsVR)
+            {
+                if (vrLocomotionGate != null)
+                    vrLocomotionGate.SetLocomotionEnabled(true);
+
+                playerInputFrozen = false;
+                return;
+            }
 
             movementLookFreeze.Restore();
 
