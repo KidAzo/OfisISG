@@ -38,6 +38,11 @@ namespace Woi.UI.Result
         [SerializeField]
         LayerMask extraRaycastLayers = ~0;
 
+        [Header("Çizgi görseli")]
+        [Tooltip("True ise NearFarInteractor'ın yeşil→kırmızı gradient çizgi görseli gizlenir (etkileşim çalışmaya devam eder).")]
+        [SerializeField]
+        bool hideInteractorLineVisual = true;
+
         [Header("Event System")]
         [SerializeField]
         bool autoCreateXrUiToolkitManager = true;
@@ -269,9 +274,40 @@ namespace Woi.UI.Result
 
             TrySetEnableUiInteraction(n);
 
+            if (hideInteractorLineVisual)
+                HideInteractorLineVisual(n);
+
             int id = n.GetInstanceID();
             if (_raycastMaskMergedInstanceIds.Add(id))
                 TryMergeRaycastMask(n, extraRaycastLayers);
+        }
+
+        /// <summary>
+        /// NearFarInteractor'ın yeşil→kırmızı gradient ışın çizgisini gizler. Hem çizgiyi süren
+        /// görsel kontrolcü (CurveVisualController / XRInteractorLineVisual) hem de LineRenderer
+        /// kapatılır; etkileşim (UI tıklaması, raycast) çalışmaya devam eder.
+        /// </summary>
+        static void HideInteractorLineVisual(NearFarInteractor n)
+        {
+            if (n == null)
+                return;
+
+            foreach (Behaviour beh in n.GetComponentsInChildren<Behaviour>(true))
+            {
+                if (beh == null)
+                    continue;
+
+                string typeName = beh.GetType().Name;
+                if (typeName == "CurveVisualController"
+                    || typeName.IndexOf("LineVisual", StringComparison.OrdinalIgnoreCase) >= 0)
+                    beh.enabled = false;
+            }
+
+            foreach (LineRenderer lr in n.GetComponentsInChildren<LineRenderer>(true))
+            {
+                if (lr != null)
+                    lr.enabled = false;
+            }
         }
 
         /// <summary>
