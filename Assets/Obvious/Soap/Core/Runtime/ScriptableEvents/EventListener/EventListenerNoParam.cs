@@ -20,8 +20,14 @@ namespace Obvious.Soap
 
         protected override void ToggleRegistration(bool toggle)
         {
+            if (_eventResponses == null)
+                return;
+
             foreach (var eventResponse in _eventResponses)
             {
+                if (eventResponse?.ScriptableEvent == null)
+                    continue;
+
                 if (toggle)
                 {
                     eventResponse.ScriptableEvent.RegisterListener(this);

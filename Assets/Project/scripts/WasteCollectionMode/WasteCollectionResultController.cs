@@ -106,9 +106,6 @@ namespace Woi.WasteCollectionMode
 
             if (WasteCollectionPlatform.IsVR)
             {
-                if (vrLocomotionGate != null)
-                    vrLocomotionGate.SetLocomotionEnabled(false);
-
                 playerInputFrozen = true;
                 return;
             }
@@ -133,9 +130,6 @@ namespace Woi.WasteCollectionMode
 
             if (WasteCollectionPlatform.IsVR)
             {
-                if (vrLocomotionGate != null)
-                    vrLocomotionGate.SetLocomotionEnabled(true);
-
                 playerInputFrozen = false;
                 return;
             }

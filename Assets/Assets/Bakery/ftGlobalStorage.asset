@@ -29,7 +29,19 @@ MonoBehaviour:
   - Assets/Project/Characters/Animations/Running (1).fbx
   - Assets/AssetSection/FireTool/FireBlanketBAG.fbx
   - Assets/AssetSection/PolygonConstruction/Models/SM_Chr_Attach_Cigarette_02.fbx
-  uvOverlapAssetList: 0000000001010000000000000101000000000000000000000000000000000000000000000101000000000000
+  - Assets/AssetSection/TrashAsset/Trash.fbx
+  - Assets/Synty/PolygonOffice/Models/SM_Prop_Can_Soda_01.fbx
+  - Assets/AssetSection/PolygonConstruction/Models/SM_Prop_CardboardBox_02.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Prop_Paper_05.fbx
+  - Assets/Synty/PolygonShops/Models/SM_Prop_Food_Chicken_Pile_03.fbx
+  - Assets/Synty/PolygonShops/Models/SM_Prop_Computer_Keyboard_01.fbx
+  - Assets/AssetSection/PolygonConstruction/Models/SM_Item_Battery_02.fbx
+  - Assets/Synty/PolygonShops/Models/SM_Prop_Food_Onion_Sliced_01.fbx
+  - Assets/Synty/PolygonShops/Models/SM_Prop_Food_Pineapple_Sliced_01.fbx
+  - Assets/Synty/PolygonShops/Models/SM_Prop_Food_Pickle_Slice_01.fbx
+  - Assets/Synty/PolygonShops/Models/SM_Prop_Food_Salami_Slice_01.fbx
+  - Assets/AssetSection/PolygonConstruction/Models/SM_Item_Battery_01.fbx
+  uvOverlapAssetList: 0000000001010000000000000101000000000000000000000000000000000000000000000101000000000000010100000000000000000000000000000000000000000000000000000000000001010000000000000101000000000000
   xatlasWarningShown: 0
   foundCompatibleSetup: 0
   gpuName_2: 

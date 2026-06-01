@@ -13,6 +13,8 @@ namespace Woi.WasteCollectionMode.Editor
         private const string SelectionUxmlPath = "Assets/Project/WasteCollection/UI/WasteSelectionMenu.uxml";
         private const string IconLibraryPath = "Assets/Project/WasteCollection/UI/WasteBinIconLibrary.asset";
         private const string PanelSettingsPath = "Assets/UI Toolkit/PanelSettings.asset";
+        private const string GripInputEventPath =
+            "Packages/com.woi.module.fire/Runtime/InputSystem/InputsSO/InputEvents/preOnGameFinishEvent.asset";
         private const string HostObjectName = "WasteCollectionUI";
         private const string LegacyResultObjectName = "WasteResultScreenUI";
 
@@ -112,7 +114,8 @@ namespace Woi.WasteCollectionMode.Editor
 
             UIDocument selectionDocument = Undo.AddComponent<UIDocument>(host);
             selectionDocument.visualTreeAsset = selectionAsset;
-            selectionDocument.panelSettings = LoadPanelSettings();
+            selectionDocument.panelSettings = LoadScreenPanelSettings();
+            selectionDocument.worldSpaceSizeMode = UIDocument.WorldSpaceSizeMode.Dynamic;
 
             WasteSelectionMenu selectionMenu = Undo.AddComponent<WasteSelectionMenu>(host);
             Undo.AddComponent<WasteCollectionResultController>(host);
@@ -187,9 +190,15 @@ namespace Woi.WasteCollectionMode.Editor
             return player != null ? player.transform : null;
         }
 
-        private static PanelSettings LoadPanelSettings()
+        private static PanelSettings LoadScreenPanelSettings()
         {
             return AssetDatabase.LoadAssetAtPath<PanelSettings>(PanelSettingsPath);
+        }
+
+        private static PanelSettings LoadWorldPanelSettings()
+        {
+            return AssetDatabase.LoadAssetAtPath<PanelSettings>(
+                "Assets/Project/OfficeFire/UI/InteractHoverWorldPanelSettings.asset");
         }
 
         private static void WireFlowController(
@@ -354,16 +363,70 @@ namespace Woi.WasteCollectionMode.Editor
             serializedRig.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        private static void WireVrUiSession(
+            GameObject host,
+            WasteVrUiSessionController uiSession,
+            WasteResultScreenController resultController,
+            WasteCollectionResultController flowController)
+        {
+            if (uiSession == null)
+                return;
+
+            SerializedObject serialized = new SerializedObject(uiSession);
+            serialized.FindProperty("selectionMenu").objectReferenceValue = host.GetComponent<WasteSelectionMenu>();
+            serialized.FindProperty("resultScreen").objectReferenceValue = resultController;
+            serialized.FindProperty("worldUiPresenter").objectReferenceValue = host.GetComponent<WasteWorldUiPresenter>();
+
+            WasteVrLocomotionGate locomotionGate = host.GetComponent<WasteVrLocomotionGate>();
+            if (locomotionGate == null)
+                locomotionGate = host.GetComponentInChildren<WasteVrLocomotionGate>(true);
+
+            serialized.FindProperty("locomotionGate").objectReferenceValue = locomotionGate;
+            serialized.FindProperty("selectionSystemManager").objectReferenceValue =
+                Object.FindFirstObjectByType<SelectionSystemManager>();
+
+            SelectionVrInteractionRay selectionRay =
+                Object.FindFirstObjectByType<SelectionVrInteractionRay>(FindObjectsInactive.Include);
+            serialized.FindProperty("selectionRay").objectReferenceValue = selectionRay;
+            serialized.FindProperty("uiDistanceInFrontOfHmd").floatValue = 1.35f;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
         private static void EnsureVrComponents(
             GameObject host,
             WasteResultScreenController resultController,
             WasteCollectionResultController flowController)
         {
-            if (host.GetComponent<WasteWorldUiPresenter>() == null)
-                Undo.AddComponent<WasteWorldUiPresenter>(host);
+            WasteWorldUiPresenter presenter = host.GetComponent<WasteWorldUiPresenter>();
+            if (presenter == null)
+                presenter = Undo.AddComponent<WasteWorldUiPresenter>(host);
 
-            if (host.GetComponent<WasteVrExitInput>() == null)
-                Undo.AddComponent<WasteVrExitInput>(host);
+            SerializedObject serializedPresenter = new SerializedObject(presenter);
+            PanelSettings worldPanel = LoadWorldPanelSettings();
+            if (worldPanel != null)
+                serializedPresenter.FindProperty("worldPanelSettingsSource").objectReferenceValue = worldPanel;
+            serializedPresenter.FindProperty("worldDocumentScale").floatValue = 0.005f;
+            serializedPresenter.ApplyModifiedPropertiesWithoutUndo();
+            presenter.ApplyEditorScenePreview();
+
+            WasteVrUiSessionController uiSession = host.GetComponent<WasteVrUiSessionController>();
+            if (uiSession == null)
+                uiSession = Undo.AddComponent<WasteVrUiSessionController>(host);
+
+            WireVrUiSession(host, uiSession, resultController, flowController);
+
+            WasteVrExitInput exitInput = host.GetComponent<WasteVrExitInput>();
+            if (exitInput == null)
+                exitInput = Undo.AddComponent<WasteVrExitInput>(host);
+
+            ScriptableEventNoParam gripEvent =
+                AssetDatabase.LoadAssetAtPath<ScriptableEventNoParam>(GripInputEventPath);
+            if (gripEvent != null)
+            {
+                SerializedObject serializedExit = new SerializedObject(exitInput);
+                serializedExit.FindProperty("gripInputEvent").objectReferenceValue = gripEvent;
+                serializedExit.ApplyModifiedPropertiesWithoutUndo();
+            }
 
             WasteVrLocomotionGate locomotionGate = host.GetComponent<WasteVrLocomotionGate>();
             if (locomotionGate == null)

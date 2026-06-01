@@ -63,6 +63,13 @@ namespace Woi.WasteCollectionMode
                 {
                     disabledBehaviours.Add(mb);
                     mb.enabled = false;
+                    continue;
+                }
+
+                if (IsLocomotionSystemBehaviour(mb))
+                {
+                    disabledBehaviours.Add(mb);
+                    mb.enabled = false;
                 }
             }
 
@@ -110,10 +117,34 @@ namespace Woi.WasteCollectionMode
                    fullName.EndsWith(".LocomotionSystem", StringComparison.Ordinal);
         }
 
+        private static bool IsLocomotionSystemBehaviour(MonoBehaviour behaviour)
+        {
+            if (behaviour == null)
+                return false;
+
+            System.Type type = behaviour.GetType();
+            return type.Name == "LocomotionSystem"
+                && type.Namespace != null
+                && type.Namespace.StartsWith(
+                    "UnityEngine.XR.Interaction.Toolkit.Locomotion",
+                    StringComparison.Ordinal);
+        }
+
         private Transform ResolveRigRoot()
         {
             if (xrRigRoot != null)
                 return xrRigRoot;
+
+            System.Type originType = System.Type.GetType("Unity.XR.CoreUtils.XROrigin, Unity.XR.CoreUtils");
+            if (originType != null)
+            {
+                Array found = Resources.FindObjectsOfTypeAll(originType);
+                for (int i = 0; i < found.Length; i++)
+                {
+                    if (found.GetValue(i) is Component origin && origin != null && origin.gameObject.scene.IsValid())
+                        return origin.transform;
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(playerTag))
             {

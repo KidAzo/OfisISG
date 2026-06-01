@@ -34,6 +34,22 @@ namespace Woi.SelectionSystem
 
         public Transform RayOrigin => rayOrigin;
 
+        public void SetGameplayRayEnabled(bool gameplayRayEnabled)
+        {
+            if (!gameplayRayEnabled)
+            {
+                if (lineRenderer != null)
+                    lineRenderer.enabled = false;
+
+                FireVrGameplayInteractionRay.Unregister(this);
+            }
+
+            enabled = gameplayRayEnabled;
+
+            if (gameplayRayEnabled && IsVrActive() && rayOrigin != null)
+                FireVrGameplayInteractionRay.Register(this, rayOrigin, rayStartInsetMeters);
+        }
+
         private void Awake()
         {
             if (rayOrigin == null && autoFindRightController)

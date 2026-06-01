@@ -11,10 +11,21 @@
     --color-text-gray: rgb(148, 163, 184);
 }
 
+/* Screen-space (PC): fill overlay canvas */
 .ui-root {
     flex-grow: 1;
     width: 100%;
     height: 100%;
+}
+
+/* World-space (VR): shrink-wrap menu — avoids giant empty collider in Scene/headset */
+.ui-root.ui-root--vr-world {
+    flex-grow: 0;
+    width: 960px;
+    height: auto;
+    min-height: 200px;
+    align-items: center;
+    justify-content: center;
 }
 
 .waste-counter-hud {

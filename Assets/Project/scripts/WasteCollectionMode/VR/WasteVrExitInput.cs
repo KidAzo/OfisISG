@@ -62,7 +62,20 @@ namespace Woi.WasteCollectionMode
 #if UNITY_EDITOR
             gripInputEvent =
                 UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableEventNoParam>(GripEventPath);
+            if (gripInputEvent != null)
+                return;
 #endif
+
+            ScriptableEventNoParam[] events =
+                Resources.FindObjectsOfTypeAll<ScriptableEventNoParam>();
+            for (int i = 0; i < events.Length; i++)
+            {
+                if (events[i] != null && events[i].name == "preOnGameFinishEvent")
+                {
+                    gripInputEvent = events[i];
+                    return;
+                }
+            }
         }
     }
 }
