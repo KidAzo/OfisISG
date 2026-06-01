@@ -363,6 +363,33 @@ namespace Woi.WasteCollectionMode.Editor
             serializedRig.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        private static Transform FindActiveXrOriginTransform()
+        {
+            System.Type xrOriginType = System.Type.GetType("Unity.XR.CoreUtils.XROrigin, Unity.XR.CoreUtils");
+            if (xrOriginType == null)
+                return null;
+
+            System.Array found = Resources.FindObjectsOfTypeAll(xrOriginType);
+            Transform fallback = null;
+            for (int i = 0; i < found.Length; i++)
+            {
+                if (found.GetValue(i) is not Component origin || origin == null)
+                    continue;
+
+                GameObject go = origin.gameObject;
+                if (!go.scene.IsValid())
+                    continue;
+
+                if (fallback == null)
+                    fallback = origin.transform;
+
+                if (go.activeInHierarchy)
+                    return origin.transform;
+            }
+
+            return fallback;
+        }
+
         private static void WireVrUiSession(
             GameObject host,
             WasteVrUiSessionController uiSession,
@@ -401,11 +428,28 @@ namespace Woi.WasteCollectionMode.Editor
             if (presenter == null)
                 presenter = Undo.AddComponent<WasteWorldUiPresenter>(host);
 
+            WasteVrLocomotionGate locomotionGateForPresenter = host.GetComponent<WasteVrLocomotionGate>();
+            if (locomotionGateForPresenter == null)
+                locomotionGateForPresenter = host.GetComponentInChildren<WasteVrLocomotionGate>(true);
+
+            Transform activeXrRig = FindActiveXrOriginTransform();
+            if (locomotionGateForPresenter != null && activeXrRig != null)
+            {
+                SerializedObject serializedLocomotion = new SerializedObject(locomotionGateForPresenter);
+                serializedLocomotion.FindProperty("xrRigRoot").objectReferenceValue = activeXrRig;
+                serializedLocomotion.ApplyModifiedPropertiesWithoutUndo();
+            }
+
             SerializedObject serializedPresenter = new SerializedObject(presenter);
             PanelSettings worldPanel = LoadWorldPanelSettings();
             if (worldPanel != null)
                 serializedPresenter.FindProperty("worldPanelSettingsSource").objectReferenceValue = worldPanel;
             serializedPresenter.FindProperty("worldDocumentScale").floatValue = 0.005f;
+            serializedPresenter.FindProperty("cameraOverride").objectReferenceValue = null;
+            serializedPresenter.FindProperty("billboardYawOffsetDegrees").floatValue = 0f;
+            serializedPresenter.FindProperty("localOffsetFromEye").vector3Value = new Vector3(0f, 0f, 1.35f);
+            if (activeXrRig != null)
+                serializedPresenter.FindProperty("xrRigRoot").objectReferenceValue = activeXrRig;
             serializedPresenter.ApplyModifiedPropertiesWithoutUndo();
             presenter.ApplyEditorScenePreview();
 

@@ -27,11 +27,8 @@ namespace Woi.WasteCollectionMode
 
         private void OnEnable()
         {
-            if (!WasteCollectionPlatform.IsVR)
-            {
-                enabled = false;
+            if (!WasteCollectionPlatform.ShouldUseVrPresentation())
                 return;
-            }
 
             if (gripInputEvent != null)
                 gripInputEvent.OnRaised += OnGripInput;

@@ -46,18 +46,9 @@ namespace Woi.WasteCollectionMode
                 selectionRay = FindFirstObjectByType<SelectionVrInteractionRay>(FindObjectsInactive.Include);
         }
 
-        private void OnEnable()
-        {
-            if (!WasteCollectionPlatform.IsVR)
-            {
-                enabled = false;
-                return;
-            }
-        }
-
         private void Update()
         {
-            if (!WasteCollectionPlatform.IsVR)
+            if (!WasteCollectionPlatform.ShouldUseVrPresentation())
                 return;
 
             bool shouldBeOpen = IsAnyModalUiVisible();

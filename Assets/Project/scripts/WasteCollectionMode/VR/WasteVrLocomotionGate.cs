@@ -17,6 +17,8 @@ namespace Woi.WasteCollectionMode
         private readonly List<GameObject> deactivatedRoots = new();
         private bool locomotionDisabled;
 
+        public Transform XrRigRoot => xrRigRoot;
+
         public void SetLocomotionEnabled(bool enabled)
         {
             if (enabled)

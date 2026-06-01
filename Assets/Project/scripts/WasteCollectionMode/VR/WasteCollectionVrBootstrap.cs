@@ -15,11 +15,8 @@ namespace Woi.WasteCollectionMode
 
         private void Awake()
         {
-            if (!WasteCollectionPlatform.IsVR)
-            {
-                enabled = false;
+            if (!WasteCollectionPlatform.ShouldUseVrPresentation())
                 return;
-            }
 
             EnsureVrSession();
         }
