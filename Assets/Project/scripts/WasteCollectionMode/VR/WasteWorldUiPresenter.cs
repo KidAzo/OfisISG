@@ -224,15 +224,9 @@ namespace Woi.WasteCollectionMode
 
 
 
-        private void Update()
+        // No per-frame follow: the panel is placed once when it opens (see LateUpdate's
 
-        {
-
-            if (followActive && configuredForVr)
-
-                SnapInFrontOfEye();
-
-        }
+        // settle window) and then stays fixed in world space — it does not track the head.
 
 
 
@@ -300,21 +294,25 @@ namespace Woi.WasteCollectionMode
 
         {
 
+            // Settle window after opening: place the panel in front of the eye and refresh
+
+            // its world mesh for a few frames (head pose can still be moving on the exact
+
+            // open frame), then freeze. After this there is no head-following.
+
             if (layoutRefreshFramesRemaining > 0 && configuredForVr)
 
             {
 
                 layoutRefreshFramesRemaining--;
 
+                SnapInFrontOfEye();
+
                 ApplyLayoutFromInspector();
 
-            }
-
-
-
-            if (followActive && configuredForVr)
-
                 SyncUidocumentWorldTransform();
+
+            }
 
         }
 
@@ -372,9 +370,19 @@ namespace Woi.WasteCollectionMode
 
             Vector3 toCamera = eye.position - panelWorldPosition;
 
+            // Flatten to the horizontal plane so the panel only yaws (Y). This keeps it
+
+            // vertically upright — X (pitch) and Z (roll) stay 0 even when looking up/down.
+
+            toCamera.y = 0f;
+
             if (toCamera.sqrMagnitude < 1e-6f)
 
-                return eye.rotation;
+                toCamera = new Vector3(-eye.forward.x, 0f, -eye.forward.z);
+
+            if (toCamera.sqrMagnitude < 1e-6f)
+
+                return Quaternion.identity;
 
 
 
