@@ -9,6 +9,7 @@ using Woi.OfficeFire;
 using Woi.Player;
 using Woi.Settings;
 using WOI.Modules.SDK;
+using WoiUtils.AudioSystem;
 
 namespace Woi.WasteCollectionMode
 {
@@ -21,6 +22,8 @@ namespace Woi.WasteCollectionMode
             "Assets/Project/WasteCollection/UI/IconsPng/circle-x.png";
         private const string ExitAlertIconPath =
             "Assets/Project/WasteCollection/UI/IconsPng/triangle-alert.png";
+        private const string ResultShowSoundPath =
+            "Assets/Project/WasteCollection/Audio/Result/ResultScreen.asset";
 
         private static readonly Color CorrectStatusColor = new(0.376f, 0.647f, 0.980f, 1f);
         private static readonly Color IncorrectStatusColor = new(0.957f, 0.247f, 0.369f, 1f);
@@ -31,6 +34,10 @@ namespace Woi.WasteCollectionMode
         [SerializeField] private Texture2D exitAlertIcon;
         [SerializeField] private WasteCollectTracker collectTracker;
         [SerializeField] private WasteSelectionMenu wasteSelectionMenu;
+
+        [Header("Audio")]
+        [Tooltip("TR/EN sound played once when the result screen appears. Assign clips inside ResultScreen_TR / ResultScreen_EN.")]
+        [SerializeField] private LocalizedWasteSound resultShowSound;
 
         [Header("VR")]
         [SerializeField] private WasteVrLocomotionGate vrLocomotionGate;
@@ -60,6 +67,7 @@ namespace Woi.WasteCollectionMode
         private Button restartButton;
 
         private readonly PlayerMovementLookFreeze movementLookFreeze = new();
+        private AudioSystem audioSystem;
         private bool inputFrozen;
         private bool isRestarting;
         private bool sessionResultsExported;
@@ -106,6 +114,9 @@ namespace Woi.WasteCollectionMode
 
             if (exitAlertIcon == null)
                 exitAlertIcon = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>(ExitAlertIconPath);
+
+            if (resultShowSound == null)
+                resultShowSound = UnityEditor.AssetDatabase.LoadAssetAtPath<LocalizedWasteSound>(ResultShowSoundPath);
 #endif
         }
 
@@ -336,10 +347,31 @@ namespace Woi.WasteCollectionMode
             if (overlay == null && !TryBindUi())
                 return;
 
+            bool wasVisible = IsResultVisible;
+
             RefreshContent();
             ExportSessionResultsIfNeeded();
             overlay.style.display = DisplayStyle.Flex;
             FreezePlayerInput();
+
+            if (!wasVisible)
+                PlayResultShowSound();
+        }
+
+        private void PlayResultShowSound()
+        {
+            if (resultShowSound == null)
+                return;
+
+            SoundDefinition sound = resultShowSound.Resolve();
+            if (sound == null)
+                return;
+
+            if (audioSystem == null && !AudioSystem.TryGetFromServiceLocator(out audioSystem))
+                audioSystem = FindFirstObjectByType<AudioSystem>();
+
+            if (audioSystem != null)
+                audioSystem.Play(sound);
         }
 
         private void ExportSessionResultsIfNeeded()
