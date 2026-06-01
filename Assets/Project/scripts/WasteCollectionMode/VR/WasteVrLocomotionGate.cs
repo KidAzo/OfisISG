@@ -6,6 +6,7 @@ namespace Woi.WasteCollectionMode
 {
     /// <summary>
     /// Temporarily disables XR locomotion / teleport while waste UI is open.
+    /// Uses behaviour.enabled only (never SetActive) to avoid activation stack conflicts.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class WasteVrLocomotionGate : MonoBehaviour
@@ -14,7 +15,6 @@ namespace Woi.WasteCollectionMode
         [SerializeField] private string playerTag = "Player";
 
         private readonly List<Behaviour> disabledBehaviours = new();
-        private readonly List<GameObject> deactivatedRoots = new();
         private bool locomotionDisabled;
 
         public Transform XrRigRoot => xrRigRoot;
@@ -33,7 +33,6 @@ namespace Woi.WasteCollectionMode
                 return;
 
             disabledBehaviours.Clear();
-            deactivatedRoots.Clear();
 
             Transform rig = ResolveRigRoot();
             if (rig == null)
@@ -41,18 +40,10 @@ namespace Woi.WasteCollectionMode
 
             foreach (Transform child in rig.GetComponentsInChildren<Transform>(true))
             {
-                if (child == null)
+                if (child == null || !IsLocomotionRootName(child.name))
                     continue;
 
-                if (string.Equals(child.name, "Locomotion", StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(child.name, "Teleportation", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (child.gameObject.activeSelf)
-                    {
-                        deactivatedRoots.Add(child.gameObject);
-                        child.gameObject.SetActive(false);
-                    }
-                }
+                DisableBehavioursUnder(child);
             }
 
             foreach (MonoBehaviour mb in rig.GetComponentsInChildren<MonoBehaviour>(true))
@@ -61,18 +52,8 @@ namespace Woi.WasteCollectionMode
                     continue;
 
                 string fullName = mb.GetType().FullName ?? string.Empty;
-                if (ShouldDisableLocomotionBehaviour(fullName))
-                {
-                    disabledBehaviours.Add(mb);
-                    mb.enabled = false;
-                    continue;
-                }
-
-                if (IsLocomotionSystemBehaviour(mb))
-                {
-                    disabledBehaviours.Add(mb);
-                    mb.enabled = false;
-                }
+                if (ShouldDisableLocomotionBehaviour(fullName) || IsLocomotionSystemBehaviour(mb))
+                    DisableBehaviour(mb);
             }
 
             locomotionDisabled = true;
@@ -90,16 +71,30 @@ namespace Woi.WasteCollectionMode
                     behaviour.enabled = true;
             }
 
-            for (int i = 0; i < deactivatedRoots.Count; i++)
-            {
-                GameObject root = deactivatedRoots[i];
-                if (root != null)
-                    root.SetActive(true);
-            }
-
             disabledBehaviours.Clear();
-            deactivatedRoots.Clear();
             locomotionDisabled = false;
+        }
+
+        private void DisableBehavioursUnder(Transform root)
+        {
+            MonoBehaviour[] behaviours = root.GetComponentsInChildren<MonoBehaviour>(true);
+            for (int i = 0; i < behaviours.Length; i++)
+                DisableBehaviour(behaviours[i]);
+        }
+
+        private void DisableBehaviour(Behaviour behaviour)
+        {
+            if (behaviour == null || !behaviour.enabled || disabledBehaviours.Contains(behaviour))
+                return;
+
+            disabledBehaviours.Add(behaviour);
+            behaviour.enabled = false;
+        }
+
+        private static bool IsLocomotionRootName(string objectName)
+        {
+            return string.Equals(objectName, "Locomotion", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(objectName, "Teleportation", StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool ShouldDisableLocomotionBehaviour(string fullName)

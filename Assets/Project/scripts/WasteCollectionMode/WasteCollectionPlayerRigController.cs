@@ -161,8 +161,10 @@ namespace Woi.WasteCollectionMode
             for (int i = 0; i < roots.Count; i++)
             {
                 GameObject root = roots[i];
-                if (root != null)
-                    root.SetActive(active);
+                if (root == null || root.activeSelf == active)
+                    continue;
+
+                root.SetActive(active);
             }
         }
 

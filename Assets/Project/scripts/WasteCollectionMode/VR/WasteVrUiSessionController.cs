@@ -61,8 +61,23 @@ namespace Woi.WasteCollectionMode
 
         private void OnDisable()
         {
-            if (sessionApplied)
-                ApplySession(false);
+            if (!sessionApplied)
+                return;
+
+            sessionApplied = false;
+            modalUiOpen = false;
+
+            if (worldUiPresenter != null)
+                worldUiPresenter.SetFollowActive(false);
+
+            if (selectionSystemManager != null)
+                selectionSystemManager.SetSelectionInputEnabled(true);
+
+            if (selectionRay != null)
+                selectionRay.SetGameplayRayEnabled(true);
+
+            if (locomotionGate != null)
+                locomotionGate.SetLocomotionEnabled(true);
         }
 
         private bool IsAnyModalUiVisible()
