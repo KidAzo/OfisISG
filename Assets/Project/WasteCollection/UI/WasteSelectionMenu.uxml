@@ -88,5 +88,13 @@
                 <ui:Button name="RestartButton" text="TEKRAR BAŞLA" class="restart-button" />
             </ui:VisualElement>
         </ui:VisualElement>
+
+        <ui:VisualElement name="ExplanationOverlay" class="overlay explanation-overlay flex-center" style="display: none;">
+            <ui:VisualElement class="explanation-container">
+                <ui:VisualElement name="ExplanationStatusIcon" class="explanation-status-icon" />
+                <ui:Label name="ExplanationStatusLabel" text="DOĞRU" class="explanation-status explanation-status--correct" />
+                <ui:Label name="ExplanationText" text="" class="explanation-text" />
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

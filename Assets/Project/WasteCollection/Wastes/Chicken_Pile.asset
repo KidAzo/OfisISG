@@ -15,3 +15,9 @@ MonoBehaviour:
   waste:
     name: Chicken_Pile
     type: 4
+  selectSound: {fileID: 11400000, guid: 74160a7b5705eb041a7c044a9d34dcf2, type: 2}
+  explanationSound: {fileID: 11400000, guid: 2429f379e581ae741bdcdce2f2183246, type: 2}
+  explanationTurkish: "Mutfak, park bah\xE7e, pazar at\u0131klar\u0131 ve g\u0131da
+    at\u0131klar\u0131 'Bio-Bozunur At\u0131klar' at\u0131k kutusuna at\u0131lmal\u0131d\u0131r."
+  explanationEnglish: Kitchen, park and garden, market, and food waste should be
+    placed in the 'Biodegradable Waste' bin.

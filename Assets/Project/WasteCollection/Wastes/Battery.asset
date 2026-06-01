@@ -15,3 +15,7 @@ MonoBehaviour:
   waste:
     name: Battery
     type: 3
+  selectSound: {fileID: 11400000, guid: 5a0cac030b55e3649a540d709c5be814, type: 2}
+  explanationSound: {fileID: 11400000, guid: a4e743188ca6c274ab9e00bb982c8af7, type: 2}
+  explanationTurkish: "At\u0131k piller 'At\u0131k Pil' at\u0131k kutusuna at\u0131lmal\u0131d\u0131r."
+  explanationEnglish: Waste batteries should be placed in the 'Waste Battery' bin.

@@ -15,3 +15,9 @@ MonoBehaviour:
   waste:
     name: Soda
     type: 3
+  selectSound: {fileID: 11400000, guid: c5a1f560134b41046ad4760c2826e98f, type: 2}
+  explanationSound: {fileID: 11400000, guid: e4c121084cd94f64798bf1f4436aac22, type: 2}
+  explanationTurkish: "Metal (al\xFCminyum) i\xE7ecek kutular\u0131 ve metal (\xE7elik)
+    g\u0131da kutular\u0131 'Metal At\u0131klar' at\u0131k kutusuna at\u0131lmal\u0131d\u0131r."
+  explanationEnglish: Aluminium beverage cans and steel food cans should be placed
+    in the 'Metal Waste' bin.

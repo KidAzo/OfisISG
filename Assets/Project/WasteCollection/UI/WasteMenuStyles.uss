@@ -490,6 +490,52 @@
     scale: 0.95;
 }
 
+.explanation-overlay {
+    background-color: rgba(11, 14, 23, 0.82);
+}
+
+.explanation-container {
+    width: 640px;
+    flex-direction: column;
+    background-color: var(--color-bg-result);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 24px;
+    padding: 40px;
+    align-items: center;
+}
+
+.explanation-status-icon {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.explanation-status {
+    font-size: 32px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    -unity-text-align: middle-center;
+}
+
+.explanation-status--correct {
+    color: var(--color-accent);
+}
+
+.explanation-status--wrong {
+    color: var(--color-danger);
+}
+
+.explanation-text {
+    font-size: 18px;
+    color: var(--color-text-white);
+    white-space: normal;
+    -unity-text-align: middle-center;
+}
+
 .exit-overlay {
     background-color: rgba(11, 14, 23, 0.8);
 }

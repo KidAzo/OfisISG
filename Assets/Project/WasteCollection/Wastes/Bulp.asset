@@ -15,3 +15,9 @@ MonoBehaviour:
   waste:
     name: Bulp
     type: 2
+  selectSound: {fileID: 11400000, guid: 9c804b04fe834df4dbcd621df357c766, type: 2}
+  explanationSound: {fileID: 11400000, guid: 145d57e40e1ff2549b8a10d160e2c9c9, type: 2}
+  explanationTurkish: "Cam i\xE7ecek ve g\u0131da \u015Fi\u015Feleri 'Cam At\u0131klar'
+    at\u0131k kutusuna at\u0131lmal\u0131d\u0131r."
+  explanationEnglish: Newspapers, magazines, writing and drawing papers should be
+    placed in the 'Paper Waste' bin.

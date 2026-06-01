@@ -101,6 +101,9 @@ public class WasteCollectTracker : MonoBehaviour
         });
     }
 
+    public WasteDefinition GetDefinition(string wasteName) =>
+        database != null ? database.GetByName(wasteName) : null;
+
     public void ClearSession()
     {
         records.Clear();

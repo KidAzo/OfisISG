@@ -12,6 +12,7 @@ namespace Woi.WasteCollectionMode
         [Header("UI panels")]
         [SerializeField] private WasteSelectionMenu selectionMenu;
         [SerializeField] private WasteResultScreenController resultScreen;
+        [SerializeField] private WasteExplanationPopup explanationPopup;
 
         [Header("Presentation")]
         [SerializeField] private WasteWorldUiPresenter worldUiPresenter;
@@ -32,6 +33,9 @@ namespace Woi.WasteCollectionMode
 
             if (resultScreen == null)
                 resultScreen = GetComponent<WasteResultScreenController>();
+
+            if (explanationPopup == null)
+                explanationPopup = GetComponent<WasteExplanationPopup>();
 
             if (worldUiPresenter == null)
                 worldUiPresenter = GetComponent<WasteWorldUiPresenter>();
@@ -86,6 +90,9 @@ namespace Woi.WasteCollectionMode
                 return true;
 
             if (resultScreen != null && resultScreen.IsVisible)
+                return true;
+
+            if (explanationPopup != null && explanationPopup.IsVisible)
                 return true;
 
             return false;

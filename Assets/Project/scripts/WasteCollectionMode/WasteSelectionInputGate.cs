@@ -11,6 +11,7 @@ namespace Woi.WasteCollectionMode
     {
         [SerializeField] private WasteSelectionMenu selectionMenu;
         [SerializeField] private WasteResultScreenController resultScreen;
+        [SerializeField] private WasteExplanationPopup explanationPopup;
 
         public bool CanSelect
         {
@@ -20,6 +21,9 @@ namespace Woi.WasteCollectionMode
                     return false;
 
                 if (selectionMenu != null && selectionMenu.IsVisible)
+                    return false;
+
+                if (explanationPopup != null && explanationPopup.IsVisible)
                     return false;
 
                 return true;
@@ -33,6 +37,9 @@ namespace Woi.WasteCollectionMode
 
             if (resultScreen == null)
                 resultScreen = GetComponent<WasteResultScreenController>();
+
+            if (explanationPopup == null)
+                explanationPopup = GetComponent<WasteExplanationPopup>();
         }
     }
 }

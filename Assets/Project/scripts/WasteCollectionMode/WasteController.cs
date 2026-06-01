@@ -46,6 +46,10 @@ namespace Woi.WasteCollectionMode
             WasteCollectable collectable = GetComponent<WasteCollectable>();
             if (collectable != null && WasteCollectTracker.TryGetActive(out WasteCollectTracker tracker))
                 tracker.Collect(collectable);
+
+            if (collectable != null && collectable.Definition != null &&
+                ServiceLocator.TryGet(out WasteAudioFeedback wasteAudio))
+                wasteAudio.PlayWasteSelected(collectable.Definition, transform.position);
         }
 
         public void Deselect()

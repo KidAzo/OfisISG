@@ -15,6 +15,7 @@ namespace Woi.WasteCollectionMode
         [SerializeField] private ScriptableEventNoParam gripInputEvent;
         [SerializeField] private WasteResultScreenController resultScreen;
         [SerializeField] private WasteSelectionMenu selectionMenu;
+        [SerializeField] private WasteExplanationPopup explanationPopup;
 
         private void Awake()
         {
@@ -23,6 +24,8 @@ namespace Woi.WasteCollectionMode
                 resultScreen = GetComponent<WasteResultScreenController>();
             if (selectionMenu == null)
                 selectionMenu = GetComponent<WasteSelectionMenu>();
+            if (explanationPopup == null)
+                explanationPopup = GetComponent<WasteExplanationPopup>();
         }
 
         private void OnEnable()
@@ -46,6 +49,9 @@ namespace Woi.WasteCollectionMode
                 return;
 
             if (selectionMenu != null && selectionMenu.IsVisible)
+                return;
+
+            if (explanationPopup != null && explanationPopup.IsVisible)
                 return;
 
             resultScreen.ToggleExitOverlay();

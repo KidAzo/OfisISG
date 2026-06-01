@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728ea66896d6a3c4c9587bc746dba1cf, type: 3}
+  m_Name: 01_Kagit_Exp
+  m_EditorClassIdentifier: Assembly-CSharp::Woi.WasteCollectionMode.LocalizedWasteSound
+  turkish: {fileID: 11400000, guid: 0fd19a05774e7a44388302e3ea2cd81d, type: 2}
+  english: {fileID: 11400000, guid: 80c9861fb62b0774f85a628ce51b7684, type: 2}

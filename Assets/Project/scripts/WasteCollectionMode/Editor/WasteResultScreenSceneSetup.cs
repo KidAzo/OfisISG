@@ -49,6 +49,8 @@ namespace Woi.WasteCollectionMode.Editor
             if (counterUi == null)
                 counterUi = Undo.AddComponent<WasteCollectionCounterUI>(host);
 
+            EnsureExplanationPopup(host);
+
             WasteCollectTracker tracker = FindTracker();
             WasteCollectionResultController flowController = host.GetComponent<WasteCollectionResultController>();
             UIDocument sharedDocument = selectionMenu.GetComponent<UIDocument>();
@@ -87,6 +89,56 @@ namespace Woi.WasteCollectionMode.Editor
             Debug.Log("[WasteResultScreenSceneSetup] Result screen uses shared WasteSelectionMenu UIDocument.");
         }
 
+        /// <summary>
+        /// Non-destructive: only adds/configures the explanation popup component on the existing
+        /// WasteCollectionUI and fills the (currently empty) explanationPopup reference on the flow,
+        /// VR session, input gate and exit input. Touches nothing else, so existing manual wiring is
+        /// preserved. (The runtime also auto-resolves the popup, so this is mostly for clarity.)
+        /// </summary>
+        [MenuItem("Waste Collection/Add Explanation Popup (Safe)")]
+        public static void AddExplanationPopupSafe()
+        {
+            WasteSelectionMenu selectionMenu = FindSelectionMenu();
+            if (selectionMenu == null)
+            {
+                EditorUtility.DisplayDialog(
+                    "Waste Collection",
+                    "WasteCollectionUI (WasteSelectionMenu) açık sahnede bulunamadı.",
+                    "OK");
+                return;
+            }
+
+            GameObject host = selectionMenu.gameObject;
+            WasteExplanationPopup popup = EnsureExplanationPopup(host);
+
+            SetReferenceIfNull(host.GetComponent<WasteCollectionResultController>(), "explanationPopup", popup);
+            SetReferenceIfNull(host.GetComponent<WasteVrUiSessionController>(), "explanationPopup", popup);
+            SetReferenceIfNull(host.GetComponent<WasteSelectionInputGate>(), "explanationPopup", popup);
+            SetReferenceIfNull(host.GetComponent<WasteVrExitInput>(), "explanationPopup", popup);
+
+            EditorUtility.SetDirty(host);
+            EditorSceneManager.MarkSceneDirty(host.scene);
+            Debug.Log("[WasteResultScreenSceneSetup] Explanation popup added/updated (safe). Sahneyi kaydetmeyi unutma (Ctrl+S).");
+        }
+
+        private static void SetReferenceIfNull(Component target, string propertyName, Object value)
+        {
+            if (target == null)
+                return;
+
+            SerializedObject serialized = new SerializedObject(target);
+            SerializedProperty property = serialized.FindProperty(propertyName);
+            if (property == null)
+                return;
+
+            if (property.objectReferenceValue == null)
+            {
+                property.objectReferenceValue = value;
+                serialized.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(target);
+            }
+        }
+
         [MenuItem("Waste Collection/Create Waste Collection UI In Scene")]
         public static void CreateWasteCollectionUiInSceneMenu()
         {
@@ -120,6 +172,7 @@ namespace Woi.WasteCollectionMode.Editor
             WasteSelectionMenu selectionMenu = Undo.AddComponent<WasteSelectionMenu>(host);
             Undo.AddComponent<WasteCollectionResultController>(host);
             Undo.AddComponent<WasteCollectionCounterUI>(host);
+            EnsureExplanationPopup(host);
             EnsureVrComponents(host, null, host.GetComponent<WasteCollectionResultController>());
 
             SerializedObject serializedMenu = new SerializedObject(selectionMenu);
@@ -130,6 +183,24 @@ namespace Woi.WasteCollectionMode.Editor
             EditorUtility.SetDirty(host);
             EditorSceneManager.MarkSceneDirty(host.scene);
             return selectionMenu;
+        }
+
+        private static WasteExplanationPopup EnsureExplanationPopup(GameObject host)
+        {
+            WasteExplanationPopup popup = host.GetComponent<WasteExplanationPopup>();
+            if (popup == null)
+                popup = Undo.AddComponent<WasteExplanationPopup>(host);
+
+            SerializedObject serializedPopup = new SerializedObject(popup);
+            serializedPopup.FindProperty("uiDocument").objectReferenceValue = host.GetComponent<UIDocument>();
+            serializedPopup.FindProperty("correctIcon").objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    "Assets/Project/WasteCollection/UI/IconsPng/circle-check.png");
+            serializedPopup.FindProperty("incorrectIcon").objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    "Assets/Project/WasteCollection/UI/IconsPng/circle-x.png");
+            serializedPopup.ApplyModifiedPropertiesWithoutUndo();
+            return popup;
         }
 
         private static void RemoveLegacyResultChild(Transform host)
@@ -218,6 +289,9 @@ namespace Woi.WasteCollectionMode.Editor
             if (selectionMenu != null)
                 serializedFlow.FindProperty("wasteSelectionMenu").objectReferenceValue = selectionMenu;
 
+            serializedFlow.FindProperty("explanationPopup").objectReferenceValue =
+                flowController.GetComponent<WasteExplanationPopup>();
+
             SelectionSystemManager selectionSystem = Object.FindFirstObjectByType<SelectionSystemManager>();
             if (selectionSystem != null)
                 serializedFlow.FindProperty("selectionSystemManager").objectReferenceValue = selectionSystem;
@@ -271,6 +345,8 @@ namespace Woi.WasteCollectionMode.Editor
             serializedGate.FindProperty("selectionMenu").objectReferenceValue =
                 wasteUiHost.GetComponent<WasteSelectionMenu>();
             serializedGate.FindProperty("resultScreen").objectReferenceValue = resultController;
+            serializedGate.FindProperty("explanationPopup").objectReferenceValue =
+                wasteUiHost.GetComponent<WasteExplanationPopup>();
             serializedGate.ApplyModifiedPropertiesWithoutUndo();
 
             SelectionVrInteractionRay vrRay = Object.FindFirstObjectByType<SelectionVrInteractionRay>(FindObjectsInactive.Include);
@@ -402,6 +478,7 @@ namespace Woi.WasteCollectionMode.Editor
             SerializedObject serialized = new SerializedObject(uiSession);
             serialized.FindProperty("selectionMenu").objectReferenceValue = host.GetComponent<WasteSelectionMenu>();
             serialized.FindProperty("resultScreen").objectReferenceValue = resultController;
+            serialized.FindProperty("explanationPopup").objectReferenceValue = host.GetComponent<WasteExplanationPopup>();
             serialized.FindProperty("worldUiPresenter").objectReferenceValue = host.GetComponent<WasteWorldUiPresenter>();
 
             WasteVrLocomotionGate locomotionGate = host.GetComponent<WasteVrLocomotionGate>();
@@ -465,10 +542,12 @@ namespace Woi.WasteCollectionMode.Editor
 
             ScriptableEventNoParam gripEvent =
                 AssetDatabase.LoadAssetAtPath<ScriptableEventNoParam>(GripInputEventPath);
-            if (gripEvent != null)
             {
                 SerializedObject serializedExit = new SerializedObject(exitInput);
-                serializedExit.FindProperty("gripInputEvent").objectReferenceValue = gripEvent;
+                if (gripEvent != null)
+                    serializedExit.FindProperty("gripInputEvent").objectReferenceValue = gripEvent;
+                serializedExit.FindProperty("explanationPopup").objectReferenceValue =
+                    host.GetComponent<WasteExplanationPopup>();
                 serializedExit.ApplyModifiedPropertiesWithoutUndo();
             }
 
