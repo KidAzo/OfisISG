@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using Woi.Events;
 using Woi.Events.Data;
 using Woi.OfficeFire;
 using Woi.Player;
@@ -68,6 +69,8 @@ namespace Woi.WasteCollectionMode
 
         private readonly PlayerMovementLookFreeze movementLookFreeze = new();
         private AudioSystem audioSystem;
+        private SoundDefinition sceneIntroSound;
+        private bool sceneIntroStopped;
         private bool inputFrozen;
         private bool isRestarting;
         private bool sessionResultsExported;
@@ -136,6 +139,8 @@ namespace Woi.WasteCollectionMode
 
         private void OnEnable()
         {
+            EventBus.Register<WasteCollectedEvent>(OnWasteCollected);
+
             if (collectTracker == null)
                 collectTracker = FindFirstObjectByType<WasteCollectTracker>();
 
@@ -148,6 +153,8 @@ namespace Woi.WasteCollectionMode
 
         private void OnDisable()
         {
+            EventBus.Deregister<WasteCollectedEvent>(OnWasteCollected);
+
             if (restartButton != null)
                 restartButton.clicked -= OnRestartClicked;
 
@@ -378,7 +385,22 @@ namespace Woi.WasteCollectionMode
                 audioSystem = FindFirstObjectByType<AudioSystem>();
 
             if (audioSystem != null)
+            {
+                sceneIntroSound = sound;
                 audioSystem.Play(sound);
+            }
+        }
+
+        // Cuts off the scene intro ("Sonsöz") announcement the moment the first waste is collected.
+        private void OnWasteCollected(WasteCollectedEvent evt)
+        {
+            if (sceneIntroStopped)
+                return;
+
+            sceneIntroStopped = true;
+
+            if (audioSystem != null && sceneIntroSound != null)
+                audioSystem.StopAllInstances(sceneIntroSound);
         }
 
         private void ExportSessionResultsIfNeeded()

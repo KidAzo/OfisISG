@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: WoiUtils.AudioSystem.Runtime::WoiUtils.AudioSystem.SoundDefinition
   selectionMode: 0
   clips:
-  - clip: {fileID: 8300000, guid: 6a6a5273b845ad84b87ab1a1abf6cfee, type: 3}
+  - clip: {fileID: 8300000, guid: 3b0afc5b995eb7a47bc4d80c1244d036, type: 3}
     weight: 1
     delay: 0
   noImmediateRepeat: 1

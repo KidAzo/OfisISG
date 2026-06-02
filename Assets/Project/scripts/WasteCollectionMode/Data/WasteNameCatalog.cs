@@ -21,8 +21,7 @@ namespace Woi.WasteCollectionMode
             ["Cartridge"] = "Yazıcı Kartuşu",
             ["Keyboard"] = "Bozuk Bilgisayar Klavyesi",
             ["Soda"] = "Gazoz Kutusu",
-            ["Juice"] = "Kompozit",
-            ["sut"] = "Kompozit",
+            ["Juice"] = "Meyve Suyu Kutusu",
             ["Mask"] = "Cerrahi Maske",
             ["Bulp"] = "Ampul",
         };
@@ -40,8 +39,7 @@ namespace Woi.WasteCollectionMode
             ["Cartridge"] = "Toner Cartridge",
             ["Keyboard"] = "Broken Keyboard",
             ["Soda"] = "Soda Can",
-            ["Juice"] = "Composite",
-            ["sut"] = "Composite",
+            ["Juice"] = "Juice Box",
             ["Mask"] = "Face Mask",
             ["Bulp"] = "Light Bulb",
         };
