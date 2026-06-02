@@ -129,6 +129,12 @@ namespace Woi.OfficeFire
                 OfficeFireObjectiveId.EnterKitchenCafe,
                 report => HasAction(report, OfficeFireCorrectActionId.EnteredKitchenCafeSafely)),
             new ObjectiveRule(
+                OfficeFireObjectiveId.GetFireBlanket,
+                report => HasAction(report, OfficeFireCorrectActionId.SelectedFireBlanket)),
+            new ObjectiveRule(
+                OfficeFireObjectiveId.PlaceFireBlanket,
+                report => HasAction(report, OfficeFireCorrectActionId.PlacedFireBlanketCorrectly)),
+            new ObjectiveRule(
                 OfficeFireObjectiveId.ActivateKitchenSuppression,
                 report => HasAction(report, OfficeFireCorrectActionId.ActivatedSuppressionSystem)),
             new ObjectiveRule(
