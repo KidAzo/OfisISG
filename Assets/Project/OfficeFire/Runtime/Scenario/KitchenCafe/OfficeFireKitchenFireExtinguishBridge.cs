@@ -78,6 +78,7 @@ namespace Woi.OfficeFire
             }
 
             BindEquipmentListeners();
+            EnsureKitchenSmokeDelayedShutdown();
             SnapshotIntensityBaseline();
             LogProgress(force: true);
         }
@@ -119,6 +120,31 @@ namespace Woi.OfficeFire
             {
                 fireSource = FindFirstObjectByType<FireSource>(FindObjectsInactive.Include);
             }
+        }
+
+        private void EnsureKitchenSmokeDelayedShutdown()
+        {
+            ResolveFireSource();
+            if (fireSource == null)
+            {
+                return;
+            }
+
+            Transform effects = fireSource.transform.Find("Effects");
+            if (effects == null)
+            {
+                LogWarning("Kitchen Effects bulunamadi — duman gecikmeli kapanma atlandi.");
+                return;
+            }
+
+            KitchenFireSmokeDelayedShutdown shutdown =
+                effects.GetComponent<KitchenFireSmokeDelayedShutdown>();
+            if (shutdown == null)
+            {
+                shutdown = effects.gameObject.AddComponent<KitchenFireSmokeDelayedShutdown>();
+            }
+
+            shutdown.Configure(fireSource, 1f);
         }
 
         private void OnEnable()

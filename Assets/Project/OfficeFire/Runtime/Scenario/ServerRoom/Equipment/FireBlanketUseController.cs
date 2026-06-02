@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using FireExtinguisher.Core;
 using UnityEngine;
 using UnityEngine.Events;
@@ -35,7 +36,13 @@ namespace Woi.OfficeFire
         private LayerMask fireZoneLayerMask = 1 << 9;
 
         [SerializeField, Min(0.01f)]
-        private float fireZoneProbeRadius = 0.25f;
+        private float fireZoneProbeRadius = 3f;
+
+        [SerializeField]
+        private bool useCrosshairRayForFireZone = true;
+
+        [SerializeField, Min(0.5f)]
+        private float fireZoneRaycastDistance = 5f;
 
         [Header("Extinguish")]
         [SerializeField, Min(0.1f)]
@@ -53,10 +60,24 @@ namespace Woi.OfficeFire
         [SerializeField]
         private bool enableDebugLogs;
 
+        [Header("Use Prompt")]
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string useInstructionText = "Approach the fire and press G to place the blanket";
+
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string useInstructionTextTurkish = "Yangına yaklaş ve G ile bırak";
+
+        [SerializeField]
+        private bool preferTurkishInstruction = true;
+
         /// <summary>Fired when gradual fire suppression completes (not on placement).</summary>
         public event Action BlanketFireExtinguished;
 
         public bool IsInsideFireZone => CheckInsideFireZone(out _);
+
+        public bool TryGetTargetFireZone(out FireTargetZone zone) => CheckInsideFireZone(out zone);
 
         public bool IsExtinguishingFire { get; private set; }
 
@@ -74,29 +95,22 @@ namespace Woi.OfficeFire
         }
 
         private Coroutine _extinguishRoutine;
+        private FireBlanketUseScreenPrompt _useScreenPrompt;
+        private bool _usePromptVisible;
 
-        private void Start()
+        private void Awake()
         {
-            EnsureFireZoneUsePrompts();
-        }
-
-        private void EnsureFireZoneUsePrompts()
-        {
-            FireSource source = fireSource;
-            if (source == null)
+            if (blanketEquipment == null)
             {
-                return;
+                blanketEquipment = GetComponent<PlayerFireBlanketEquipment>();
             }
 
-            foreach (FireTargetZone zone in source.Zones)
+            if (fireZoneProbeRadius < 2.5f)
             {
-                if (zone == null || zone.GetComponent<FireBlanketFireZoneUsePrompt>() != null)
-                {
-                    continue;
-                }
-
-                zone.gameObject.AddComponent<FireBlanketFireZoneUsePrompt>();
+                fireZoneProbeRadius = 3f;
             }
+
+            EnsureUseScreenPrompt();
         }
 
         private void OnDisable()
@@ -108,6 +122,55 @@ namespace Woi.OfficeFire
             }
 
             IsExtinguishingFire = false;
+            _useScreenPrompt?.Hide();
+            _usePromptVisible = false;
+        }
+
+        private void LateUpdate()
+        {
+            UpdateUseScreenPrompt();
+        }
+
+        private void UpdateUseScreenPrompt()
+        {
+            EnsureUseScreenPrompt();
+
+            bool show = ShouldShowUseInstructionPrompt(out _);
+            if (show == _usePromptVisible)
+            {
+                return;
+            }
+
+            _usePromptVisible = show;
+            _useScreenPrompt?.SetVisible(show);
+        }
+
+        private void EnsureUseScreenPrompt()
+        {
+            if (_useScreenPrompt != null)
+            {
+                return;
+            }
+
+            _useScreenPrompt = new FireBlanketUseScreenPrompt(this);
+            _useScreenPrompt.SetText(useInstructionText, useInstructionTextTurkish, preferTurkishInstruction);
+        }
+
+        private bool ShouldShowUseInstructionPrompt(out FireTargetZone zone)
+        {
+            zone = null;
+
+            if (blanketEquipment == null || blanketEquipment.CurrentItem == null)
+            {
+                return false;
+            }
+
+            if (IsExtinguishingFire)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void Update()
@@ -139,6 +202,7 @@ namespace Woi.OfficeFire
                 return TryConsumeBlanketOnFire(item, zone);
             }
 
+            Log("G treated as drop — player is not inside a matching fire zone (move closer or aim at the fire).");
             return TryDropBlanketToAnchor(item);
         }
 
@@ -215,11 +279,6 @@ namespace Woi.OfficeFire
 
         private FireSource ResolveTargetFireSource(FireTargetZone zone)
         {
-            if (fireSource != null)
-            {
-                return fireSource;
-            }
-
             if (zone != null)
             {
                 FireSource fromZone = zone.GetComponentInParent<FireSource>();
@@ -227,6 +286,11 @@ namespace Woi.OfficeFire
                 {
                     return fromZone;
                 }
+            }
+
+            if (fireSource != null)
+            {
+                return fireSource;
             }
 
             return FindFirstObjectByType<FireSource>();
@@ -241,6 +305,32 @@ namespace Woi.OfficeFire
         }
 
         private bool CheckInsideFireZone(out FireTargetZone matchedZone)
+        {
+            if (TryMatchFireZoneFromProximity(out matchedZone))
+            {
+                return true;
+            }
+
+            if (TryMatchFireZoneFromFireSourceProximity(out matchedZone))
+            {
+                return true;
+            }
+
+            if (useCrosshairRayForFireZone && TryMatchFireZoneFromCrosshairRay(out matchedZone))
+            {
+                return true;
+            }
+
+            if (useCrosshairRayForFireZone && TryMatchFireZoneFromCrosshairAim(out matchedZone))
+            {
+                return true;
+            }
+
+            matchedZone = null;
+            return false;
+        }
+
+        private bool TryMatchFireZoneFromProximity(out FireTargetZone matchedZone)
         {
             matchedZone = null;
             Transform reference = ResolveDistanceReference();
@@ -269,18 +359,8 @@ namespace Woi.OfficeFire
                     continue;
                 }
 
-                FireTargetZone zone = collider.GetComponent<FireTargetZone>();
-                if (zone == null)
-                {
-                    zone = collider.GetComponentInParent<FireTargetZone>();
-                }
-
-                if (zone == null)
-                {
-                    continue;
-                }
-
-                if (fireSource != null && !zone.transform.IsChildOf(fireSource.transform))
+                FireTargetZone zone = ResolveFireTargetZone(collider);
+                if (!IsAcceptedFireZone(zone))
                 {
                     continue;
                 }
@@ -292,11 +372,189 @@ namespace Woi.OfficeFire
             return false;
         }
 
+        private bool TryMatchFireZoneFromFireSourceProximity(out FireTargetZone matchedZone)
+        {
+            matchedZone = null;
+            Transform reference = ResolveDistanceReference();
+            if (reference == null)
+            {
+                return false;
+            }
+
+            Vector3 point = reference.position;
+            FireSource[] sources = FindObjectsByType<FireSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            FireSource closestSource = null;
+            float closestDistance = fireZoneProbeRadius;
+
+            for (int i = 0; i < sources.Length; i++)
+            {
+                FireSource source = sources[i];
+                if (source == null || source.IsExtinguished)
+                {
+                    continue;
+                }
+
+                float distance = Vector3.Distance(point, source.transform.position);
+                if (distance > closestDistance)
+                {
+                    continue;
+                }
+
+                closestDistance = distance;
+                closestSource = source;
+            }
+
+            if (closestSource == null)
+            {
+                return false;
+            }
+
+            return TryGetFirstActiveZone(closestSource, out matchedZone);
+        }
+
+        private bool TryMatchFireZoneFromCrosshairAim(out FireTargetZone matchedZone)
+        {
+            matchedZone = null;
+            if (blanketEquipment == null || !blanketEquipment.TryGetCrosshairRay(out Ray ray))
+            {
+                return false;
+            }
+
+            if (!Physics.Raycast(ray, out RaycastHit hit, fireZoneRaycastDistance, ~0, QueryTriggerInteraction.Collide))
+            {
+                return false;
+            }
+
+            FireSource[] sources = FindObjectsByType<FireSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            float aimRadius = fireZoneProbeRadius * 1.5f;
+            FireSource bestSource = null;
+            float bestDistance = aimRadius;
+
+            for (int i = 0; i < sources.Length; i++)
+            {
+                FireSource source = sources[i];
+                if (source == null || source.IsExtinguished)
+                {
+                    continue;
+                }
+
+                float distance = Vector3.Distance(hit.point, source.transform.position);
+                if (distance > bestDistance)
+                {
+                    continue;
+                }
+
+                bestDistance = distance;
+                bestSource = source;
+            }
+
+            if (bestSource == null)
+            {
+                return false;
+            }
+
+            return TryGetFirstActiveZone(bestSource, out matchedZone);
+        }
+
+        private static bool TryGetFirstActiveZone(FireSource source, out FireTargetZone matchedZone)
+        {
+            matchedZone = null;
+            if (source == null)
+            {
+                return false;
+            }
+
+            IReadOnlyList<FireTargetZone> zones = source.Zones;
+            for (int i = 0; i < zones.Count; i++)
+            {
+                FireTargetZone zone = zones[i];
+                if (zone == null || zone.IsExtinguished)
+                {
+                    continue;
+                }
+
+                matchedZone = zone;
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool TryMatchFireZoneFromCrosshairRay(out FireTargetZone matchedZone)
+        {
+            matchedZone = null;
+            if (blanketEquipment == null || !blanketEquipment.TryGetCrosshairRay(out Ray ray))
+            {
+                return false;
+            }
+
+            RaycastHit[] hits = Physics.RaycastAll(
+                ray,
+                fireZoneRaycastDistance,
+                fireZoneLayerMask,
+                QueryTriggerInteraction.Collide);
+
+            if (hits == null || hits.Length == 0)
+            {
+                return false;
+            }
+
+            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+            for (int i = 0; i < hits.Length; i++)
+            {
+                Collider collider = hits[i].collider;
+                if (collider == null)
+                {
+                    continue;
+                }
+
+                FireTargetZone zone = ResolveFireTargetZone(collider);
+                if (!IsAcceptedFireZone(zone))
+                {
+                    continue;
+                }
+
+                matchedZone = zone;
+                return true;
+            }
+
+            return false;
+        }
+
+        private static FireTargetZone ResolveFireTargetZone(Collider collider)
+        {
+            if (collider == null)
+            {
+                return null;
+            }
+
+            FireTargetZone zone = collider.GetComponent<FireTargetZone>();
+            if (zone == null)
+            {
+                zone = collider.GetComponentInParent<FireTargetZone>();
+            }
+
+            return zone;
+        }
+
+        private bool IsAcceptedFireZone(FireTargetZone zone)
+        {
+            return zone != null && !zone.IsExtinguished;
+        }
+
         private Transform ResolveDistanceReference()
         {
             if (distanceReference != null)
             {
                 return distanceReference;
+            }
+
+            if (blanketEquipment != null
+                && blanketEquipment.CurrentItem != null
+                && blanketEquipment.EquipAnchor != null)
+            {
+                return blanketEquipment.EquipAnchor;
             }
 
             if (blanketEquipment != null)

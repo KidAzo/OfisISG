@@ -299,6 +299,24 @@ namespace Woi.OfficeFire.Editor
                 distanceReferenceProp.objectReferenceValue = player.transform;
             }
 
+            SerializedProperty probeRadiusProp = useSo.FindProperty("fireZoneProbeRadius");
+            if (probeRadiusProp != null)
+            {
+                probeRadiusProp.floatValue = 1.5f;
+            }
+
+            SerializedProperty englishPromptProp = useSo.FindProperty("useInstructionText");
+            if (englishPromptProp != null)
+            {
+                englishPromptProp.stringValue = "Approach the fire and press G to place the blanket";
+            }
+
+            SerializedProperty turkishPromptProp = useSo.FindProperty("useInstructionTextTurkish");
+            if (turkishPromptProp != null)
+            {
+                turkishPromptProp.stringValue = "Yangına yaklaş ve G ile bırak";
+            }
+
             useSo.ApplyModifiedPropertiesWithoutUndo();
         }
 

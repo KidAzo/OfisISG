@@ -72,6 +72,13 @@ namespace Woi.OfficeFire
             }
 
             ResolveRuntimeReferences();
+
+            if (blanketUseController != null)
+            {
+                enabled = false;
+                return;
+            }
+
             EnsureInstructionPrompt();
         }
 
@@ -116,7 +123,8 @@ namespace Woi.OfficeFire
                 return false;
             }
 
-            return blanketUseController.IsPlayerInsideZone(fireZone);
+            return blanketUseController.IsInsideFireZone
+                && (fireZone == null || blanketUseController.TryGetTargetFireZone(out FireTargetZone matchedZone) && matchedZone == fireZone);
         }
 
         private void ResolveRuntimeReferences()
@@ -126,9 +134,19 @@ namespace Woi.OfficeFire
                 blanketEquipment = FindFirstObjectByType<PlayerFireBlanketEquipment>(FindObjectsInactive.Include);
             }
 
+            if (blanketUseController == null && blanketEquipment != null)
+            {
+                blanketUseController = blanketEquipment.GetComponent<FireBlanketUseController>();
+            }
+
             if (blanketUseController == null)
             {
                 blanketUseController = FindFirstObjectByType<FireBlanketUseController>(FindObjectsInactive.Include);
+            }
+
+            if (blanketEquipment == null && blanketUseController != null)
+            {
+                blanketEquipment = blanketUseController.GetComponent<PlayerFireBlanketEquipment>();
             }
         }
 

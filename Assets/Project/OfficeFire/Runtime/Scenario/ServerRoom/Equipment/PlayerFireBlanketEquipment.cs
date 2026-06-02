@@ -46,6 +46,19 @@ namespace Woi.OfficeFire
 
         public Transform EquipAnchor => equipAnchor;
 
+        public bool TryGetCrosshairRay(out Ray ray)
+        {
+            ray = default;
+            Camera camera = ResolvePickupCamera();
+            if (camera == null)
+            {
+                return false;
+            }
+
+            ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            return true;
+        }
+
         private void OnEnable()
         {
             TryAutoResolveReferences();
