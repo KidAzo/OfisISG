@@ -139,11 +139,13 @@ namespace Woi.OfficeFire.Editor
             }
 
             FireSource fireSource = ResolveClosestFireSource(carafe.transform.position);
+            KitchenCafeScenarioController kitchen =
+                Object.FindFirstObjectByType<KitchenCafeScenarioController>(FindObjectsInactive.Include);
 
             int wired = 0;
             for (int i = 0; i < hosts.Count; i++)
             {
-                if (WireOnePlayer(hosts[i], fireSource, carafeVfx))
+                if (WireOnePlayer(hosts[i], fireSource, carafeVfx, kitchen))
                 {
                     wired++;
                 }
@@ -152,7 +154,11 @@ namespace Woi.OfficeFire.Editor
             return wired;
         }
 
-        private static bool WireOnePlayer(GameObject player, FireSource fireSource, GameObject carafeVfx)
+        private static bool WireOnePlayer(
+            GameObject player,
+            FireSource fireSource,
+            GameObject carafeVfx,
+            KitchenCafeScenarioController kitchen)
         {
             if (player == null)
             {
@@ -210,7 +216,41 @@ namespace Woi.OfficeFire.Editor
 
             WireBoolEvent(useController, "onCarafeUsedOnFire", carafeVfx, true);
             WireBoolEvent(useController, "onCarafeReset", carafeVfx, false);
+            WireUseWaterMistake(useController, kitchen);
             return true;
+        }
+
+        private static void WireUseWaterMistake(CarafeUseController useController, KitchenCafeScenarioController kitchen)
+        {
+            if (useController == null || kitchen == null)
+            {
+                return;
+            }
+
+            FieldInfo eventField = typeof(CarafeUseController).GetField(
+                "onCarafeUsedOnFire",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+
+            if (eventField?.GetValue(useController) is not UnityEvent unityEvent)
+            {
+                return;
+            }
+
+            // Avoid duplicate listeners on re-run.
+            for (int i = unityEvent.GetPersistentEventCount() - 1; i >= 0; i--)
+            {
+                if (ReferenceEquals(unityEvent.GetPersistentTarget(i), kitchen)
+                    && unityEvent.GetPersistentMethodName(i) == nameof(KitchenCafeScenarioController.HandleAction))
+                {
+                    return;
+                }
+            }
+
+            UnityEventTools.AddStringPersistentListener(
+                unityEvent,
+                kitchen.HandleAction,
+                KitchenCafeScenarioController.Actions.UseWater);
+            EditorUtility.SetDirty(useController);
         }
 
         private static void WireBoolEvent(

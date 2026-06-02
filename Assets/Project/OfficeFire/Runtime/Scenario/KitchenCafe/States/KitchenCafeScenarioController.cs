@@ -14,6 +14,7 @@ namespace Woi.OfficeFire
             public const string OpenKitchenDoor = "open_kitchen_door";
             public const string EnterKitchenCafe = "enter_kitchen_cafe";
             public const string UseWater = "use_water";
+            public const string UseBlanket = "use_blanket";
             public const string PressSuppressionButton = "press_suppression_button";
             public const string GrabExtinguisher = "grab_extinguisher";
             public const string UseExtinguisher = "use_extinguisher";
@@ -954,6 +955,10 @@ namespace Woi.OfficeFire
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveWaterMistake);
                         _kitchen.InvokeWaterMistake();
                         break;
+                    case Actions.UseBlanket:
+                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.SelectedFireBlanket);
+                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.PlacedFireBlanketCorrectly);
+                        break;
                     case Actions.GrabExtinguisher:
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.EstinguisherHandled);
                         break;
@@ -1003,6 +1008,10 @@ namespace Woi.OfficeFire
                         _kitchen.RegisterMistake(OfficeFireMistakeId.UsedWaterOnKitchenFire);
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveWaterMistake);
                         _kitchen.InvokeWaterMistake();
+                        break;
+                    case Actions.UseBlanket:
+                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.SelectedFireBlanket);
+                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.PlacedFireBlanketCorrectly);
                         break;
                     case Actions.GrabExtinguisher:
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.EstinguisherHandled);

@@ -1,7 +1,10 @@
+using System.Reflection;
 using FireExtinguisher.Core;
 using UnityEditor;
+using UnityEditor.Events;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using Woi.Equipment;
 using Woi.InputSystem;
@@ -78,6 +81,7 @@ namespace Woi.OfficeFire.Editor
             WirePlayerBlanketEquipment(controller);
             int promptWired = WireFireZoneUsePrompts(controller);
             WireScenarioBridge(controller);
+            WireKitchenBlanketCorrectAction();
 
             EditorSceneManager.MarkSceneDirty(scene);
             Undo.CollapseUndoOperations(undoGroup);
@@ -419,6 +423,43 @@ namespace Woi.OfficeFire.Editor
             }
 
             return wired;
+        }
+
+        private static void WireKitchenBlanketCorrectAction()
+        {
+            FireBlanketUseController useController =
+                Object.FindFirstObjectByType<FireBlanketUseController>(FindObjectsInactive.Include);
+            KitchenCafeScenarioController kitchen =
+                Object.FindFirstObjectByType<KitchenCafeScenarioController>(FindObjectsInactive.Include);
+
+            if (useController == null || kitchen == null)
+            {
+                return;
+            }
+
+            FieldInfo eventField = typeof(FireBlanketUseController).GetField(
+                "onBlanketUsedOnFire",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+
+            if (eventField?.GetValue(useController) is not UnityEvent unityEvent)
+            {
+                return;
+            }
+
+            for (int i = unityEvent.GetPersistentEventCount() - 1; i >= 0; i--)
+            {
+                if (ReferenceEquals(unityEvent.GetPersistentTarget(i), kitchen)
+                    && unityEvent.GetPersistentMethodName(i) == nameof(KitchenCafeScenarioController.HandleAction))
+                {
+                    return;
+                }
+            }
+
+            UnityEventTools.AddStringPersistentListener(
+                unityEvent,
+                kitchen.HandleAction,
+                KitchenCafeScenarioController.Actions.UseBlanket);
+            EditorUtility.SetDirty(useController);
         }
 
         private static void SetObjectReference(SerializedObject serializedObject, string propertyName, Object value)
