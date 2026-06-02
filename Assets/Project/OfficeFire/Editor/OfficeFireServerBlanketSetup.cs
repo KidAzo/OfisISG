@@ -76,13 +76,14 @@ namespace Woi.OfficeFire.Editor
             }
 
             WirePlayerBlanketEquipment(controller);
+            int promptWired = WireFireZoneUsePrompts(controller);
             WireScenarioBridge(controller);
 
             EditorSceneManager.MarkSceneDirty(scene);
             Undo.CollapseUndoOperations(undoGroup);
 
             Debug.Log(
-                $"[Office Fire Scene] Server fire blanket wiring complete ({scene.path}). Hover wired on {hoverWired} blanket(s).");
+                $"[Office Fire Scene] Server fire blanket wiring complete ({scene.path}). Hover wired on {hoverWired} blanket(s), use prompts on {promptWired} fire zone(s).");
         }
 
         public static bool TryWireItem(FireBlanketPickupItem item)
@@ -292,7 +293,123 @@ namespace Woi.OfficeFire.Editor
                 fireSourceProp.objectReferenceValue = fireSource;
             }
 
+            SerializedProperty distanceReferenceProp = useSo.FindProperty("distanceReference");
+            if (distanceReferenceProp != null)
+            {
+                distanceReferenceProp.objectReferenceValue = player.transform;
+            }
+
             useSo.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        public static int WireFireZoneUsePrompts(ServerRoomScenarioController controller)
+        {
+            FireBlanketUseController useController =
+                Object.FindFirstObjectByType<FireBlanketUseController>(FindObjectsInactive.Include);
+
+            FireSource fireSource = null;
+            if (useController != null)
+            {
+                SerializedObject useSo = new SerializedObject(useController);
+                SerializedProperty fireSourceProp = useSo.FindProperty("fireSource");
+                if (fireSourceProp != null)
+                {
+                    fireSource = fireSourceProp.objectReferenceValue as FireSource;
+                }
+            }
+
+            if (fireSource == null)
+            {
+                fireSource = controller != null && controller.ScenarioRoot != null
+                    ? controller.ScenarioRoot.GetComponentInChildren<FireSource>(true)
+                    : null;
+            }
+
+            if (fireSource == null)
+            {
+                fireSource = Object.FindFirstObjectByType<FireSource>(FindObjectsInactive.Include);
+            }
+
+            if (fireSource == null)
+            {
+                Debug.LogWarning("[Office Fire Scene] No FireSource found — fire blanket zone prompts not wired.");
+                return 0;
+            }
+
+            PlayerFireBlanketEquipment equipment =
+                Object.FindFirstObjectByType<PlayerFireBlanketEquipment>(FindObjectsInactive.Include);
+
+            FireTargetZone[] zones = fireSource.GetComponentsInChildren<FireTargetZone>(true);
+            int wired = 0;
+            for (int i = 0; i < zones.Length; i++)
+            {
+                FireTargetZone zone = zones[i];
+                if (zone == null)
+                {
+                    continue;
+                }
+
+                FireBlanketFireZoneUsePrompt prompt = zone.GetComponent<FireBlanketFireZoneUsePrompt>();
+                if (prompt == null)
+                {
+                    prompt = Undo.AddComponent<FireBlanketFireZoneUsePrompt>(zone.gameObject);
+                }
+
+                Outline outline = zone.GetComponent<Outline>();
+                if (outline == null)
+                {
+                    outline = Undo.AddComponent<Outline>(zone.gameObject);
+                    Undo.RecordObject(outline, "Configure fire zone blanket outline");
+                    outline.OutlineColor = new Color(1f, 0.55f, 0.1f, 1f);
+                    outline.OutlineWidth = 2f;
+                    outline.enabled = false;
+                }
+
+                SerializedObject promptSo = new SerializedObject(prompt);
+                SetObjectReference(promptSo, "fireZone", zone);
+                SetObjectReference(promptSo, "fireSource", fireSource);
+                SetObjectReference(promptSo, "blanketEquipment", equipment);
+                SetObjectReference(promptSo, "blanketUseController", useController);
+                SetObjectReference(promptSo, "outline", outline);
+
+                SerializedProperty useWidthProp = promptSo.FindProperty("useOutlineWidth");
+                if (useWidthProp != null)
+                {
+                    useWidthProp.boolValue = true;
+                }
+
+                SerializedProperty widthProp = promptSo.FindProperty("hoverOutlineWidth");
+                if (widthProp != null)
+                {
+                    widthProp.floatValue = 5f;
+                }
+
+                SerializedProperty englishProp = promptSo.FindProperty("instructionText");
+                if (englishProp != null)
+                {
+                    englishProp.stringValue = "Press G to place the blanket";
+                }
+
+                SerializedProperty turkishProp = promptSo.FindProperty("instructionTextTurkish");
+                if (turkishProp != null)
+                {
+                    turkishProp.stringValue = "G ile bırak";
+                }
+
+                promptSo.ApplyModifiedPropertiesWithoutUndo();
+                wired++;
+            }
+
+            return wired;
+        }
+
+        private static void SetObjectReference(SerializedObject serializedObject, string propertyName, Object value)
+        {
+            SerializedProperty property = serializedObject.FindProperty(propertyName);
+            if (property != null)
+            {
+                property.objectReferenceValue = value;
+            }
         }
 
         private static void WireDropAnchor(FireBlanketPickupItem item)

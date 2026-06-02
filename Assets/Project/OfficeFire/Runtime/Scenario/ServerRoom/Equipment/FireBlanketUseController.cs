@@ -60,7 +60,44 @@ namespace Woi.OfficeFire
 
         public bool IsExtinguishingFire { get; private set; }
 
+        /// <summary>
+        /// Returns true when the distance probe overlaps the given zone (same check used for G to place blanket).
+        /// </summary>
+        public bool IsPlayerInsideZone(FireTargetZone zone)
+        {
+            if (zone == null)
+            {
+                return false;
+            }
+
+            return CheckInsideFireZone(out FireTargetZone matchedZone) && matchedZone == zone;
+        }
+
         private Coroutine _extinguishRoutine;
+
+        private void Start()
+        {
+            EnsureFireZoneUsePrompts();
+        }
+
+        private void EnsureFireZoneUsePrompts()
+        {
+            FireSource source = fireSource;
+            if (source == null)
+            {
+                return;
+            }
+
+            foreach (FireTargetZone zone in source.Zones)
+            {
+                if (zone == null || zone.GetComponent<FireBlanketFireZoneUsePrompt>() != null)
+                {
+                    continue;
+                }
+
+                zone.gameObject.AddComponent<FireBlanketFireZoneUsePrompt>();
+            }
+        }
 
         private void OnDisable()
         {

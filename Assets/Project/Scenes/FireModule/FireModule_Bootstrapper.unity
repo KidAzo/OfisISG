@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3225f43e6ea76e47858daa602f79348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Woi.OfficeFire.Integration::Woi.OfficeFire.OfficeGameModulesBootstrapper
-  gameModule: 1
+  gameModule: 0
   loadOnStart: 1
   loadAfterFireInstallerReady: 1
   loadDelay: 0

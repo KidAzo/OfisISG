@@ -5,7 +5,7 @@ namespace Woi.OfficeFire
 {
     /// <summary>
     /// Drives a smoke transform's uniform local scale from the linked <see cref="FireSource"/> intensity.
-    /// Full fire → <see cref="scaleAtFullIntensity"/>; extinguished → <see cref="scaleAtZeroIntensity"/>.
+    /// Full fire → <see cref="scaleAtFullIntensity"/>; extinguished → <see cref="scaleAtZeroIntensity"/> (0 = smoke fully dissipated).
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Woi/Office Fire/Smoke Scale Fire Intensity Driver")]
@@ -24,7 +24,7 @@ namespace Woi.OfficeFire
         private float scaleAtFullIntensity = 1f;
 
         [SerializeField]
-        private float scaleAtZeroIntensity = 0.5f;
+        private float scaleAtZeroIntensity = 0f;
 
         private void Awake()
         {
