@@ -16,7 +16,7 @@ namespace Woi.WasteCollectionMode
             ["7"] = "Toner & Cartridge",
             ["8"] = "Electronic Waste",
             ["9"] = "Plastic Cap",
-            ["10"] = "Metal Can",
+            ["10"] = "Soda Can",
             ["11"] = "Cigarette Butt",
             ["12"] = "Recyclable Waste",
             ["13"] = "Hazardous Waste",
@@ -35,7 +35,7 @@ namespace Woi.WasteCollectionMode
             ["7"] = "Toner & Kartuş",
             ["8"] = "Elektronik Atık",
             ["9"] = "Plastik Kapak",
-            ["10"] = "Metal Kutu",
+            ["10"] = "Gazoz Kutusu",
             ["11"] = "Sigara İzmariti",
             ["12"] = "Geri Kazanılabilir",
             ["13"] = "Tehlikeli Atık",
@@ -58,7 +58,7 @@ namespace Woi.WasteCollectionMode
             ["Soda"] = "10",
             ["Cigarette"] = "5",      // Sigara kutusu kaldırıldı → Bio-Bozunur
             ["Mask"] = "14",
-            ["Bulp"] = "15",          // Kompozit
+            ["Bulp"] = "8",           // Elektronik
         };
 
         public static string GetBinName(string binId)

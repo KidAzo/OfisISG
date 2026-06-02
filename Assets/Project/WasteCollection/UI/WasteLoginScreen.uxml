@@ -17,7 +17,7 @@
                 <ui:VisualElement class="login-icon-box flex-center">
                     <ui:VisualElement name="LoginIconHost" class="login-icon" />
                 </ui:VisualElement>
-                    <ui:Label name="LoginTitleSub" text="ATIK TOPLAMA" class="login-title-sub accent-color" />
+                    <ui:Label name="LoginTitleSub" text="Sıfır Atık" class="login-title-sub accent-color" />
                     <ui:Label name="LoginTitleMain" text="EĞİTİM SİMÜLATÖRÜ" class="login-title-main" />
                 </ui:VisualElement>
 

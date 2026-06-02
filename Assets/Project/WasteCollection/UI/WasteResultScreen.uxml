@@ -7,17 +7,17 @@
                 <ui:VisualElement name="ResultIcon" class="result-icon" />
             </ui:VisualElement>
 
-            <ui:Label text="Grup Tamamlandı" class="result-title" />
+            <ui:Label text="Simülasyon Tamamlandı" class="result-title" />
             <ui:Label text="Atık Sınıflandırma Değerlendirme Raporu" class="result-subtitle" />
 
             <ui:VisualElement class="stats-container">
                 <ui:VisualElement class="stat-box">
                     <ui:Label name="CorrectCount" text="0" class="stat-value success" />
-                    <ui:Label text="DOĞRU ATIM" class="stat-label" />
+                    <ui:Label text="Doğru" class="stat-label" />
                 </ui:VisualElement>
                 <ui:VisualElement class="stat-box">
                     <ui:Label name="IncorrectCount" text="0" class="stat-value danger" />
-                    <ui:Label text="HATALI ATIM" class="stat-label" />
+                    <ui:Label text="Yanlış" class="stat-label" />
                 </ui:VisualElement>
             </ui:VisualElement>
 

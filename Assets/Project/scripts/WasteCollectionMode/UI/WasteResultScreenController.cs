@@ -36,7 +36,7 @@ namespace Woi.WasteCollectionMode
         [SerializeField] private WasteSelectionMenu wasteSelectionMenu;
 
         [Header("Audio")]
-        [Tooltip("TR/EN sound played once when the result screen appears. Assign clips inside ResultScreen_TR / ResultScreen_EN.")]
+        [Tooltip("TR/EN sound played once when the gameplay scene opens. Assign clips inside ResultScreen_TR / ResultScreen_EN.")]
         [SerializeField] private LocalizedWasteSound resultShowSound;
 
         [Header("VR")]
@@ -127,6 +127,11 @@ namespace Woi.WasteCollectionMode
 
             exitIcon.image = exitAlertIcon;
             exitIcon.tintColor = IncorrectStatusColor;
+        }
+
+        private void Start()
+        {
+            StartCoroutine(PlaySceneIntroSoundWhenReady());
         }
 
         private void OnEnable()
@@ -347,18 +352,20 @@ namespace Woi.WasteCollectionMode
             if (overlay == null && !TryBindUi())
                 return;
 
-            bool wasVisible = IsResultVisible;
-
             RefreshContent();
             ExportSessionResultsIfNeeded();
             overlay.style.display = DisplayStyle.Flex;
             FreezePlayerInput();
-
-            if (!wasVisible)
-                PlayResultShowSound();
         }
 
-        private void PlayResultShowSound()
+        private IEnumerator PlaySceneIntroSoundWhenReady()
+        {
+            yield return null;
+
+            PlaySceneIntroSound();
+        }
+
+        private void PlaySceneIntroSound()
         {
             if (resultShowSound == null)
                 return;

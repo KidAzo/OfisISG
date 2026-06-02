@@ -71,6 +71,15 @@ namespace Woi.WasteCollectionMode
             SaveList(list);
         }
 
+        /// <summary>
+        /// Tüm leaderboard verisini siler (PlayerPrefs anahtarını kaldırır).
+        /// </summary>
+        public static void Clear()
+        {
+            PlayerPrefs.DeleteKey(PrefsKey);
+            PlayerPrefs.Save();
+        }
+
         public static IReadOnlyList<string> GetDisplayLines(int maxLines = MaxEntries)
         {
             PersistedList list = LoadList();

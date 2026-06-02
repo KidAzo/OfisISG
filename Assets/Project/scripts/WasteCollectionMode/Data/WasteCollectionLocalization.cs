@@ -17,7 +17,7 @@ namespace Woi.WasteCollectionMode
             isEnglish ? englishText : turkish;
 
         public static string LoginTitleSub(bool english) =>
-            T(english, "ATIK TOPLAMA", "WASTE COLLECTION");
+            T(english, "SIFIR ATIK", "ZERO WASTE");
 
         public static string LoginTitleMain(bool english) =>
             T(english, "EĞİTİM SİMÜLATÖRÜ", "TRAINING SIMULATOR");
@@ -72,7 +72,7 @@ namespace Woi.WasteCollectionMode
             T(english, "ÇIKIŞ YAP", "EXIT");
 
         public static string ResultTitle(bool english) =>
-            T(english, "Grup Tamamlandı", "Group Completed");
+            T(english, "Simülasyon Tamamlandı", "Simulation Completed");
 
         public static string ResultSubtitle(bool english) =>
             T(english,
@@ -80,10 +80,10 @@ namespace Woi.WasteCollectionMode
                 "Waste Classification Evaluation Report");
 
         public static string CorrectStatLabel(bool english) =>
-            T(english, "DOĞRU ATIM", "CORRECT");
+            T(english, "Doğru", "Correct");
 
         public static string IncorrectStatLabel(bool english) =>
-            T(english, "HATALI ATIM", "INCORRECT");
+            T(english, "Yanlış", "Wrong");
 
         public static string TableWasteHeader(bool english) =>
             T(english, "ATIK", "WASTE");
