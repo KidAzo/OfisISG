@@ -47,8 +47,8 @@ namespace Woi.WasteCollectionMode.Editor
         private static readonly CategoryEntry[] Entries =
         {
             new CategoryEntry(1, "Kagit", "1",
-                "Gazeteler, dergiler, yazı ve çizim kâğıtları kağıt-karton atıkları 'Kağıt Atıklar' atık kutusuna atılmalıdır.",
-                "Newspapers, magazines, writing and drawing papers should be placed in the 'Paper Waste' bin."),
+                "Gazeteler, dergiler, yazı ve çizim kâğıtları ile karton kutu ve mukavva ambalajlar 'Kağıt-Karton Atıklar' atık kutusuna atılmalıdır.",
+                "Newspapers, magazines, writing and drawing papers, along with cardboard boxes and corrugated packaging, should be placed in the 'Paper & Cardboard Waste' bin."),
             new CategoryEntry(2, "Plastik", "3",
                 "Plastik şişeler, plastik kutular 'Plastik Atıklar' atık kutusuna atılmalıdır.",
                 "Plastic bottles and containers should be placed in the 'Plastic Waste' bin."),
@@ -120,6 +120,15 @@ namespace Woi.WasteCollectionMode.Editor
             [11] = $"{SelectTrNewRoot}/Cerrahi maske.mp3",
             [12] = $"{SelectTrNewRoot}/Plastik şişe kapağı.mp3",
         };
+
+        // Per-waste selection-sound overrides: the item keeps its own pickup announcement even
+        // though it shares another category's bin. CardboardBox uses the merged Paper-Cardboard
+        // bin (index 1 → "Kağıt") but must still announce "Karton kutu" when picked up.
+        private static readonly Dictionary<string, string> SelectSoundOverrideByWasteKey =
+            new(System.StringComparer.OrdinalIgnoreCase)
+            {
+                ["CardboardBox"] = $"{OutRoot}/Selection/Karton kutu_Select.asset",
+            };
 
         // Bins with no recorded voice. Only Karton (2) lacks a sound; it still gets the
         // explanation text from the Excel so the popup has something to show.
@@ -355,8 +364,19 @@ namespace Woi.WasteCollectionMode.Editor
                 }
 
                 CategoryEntry entry = entryByIndex[index];
+
+                LocalizedWasteSound selectSound = selectByIndex[index];
+                if (SelectSoundOverrideByWasteKey.TryGetValue(
+                        WasteNameCatalog.NormalizeKey(definition.Name), out string overridePath))
+                {
+                    LocalizedWasteSound overrideSound =
+                        AssetDatabase.LoadAssetAtPath<LocalizedWasteSound>(overridePath);
+                    if (overrideSound != null)
+                        selectSound = overrideSound;
+                }
+
                 SerializedObject serialized = new SerializedObject(definition);
-                serialized.FindProperty("selectSound").objectReferenceValue = selectByIndex[index];
+                serialized.FindProperty("selectSound").objectReferenceValue = selectSound;
                 serialized.FindProperty("explanationSound").objectReferenceValue = explanationByIndex[index];
                 serialized.FindProperty("explanationTurkish").stringValue = entry.Tr;
                 serialized.FindProperty("explanationEnglish").stringValue = entry.En;

@@ -15,9 +15,9 @@ MonoBehaviour:
   waste:
     name: CardboardBox
     type: 1
-  selectSound: {fileID: 11400000, guid: 017a7036f8c890f438089dcab06388d8, type: 2}
+  selectSound: {fileID: 11400000, guid: 1ba937ce177a442c88bc203089576786, type: 2}
   explanationSound: {fileID: 11400000, guid: 7c91928650b5a4447b676730c57289e0, type: 2}
-  explanationTurkish: "Karton kutular, mukavva ambalajlar ve karton paketler 'Karton
+  explanationTurkish: "Karton kutular, mukavva ambalajlar ve karton paketler 'Ka\u011F\u0131t-Karton
     At\u0131klar' at\u0131k kutusuna at\u0131lmal\u0131d\u0131r."
   explanationEnglish: Cardboard boxes, corrugated packaging and carton packets should
-    be placed in the 'Cardboard Waste' bin.
+    be placed in the 'Paper & Cardboard Waste' bin.

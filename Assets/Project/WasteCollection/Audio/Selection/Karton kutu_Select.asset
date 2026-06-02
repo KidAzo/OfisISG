@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ea66896d6a3c4c9587bc746dba1cf, type: 3}
   m_Name: Karton kutu_Select
   m_EditorClassIdentifier: Assembly-CSharp::Woi.WasteCollectionMode.LocalizedWasteSound
-  turkish: {fileID: 11400000, guid: f4e8c2a19b3d4e5f8a7c6b5d4e3f2a1, type: 2}
-  english: {fileID: 11400000, guid: f5bbf816b51d8fe499e8877237b8de7a, type: 2}
+  turkish: {fileID: 11400000, guid: 2ab933097e5f4a378809ca8486b7f84c, type: 2}
+  english: {fileID: 11400000, guid: 4fb7dd41b37b44d0b647049ef4ca3dbc, type: 2}

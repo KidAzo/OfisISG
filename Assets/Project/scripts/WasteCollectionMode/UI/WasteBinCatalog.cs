@@ -7,7 +7,7 @@ namespace Woi.WasteCollectionMode
     {
         private static readonly Dictionary<string, string> BinNamesEn = new(StringComparer.OrdinalIgnoreCase)
         {
-            ["1"] = "Paper Waste",
+            ["1"] = "Paper & Cardboard Waste",
             ["2"] = "Cardboard Waste",
             ["3"] = "Plastic Waste",
             ["4"] = "Glass Waste",
@@ -26,7 +26,7 @@ namespace Woi.WasteCollectionMode
 
         private static readonly Dictionary<string, string> BinNames = new(StringComparer.OrdinalIgnoreCase)
         {
-            ["1"] = "Kağıt Atıklar",
+            ["1"] = "Kağıt-Karton Atıklar",
             ["2"] = "Karton Atıklar",
             ["3"] = "Plastik Atıklar",
             ["4"] = "Cam Atıklar",
@@ -46,7 +46,7 @@ namespace Woi.WasteCollectionMode
         private static readonly Dictionary<string, string> WasteNameToBinId = new(StringComparer.OrdinalIgnoreCase)
         {
             ["Paper"] = "1",
-            ["CardboardBox"] = "2",
+            ["CardboardBox"] = "1",   // Kağıt-Karton birleşik kutu (Sıfır Atık standardı)
             ["WaterBottle"] = "3",
             ["BabyWipe"] = "12",      // Geri Kazanılabilir
             ["WBCap"] = "9",

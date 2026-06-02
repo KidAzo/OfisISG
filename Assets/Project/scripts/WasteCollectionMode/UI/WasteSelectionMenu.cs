@@ -23,8 +23,7 @@ namespace Woi.WasteCollectionMode
 
         private readonly List<WasteBinData> wasteBins = new()
         {
-            new WasteBinData("1", "Kağıt Atıklar", "file-text", new Color(0.14f, 0.38f, 0.88f)),
-            new WasteBinData("2", "Karton Atıklar", "package", new Color(0.31f, 0.27f, 0.89f)),
+            new WasteBinData("1", "Kağıt-Karton Atıklar", "file-text", new Color(0.14f, 0.38f, 0.88f)),
             new WasteBinData("3", "Plastik Atıklar", "beaker", new Color(0.91f, 0.69f, 0.05f)),
             new WasteBinData("4", "Cam Atıklar", "glass-water", new Color(0.02f, 0.53f, 0.40f)),
             new WasteBinData("5", "Bio-Bozunur Atıklar", "apple", new Color(0.57f, 0.25f, 0.11f)),
