@@ -56,8 +56,8 @@ namespace Woi.WasteCollectionMode.Editor
                 "Cam içecek ve gıda şişeleri 'Cam Atıklar' atık kutusuna atılmalıdır.",
                 "Glass beverage and food bottles should be placed in the 'Glass Waste' bin."),
             new CategoryEntry(4, "Metal", "10",
-                "Gazoz kutuları 'Gazoz Kutusu' atık kutusuna atılmalıdır.",
-                "Soda cans should be placed in the 'Soda Can' bin."),
+                "Gazoz kutuları 'Metal Atıklar' atık kutusuna atılmalıdır.",
+                "Soda cans should be placed in the 'Metal Waste' bin."),
             new CategoryEntry(5, "BioBozunur", "5",
                 "Mutfak, park bahçe, pazar atıkları ve gıda atıkları 'Bio-Bozunur Atıklar' atık kutusuna atılmalıdır.",
                 "Kitchen, park and garden, market, and food waste should be placed in the 'Biodegradable Waste' bin."),
@@ -93,7 +93,7 @@ namespace Woi.WasteCollectionMode.Editor
             ["1"] = 1,   // Kağıt
             ["3"] = 2,   // Plastik
             ["4"] = 3,   // Cam
-            ["10"] = 4,  // Metal
+            ["10"] = 4,  // Metal / Gazoz kutusu
             ["5"] = 5,   // Bio-Bozunur (Cigarette de buraya düşer)
             ["6"] = 6,   // Pil
             ["8"] = 8,   // Elektronik (Cartridge de buraya düşer)
@@ -101,6 +101,24 @@ namespace Woi.WasteCollectionMode.Editor
             ["12"] = 10, // Geri Kazanılabilir
             ["14"] = 11, // Tıbbi
             ["15"] = 9,  // Kompozit
+        };
+
+        private const string SelectTrNewRoot = "Assets/Project/Sounds/WasteSounds/TR/New";
+
+        // Per-waste TR selection clips (TR/New folder). Index 6 (pil) has no new clip yet.
+        private static readonly Dictionary<int, string> SelectTrClipByIndex = new()
+        {
+            [1] = $"{SelectTrNewRoot}/Kağıt.mp3",
+            [2] = $"{SelectTrNewRoot}/Plastik şişeler.mp3",
+            [3] = $"{SelectTrNewRoot}/Cam şişe.mp3",
+            [4] = $"{SelectTrNewRoot}/gazoz kutusu .mp3",
+            [5] = $"{SelectTrNewRoot}/Yemek atıkları.mp3",
+            [7] = $"{SelectTrNewRoot}/Yazıcı kartuşu.mp3",
+            [8] = $"{SelectTrNewRoot}/Bozuk bilgisayar klavyesi.mp3",
+            [9] = $"{SelectTrNewRoot}/meyve suyu kutusu.mp3",
+            [10] = $"{SelectTrNewRoot}/Islak mendil.mp3",
+            [11] = $"{SelectTrNewRoot}/Cerrahi maske.mp3",
+            [12] = $"{SelectTrNewRoot}/Plastik şişe kapağı.mp3",
         };
 
         // Bins with no recorded voice. Only Karton (2) lacks a sound; it still gets the
@@ -125,9 +143,13 @@ namespace Woi.WasteCollectionMode.Editor
             {
                 string prefix = $"{entry.Index:00}_{entry.Key}";
 
+                string selectTrClip = SelectTrClipByIndex.TryGetValue(entry.Index, out string newClip)
+                    ? newClip
+                    : $"{SoundsRoot}/TR/{entry.Index}_tr.mp3";
+
                 SoundDefinition selTr = BuildSound(
                     $"{OutRoot}/Selection/{prefix}_Select_TR",
-                    new[] { $"{SoundsRoot}/TR/{entry.Index}_tr.mp3" });
+                    new[] { selectTrClip });
                 SoundDefinition selEn = BuildSound(
                     $"{OutRoot}/Selection/{prefix}_Select_EN",
                     new[] { $"{SoundsRoot}/EN/{entry.Index}_en.mp3" });

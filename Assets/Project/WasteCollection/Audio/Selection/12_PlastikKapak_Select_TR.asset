@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f0ce49fbc1e6594982f24d5ad48acf7, type: 3}
-  m_Name: 12_PlastikKapak_Select_TR
+  m_Name: Plastik \u015Fi\u015Fe kapa\u011F\u0131_Select_TR
   m_EditorClassIdentifier: WoiUtils.AudioSystem.Runtime::WoiUtils.AudioSystem.SoundDefinition
   selectionMode: 0
   clips:
-  - clip: {fileID: 8300000, guid: 7a1cba8f8d5d59745a506b2a59c9a190, type: 3}
+  - clip: {fileID: 8300000, guid: 43deeb25e0e47694aab160059b1f6a90, type: 3}
     weight: 1
     delay: 0
   noImmediateRepeat: 1

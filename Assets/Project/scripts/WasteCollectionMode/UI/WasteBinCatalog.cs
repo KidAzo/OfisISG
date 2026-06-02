@@ -16,7 +16,7 @@ namespace Woi.WasteCollectionMode
             ["7"] = "Toner & Cartridge",
             ["8"] = "Electronic Waste",
             ["9"] = "Plastic Cap",
-            ["10"] = "Soda Can",
+            ["10"] = "Metal Waste",
             ["11"] = "Cigarette Butt",
             ["12"] = "Recyclable Waste",
             ["13"] = "Hazardous Waste",
@@ -35,7 +35,7 @@ namespace Woi.WasteCollectionMode
             ["7"] = "Toner & Kartuş",
             ["8"] = "Elektronik Atık",
             ["9"] = "Plastik Kapak",
-            ["10"] = "Gazoz Kutusu",
+            ["10"] = "Metal Atıklar",
             ["11"] = "Sigara İzmariti",
             ["12"] = "Geri Kazanılabilir",
             ["13"] = "Tehlikeli Atık",
@@ -56,7 +56,8 @@ namespace Woi.WasteCollectionMode
             ["Cartridge"] = "8",      // Toner kaldırıldı → Elektronik kapsamında
             ["Keyboard"] = "8",
             ["Soda"] = "10",
-            ["Cigarette"] = "5",      // Sigara kutusu kaldırıldı → Bio-Bozunur
+            ["Juice"] = "15",
+            ["sut"] = "15",
             ["Mask"] = "14",
             ["Bulp"] = "8",           // Elektronik
         };

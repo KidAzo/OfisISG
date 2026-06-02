@@ -12,7 +12,7 @@ namespace Woi.WasteCollectionMode
         {
             ["Paper"] = "Kağıt",
             ["CardboardBox"] = "Karton Kutu",
-            ["WaterBottle"] = "Plastik Su Şişesi",
+            ["WaterBottle"] = "Plastik Su Şişeleri",
             ["BabyWipe"] = "Islak Mendil",
             ["WBCap"] = "Plastik Şişe Kapağı",
             ["GlassBottle"] = "Cam Şişe",
@@ -21,7 +21,8 @@ namespace Woi.WasteCollectionMode
             ["Cartridge"] = "Yazıcı Kartuşu",
             ["Keyboard"] = "Bozuk Bilgisayar Klavyesi",
             ["Soda"] = "Gazoz Kutusu",
-            ["Cigarette"] = "Sigara İzmariti",
+            ["Juice"] = "Kompozit",
+            ["sut"] = "Kompozit",
             ["Mask"] = "Cerrahi Maske",
             ["Bulp"] = "Ampul",
         };
@@ -30,7 +31,7 @@ namespace Woi.WasteCollectionMode
         {
             ["Paper"] = "Paper",
             ["CardboardBox"] = "Cardboard Box",
-            ["WaterBottle"] = "Water Bottle",
+            ["WaterBottle"] = "Water Bottles",
             ["BabyWipe"] = "Baby Wipe",
             ["WBCap"] = "Plastic Bottle Cap",
             ["GlassBottle"] = "Glass Bottle",
@@ -39,7 +40,8 @@ namespace Woi.WasteCollectionMode
             ["Cartridge"] = "Toner Cartridge",
             ["Keyboard"] = "Broken Keyboard",
             ["Soda"] = "Soda Can",
-            ["Cigarette"] = "Cigarette Butt",
+            ["Juice"] = "Composite",
+            ["sut"] = "Composite",
             ["Mask"] = "Face Mask",
             ["Bulp"] = "Light Bulb",
         };
@@ -51,6 +53,9 @@ namespace Woi.WasteCollectionMode
 
             if (wasteKey.StartsWith("WBCap", StringComparison.OrdinalIgnoreCase))
                 return "WBCap";
+
+            if (string.Equals(wasteKey, "sut", StringComparison.OrdinalIgnoreCase))
+                return "Juice";
 
             return wasteKey.Trim();
         }

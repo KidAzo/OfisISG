@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f0ce49fbc1e6594982f24d5ad48acf7, type: 3}
-  m_Name: 07_TonerKartus_Select_TR
+  m_Name: Yaz\u0131c\u0131 kartu\u015Fu_Select_TR
   m_EditorClassIdentifier: WoiUtils.AudioSystem.Runtime::WoiUtils.AudioSystem.SoundDefinition
   selectionMode: 0
   clips:
-  - clip: {fileID: 8300000, guid: 71b61fc16ba629d48b79c90a74b4b494, type: 3}
+  - clip: {fileID: 8300000, guid: 86ca813220ac9c64aa7ab6029209b32a, type: 3}
     weight: 1
     delay: 0
   noImmediateRepeat: 1

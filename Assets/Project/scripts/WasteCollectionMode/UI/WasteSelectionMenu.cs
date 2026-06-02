@@ -31,7 +31,7 @@ namespace Woi.WasteCollectionMode
             new WasteBinData("6", "Kullanılmış Pil", "battery", new Color(0.86f, 0.15f, 0.15f)),
             new WasteBinData("8", "Elektronik Atık", "monitor", new Color(0.58f, 0.19f, 0.87f)),
             new WasteBinData("9", "Plastik Kapak", "disc", new Color(0.22f, 0.73f, 0.95f)),
-            new WasteBinData("10", "Gazoz Kutusu", "cylinder", new Color(0.58f, 0.65f, 0.72f)),
+            new WasteBinData("10", "Metal Atıklar", "cylinder", new Color(0.58f, 0.65f, 0.72f)),
             new WasteBinData("12", "Geri Kazanılabilir", "trash-2", new Color(0.13f, 0.60f, 0.30f)),
             new WasteBinData("14", "Tıbbi Atık", "briefcase-medical", new Color(0.86f, 0.15f, 0.15f)),
             new WasteBinData("15", "Kompozit Atık", "package", new Color(0.72f, 0.45f, 0.20f))

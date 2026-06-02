@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f0ce49fbc1e6594982f24d5ad48acf7, type: 3}
-  m_Name: 09_Kompozit_Select_TR
+  m_Name: meyve suyu kutusu_Select_TR
   m_EditorClassIdentifier: WoiUtils.AudioSystem.Runtime::WoiUtils.AudioSystem.SoundDefinition
   selectionMode: 0
   clips:
-  - clip: {fileID: 8300000, guid: 312667f51eeb60e4e8792a2291a34c41, type: 3}
+  - clip: {fileID: 8300000, guid: 65f73147ab4ad9949969823dcfa23842, type: 3}
     weight: 1
     delay: 0
   noImmediateRepeat: 1

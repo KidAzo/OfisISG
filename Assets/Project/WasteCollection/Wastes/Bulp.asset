@@ -15,7 +15,7 @@ MonoBehaviour:
   waste:
     name: Bulp
     type: 2
-  selectSound: {fileID: 11400000, guid: 15800bc6357387e44b39aa135afea957, type: 2}
+  selectSound: {fileID: 11400000, guid: a3fc6b84382e79d479cfa3ee41ac1a73, type: 2}
   explanationSound: {fileID: 11400000, guid: 83357ca355d46b743b2029c9ade2bd80, type: 2}
   explanationTurkish: "Bili\u015Fim ve telekom\xFCnikasyon ekipmanlar\u0131 vb. at\u0131klar\u0131
     'At\u0131k Elektrikli ve Elektronik E\u015Fyalar' at\u0131k kutusuna at\u0131lmal\u0131d\u0131r."
