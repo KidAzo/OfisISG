@@ -31,9 +31,13 @@ namespace Systems.SceneManagement
 			ActiveSceneGroup = group;
 			var loadedScenes = new List<string>();
 
+			Debug.Log($"[SGM] LoadScenes START group='{group.GroupName}' scenesInGroup={group.Scenes?.Count ?? 0} reloadDup={reloadDupScenes} loadedCount={SceneManager.sceneCount}");
+
 			StopWoiAudioForSceneTransition();
 
+			Debug.Log("[SGM] UnloadScenes BEGIN");
 			await UnloadScenes();
+			Debug.Log($"[SGM] UnloadScenes DONE, now loadedCount={SceneManager.sceneCount}");
 
 			int sceneCount = SceneManager.sceneCount;
 
@@ -49,16 +53,24 @@ namespace Systems.SceneManagement
 			for (var i = 0; i < totalScenesToLoad; i++)
 			{
 				var sceneData = group.Scenes[i];
-				if (reloadDupScenes == false && loadedScenes.Contains(sceneData.Name)) continue;
+				if (reloadDupScenes == false && loadedScenes.Contains(sceneData.Name))
+				{
+					Debug.Log($"[SGM] Skipping already-loaded scene '{sceneData.Name}'");
+					continue;
+				}
 
 				if (!string.IsNullOrEmpty(sceneData.AddressableKey))
 				{
+					Debug.Log($"[SGM] Addressables.LoadSceneAsync key='{sceneData.AddressableKey}'");
 					var sceneHandle = Addressables.LoadSceneAsync(sceneData.AddressableKey, LoadSceneMode.Additive);
 					handleGroup.Handles.Add(sceneHandle);
 				}
 				else if (!string.IsNullOrEmpty(sceneData.SceneName))
 				{
+					Debug.Log($"[SGM] SceneManager.LoadSceneAsync name='{sceneData.SceneName}'");
 					var operation = SceneManager.LoadSceneAsync(sceneData.SceneName, LoadSceneMode.Additive);
+					if (operation == null)
+						Debug.LogError($"[SGM] LoadSceneAsync returned NULL for '{sceneData.SceneName}' — is it in Build Settings?");
 					operationGroup.Operations.Add(operation);
 				}
 				else
@@ -73,20 +85,34 @@ namespace Systems.SceneManagement
 			}
 
 			// Wait until all AsyncOperations in the group are done
+			Debug.Log($"[SGM] Wait loop START ops={operationGroup.Operations.Count} handles={handleGroup.Handles.Count}");
+			int _sgmIter = 0;
 			while (!operationGroup.IsDone || !handleGroup.IsDone)
 			{
 				progress?.Report((operationGroup.Progress + handleGroup.Progress) / 2);
+
+				if (_sgmIter % 10 == 0)
+				{
+					string opStates = string.Join(",", operationGroup.Operations.ConvertAll(o =>
+						o == null ? "NULL" : $"{o.progress:0.00}/done={o.isDone}/act={o.allowSceneActivation}"));
+					Debug.Log($"[SGM] waiting iter={_sgmIter} opDone={operationGroup.IsDone} handleDone={handleGroup.IsDone} ops=[{opStates}]");
+				}
+				_sgmIter++;
 				await Task.Delay(100);
 			}
+			Debug.Log("[SGM] Wait loop END (all operations/handles done)");
 
 			Scene activeScene = SceneManager.GetSceneByName(ActiveSceneGroup.FindSceneNameByType(SceneType.ActiveScene));
+			Debug.Log($"[SGM] ActiveScene resolve name='{ActiveSceneGroup.FindSceneNameByType(SceneType.ActiveScene)}' valid={activeScene.IsValid()}");
 
 			if (activeScene.IsValid())
 			{
 				SceneManager.SetActiveScene(activeScene);
 			}
 			
+			Debug.Log("[SGM] Invoking OnSceneGroupLoaded");
 			OnSceneGroupLoaded.Invoke();
+			Debug.Log("[SGM] LoadScenes RETURN (group fully loaded)");
 
 			//EventBus.Publish(new OnSceneGroupLoaded());
 		}

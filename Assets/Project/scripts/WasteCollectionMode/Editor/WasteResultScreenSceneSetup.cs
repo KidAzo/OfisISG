@@ -5,6 +5,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Woi.SelectionSystem;
+using Woi.WasteCollectionMode;
 
 namespace Woi.WasteCollectionMode.Editor
 {

@@ -220,8 +220,12 @@ MonoBehaviour:
   _runCatalogHealthBeforeSelectedGroups: 1
   _catalogHealthGroupNames:
   - Fire_Train
+  - WasteLogin
+  - WasteCollector
   _catalogHealthRequiredKeys:
   - Managers/SceneLoader
+  - Managers/InputManager
+  - Managers/PortingVariable
   _catalogHealthTimeoutPerKeySeconds: 15
 --- !u!114 &8183518992933811479
 MonoBehaviour:
@@ -395,7 +399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2399347267750838206, guid: 112d293616025f84ea56281295bab79a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2471625736502971658, guid: 112d293616025f84ea56281295bab79a, type: 3}
       propertyPath: m_AnchorMax.x

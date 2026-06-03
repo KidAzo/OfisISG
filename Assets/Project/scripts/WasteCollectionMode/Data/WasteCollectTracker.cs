@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Woi.WasteCollectionMode;
 
+namespace Woi.WasteCollectionMode
+{
 /// <summary>
 /// Tracks collected waste items for end-of-session reporting.
 /// Place one instance in the scene and assign a WasteDatabase.
@@ -120,4 +121,5 @@ public class WasteCollectTracker : MonoBehaviour
 
         return default;
     }
+}
 }

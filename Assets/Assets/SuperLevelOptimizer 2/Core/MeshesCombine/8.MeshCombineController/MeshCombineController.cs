@@ -989,5 +989,39 @@ namespace NGS.SLO.MeshesCombine
         }
     }
 
+#else
+
+    // Runtime stub for player builds.
+    // The full controller above is editor-only (Tools menu / mesh-combine baking).
+    // Scenes can still contain a leftover "Meshes Combiner" GameObject referencing
+    // this component. Without a runtime type the build hits a serialization layout
+    // mismatch ("Read N bytes but expected M") that can desync the scene object
+    // stream and corrupt following objects (camera/player/input). Keeping the exact
+    // same serialized fields here makes the build deserialize identically to the editor.
+#pragma warning disable 0169
+    public class MeshCombineController : MonoBehaviour
+    {
+        [SerializeField] private bool _drawSelectedObjects;
+        [SerializeField] private bool _includeOnlyStatic;
+        [SerializeField] private bool _includeMeshRenderers;
+        [SerializeField] private bool _includeSkinnedMeshRenderers;
+        [SerializeField] private bool _includeLODGroups;
+        [SerializeField] private List<Renderer> _selectedRenderers;
+        [SerializeField] private List<LODGroup> _selectedLODGroups;
+        [SerializeField] private bool _drawGroups;
+        [SerializeField] private bool _splitInGroups;
+        [Min(0.01f)]
+        [SerializeField] private float _cellSize;
+        [SerializeField] private MeshCombineOptions _combineOptions;
+        [SerializeField] private bool _saveAssets;
+        [SerializeField] private string _dataOutputPath;
+        [SerializeField] private bool _drawSources;
+        [SerializeField] private int _sourceObjectsCount;
+        [SerializeField] private int _combinedObjectsCount;
+        [SerializeField] private int _combinedSourcesCount;
+        [SerializeField] private int _combineErrorsCount;
+    }
+#pragma warning restore 0169
+
 #endif
 }

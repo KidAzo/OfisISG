@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 
 public class PolygonShaderGUI : ShaderGUI
@@ -202,3 +203,4 @@ public class PolygonShaderGUI : ShaderGUI
         _showWave = CreatePropertyGroup("Wave", shaderProperties, _showWave, materialEditor, properties);
     }
 }
+#endif

@@ -5,6 +5,7 @@ namespace Woi.OfficeFire
 {
     public sealed class OfficeFirePlayerInitializer : MonoBehaviour
     {
+        private const string WasteCollectionTrackerObjectName = "WasteCollectTracker";
         [Header("Player")]
         [SerializeField]
         private Transform playerRoot;
@@ -75,6 +76,15 @@ namespace Woi.OfficeFire
             if (scenarioId == OfficeFireScenarioId.None)
             {
                 Debug.LogWarning("[OfficeFirePlayerInitializer] InitializePlayer(None) ignored.", this);
+                return;
+            }
+
+            // Cannot reference WasteCollectTracker type here — Woi.OfficeFire.Core is a separate asmdef from gameplay scripts.
+            if (customPlayerRoot == null && GameObject.Find(WasteCollectionTrackerObjectName) != null)
+            {
+                Debug.Log(
+                    "[OfficeFirePlayerInitializer] Waste collection active — skipping fire-drill player teleport.",
+                    this);
                 return;
             }
 

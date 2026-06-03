@@ -24,6 +24,10 @@ namespace Woi.InputSystem
             [SerializeField] private ScriptableEventNoParam onPinPullingInput;
             [SerializeField] private ScriptableEnumPortingVariable portingVariable;
 
+            public ScriptableEventVector2 MoveInputEvent => onMoveInput;
+            public ScriptableEventVector2 LookInputEvent => onLookInput;
+            public ScriptableEventBool SprintInputEvent => onSprintInput;
+
             public ScriptableEventNoParam EquipEvent => onEquipInput;
             public ScriptableEventNoParam DropEvent     => onDropInput;
             public ScriptableEventNoParam PinPulling     => onPinPullingInput;

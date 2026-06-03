@@ -1,6 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Woi.InputSystem;
+using Woi.Player;
+using WOI.Modules.SDK;
 
 namespace Woi.WasteCollectionMode
 {
@@ -27,6 +31,7 @@ namespace Woi.WasteCollectionMode
         [Header("Timing")]
         [SerializeField] private bool applyOnAwake = true;
         [SerializeField] private bool reapplyOnStart = true;
+        [SerializeField] private bool ensurePcLocomotionAfterApply = true;
         [SerializeField] private bool logAppliedState;
 
         private void Awake()
@@ -56,7 +61,18 @@ namespace Woi.WasteCollectionMode
             bool pcActive = mode == AppMode.PC;
             bool vrActive = mode == AppMode.XR;
 
-            SetRootsActive(pcPlayerRoots, pcActive);
+            if (pcActive && pcPlayerRoots.Count > 1)
+            {
+                GameObject primaryPc = SelectPrimaryPcRoot(pcPlayerRoots);
+                SetRootsActive(pcPlayerRoots, false);
+                if (primaryPc != null)
+                    primaryPc.SetActive(true);
+            }
+            else
+            {
+                SetRootsActive(pcPlayerRoots, pcActive);
+            }
+
             SetRootsActive(xrOriginRoots, vrActive);
 
             if (logAppliedState)
@@ -66,6 +82,68 @@ namespace Woi.WasteCollectionMode
                     $"XR roots active={vrActive} ({xrOriginRoots.Count}).",
                     this);
             }
+
+            if (pcActive && ensurePcLocomotionAfterApply)
+                StartCoroutine(EnsurePcLocomotionAfterRigApplied());
+        }
+
+        private IEnumerator EnsurePcLocomotionAfterRigApplied()
+        {
+            const int maxWaitFrames = 300;
+            for (int frame = 0;
+                 frame < maxWaitFrames &&
+                 (!ServiceLocator.TryGet(out IPlayerService _) ||
+                  !ServiceLocator.TryGet(out InputManager _));
+                 frame++)
+            {
+                yield return null;
+            }
+
+            if (ResolveMode() != AppMode.PC)
+                yield break;
+
+            GameObject pcRoot = ResolveActivePcRoot();
+            if (pcRoot == null || !pcRoot.activeInHierarchy)
+            {
+                Debug.LogWarning("[WasteCollectionPlayerRigController] PC locomotion: no active PC-Player root.", this);
+                yield break;
+            }
+
+            PlayerController controller = pcRoot.GetComponentInChildren<PlayerController>(true);
+            if (controller == null)
+            {
+                Debug.LogError("[WasteCollectionPlayerRigController] PC locomotion: PlayerController not found.", this);
+                yield break;
+            }
+
+            if (ServiceLocator.TryGet(out IPlayerService playerService))
+            {
+                playerService.RegisterPlayer(controller);
+                playerService.SetPlayerInputEnabled(true);
+            }
+
+            if (ServiceLocator.TryGet(out InputManager inputManager))
+                inputManager.EnsurePcGameplayInputEnabled();
+
+            controller.ActivatePcLocomotion();
+
+            if (logAppliedState)
+            {
+                Debug.Log(
+                    $"[WasteCollectionPlayerRigController] PC locomotion ensured on '{pcRoot.name}'.",
+                    this);
+            }
+        }
+
+        private GameObject ResolveActivePcRoot()
+        {
+            if (pcPlayerRoots == null || pcPlayerRoots.Count == 0)
+                return null;
+
+            if (pcPlayerRoots.Count > 1)
+                return SelectPrimaryPcRoot(pcPlayerRoots);
+
+            return pcPlayerRoots[0];
         }
 
         private void EnsurePortingInitialized()
@@ -151,6 +229,34 @@ namespace Woi.WasteCollectionMode
                 return false;
 
             return root.GetComponentInChildren(originType, true) != null;
+        }
+
+        /// <summary>
+        /// FireModule_Office has two PC-Player instances (fire drill under 01_Player and waste under =======WasteCollection=====).
+        /// </summary>
+        private static GameObject SelectPrimaryPcRoot(List<GameObject> roots)
+        {
+            for (int i = 0; i < roots.Count; i++)
+            {
+                if (roots[i] != null && IsUnderWasteCollection(roots[i]))
+                    return roots[i];
+            }
+
+            return roots.Count > 0 ? roots[0] : null;
+        }
+
+        private static bool IsUnderWasteCollection(GameObject root)
+        {
+            Transform t = root.transform;
+            while (t != null)
+            {
+                if (t.name.IndexOf("WasteCollection", StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+
+                t = t.parent;
+            }
+
+            return false;
         }
 
         private static void SetRootsActive(List<GameObject> roots, bool active)

@@ -757,8 +757,11 @@ namespace Woi.WasteCollectionMode
             if (ServiceLocator.TryGet(out IPlayerService playerService))
                 playerService.SetPlayerInputEnabled(true);
 
-            UnityEngine.Cursor.lockState = savedCursorLockState;
-            UnityEngine.Cursor.visible = savedCursorVisible;
+            if (ServiceLocator.TryGet(out Woi.InputSystem.InputManager inputManager))
+                inputManager.EnsurePcGameplayInputEnabled();
+
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+            UnityEngine.Cursor.visible = false;
             inputFrozen = false;
         }
 

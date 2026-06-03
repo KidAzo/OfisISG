@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using Obvious.Soap;
 using UnityEngine;
+using Woi.InputSystem;
 
 namespace Woi.OfficeFire
 {
-    public sealed class PCSelectableInteractor : MonoBehaviour
+    public sealed class PCSelectableInteractor : MonoBehaviour, ISoapInteractInputListener
     {
         [Header("Input")]
         [Tooltip("Raised when Gameplay/Interact is pressed (E in PlayerInputActions).")]
@@ -48,6 +49,31 @@ namespace Woi.OfficeFire
 
         private void OnEnable()
         {
+            SubscribeInteract();
+        }
+
+        private void OnDisable()
+        {
+            UnsubscribeInteract();
+        }
+
+        public bool IsListeningToDifferentInteractEvent(ScriptableEventNoParam liveInteractEvent) =>
+            interactInputEvent != null
+            && liveInteractEvent != null
+            && !ReferenceEquals(interactInputEvent, liveInteractEvent);
+
+        public void RebindInteractInputEvent(ScriptableEventNoParam liveInteractEvent)
+        {
+            UnsubscribeInteract();
+            interactInputEvent = liveInteractEvent;
+            if (isActiveAndEnabled)
+            {
+                SubscribeInteract();
+            }
+        }
+
+        private void SubscribeInteract()
+        {
             if (interactInputEvent == null)
             {
                 return;
@@ -56,7 +82,7 @@ namespace Woi.OfficeFire
             interactInputEvent.OnRaised += OnInteractInput;
         }
 
-        private void OnDisable()
+        private void UnsubscribeInteract()
         {
             if (interactInputEvent == null)
             {

@@ -29,8 +29,9 @@ namespace Woi.WasteCollectionMode
             if (FirePlatformRuntime.IsSourceInitialized)
                 return FirePlatformRuntime.IsVR;
 
-            // Porting truly unavailable → infer from an active XR rig + head camera.
-            return WasteVrHeadCameraResolver.TryGetHeadCamera(null, out _);
+            // Do not treat "any Camera.main exists" as VR — that misclassifies flat PC builds
+            // (login loading camera, gameplay PC camera) and disables WASD / mouse look.
+            return false;
         }
 
         private static void EnsurePortingInitialized()

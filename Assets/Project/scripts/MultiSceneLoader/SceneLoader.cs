@@ -31,11 +31,19 @@ namespace Woi.Settings
 		[SerializeField] private bool _runCatalogHealthBeforeSelectedGroups = true;
 
 		[Tooltip("Scene group GroupName values that require catalog health checks (e.g. Fire training gameplay).")]
-		[SerializeField] private string[] _catalogHealthGroupNames = { "Fire_Train" };
+		[SerializeField] private string[] _catalogHealthGroupNames =
+		{
+			"Fire_Train",
+			"WasteLogin",
+			"WasteCollector",
+		};
 
 		[SerializeField] private string[] _catalogHealthRequiredKeys =
 		{
 			"Managers/SceneLoader",
+			"Managers/InputManager",
+			"Managers/PortingVariable",
+			"Managers/PC-GameplayContext",
 		};
 
 		[SerializeField] private float _catalogHealthTimeoutPerKeySeconds = 15f;
@@ -77,6 +85,7 @@ namespace Woi.Settings
 		void Start()
 		{
 			RefreshLoadingScreenSettings();
+			GetComponent<LoadingScreenController>()?.HideAllLoadingUi();
 		}
 
 		void RefreshLoadingScreenSettings()
@@ -101,7 +110,6 @@ namespace Woi.Settings
 				loadingScreenSettings.fillSpeed * Time.deltaTime
 			);
 
-			Debug.Log($"Current Progress: {loadingScreenSettings.progressBar.fillAmount}, Target Progress: {targetProgress}");
 		}
 
 		public Task LoadSceneGroup(int index)
@@ -202,16 +210,28 @@ namespace Woi.Settings
 					}
 				}
 
+				Debug.Log($"[SceneLoader] manager.LoadScenes BEGIN group='{group.GroupName}' mode={(loadingScreenSettings != null ? loadingScreenSettings.mode.ToString() : "null")} manageXrRig={manageXrRig}");
 				await manager.LoadScenes(group, progress, false);
+				Debug.Log("[SceneLoader] manager.LoadScenes RETURNED");
 
 				if (useLoadingCanvas)
+				{
+					Debug.Log($"[SceneLoader] post-load delay {beforeDelayScene}ms");
 					await Task.Delay((int)beforeDelayScene);
+				}
 
 				if (manageXrRig)
+				{
+					Debug.Log("[SceneLoader] EnableXrRigSafe");
 					EnableXrRigSafe(xrRigDisabledTarget, loadingScreenSettings);
+				}
 
 				if (xrFadeOverlay != null)
+				{
+					Debug.Log("[SceneLoader] XR fade-out BEGIN");
 					await RunFadeCanvasGroupAsync(xrFadeOverlay, 1f, 0f, xrFadeOut);
+					Debug.Log("[SceneLoader] XR fade-out END");
+				}
 			}
 			catch (Exception ex)
 			{
@@ -233,6 +253,8 @@ namespace Woi.Settings
 				isLoading = false;
 				if (useLoadingCanvas)
 					EnableLoadingCanvas(false);
+
+				GetComponent<LoadingScreenController>()?.RefreshDisplayFallbackCamera();
 			}
 		}
 
@@ -330,6 +352,14 @@ namespace Woi.Settings
 			Debug.Log("Loading canvas " + (enable ? "enabled" : "disabled"));
 			isLoading = enable;
 			RefreshLoadingScreenSettings();
+
+			var controller = GetComponent<LoadingScreenController>();
+			if (!enable)
+			{
+				controller?.HideAllLoadingUi();
+				return;
+			}
+
 			if (loadingScreenSettings == null
 			    || loadingScreenSettings.loadingCanvas == null
 			    || loadingScreenSettings.loadingCamera == null)
@@ -339,8 +369,9 @@ namespace Woi.Settings
 				return;
 			}
 
-			loadingScreenSettings.loadingCanvas.gameObject.SetActive(enable);
-			loadingScreenSettings.loadingCamera.gameObject.SetActive(enable);
+			controller?.HideAllLoadingUi();
+			loadingScreenSettings.loadingCanvas.gameObject.SetActive(true);
+			loadingScreenSettings.loadingCamera.gameObject.SetActive(true);
 		}
 
 		private int GetGroupIndex(string name) => Array.FindIndex(sceneGroups, g => g.GroupName == name);

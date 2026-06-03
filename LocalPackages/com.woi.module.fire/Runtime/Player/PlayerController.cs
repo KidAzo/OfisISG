@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Obvious.Soap;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -44,6 +45,10 @@ namespace Woi.Player
 
         public bool InputEnabled => _inputEnabled;
 
+        /// <summary>True when the player listens to a different move event instance than the live gameplay context.</summary>
+        public bool IsListeningToDifferentMoveEvent(ScriptableEventVector2 liveMoveEvent) =>
+            moveInputEvent != null && liveMoveEvent != null && !ReferenceEquals(moveInputEvent, liveMoveEvent);
+
         public void SetInputEnabled(bool enabled)
         {
             _inputEnabled = enabled;
@@ -58,14 +63,106 @@ namespace Woi.Player
 
         private void Awake()
         {
-            _playerService = ServiceLocator.Get<IPlayerService>();
-            _playerService.RegisterPlayer(this);
             _characterController = GetComponent<CharacterController>();
+            TryRegisterWithPlayerService();
+        }
+
+        private void TryRegisterWithPlayerService()
+        {
+            if (!ServiceLocator.TryGet(out _playerService) || _playerService == null)
+            {
+                Debug.LogWarning(
+                    "[PlayerController] IPlayerService not registered yet — retrying registration.",
+                    this);
+                return;
+            }
+
+            _playerService.RegisterPlayer(this);
         }
 
         private void Start()
         {
+            if (_playerService == null)
+                StartCoroutine(RegisterWhenServiceReady());
+            else
+                DelayedCursorLock().Forget();
+        }
+
+        private IEnumerator RegisterWhenServiceReady()
+        {
+            const int maxFrames = 300;
+            for (int frame = 0; frame < maxFrames && _playerService == null; frame++)
+            {
+                TryRegisterWithPlayerService();
+                yield return null;
+            }
+
+            if (_playerService == null)
+            {
+                Debug.LogError(
+                    "[PlayerController] IPlayerService never became available — movement/look input will not work.",
+                    this);
+                yield break;
+            }
+
             DelayedCursorLock().Forget();
+        }
+
+        /// <summary>
+        /// Re-binds PC locomotion after scene/rig changes (waste office scene, duplicate player roots).
+        /// </summary>
+        public void ActivatePcLocomotion()
+        {
+            TryRegisterWithPlayerService();
+            SetInputEnabled(true);
+            _lookArmed = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        /// <summary>
+        /// Re-subscribes to Soap events from the live <see cref="GameplayInputContext"/> instance.
+        /// Required when Addressables loads duplicate ScriptableObject instances for events vs the player prefab.
+        /// </summary>
+        public void RebindSoapInputEvents(
+            ScriptableEventVector2 move,
+            ScriptableEventVector2 look,
+            ScriptableEventBool sprint)
+        {
+            UnsubscribeSoapEvents();
+
+            moveInputEvent = move;
+            lookInputEvent = look;
+            sprintInputEvent = sprint;
+
+            if (isActiveAndEnabled)
+                SubscribeSoapEvents();
+        }
+
+        private void UnsubscribeSoapEvents()
+        {
+            if (moveInputEvent != null)
+                moveInputEvent.OnRaised -= OnMove;
+            if (lookInputEvent != null)
+                lookInputEvent.OnRaised -= OnLook;
+            if (sprintInputEvent != null)
+                sprintInputEvent.OnRaised -= OnSprint;
+        }
+
+        private void SubscribeSoapEvents()
+        {
+            if (moveInputEvent == null || lookInputEvent == null || sprintInputEvent == null)
+            {
+                Debug.LogError(
+                    "[PlayerController] Soap move/look/sprint events are missing — WASD/mouse will not work. " +
+                    "Rebuild Addressables and call InputManager.SyncPcPlayerSoapEvents().",
+                    this);
+                return;
+            }
+
+            moveInputEvent.OnRaised += OnMove;
+            lookInputEvent.OnRaised += OnLook;
+            sprintInputEvent.OnRaised += OnSprint;
         }
 
         private async UniTaskVoid DelayedCursorLock()
@@ -80,16 +177,12 @@ namespace Woi.Player
 
         private void OnEnable()
         {
-            moveInputEvent.OnRaised += OnMove;
-            lookInputEvent.OnRaised += OnLook;
-            sprintInputEvent.OnRaised += OnSprint;
+            SubscribeSoapEvents();
         }
 
         private void OnDisable()
         {
-            moveInputEvent.OnRaised -= OnMove;
-            lookInputEvent.OnRaised -= OnLook;
-            sprintInputEvent.OnRaised -= OnSprint;
+            UnsubscribeSoapEvents();
         }
 
         private void Update()

@@ -65,6 +65,11 @@ namespace WOI.Module.Fire.DI
             DontDestroyOnLoad(inputManager.gameObject);
             DontDestroyOnLoad(sceneLoader.gameObject);
 
+            inputManager.InitializePortingRuntime();
+
+            // Start() may run next frame; ensure gameplay map + Soap chain for any early player.
+            inputManager.EnsurePcGameplayInputEnabled();
+
             Debug.Log("[FireServiceInstaller] InstallBindings START");
 
             ServiceLocator.Register<IInputProvider>(inputManager);

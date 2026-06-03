@@ -21,10 +21,10 @@ namespace Woi.OfficeFire
 
         private void Start()
         {
-            if (autoStartOnPlay)
-            {
-                StartScenario(startScenario);
-            }
+            if (!autoStartOnPlay)
+                return;
+
+            StartScenario(startScenario);
         }
 
         /// <summary>

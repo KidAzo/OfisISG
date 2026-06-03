@@ -14,8 +14,99 @@ namespace Woi.Settings
 
         void Awake()
         {
+            if (portingVariable == null)
+            {
+                Debug.LogError(
+                    "[LoadingScreenController] portingVariable is not assigned — cannot select PC/XR loading UI. " +
+                    "Assign Packages/com.woi.module.fire/Runtime/Porting/PortingVariable.asset (same as InputManager). " +
+                    "In builds using Addressables, rebuild bundles after changing SceneLoader prefab.");
+                HideAllLoadingUi();
+                return;
+            }
+
             FirePlatformRuntime.TryInitialize(portingVariable);
             SetLoadingScreen(portingVariable.CurrentValue);
+            HideAllLoadingUi();
+        }
+
+        /// <summary>
+        /// Hides every configured loading canvas/camera. VR loading UI is inactive in the prefab by default,
+        /// but older prefabs had it enabled — leaving it on blocks UI Toolkit / uGUI input after scene load.
+        /// </summary>
+        public void HideAllLoadingUi()
+        {
+            if (settings == null)
+                return;
+
+            for (int i = 0; i < settings.Length; i++)
+            {
+                LoadingScreenSettings entry = settings[i];
+                if (entry == null || entry.loadingCanvas == null)
+                    continue;
+
+                entry.loadingCanvas.gameObject.SetActive(false);
+            }
+
+            RefreshDisplayFallbackCamera();
+        }
+
+        /// <summary>
+        /// Keeps the SceneLoader loading camera enabled when no other camera is active (e.g. WasteLogin UI-only scene).
+        /// Disables it once a gameplay camera exists (e.g. PC-Player after FireModule_Office load).
+        /// </summary>
+        public void RefreshDisplayFallbackCamera()
+        {
+            Camera fallbackCamera = GetSharedLoadingCamera();
+            if (fallbackCamera == null)
+                return;
+
+            if (HasAnotherEnabledCamera(fallbackCamera))
+            {
+                if (fallbackCamera.gameObject.activeSelf)
+                    fallbackCamera.gameObject.SetActive(false);
+                return;
+            }
+
+            fallbackCamera.gameObject.SetActive(true);
+            fallbackCamera.enabled = true;
+            fallbackCamera.depth = -100f;
+            fallbackCamera.clearFlags = CameraClearFlags.SolidColor;
+            fallbackCamera.backgroundColor = Color.black;
+            fallbackCamera.cullingMask = 0;
+        }
+
+        private Camera GetSharedLoadingCamera()
+        {
+            if (settings == null)
+                return null;
+
+            for (int i = 0; i < settings.Length; i++)
+            {
+                LoadingScreenSettings entry = settings[i];
+                if (entry?.loadingCamera != null)
+                    return entry.loadingCamera;
+            }
+
+            return null;
+        }
+
+        private static bool HasAnotherEnabledCamera(Camera exclude)
+        {
+            Camera[] cameras = UnityEngine.Object.FindObjectsByType<Camera>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                Camera camera = cameras[i];
+                if (camera == null || camera == exclude)
+                    continue;
+
+                if (camera.enabled && camera.gameObject.activeInHierarchy)
+                    return true;
+            }
+
+            return false;
         }
 
         void SetLoadingScreen(AppMode mode)
