@@ -11,3 +11,11 @@ public class WasteClassificationRecord
     public string correctBinName;
     public bool isCorrect;
 }
+
+[Serializable]
+public class WasteUncollectedRecord
+{
+    public string wasteName;
+    public WasteType wasteType;
+    public string correctBinId;
+}

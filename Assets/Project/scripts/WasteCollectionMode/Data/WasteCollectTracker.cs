@@ -111,6 +111,36 @@ public class WasteCollectTracker : MonoBehaviour
         classifications.Clear();
     }
 
+    public void GetUncollectedSceneWastes(List<WasteUncollectedRecord> results)
+    {
+        results.Clear();
+
+        WasteController[] wastes = FindObjectsByType<WasteController>(
+            FindObjectsInactive.Exclude,
+            FindObjectsSortMode.None);
+
+        if (wastes == null)
+            return;
+
+        for (int i = 0; i < wastes.Length; i++)
+        {
+            WasteCollectable collectable = wastes[i].GetComponent<WasteCollectable>();
+            if (collectable == null || collectable.Definition == null)
+                continue;
+
+            WasteDefinition definition = collectable.Definition;
+            string wasteName = definition.Name;
+            WasteType wasteType = definition.Type;
+
+            results.Add(new WasteUncollectedRecord
+            {
+                wasteName = wasteName,
+                wasteType = wasteType,
+                correctBinId = WasteBinCatalog.GetCorrectBinId(wasteName, wasteType)
+            });
+        }
+    }
+
     private WasteType ResolveWasteType(string wasteName)
     {
         for (int i = records.Count - 1; i >= 0; i--)

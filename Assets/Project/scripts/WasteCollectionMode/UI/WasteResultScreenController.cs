@@ -28,6 +28,7 @@ namespace Woi.WasteCollectionMode
 
         private static readonly Color CorrectStatusColor = new(0.376f, 0.647f, 0.980f, 1f);
         private static readonly Color IncorrectStatusColor = new(0.957f, 0.247f, 0.369f, 1f);
+        private static readonly Color NotFoundStatusColor = new(0.984f, 0.749f, 0.141f, 1f);
 
         [SerializeField] private UIDocument uiDocument;
         [SerializeField] private Texture2D correctStatusIcon;
@@ -68,6 +69,7 @@ namespace Woi.WasteCollectionMode
         private Button restartButton;
 
         private readonly PlayerMovementLookFreeze movementLookFreeze = new();
+        private readonly List<WasteUncollectedRecord> uncollectedWastes = new();
         private AudioSystem audioSystem;
         private SoundDefinition sceneIntroSound;
         private bool sceneIntroStopped;
@@ -122,6 +124,16 @@ namespace Woi.WasteCollectionMode
                 resultShowSound = UnityEditor.AssetDatabase.LoadAssetAtPath<LocalizedWasteSound>(ResultShowSoundPath);
 #endif
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (resultShowSound != null)
+                return;
+
+            resultShowSound = UnityEditor.AssetDatabase.LoadAssetAtPath<LocalizedWasteSound>(ResultShowSoundPath);
+        }
+#endif
 
         private void ApplyExitIcon()
         {
@@ -367,7 +379,18 @@ namespace Woi.WasteCollectionMode
 
         private IEnumerator PlaySceneIntroSoundWhenReady()
         {
-            yield return null;
+            const float audioSystemTimeoutSeconds = 5f;
+            float elapsed = 0f;
+
+            while (elapsed < audioSystemTimeoutSeconds)
+            {
+                EnsureAudioSystem();
+                if (audioSystem != null)
+                    break;
+
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
 
             PlaySceneIntroSound();
         }
@@ -375,20 +398,45 @@ namespace Woi.WasteCollectionMode
         private void PlaySceneIntroSound()
         {
             if (resultShowSound == null)
+            {
+                Debug.LogWarning(
+                    "[WasteResultScreenController] resultShowSound is not assigned; scene intro audio skipped. " +
+                    "Assign Assets/Project/WasteCollection/Audio/Result/ResultScreen.asset on WasteResultScreenController.",
+                    this);
                 return;
+            }
 
             SoundDefinition sound = resultShowSound.Resolve();
             if (sound == null)
+            {
+                Debug.LogWarning(
+                    "[WasteResultScreenController] resultShowSound resolved to null; check ResultScreen_TR / ResultScreen_EN.",
+                    this);
+                return;
+            }
+
+            EnsureAudioSystem();
+            if (audioSystem == null)
+            {
+                Debug.LogWarning(
+                    "[WasteResultScreenController] AudioSystem not found; scene intro audio skipped.",
+                    this);
+                return;
+            }
+
+            sceneIntroSound = sound;
+            audioSystem.Play(sound);
+        }
+
+        private void EnsureAudioSystem()
+        {
+            if (audioSystem != null)
                 return;
 
-            if (audioSystem == null && !AudioSystem.TryGetFromServiceLocator(out audioSystem))
-                audioSystem = FindFirstObjectByType<AudioSystem>();
+            if (AudioSystem.TryGetFromServiceLocator(out audioSystem) && audioSystem != null)
+                return;
 
-            if (audioSystem != null)
-            {
-                sceneIntroSound = sound;
-                audioSystem.Play(sound);
-            }
+            audioSystem = FindFirstObjectByType<AudioSystem>();
         }
 
         // Cuts off the scene intro ("Sonsöz") announcement the moment the first waste is collected.
@@ -505,7 +553,12 @@ namespace Woi.WasteCollectionMode
 
             tableBody.Clear();
 
-            if (records.Count == 0)
+            if (collectTracker != null)
+                collectTracker.GetUncollectedSceneWastes(uncollectedWastes);
+            else
+                uncollectedWastes.Clear();
+
+            if (records.Count == 0 && uncollectedWastes.Count == 0)
             {
                 tableBody.Add(CreateEmptyRow(WasteCollectionLocalization.EmptyClassification(WasteCollectionLocalization.IsEnglish)));
                 return;
@@ -513,6 +566,9 @@ namespace Woi.WasteCollectionMode
 
             for (int i = 0; i < records.Count; i++)
                 tableBody.Add(CreateTableRow(records[i]));
+
+            for (int i = 0; i < uncollectedWastes.Count; i++)
+                tableBody.Add(CreateNotFoundTableRow(uncollectedWastes[i]));
         }
 
         private static VisualElement CreateEmptyRow(string message)
@@ -538,6 +594,49 @@ namespace Woi.WasteCollectionMode
             row.Add(CreateStatusCell(record.isCorrect));
 
             return row;
+        }
+
+        private VisualElement CreateNotFoundTableRow(WasteUncollectedRecord record)
+        {
+            var row = new VisualElement();
+            row.AddToClassList("table-row");
+
+            row.Add(CreateTableCell(WasteNameCatalog.GetDisplayName(record.wasteName), "col-1"));
+            row.Add(CreateTableCell("-", "col-2"));
+            row.Add(CreateTableCell(WasteBinCatalog.GetBinName(record.correctBinId), "col-3"));
+            row.Add(CreateNotFoundStatusCell());
+
+            return row;
+        }
+
+        private VisualElement CreateNotFoundStatusCell()
+        {
+            var column = new VisualElement();
+            column.AddToClassList("table-col");
+            column.AddToClassList("col-4");
+
+            var badge = new VisualElement();
+            badge.AddToClassList("status-badge");
+            badge.AddToClassList("warning");
+
+            if (exitAlertIcon != null)
+            {
+                var icon = new Image
+                {
+                    image = exitAlertIcon,
+                    scaleMode = ScaleMode.ScaleToFit,
+                    tintColor = NotFoundStatusColor
+                };
+                icon.AddToClassList("status-icon");
+                badge.Add(icon);
+            }
+
+            var statusText = new Label(WasteCollectionLocalization.StatusNotFound(WasteCollectionLocalization.IsEnglish));
+            statusText.AddToClassList("status-badge-text");
+            statusText.AddToClassList("warning");
+            badge.Add(statusText);
+            column.Add(badge);
+            return column;
         }
 
         private static VisualElement CreateTableCell(string text, string columnClass)

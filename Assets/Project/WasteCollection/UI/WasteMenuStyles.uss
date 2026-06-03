@@ -454,6 +454,11 @@
     border-color: rgba(244, 63, 94, 0.35);
 }
 
+.status-badge.warning {
+    background-color: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
 .status-badge-text {
     font-size: 12px;
     -unity-font-style: bold;
@@ -465,6 +470,10 @@
 
 .status-badge-text.danger {
     color: var(--color-danger);
+}
+
+.status-badge-text.warning {
+    color: rgb(251, 191, 36);
 }
 
 .restart-button {

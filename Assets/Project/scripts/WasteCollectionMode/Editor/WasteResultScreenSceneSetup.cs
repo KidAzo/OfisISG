@@ -18,6 +18,8 @@ namespace Woi.WasteCollectionMode.Editor
             "Packages/com.woi.module.fire/Runtime/InputSystem/InputsSO/InputEvents/preOnGameFinishEvent.asset";
         private const string HostObjectName = "WasteCollectionUI";
         private const string LegacyResultObjectName = "WasteResultScreenUI";
+        private const string ResultShowSoundPath =
+            "Assets/Project/WasteCollection/Audio/Result/ResultScreen.asset";
 
         [MenuItem("Waste Collection/Setup Result Screen In Scene")]
         public static void SetupResultScreenInScene()
@@ -70,6 +72,8 @@ namespace Woi.WasteCollectionMode.Editor
                     "Assets/Project/WasteCollection/UI/IconsPng/triangle-alert.png");
             serializedController.FindProperty("collectTracker").objectReferenceValue = tracker;
             serializedController.FindProperty("wasteSelectionMenu").objectReferenceValue = selectionMenu;
+            serializedController.FindProperty("resultShowSound").objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<LocalizedWasteSound>(ResultShowSoundPath);
             if (player != null)
                 serializedController.FindProperty("playerRoot").objectReferenceValue = player;
             serializedController.ApplyModifiedPropertiesWithoutUndo();

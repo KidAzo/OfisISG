@@ -106,6 +106,9 @@ namespace Woi.WasteCollectionMode
         public static string StatusIncorrect(bool english) =>
             T(english, "HATALI", "INCORRECT");
 
+        public static string StatusNotFound(bool english) =>
+            T(english, "BULUNAMADI", "NOT FOUND");
+
         public static string EmptyClassification(bool english) =>
             T(english, "Henüz sınıflandırma yapılmadı.", "No classifications yet.");
 
