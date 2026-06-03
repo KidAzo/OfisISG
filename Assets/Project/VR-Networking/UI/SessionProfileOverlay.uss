@@ -4,9 +4,11 @@
     height: 100%;
     position: relative;
     background-color: rgba(0, 0, 0, 0);
+    align-items: center;
+    justify-content: center;
 }
 
-/* World-space (VR): shrink-wrap card — avoids split layout across a giant dynamic panel */
+/* World-space (VR): card-sized root */
 .session-overlay-root.session-overlay-root--vr-world {
     flex-grow: 0;
     width: 520px;
@@ -16,13 +18,33 @@
     justify-content: center;
 }
 
+/* login-screen is position:absolute in WasteLoginStyles — override for session card */
+.session-profile-screen.login-screen {
+    position: relative;
+    left: auto;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
 .session-profile-screen {
     align-items: center;
     justify-content: center;
 }
 
+.session-profile-card.login-card {
+    width: 100%;
+    max-width: 420px;
+    align-self: center;
+    flex-shrink: 0;
+}
+
 .session-profile-card {
-    width: 420px;
     picking-mode: position;
 }
 
@@ -33,35 +55,50 @@
     -unity-text-align: middle-center;
     margin-bottom: 18px;
     white-space: normal;
+    align-self: stretch;
 }
 
 .session-status-label--ready {
     color: var(--color-accent);
 }
 
-.session-value-row {
+/* Same stack as WasteLogin TextField rows (login-field > Label + control) */
+.session-readonly-field {
     flex-direction: column;
-    margin-bottom: 12px;
+    align-items: stretch;
+    align-self: stretch;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
-.session-field-label {
-    font-size: 12px;
-    color: var(--color-text-gray);
+.session-readonly-field > Label:first-child {
+    align-self: flex-start;
+    width: 100%;
     margin-bottom: 6px;
+    -unity-text-align: upper-left;
 }
 
 .session-field-value {
+    align-self: stretch;
+    width: 100%;
+    min-height: 42px;
     background-color: var(--color-bg-field);
     border-width: 1px;
     border-color: rgb(42, 48, 65);
     border-radius: 10px;
     padding-left: 12px;
     padding-right: 12px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
     color: var(--color-text-white);
     font-size: 14px;
     -unity-font-style: bold;
+    -unity-text-align: middle-left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .session-field-value--waiting {
@@ -77,6 +114,8 @@
 .session-language-row {
     flex-direction: row;
     justify-content: space-between;
+    align-self: stretch;
+    width: 100%;
     margin-top: 4px;
 }
 

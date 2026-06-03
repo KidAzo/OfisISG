@@ -11,12 +11,12 @@
                 <ui:Label name="SessionStatusLabel" text="Sunucudan veri bekleniyor…" class="session-status-label"/>
                 <ui:VisualElement class="login-section">
                     <ui:Label name="SessionProfileSectionLabel" text="KULLANICI PROFİLİ" class="login-section-label"/>
-                    <ui:VisualElement class="session-value-row">
-                        <ui:Label name="PlayerNameFieldLabel" text="Ad Soyad" class="session-field-label"/>
+                    <ui:VisualElement class="login-field session-readonly-field">
+                        <ui:Label name="PlayerNameFieldLabel" text="Ad Soyad"/>
                         <ui:Label name="PlayerNameValue" text="—" class="session-field-value session-field-value--waiting"/>
                     </ui:VisualElement>
-                    <ui:VisualElement class="session-value-row">
-                        <ui:Label name="PlayerIdFieldLabel" text="Kullanıcı ID" class="session-field-label"/>
+                    <ui:VisualElement class="login-field session-readonly-field">
+                        <ui:Label name="PlayerIdFieldLabel" text="Kullanıcı ID"/>
                         <ui:Label name="PlayerIdValue" text="—" class="session-field-value session-field-value--waiting"/>
                     </ui:VisualElement>
                 </ui:VisualElement>
