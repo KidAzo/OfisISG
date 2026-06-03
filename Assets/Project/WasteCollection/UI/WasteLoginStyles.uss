@@ -32,6 +32,9 @@
     right: 0;
     bottom: 0;
     background-color: var(--color-bg-darkest);
+    background-image: url("project://database/Assets/Project/Sprites/gaussImage.jpg");
+    -unity-background-scale-mode: scale-and-crop;
+    overflow: hidden;
 }
 
 .login-glow-accent {
@@ -85,6 +88,7 @@
     width: 32px;
     height: 32px;
     flex-shrink: 0;
+    -unity-image-tint-color: rgb(0, 255, 178);
 }
 
 .login-title-sub {

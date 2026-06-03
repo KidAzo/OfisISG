@@ -111,6 +111,9 @@ namespace Woi.WasteCollectionMode.Editor
             serializedController.FindProperty("loginIcon").objectReferenceValue =
                 AssetDatabase.LoadAssetAtPath<Texture2D>(
                     "Assets/Project/WasteCollection/UI/IconsPng/trash-2.png");
+            serializedController.FindProperty("gaussBackgroundImage").objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<Texture2D>(
+                    "Assets/Project/Sprites/gaussImage.jpg");
             serializedController.ApplyModifiedPropertiesWithoutUndo();
 
             EditorUtility.SetDirty(host);

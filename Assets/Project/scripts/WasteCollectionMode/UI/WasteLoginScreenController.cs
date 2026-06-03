@@ -17,19 +17,23 @@ namespace Woi.WasteCollectionMode
     {
         private const string LoginIconPath =
             "Assets/Project/WasteCollection/UI/IconsPng/trash-2.png";
+        private const string GaussBackgroundPath =
+            "Assets/Project/Sprites/gaussImage.jpg";
         private const string TargetSceneGroup = OfficeGameModulesBootstrapper.WasteCollectorSceneGroup;
 
         private static readonly Color LoginIconTint = new(0f, 1f, 0.698f, 1f);
 
         [SerializeField] private UIDocument uiDocument;
         [SerializeField] private Texture2D loginIcon;
+        [SerializeField] private Texture2D gaussBackgroundImage;
 
         private TextField userNameField;
         private TextField userIdField;
         private DropdownField languageDropdown;
         private Button startButton;
         private Label errorLabel;
-        private VisualElement loginIconHost;
+        private Image loginIconImage;
+        private VisualElement loginBackground;
         private Label loginTitleSub;
         private Label loginTitleMain;
         private Label profileSectionLabel;
@@ -46,6 +50,7 @@ namespace Woi.WasteCollectionMode
                 uiDocument = GetComponent<UIDocument>();
 
             ResolveLoginIcon();
+            ResolveGaussBackground();
         }
 
         private void OnEnable()
@@ -111,9 +116,21 @@ namespace Woi.WasteCollectionMode
 
         private void ResolveLoginIcon()
         {
+            if (loginIcon != null)
+                return;
+
 #if UNITY_EDITOR
-            if (loginIcon == null)
-                loginIcon = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>(LoginIconPath);
+            loginIcon = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>(LoginIconPath);
+#endif
+        }
+
+        private void ResolveGaussBackground()
+        {
+            if (gaussBackgroundImage != null)
+                return;
+
+#if UNITY_EDITOR
+            gaussBackgroundImage = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>(GaussBackgroundPath);
 #endif
         }
 
@@ -128,7 +145,8 @@ namespace Woi.WasteCollectionMode
             languageDropdown = root.Q<DropdownField>("LanguageDropdown");
             startButton = root.Q<Button>("StartButton");
             errorLabel = root.Q<Label>("LoginErrorLabel");
-            loginIconHost = root.Q<VisualElement>("LoginIconHost");
+            loginIconImage = root.Q<Image>("LoginIconHost");
+            loginBackground = root.Q<VisualElement>("LoginBackground");
             loginTitleSub = root.Q<Label>("LoginTitleSub");
             loginTitleMain = root.Q<Label>("LoginTitleMain");
             profileSectionLabel = root.Q<Label>("ProfileSectionLabel");
@@ -137,21 +155,39 @@ namespace Woi.WasteCollectionMode
             leaderboardRows = root.Q<VisualElement>("leaderboard-rows");
 
             ApplyLoginIcon();
+            ApplyGaussBackground();
             ClearError();
             return startButton != null;
         }
 
-        private void ApplyLoginIcon()
+        private void ApplyGaussBackground()
         {
-            if (loginIconHost == null || loginIcon == null)
+            if (loginBackground == null)
                 return;
 
-            loginIconHost.style.width = 32f;
-            loginIconHost.style.height = 32f;
-            loginIconHost.style.flexShrink = 0;
-            loginIconHost.style.backgroundImage = new StyleBackground(loginIcon);
-            loginIconHost.style.unityBackgroundImageTintColor = LoginIconTint;
-            loginIconHost.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Contain);
+            ResolveGaussBackground();
+
+            if (gaussBackgroundImage == null)
+                return;
+
+            loginBackground.style.backgroundImage = new StyleBackground(gaussBackgroundImage);
+            loginBackground.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Cover);
+            loginBackground.style.backgroundPositionX = new BackgroundPosition(BackgroundPositionKeyword.Center);
+            loginBackground.style.backgroundPositionY = new BackgroundPosition(BackgroundPositionKeyword.Center);
+        }
+
+        private void ApplyLoginIcon()
+        {
+            if (loginIconImage == null)
+                return;
+
+            ResolveLoginIcon();
+
+            if (loginIcon != null)
+                loginIconImage.image = loginIcon;
+
+            loginIconImage.tintColor = LoginIconTint;
+            loginIconImage.scaleMode = ScaleMode.ScaleToFit;
         }
 
         private void OnLanguageChanged(ChangeEvent<string> evt)

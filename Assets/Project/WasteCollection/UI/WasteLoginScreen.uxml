@@ -1,40 +1,34 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
-    <Style src="WasteLoginStyles.uss" />
-
+    <Style src="project://database/Assets/Project/WasteCollection/UI/WasteLoginStyles.uss?fileID=7433441132597879392&amp;guid=128034c6e9a8a5941b4ea614361742f7&amp;type=3#WasteLoginStyles"/>
     <ui:VisualElement class="login-root">
-        <ui:VisualElement class="login-background">
-            <ui:VisualElement class="login-glow-accent" />
+        <ui:VisualElement name="LoginBackground" class="login-background">
+            <ui:VisualElement class="login-glow-accent"/>
+            <ui:VisualElement style="flex-grow: 1; align-content: flex-end; align-self: flex-start; position: absolute; left: 20px; bottom: 20px; min-width: auto; min-height: auto; background-image: url(&quot;project://database/Assets/Project/Sprites/ISG_DT_Logo_Original.png?fileID=2800000&amp;guid=018c8f1c5b33a0340b454aea997df672&amp;type=3#ISG_DT_Logo_Original&quot;);"/>
         </ui:VisualElement>
-
         <ui:VisualElement name="LeaderboardPanel" class="leaderboard-panel">
-            <ui:Label name="LeaderboardTitle" text="BAŞARI TABLOSU" class="leaderboard-title" />
-            <ui:VisualElement name="leaderboard-rows" class="leaderboard-rows" />
+            <ui:Label name="LeaderboardTitle" text="BAŞARI TABLOSU" class="leaderboard-title"/>
+            <ui:VisualElement name="leaderboard-rows" class="leaderboard-rows"/>
         </ui:VisualElement>
-
         <ui:VisualElement class="login-screen flex-center">
             <ui:VisualElement class="login-card">
                 <ui:VisualElement class="login-header">
-                <ui:VisualElement class="login-icon-box flex-center">
-                    <ui:VisualElement name="LoginIconHost" class="login-icon" />
+                    <ui:VisualElement class="login-icon-box flex-center">
+                        <ui:Image name="LoginIconHost" src="project://database/Assets/Project/WasteCollection/UI/IconsPng/trash-2.png" picking-mode="Ignore" class="login-icon" style="background-image: url(&quot;project://database/Assets/Project/WasteCollection/UI/IconsPng/trash-2.png?fileID=2800000&amp;guid=28b14a2f32ff4213a86dc6b9048639b5&amp;type=3#trash-2&quot;); -unity-background-image-tint-color: rgb(0, 0, 0);"/>
+                    </ui:VisualElement>
+                    <ui:Label name="LoginTitleSub" text="Sıfır Atık" class="login-title-sub accent-color"/>
+                    <ui:Label name="LoginTitleMain" text="EĞİTİM SİMÜLATÖRÜ" class="login-title-main"/>
                 </ui:VisualElement>
-                    <ui:Label name="LoginTitleSub" text="Sıfır Atık" class="login-title-sub accent-color" />
-                    <ui:Label name="LoginTitleMain" text="EĞİTİM SİMÜLATÖRÜ" class="login-title-main" />
-                </ui:VisualElement>
-
                 <ui:VisualElement class="login-section">
-                    <ui:Label name="ProfileSectionLabel" text="KULLANICI PROFİLİ" class="login-section-label" />
-                    <ui:TextField name="UserNameField" label="Ad Soyad" class="login-field" />
-                    <ui:TextField name="UserIdField" label="Kullanıcı ID" class="login-field" />
+                    <ui:Label name="ProfileSectionLabel" text="KULLANICI PROFİLİ" class="login-section-label"/>
+                    <ui:TextField name="UserNameField" label="Ad Soyad" class="login-field"/>
+                    <ui:TextField name="UserIdField" label="Kullanıcı ID" class="login-field"/>
                 </ui:VisualElement>
-
                 <ui:VisualElement class="login-section">
-                    <ui:Label name="LanguageSectionLabel" text="DİL" class="login-section-label" />
-                    <ui:DropdownField name="LanguageDropdown" choices="Türkçe,English" value="Türkçe" class="login-dropdown" />
+                    <ui:Label name="LanguageSectionLabel" text="DİL" class="login-section-label"/>
+                    <ui:DropdownField name="LanguageDropdown" choices="Türkçe,English" value="Türkçe" class="login-dropdown"/>
                 </ui:VisualElement>
-
-                <ui:Label name="LoginErrorLabel" text="" class="login-error" style="display: none;" />
-
-                <ui:Button name="StartButton" text="OYUNU BAŞLAT" class="login-start-button" />
+                <ui:Label name="LoginErrorLabel" text="" class="login-error" style="display: none;"/>
+                <ui:Button name="StartButton" text="OYUNU BAŞLAT" class="login-start-button"/>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
