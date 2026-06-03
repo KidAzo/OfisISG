@@ -14,6 +14,10 @@ namespace Woi.InputSystem
         [SerializeField] private ScriptableEventNoParam preOnGameplayFinishedInput;
         //[SerializeField] private ScriptableEnumPortingVariable portingVariable;
 
+        public ScriptableEventNoParam InteractEvent => onInteractInput;
+
+        public ScriptableEventNoParam PreOnGameplayFinishedEvent => preOnGameplayFinishedInput;
+
         public override void OnEnter()
         {
             if (inputActions == null)

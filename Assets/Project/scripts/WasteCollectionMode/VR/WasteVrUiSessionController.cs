@@ -25,6 +25,7 @@ namespace Woi.WasteCollectionMode
 
         private bool modalUiOpen;
         private bool sessionApplied;
+        private int lastModalFingerprint = -1;
 
         private void Awake()
         {
@@ -61,6 +62,17 @@ namespace Woi.WasteCollectionMode
 
             modalUiOpen = shouldBeOpen;
             ApplySession(modalUiOpen);
+
+            int fingerprint = ComputeModalFingerprint();
+            if (modalUiOpen && fingerprint != lastModalFingerprint)
+            {
+                lastModalFingerprint = fingerprint;
+                worldUiPresenter?.NotifyContentLayoutChanged();
+            }
+            else if (!modalUiOpen)
+            {
+                lastModalFingerprint = -1;
+            }
         }
 
         private void OnDisable()
@@ -96,6 +108,22 @@ namespace Woi.WasteCollectionMode
                 return true;
 
             return false;
+        }
+
+        private int ComputeModalFingerprint()
+        {
+            int fingerprint = 0;
+            if (selectionMenu != null && selectionMenu.IsVisible)
+                fingerprint |= 1 << 0;
+            if (resultScreen != null && resultScreen.IsVisible)
+                fingerprint |= 1 << 1;
+            if (resultScreen != null && resultScreen.IsExitVisible)
+                fingerprint |= 1 << 2;
+            if (resultScreen != null && resultScreen.IsResultVisible)
+                fingerprint |= 1 << 3;
+            if (explanationPopup != null && explanationPopup.IsVisible)
+                fingerprint |= 1 << 4;
+            return fingerprint;
         }
 
         private void ApplySession(bool open)

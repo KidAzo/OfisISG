@@ -58,6 +58,15 @@ namespace Woi.InputSystem
                 }
                 
                 inputActions.Gameplay.Enable();
+
+                if (portingVariable != null && portingVariable.CurrentValue == AppMode.XR)
+                {
+                    SetMoveEnabled(false);
+                    SetLookEnabled(false);
+                    SetSprintEnabled(false);
+                    SetLeanEnabled(false);
+                    SetInteractEnabled(false);
+                }
                 
                 inputActions.Gameplay.Move.performed += OnMove;
                 inputActions.Gameplay.Move.canceled += OnMove;

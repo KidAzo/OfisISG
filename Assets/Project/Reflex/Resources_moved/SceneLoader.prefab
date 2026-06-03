@@ -226,6 +226,7 @@ MonoBehaviour:
   - Managers/SceneLoader
   - Managers/InputManager
   - Managers/PortingVariable
+  - Managers/XR-InputContext
   _catalogHealthTimeoutPerKeySeconds: 15
 --- !u!114 &8183518992933811479
 MonoBehaviour:

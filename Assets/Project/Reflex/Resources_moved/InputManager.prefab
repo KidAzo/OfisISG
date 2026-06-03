@@ -48,5 +48,6 @@ MonoBehaviour:
     PCContexts:
     - {fileID: 11400000, guid: 1ecc43e6e895b074eb8fa7d7788e8d20, type: 2}
     XRContexts:
+    - {fileID: 11400000, guid: 1ecc43e6e895b074eb8fa7d7788e8d20, type: 2}
     - {fileID: 11400000, guid: 8a0062946cdf35741ab93ca0b938a0de, type: 2}
   portingVariable: {fileID: 11400000, guid: d6a0c74088c2fa747a9332d4158c4dfa, type: 2}

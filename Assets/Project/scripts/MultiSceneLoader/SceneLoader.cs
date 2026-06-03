@@ -44,6 +44,7 @@ namespace Woi.Settings
 			"Managers/InputManager",
 			"Managers/PortingVariable",
 			"Managers/PC-GameplayContext",
+			"Managers/XR-InputContext",
 		};
 
 		[SerializeField] private float _catalogHealthTimeoutPerKeySeconds = 15f;

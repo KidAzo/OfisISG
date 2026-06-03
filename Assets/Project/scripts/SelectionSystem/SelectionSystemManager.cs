@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using Obvious.Soap;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Woi.InputSystem;
+using WOI.Modules.SDK;
 
 namespace Woi.SelectionSystem
 {
@@ -10,7 +12,7 @@ namespace Woi.SelectionSystem
     /// (<see cref="SelectionVrInteractionRay"/> → <see cref="FireVrGameplayInteractionRay"/>).
     /// </summary>
     [DisallowMultipleComponent]
-    public class SelectionSystemManager : MonoBehaviour
+    public class SelectionSystemManager : MonoBehaviour, ISoapInteractInputListener
     {
         private const string InteractEventPath =
             "Packages/com.woi.module.fire/Runtime/InputSystem/InputsSO/InputEvents/onInteractInput.asset";
@@ -187,10 +189,33 @@ namespace Woi.SelectionSystem
             if (interactInputEvent != null)
                 return;
 
+            if (ServiceLocator.TryGet<InputManager>(out InputManager inputManager) && inputManager != null)
+            {
+                VrInputContext vrContext = inputManager.GetVrInputContext();
+                if (vrContext != null && vrContext.InteractEvent != null)
+                {
+                    interactInputEvent = vrContext.InteractEvent;
+                    return;
+                }
+            }
+
 #if UNITY_EDITOR
             interactInputEvent =
                 UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableEventNoParam>(InteractEventPath);
 #endif
+        }
+
+        public bool IsListeningToDifferentInteractEvent(ScriptableEventNoParam liveInteractEvent) =>
+            interactInputEvent != null
+            && liveInteractEvent != null
+            && !ReferenceEquals(interactInputEvent, liveInteractEvent);
+
+        public void RebindInteractInputEvent(ScriptableEventNoParam liveInteractEvent)
+        {
+            DisableVrInput();
+            interactInputEvent = liveInteractEvent;
+            if (isActiveAndEnabled && inputEnabled && IsVrMode())
+                EnableVrInput();
         }
 
         private static void EnsurePortingReady()

@@ -170,6 +170,34 @@ namespace Woi.WasteCollectionMode
 
 
 
+        /// <summary>
+
+        /// Call when modal overlay content changes (exit → result, table rebuild, etc.) so the
+
+        /// world-space pick mesh/collider matches visible buttons for XR UI clicks.
+
+        /// </summary>
+
+        public void NotifyContentLayoutChanged()
+
+        {
+
+            if (!configuredForVr || uiDocument == null)
+
+                return;
+
+
+
+            ScheduleLayoutRefresh();
+
+            if (followActive)
+
+                SyncUidocumentWorldTransform();
+
+        }
+
+
+
         public void ApplyLayoutFromInspector()
 
         {

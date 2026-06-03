@@ -3,8 +3,9 @@ using Obvious.Soap;
 namespace Woi.InputSystem
 {
     /// <summary>
-    /// Scene objects that subscribe to <c>onInteractInput</c> (E) via serialized Soap assets.
-    /// <see cref="InputManager.SyncPcPlayerSoapEvents"/> rebinds them to the live GameplayInputContext instance.
+    /// Scene objects that subscribe to <c>onInteractInput</c> (E / VR trigger) via serialized Soap assets.
+    /// <see cref="InputManager.SyncPcPlayerSoapEvents"/> and <see cref="InputManager.SyncVrInteractSoapEvents"/>
+    /// rebind them to the live context instance loaded via Addressables.
     /// </summary>
     public interface ISoapInteractInputListener
     {

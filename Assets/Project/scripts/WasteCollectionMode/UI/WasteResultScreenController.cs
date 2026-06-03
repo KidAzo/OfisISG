@@ -43,6 +43,7 @@ namespace Woi.WasteCollectionMode
 
         [Header("VR")]
         [SerializeField] private WasteVrLocomotionGate vrLocomotionGate;
+        [SerializeField] private WasteWorldUiPresenter worldUiPresenter;
 
         [Header("Player")]
         [SerializeField] private Transform playerRoot;
@@ -83,10 +84,10 @@ namespace Woi.WasteCollectionMode
         public bool IsVisible =>
             IsExitVisible || IsResultVisible;
 
-        private bool IsExitVisible =>
+        public bool IsExitVisible =>
             exitOverlay != null && exitOverlay.style.display == DisplayStyle.Flex;
 
-        private bool IsResultVisible =>
+        public bool IsResultVisible =>
             overlay != null && overlay.style.display == DisplayStyle.Flex;
 
         private void Awake()
@@ -105,6 +106,9 @@ namespace Woi.WasteCollectionMode
 
             if (vrLocomotionGate == null)
                 vrLocomotionGate = GetComponent<WasteVrLocomotionGate>();
+
+            if (worldUiPresenter == null)
+                worldUiPresenter = GetComponent<WasteWorldUiPresenter>();
 
             ResolveStatusIcons();
         }
@@ -173,6 +177,18 @@ namespace Woi.WasteCollectionMode
 
             if (quitButton != null)
                 quitButton.clicked -= OnQuitClicked;
+
+            if (restartButton != null)
+                restartButton.UnregisterCallback<ClickEvent>(OnRestartClickEvent);
+
+            if (quitButton != null)
+                quitButton.UnregisterCallback<ClickEvent>(OnQuitClickEvent);
+
+            if (cancelButton != null)
+                cancelButton.UnregisterCallback<ClickEvent>(OnCancelClickEvent);
+
+            if (confirmExitButton != null)
+                confirmExitButton.UnregisterCallback<ClickEvent>(OnConfirmExitClickEvent);
 
             if (cancelButton != null)
                 cancelButton.clicked -= OnCancelClicked;
@@ -260,12 +276,16 @@ namespace Woi.WasteCollectionMode
             {
                 cancelButton.clicked -= OnCancelClicked;
                 cancelButton.clicked += OnCancelClicked;
+                cancelButton.UnregisterCallback<ClickEvent>(OnCancelClickEvent);
+                cancelButton.RegisterCallback<ClickEvent>(OnCancelClickEvent);
             }
 
             if (confirmExitButton != null)
             {
                 confirmExitButton.clicked -= OnConfirmExitClicked;
                 confirmExitButton.clicked += OnConfirmExitClicked;
+                confirmExitButton.UnregisterCallback<ClickEvent>(OnConfirmExitClickEvent);
+                confirmExitButton.RegisterCallback<ClickEvent>(OnConfirmExitClickEvent);
             }
 
             ApplyExitIcon();
@@ -274,12 +294,16 @@ namespace Woi.WasteCollectionMode
             {
                 restartButton.clicked -= OnRestartClicked;
                 restartButton.clicked += OnRestartClicked;
+                restartButton.UnregisterCallback<ClickEvent>(OnRestartClickEvent);
+                restartButton.RegisterCallback<ClickEvent>(OnRestartClickEvent);
             }
 
             if (quitButton != null)
             {
                 quitButton.clicked -= OnQuitClicked;
                 quitButton.clicked += OnQuitClicked;
+                quitButton.UnregisterCallback<ClickEvent>(OnQuitClickEvent);
+                quitButton.RegisterCallback<ClickEvent>(OnQuitClickEvent);
             }
 
             ApplyLocalizedTexts();
@@ -367,6 +391,7 @@ namespace Woi.WasteCollectionMode
 
             exitOverlay.style.display = DisplayStyle.Flex;
             FreezePlayerInput();
+            RefreshVrWorldPanelLayout();
         }
 
         private void HideExit()
@@ -378,6 +403,8 @@ namespace Woi.WasteCollectionMode
 
             if (!IsResultVisible)
                 RestorePlayerInput();
+
+            RefreshVrWorldPanelLayout();
         }
 
         private void ShowResult()
@@ -389,6 +416,7 @@ namespace Woi.WasteCollectionMode
             ExportSessionResultsIfNeeded();
             overlay.style.display = DisplayStyle.Flex;
             FreezePlayerInput();
+            RefreshVrWorldPanelLayout();
         }
 
         private IEnumerator PlaySceneIntroSoundWhenReady()
@@ -525,6 +553,43 @@ namespace Woi.WasteCollectionMode
 
             if (!IsExitVisible)
                 RestorePlayerInput();
+
+            RefreshVrWorldPanelLayout();
+        }
+
+        private void OnCancelClickEvent(ClickEvent evt)
+        {
+            evt.StopImmediatePropagation();
+            OnCancelClicked();
+        }
+
+        private void OnConfirmExitClickEvent(ClickEvent evt)
+        {
+            evt.StopImmediatePropagation();
+            OnConfirmExitClicked();
+        }
+
+        private void OnRestartClickEvent(ClickEvent evt)
+        {
+            evt.StopImmediatePropagation();
+            OnRestartClicked();
+        }
+
+        private void OnQuitClickEvent(ClickEvent evt)
+        {
+            evt.StopImmediatePropagation();
+            OnQuitClicked();
+        }
+
+        private void RefreshVrWorldPanelLayout()
+        {
+            if (!WasteCollectionPlatform.ShouldUseVrPresentation())
+                return;
+
+            if (worldUiPresenter == null)
+                worldUiPresenter = GetComponent<WasteWorldUiPresenter>();
+
+            worldUiPresenter?.NotifyContentLayoutChanged();
         }
 
         private void OnCancelClicked()

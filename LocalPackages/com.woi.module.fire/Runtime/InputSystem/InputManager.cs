@@ -56,6 +56,7 @@ public class InputManager : MonoBehaviour, IInputProvider
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         EnsurePcGameplayInputEnabled();
+        EnsureVrGameplayInputEnabled();
     }
 
     private void Update()
@@ -279,6 +280,173 @@ public class InputManager : MonoBehaviour, IInputProvider
         }
 
         return null;
+    }
+
+    public VrInputContext GetVrInputContext()
+    {
+        if (inputSets.XRContexts == null)
+            return null;
+
+        for (int i = 0; i < inputSets.XRContexts.Length; i++)
+        {
+            if (inputSets.XRContexts[i] is VrInputContext vrContext)
+                return vrContext;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Ensures VR gameplay actions stay active after additive scene loads (grab, fire, pin-pull on Gameplay map).
+    /// </summary>
+    public void EnsureVrGameplayInputEnabled()
+    {
+        if (portingVariable != null && portingVariable.CurrentValue != AppMode.XR)
+            return;
+
+        if (inputActions == null)
+        {
+            if (portingVariable == null)
+            {
+                Debug.LogError("[InputManager] portingVariable is not assigned — cannot initialize VR input.");
+                return;
+            }
+
+            EnsureInputSystemInitialized();
+            SyncVrInteractSoapEvents();
+            SyncVrGripSoapEvents();
+            return;
+        }
+
+        inputActions.Enable();
+        if (!inputActions.XR.enabled)
+            inputActions.XR.Enable();
+        if (!inputActions.Gameplay.enabled)
+            inputActions.Gameplay.Enable();
+
+        SyncVrInteractSoapEvents();
+        SyncVrGripSoapEvents();
+    }
+
+    /// <summary>
+    /// Rebinds scene listeners to the live <see cref="VrInputContext"/> Soap interact event
+    /// (Addressables can duplicate ScriptableObject instances — same fix as PC WASD sync).
+    /// </summary>
+    public void SyncVrInteractSoapEvents()
+    {
+        VrInputContext vrContext = GetVrInputContext();
+        if (vrContext == null)
+        {
+            Debug.LogError(
+                "[InputManager] VrInputContext missing — cannot sync VR interact Soap events. " +
+                "Assign XR-InputContext on InputManager prefab and rebuild Addressables.");
+            return;
+        }
+
+        ScriptableEventNoParam interact = vrContext.InteractEvent;
+        if (interact == null)
+        {
+            Debug.LogError("[InputManager] VrInputContext has null onInteractInput Soap event.");
+            return;
+        }
+
+        MonoBehaviour[] allBehaviours = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+
+        int rebound = 0;
+        for (int i = 0; i < allBehaviours.Length; i++)
+        {
+            if (allBehaviours[i] is not ISoapInteractInputListener listener)
+                continue;
+
+            if (!allBehaviours[i].gameObject.activeInHierarchy)
+                continue;
+
+            bool wasSplit = listener.IsListeningToDifferentInteractEvent(interact);
+            listener.RebindInteractInputEvent(interact);
+            rebound++;
+
+            if (wasSplit)
+            {
+                Debug.LogWarning(
+                    $"[InputManager] Rebound VR interact on '{allBehaviours[i].name}' — Addressables had split onInteractInput instance.",
+                    allBehaviours[i]);
+            }
+        }
+
+        if (rebound == 0)
+        {
+            Debug.LogWarning(
+                "[InputManager] SyncVrInteractSoapEvents: no active ISoapInteractInputListener found yet.");
+        }
+        else
+        {
+            Debug.Log(
+                $"[InputManager] SyncVrInteractSoapEvents: rebound interact on {rebound} listener(s). " +
+                $"interactEvent='{interact.name}' xrEnabled={inputActions != null && inputActions.XR.enabled} " +
+                $"gameplayEnabled={inputActions != null && inputActions.Gameplay.enabled}");
+        }
+    }
+
+    /// <summary>
+    /// Rebinds scene listeners to the live <see cref="VrInputContext"/> grip Soap event
+    /// (Addressables can duplicate ScriptableObject instances).
+    /// </summary>
+    public void SyncVrGripSoapEvents()
+    {
+        VrInputContext vrContext = GetVrInputContext();
+        if (vrContext == null)
+        {
+            Debug.LogError(
+                "[InputManager] VrInputContext missing — cannot sync VR grip Soap events. " +
+                "Assign XR-InputContext on InputManager prefab and rebuild Addressables.");
+            return;
+        }
+
+        ScriptableEventNoParam grip = vrContext.PreOnGameplayFinishedEvent;
+        if (grip == null)
+        {
+            Debug.LogError("[InputManager] VrInputContext has null preOnGameplayFinishedInput Soap event.");
+            return;
+        }
+
+        MonoBehaviour[] allBehaviours = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None);
+
+        int rebound = 0;
+        for (int i = 0; i < allBehaviours.Length; i++)
+        {
+            if (allBehaviours[i] is not ISoapVrGripInputListener listener)
+                continue;
+
+            if (!allBehaviours[i].gameObject.activeInHierarchy)
+                continue;
+
+            bool wasSplit = listener.IsListeningToDifferentGripEvent(grip);
+            listener.RebindGripInputEvent(grip);
+            rebound++;
+
+            if (wasSplit)
+            {
+                Debug.LogWarning(
+                    $"[InputManager] Rebound VR grip on '{allBehaviours[i].name}' — Addressables had split preOnGameFinishEvent instance.",
+                    allBehaviours[i]);
+            }
+        }
+
+        if (rebound == 0)
+        {
+            Debug.LogWarning(
+                "[InputManager] SyncVrGripSoapEvents: no active ISoapVrGripInputListener found yet.");
+        }
+        else
+        {
+            Debug.Log(
+                $"[InputManager] SyncVrGripSoapEvents: rebound grip on {rebound} listener(s). " +
+                $"gripEvent='{grip.name}' xrEnabled={inputActions != null && inputActions.XR.enabled}");
+        }
     }
 
     /*private void OnApplicationFocus(bool hasFocus)

@@ -69,6 +69,7 @@ namespace WOI.Module.Fire.DI
 
             // Start() may run next frame; ensure gameplay map + Soap chain for any early player.
             inputManager.EnsurePcGameplayInputEnabled();
+            inputManager.EnsureVrGameplayInputEnabled();
 
             Debug.Log("[FireServiceInstaller] InstallBindings START");
 

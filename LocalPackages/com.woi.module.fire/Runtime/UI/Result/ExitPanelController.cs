@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
+using Obvious.Soap;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Unity.XR.CoreUtils;
 using WOI.Modules.SDK;
+using Woi.InputSystem;
 using Woi.Player;
 using Woi.Game.Training.UI;
 using Woi.UI.Popups.Localization;
@@ -20,7 +22,7 @@ namespace Woi.UI.Result
     /// </summary>
     [AddComponentMenu("Woi/UI/Exit Panel Controller")]
     [RequireComponent(typeof(UIDocument))]
-    public sealed class ExitPanelController : MonoBehaviour
+    public sealed class ExitPanelController : MonoBehaviour, ISoapVrGripInputListener
     {
         const string MainContainerName = "MainContainer";
         const string BtnYesName = "BtnYes";
@@ -38,6 +40,10 @@ namespace Woi.UI.Result
         [Tooltip("Kapalıyken Started = panel açılır; panel zaten açıkken aynı girdi = panel kapanır (Hayır ile aynı).")]
         [SerializeField]
         InputActionReference _openPanelAction;
+
+        [Tooltip("Boşsa InputManager/VrInputContext üzerinden preOnGameFinishEvent bağlanır (Addressables VR grip).")]
+        [SerializeField]
+        ScriptableEventNoParam _openPanelGripEvent;
 
         [Header("VR — konum (XR Origin göz kamerası)")]
         [Tooltip("Panel açıkken baş kamerasının ileri ekseninde ne kadar ileride dursun (metre).")]
@@ -109,11 +115,15 @@ namespace Woi.UI.Result
 
         void OnEnable()
         {
+            ResolveOpenPanelGripEvent();
+
             if (_openPanelAction != null && _openPanelAction.action != null)
             {
                 _openPanelAction.action.Enable();
                 _openPanelAction.action.started += OnOpenActionStarted;
             }
+
+            SubscribeOpenPanelGripEvent();
 
             if (_bindRoutine != null)
             {
@@ -131,6 +141,8 @@ namespace Woi.UI.Result
                 _openPanelAction.action.started -= OnOpenActionStarted;
                 _openPanelAction.action.Disable();
             }
+
+            UnsubscribeOpenPanelGripEvent();
 
             if (_bindRoutine != null)
             {
@@ -242,10 +254,66 @@ namespace Woi.UI.Result
 
         void OnOpenActionStarted(InputAction.CallbackContext _)
         {
+            TogglePanelFromGripInput();
+        }
+
+        void OnOpenPanelGripEventRaised()
+        {
+            TogglePanelFromGripInput();
+        }
+
+        void TogglePanelFromGripInput()
+        {
             if (_isOpen)
                 SetPanelVisible(false);
             else
                 SetPanelVisible(true);
+        }
+
+        public bool IsListeningToDifferentGripEvent(ScriptableEventNoParam liveGripEvent) =>
+            _openPanelGripEvent != null
+            && liveGripEvent != null
+            && !ReferenceEquals(_openPanelGripEvent, liveGripEvent);
+
+        public void RebindGripInputEvent(ScriptableEventNoParam liveGripEvent)
+        {
+            UnsubscribeOpenPanelGripEvent();
+            _openPanelGripEvent = liveGripEvent;
+            if (isActiveAndEnabled)
+                SubscribeOpenPanelGripEvent();
+        }
+
+        void ResolveOpenPanelGripEvent()
+        {
+            if (_openPanelGripEvent != null)
+                return;
+
+            if (ServiceLocator.TryGet<InputManager>(out InputManager inputManager) && inputManager != null)
+            {
+                VrInputContext vrContext = inputManager.GetVrInputContext();
+                if (vrContext != null && vrContext.PreOnGameplayFinishedEvent != null)
+                {
+                    _openPanelGripEvent = vrContext.PreOnGameplayFinishedEvent;
+                    return;
+                }
+            }
+
+#if UNITY_EDITOR
+            _openPanelGripEvent = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableEventNoParam>(
+                "Packages/com.woi.module.fire/Runtime/InputSystem/InputsSO/InputEvents/preOnGameFinishEvent.asset");
+#endif
+        }
+
+        void SubscribeOpenPanelGripEvent()
+        {
+            if (_openPanelGripEvent != null)
+                _openPanelGripEvent.OnRaised += OnOpenPanelGripEventRaised;
+        }
+
+        void UnsubscribeOpenPanelGripEvent()
+        {
+            if (_openPanelGripEvent != null)
+                _openPanelGripEvent.OnRaised -= OnOpenPanelGripEventRaised;
         }
 
         void OnNoClicked()

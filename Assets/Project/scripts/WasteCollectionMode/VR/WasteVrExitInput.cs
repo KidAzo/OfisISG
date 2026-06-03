@@ -1,5 +1,7 @@
 using Obvious.Soap;
 using UnityEngine;
+using Woi.InputSystem;
+using WOI.Modules.SDK;
 
 namespace Woi.WasteCollectionMode
 {
@@ -7,7 +9,7 @@ namespace Woi.WasteCollectionMode
     /// VR: right grip opens/closes the waste exit overlay (same as Tab on PC).
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class WasteVrExitInput : MonoBehaviour
+    public sealed class WasteVrExitInput : MonoBehaviour, ISoapVrGripInputListener
     {
         private const string GripEventPath =
             "Packages/com.woi.module.fire/Runtime/InputSystem/InputsSO/InputEvents/preOnGameFinishEvent.asset";
@@ -33,11 +35,35 @@ namespace Woi.WasteCollectionMode
             if (!WasteCollectionPlatform.ShouldUseVrPresentation())
                 return;
 
+            ResolveGripEvent();
+            SubscribeGrip();
+        }
+
+        private void OnDisable()
+        {
+            UnsubscribeGrip();
+        }
+
+        public bool IsListeningToDifferentGripEvent(ScriptableEventNoParam liveGripEvent) =>
+            gripInputEvent != null
+            && liveGripEvent != null
+            && !ReferenceEquals(gripInputEvent, liveGripEvent);
+
+        public void RebindGripInputEvent(ScriptableEventNoParam liveGripEvent)
+        {
+            UnsubscribeGrip();
+            gripInputEvent = liveGripEvent;
+            if (isActiveAndEnabled && WasteCollectionPlatform.ShouldUseVrPresentation())
+                SubscribeGrip();
+        }
+
+        private void SubscribeGrip()
+        {
             if (gripInputEvent != null)
                 gripInputEvent.OnRaised += OnGripInput;
         }
 
-        private void OnDisable()
+        private void UnsubscribeGrip()
         {
             if (gripInputEvent != null)
                 gripInputEvent.OnRaised -= OnGripInput;
@@ -61,6 +87,16 @@ namespace Woi.WasteCollectionMode
         {
             if (gripInputEvent != null)
                 return;
+
+            if (ServiceLocator.TryGet<InputManager>(out InputManager inputManager) && inputManager != null)
+            {
+                VrInputContext vrContext = inputManager.GetVrInputContext();
+                if (vrContext != null && vrContext.PreOnGameplayFinishedEvent != null)
+                {
+                    gripInputEvent = vrContext.PreOnGameplayFinishedEvent;
+                    return;
+                }
+            }
 
 #if UNITY_EDITOR
             gripInputEvent =
