@@ -570,12 +570,14 @@ namespace Woi.WasteCollectionMode
             if (classifications.Count == 0)
                 return;
 
-            string path = WasteSessionResultCsvExporter.AppendSession(classifications);
-            if (!string.IsNullOrEmpty(path))
-            {
-                sessionResultsExported = true;
-                RecordLeaderboardScore(classifications);
-            }
+            string path = WasteSessionResultCsvExporter.ExportSession(classifications);
+            sessionResultsExported = true;
+            RecordLeaderboardScore(classifications);
+
+            if (string.IsNullOrEmpty(path))
+                Debug.LogWarning(
+                    "[WasteResultScreenController] Local CSV path unavailable (VR build may still have uploaded to PC).",
+                    this);
         }
 
         private static void RecordLeaderboardScore(IReadOnlyList<WasteClassificationRecord> classifications)
@@ -591,23 +593,7 @@ namespace Woi.WasteCollectionMode
                 ? Mathf.RoundToInt(correct * 100f / classifications.Count)
                 : 0;
 
-            string userName;
-            string userId;
-            if (WasteLoginSession.IsSet)
-            {
-                userName = WasteLoginSession.UserName;
-                userId = WasteLoginSession.UserId;
-            }
-            else if (GameSessionData.IsSet)
-            {
-                userName = GameSessionData.UserName;
-                userId = GameSessionData.UserId;
-            }
-            else
-            {
-                userName = string.Empty;
-                userId = string.Empty;
-            }
+            WasteSessionResultCsvExporter.ResolveIdentity(out string userName, out string userId);
 
             WasteLeaderboardStore.TryRecordScore(userName, userId, successPercent);
         }
