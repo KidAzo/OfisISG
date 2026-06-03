@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Woi.Events.Data;
 using Woi.WasteCollectionMode;
 
 namespace Woi.DataHandler.Editor
@@ -31,6 +32,7 @@ namespace Woi.DataHandler.Editor
                 EnsureSessionUi(prefabRoot);
                 EnsureGameplayGate(prefabRoot);
                 EnsureVrLocomotionGate(prefabRoot);
+                EnsureSessionDataBridge(prefabRoot);
                 PrefabUtility.SaveAsPrefabAsset(prefabRoot, NetworkingPrefabPath);
                 Debug.Log("[SessionNetworkingPrefabSetup] NetworkingSystem prefab updated.");
             }
@@ -144,6 +146,22 @@ namespace Woi.DataHandler.Editor
             SerializedObject so = new SerializedObject(sessionGate);
             so.FindProperty("vrLocomotionGate").objectReferenceValue = gate;
             so.FindProperty("teleportPlayerOnScenarioStart").boolValue = false;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void EnsureSessionDataBridge(GameObject networkingRoot)
+        {
+            SessionNetworkingDataBridge bridge = networkingRoot.GetComponent<SessionNetworkingDataBridge>();
+            if (bridge == null)
+                bridge = networkingRoot.AddComponent<SessionNetworkingDataBridge>();
+
+            SessionManager manager = networkingRoot.GetComponent<SessionManager>();
+            SessionDataSO sessionData = AssetDatabase.LoadAssetAtPath<SessionDataSO>(
+                SessionNetworkingDataBridge.DefaultSessionDataAssetPath);
+
+            SerializedObject so = new SerializedObject(bridge);
+            so.FindProperty("sessionData").objectReferenceValue = sessionData;
+            so.FindProperty("sessionManager").objectReferenceValue = manager;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
     }

@@ -42,6 +42,11 @@ namespace Woi.DataHandler
         public event Action<PlayerSession> OnSessionReady;
         public event Action<string> OnError;
 
+        /// <summary>
+        /// Fired when UDP/editor test session is committed (same moment as <see cref="OnSessionReady"/> / onSessionStarted).
+        /// </summary>
+        public static event Action<PlayerSession> SessionBecameReady;
+
         protected override void Awake()
         {
             base.Awake();
@@ -217,17 +222,7 @@ namespace Woi.DataHandler
 
                     Debug.Log($"[SessionManager] MAIN THREAD: CurrentSession set -> {CurrentSession}");
 
-                    OnSessionReady?.Invoke(CurrentSession);
-
-                    EventBus.Raise(new OnLogged
-                    {
-                        UserName = CurrentSession.PlayerName,
-                        UserId = CurrentSession.PlayerID.ToString(),
-                        SelectedClasses = new List<FireClass>(),
-                        TargetScene = string.Empty,
-                    });
-
-                    onSessionStarted?.Raise();
+                    RaiseSessionStarted(CurrentSession);
 
                     Debug.Log($"[SessionManager] OnSessionReady fired -> {CurrentSession}");
                 });
@@ -336,8 +331,7 @@ namespace Woi.DataHandler
                 return;
 
             Log($"🔁 Session re-notified: {CurrentSession}");
-            OnSessionReady?.Invoke(CurrentSession);
-            onSessionStarted?.Raise();
+            RaiseSessionStarted(CurrentSession);
         }
 
 #if UNITY_EDITOR
@@ -364,7 +358,25 @@ namespace Woi.DataHandler
             };
 
             Log($"🧪 Test session oluşturuldu: {CurrentSession}");
-            OnSessionReady?.Invoke(CurrentSession);
+            RaiseSessionStarted(CurrentSession);
+        }
+
+        private void RaiseSessionStarted(PlayerSession session)
+        {
+            if (session == null || !session.IsActive)
+                return;
+
+            OnSessionReady?.Invoke(session);
+            SessionBecameReady?.Invoke(session);
+
+            EventBus.Raise(new OnLogged
+            {
+                UserName = session.PlayerName,
+                UserId = session.PlayerID.ToString(),
+                SelectedClasses = new List<FireClass>(),
+                TargetScene = string.Empty,
+            });
+
             onSessionStarted?.Raise();
         }
 

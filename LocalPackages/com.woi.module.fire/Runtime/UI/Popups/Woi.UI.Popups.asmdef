@@ -2,7 +2,8 @@
     "name": "Woi.UI.Popups",
     "rootNamespace": "Woi.UI.Popups",
     "references": [
-        "GUID:e482584a5795fa4409047161cc21985d"
+        "GUID:e482584a5795fa4409047161cc21985d",
+        "GUID:e984484bb6786cb4f9cc8f0f23933645"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Woi.Events.Data;
 using Woi.UI.Popups.Localization;
 using WOI.Modules.SDK;
 
@@ -58,10 +59,11 @@ namespace Woi.OfficeFire
 
         public string ResolveLanguageCode()
         {
-            if (localizationService != null && !string.IsNullOrEmpty(localizationService.CurrentLanguage))
-            {
-                return localizationService.CurrentLanguage.Trim().ToLowerInvariant();
-            }
+            if (SessionLanguageState.HasUserChoice)
+                return SessionLanguageState.LanguageCode;
+
+            if (GameSessionData.IsSet && !string.IsNullOrEmpty(GameSessionData.LanguageCode))
+                return GameSessionData.LanguageCode.Trim().ToLowerInvariant();
 
             if (ServiceLocator.TryGet<ILocalizationService>(out ILocalizationService loc) && loc != null &&
                 !string.IsNullOrEmpty(loc.CurrentLanguage))
@@ -74,6 +76,9 @@ namespace Woi.OfficeFire
             {
                 return LocalizationService.Instance.CurrentLanguage.Trim().ToLowerInvariant();
             }
+
+            if (localizationService != null && !string.IsNullOrEmpty(localizationService.CurrentLanguage))
+                return localizationService.CurrentLanguage.Trim().ToLowerInvariant();
 
             Debug.LogWarning(
                 "[OfficeFireLanguageResolver] LocalizationService / ILocalizationService not found — falling back to Turkish (tr).",

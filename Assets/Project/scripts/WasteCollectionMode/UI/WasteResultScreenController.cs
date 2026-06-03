@@ -76,6 +76,7 @@ namespace Woi.WasteCollectionMode
         private AudioSystem audioSystem;
         private SoundDefinition sceneIntroSound;
         private bool sceneIntroStopped;
+        private bool sceneIntroScheduled;
         private bool inputFrozen;
         private bool isRestarting;
         private bool sessionResultsExported;
@@ -150,17 +151,17 @@ namespace Woi.WasteCollectionMode
             exitIcon.tintColor = IncorrectStatusColor;
         }
 
-        private void Start()
-        {
-            StartCoroutine(PlaySceneIntroSoundWhenReady());
-        }
-
         private void OnEnable()
         {
+            sceneIntroScheduled = false;
+
             EventBus.Register<WasteCollectedEvent>(OnWasteCollected);
 
             if (collectTracker == null)
                 collectTracker = FindFirstObjectByType<WasteCollectTracker>();
+
+            BindResultIntroToSessionEvents();
+            SessionLanguageState.LanguageChanged += OnSessionLanguageChanged;
 
             if (!TryBindUi())
                 return;
@@ -171,6 +172,8 @@ namespace Woi.WasteCollectionMode
 
         private void OnDisable()
         {
+            SessionLanguageState.LanguageChanged -= OnSessionLanguageChanged;
+            UnbindResultIntroFromSessionEvents();
             EventBus.Deregister<WasteCollectedEvent>(OnWasteCollected);
 
             if (restartButton != null)
@@ -311,6 +314,17 @@ namespace Woi.WasteCollectionMode
             return true;
         }
 
+        private void OnSessionLanguageChanged()
+        {
+            if (exitTitle == null && resultTitle == null && !TryBindUi())
+                return;
+
+            ApplyLocalizedTexts();
+
+            if (IsResultVisible)
+                RefreshContent();
+        }
+
         private void ApplyLocalizedTexts()
         {
             bool english = WasteCollectionLocalization.IsEnglish;
@@ -390,6 +404,7 @@ namespace Woi.WasteCollectionMode
             if (exitOverlay == null && !TryBindUi())
                 return;
 
+            ApplyLocalizedTexts();
             exitOverlay.style.display = DisplayStyle.Flex;
             FreezePlayerInput();
             RefreshVrWorldPanelLayout();
@@ -413,11 +428,63 @@ namespace Woi.WasteCollectionMode
             if (overlay == null && !TryBindUi())
                 return;
 
+            ApplyLocalizedTexts();
             RefreshContent();
             ExportSessionResultsIfNeeded();
             overlay.style.display = DisplayStyle.Flex;
             FreezePlayerInput();
             RefreshVrWorldPanelLayout();
+        }
+
+        /// <summary>
+        /// Office Fire / VR: wait for <see cref="SessionManager.SessionBecameReady"/> (UDP or editor test session).
+        /// Waste login scene has no SessionManager — play intro when the scene opens.
+        /// </summary>
+        private static bool ShouldDeferResultIntroUntilSessionEvent() =>
+            FindSessionManager() != null;
+
+        private static SessionManager FindSessionManager()
+        {
+            if (SessionManager.Instance != null)
+                return SessionManager.Instance;
+
+            return FindFirstObjectByType<SessionManager>(FindObjectsInactive.Include);
+        }
+
+        private void BindResultIntroToSessionEvents()
+        {
+            SessionManager.SessionBecameReady -= OnNetworkSessionBecameReady;
+            SessionManager.SessionBecameReady += OnNetworkSessionBecameReady;
+
+            if (!ShouldDeferResultIntroUntilSessionEvent())
+            {
+                TryScheduleSceneIntro();
+                return;
+            }
+
+            // Do not use SessionDataSO.UserName — asset may contain editor placeholder data.
+        }
+
+        private void UnbindResultIntroFromSessionEvents()
+        {
+            SessionManager.SessionBecameReady -= OnNetworkSessionBecameReady;
+        }
+
+        private void OnNetworkSessionBecameReady(PlayerSession session)
+        {
+            if (session == null || !session.IsActive)
+                return;
+
+            TryScheduleSceneIntro();
+        }
+
+        private void TryScheduleSceneIntro()
+        {
+            if (sceneIntroScheduled)
+                return;
+
+            sceneIntroScheduled = true;
+            StartCoroutine(PlaySceneIntroSoundWhenReady());
         }
 
         private IEnumerator PlaySceneIntroSoundWhenReady()

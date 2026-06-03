@@ -1,4 +1,7 @@
 using System;
+using Woi.Events.Data;
+using Woi.UI.Popups.Localization;
+using WOI.Modules.SDK;
 
 namespace Woi.WasteCollectionMode
 {
@@ -7,8 +10,28 @@ namespace Woi.WasteCollectionMode
         public const string LangEnglish = "en";
         public const string LangTurkish = "tr";
 
-        public static bool IsEnglish =>
-            WasteLoginSession.IsSet && WasteLoginSession.LanguageCode == LangEnglish;
+        /// <summary>
+        /// Session overlay choice wins; then networked session; then login scene; scene LocalizationService last.
+        /// </summary>
+        public static bool IsEnglish
+        {
+            get
+            {
+                if (SessionLanguageState.HasUserChoice)
+                    return SessionLanguageState.IsEnglish;
+
+                if (GameSessionData.IsSet)
+                    return GameSessionData.IsEnglish;
+
+                if (WasteLoginSession.IsSet)
+                    return string.Equals(
+                        WasteLoginSession.LanguageCode,
+                        LangEnglish,
+                        StringComparison.OrdinalIgnoreCase);
+
+                return IsEnglishFromLocalizationService();
+            }
+        }
 
         public static bool IsEnglishFromDropdown(string dropdownLabel) =>
             string.Equals(dropdownLabel?.Trim(), "English", StringComparison.OrdinalIgnoreCase);
@@ -117,5 +140,22 @@ namespace Woi.WasteCollectionMode
 
         public static string UnknownWaste(bool english) =>
             T(english, "Bilinmeyen Atık", "Unknown Waste");
+
+        private static bool IsEnglishFromLocalizationService()
+        {
+            if (ServiceLocator.TryGet(out ILocalizationService localization) && localization != null
+                && !string.IsNullOrEmpty(localization.CurrentLanguage))
+            {
+                return localization.CurrentLanguage.Trim().ToLowerInvariant() == LangEnglish;
+            }
+
+            if (LocalizationService.Instance != null
+                && !string.IsNullOrEmpty(LocalizationService.Instance.CurrentLanguage))
+            {
+                return LocalizationService.Instance.CurrentLanguage.Trim().ToLowerInvariant() == LangEnglish;
+            }
+
+            return false;
+        }
     }
 }

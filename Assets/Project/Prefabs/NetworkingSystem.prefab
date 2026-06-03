@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 617430978856805053}
   - component: {fileID: 7274010589947383064}
   - component: {fileID: 8822334455667788990}
+  - component: {fileID: 9911223344556677889}
   m_Layer: 0
   m_Name: NetworkingSystem
   m_TagString: Untagged
@@ -229,3 +230,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Woi.WasteCollectionMode.WasteVrLocomotionGate
   xrRigRoot: {fileID: 0}
   playerTag: Player
+--- !u!114 &9911223344556677889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054286029410789042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8f3c2e19b4d6a7489e0f1c2d3b4a5e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Woi.DataHandler.SessionNetworkingDataBridge
+  sessionData: {fileID: 11400000, guid: 012e332c382ea78499ecb414873b2495, type: 2}
+  sessionManager: {fileID: 8452335069505219159}

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Woi.Events.Data;
 
 namespace Woi.WasteCollectionMode
 {
@@ -63,27 +64,28 @@ namespace Woi.WasteCollectionMode
             headerDesc = root.Q<Label>("HeaderDesc");
             closeButton = root.Q<Button>("CloseButton");
 
-            ApplyLocalizedTexts();
+            SessionLanguageState.LanguageChanged += RefreshLocalizedContent;
 
             if (closeButton != null)
                 closeButton.clicked += OnCloseClicked;
 
             ApplyHeaderIcon();
-
-            if (gridContainer != null)
-                GenerateGrid();
-
+            RefreshLocalizedContent();
             Hide();
         }
 
         private void OnDisable()
         {
+            SessionLanguageState.LanguageChanged -= RefreshLocalizedContent;
+
             if (closeButton != null)
                 closeButton.clicked -= OnCloseClicked;
         }
 
         public void Show(string itemName)
         {
+            RefreshLocalizedContent();
+
             if (activeItemLabel != null)
             {
                 activeItemLabel.text = string.IsNullOrWhiteSpace(itemName)
@@ -102,6 +104,14 @@ namespace Woi.WasteCollectionMode
         }
 
         public bool IsVisible => overlay != null && overlay.style.display == DisplayStyle.Flex;
+
+        private void RefreshLocalizedContent()
+        {
+            ApplyLocalizedTexts();
+
+            if (gridContainer != null)
+                GenerateGrid();
+        }
 
         private void ApplyLocalizedTexts()
         {

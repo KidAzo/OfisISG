@@ -531,6 +531,8 @@ namespace Woi.DataHandler
 
         private void StartGameplay(PlayerSession session)
         {
+            SessionProfileLanguagePreference.ReapplyToGame();
+
             if (startScenarioWhenSessionReady && scenarioBootstrapper != null)
                 scenarioBootstrapper.StartConfiguredScenario(teleportPlayerOnScenarioStart);
 

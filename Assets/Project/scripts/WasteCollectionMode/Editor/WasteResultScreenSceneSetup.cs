@@ -4,6 +4,8 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Woi.DataHandler;
+using Woi.Events.Data;
 using Woi.SelectionSystem;
 using Woi.WasteCollectionMode;
 
@@ -74,6 +76,9 @@ namespace Woi.WasteCollectionMode.Editor
             serializedController.FindProperty("wasteSelectionMenu").objectReferenceValue = selectionMenu;
             serializedController.FindProperty("resultShowSound").objectReferenceValue =
                 AssetDatabase.LoadAssetAtPath<LocalizedWasteSound>(ResultShowSoundPath);
+            serializedController.FindProperty("sessionData").objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<SessionDataSO>(
+                    SessionNetworkingDataBridge.DefaultSessionDataAssetPath);
             if (player != null)
                 serializedController.FindProperty("playerRoot").objectReferenceValue = player;
             serializedController.ApplyModifiedPropertiesWithoutUndo();

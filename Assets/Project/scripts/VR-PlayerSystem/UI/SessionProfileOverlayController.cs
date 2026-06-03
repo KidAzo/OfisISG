@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Woi.UI.Popups.Localization;
-using WOI.Modules.SDK;
 
 namespace Woi.DataHandler
 {
@@ -145,7 +144,7 @@ namespace Woi.DataHandler
             }
 
             RegisterLanguageButtons();
-            activeLanguageCode = ResolveCurrentLanguageCode();
+            activeLanguageCode = SessionProfileLanguagePreference.ResolveForOverlay();
             UpdateLanguageButtonStyles();
             ApplyLanguage(activeLanguageCode);
 
@@ -218,6 +217,7 @@ namespace Woi.DataHandler
                 return;
 
             activeLanguageCode = languageCode;
+            SessionProfileLanguagePreference.RecordUserChoice(languageCode);
             UpdateLanguageButtonStyles();
             ApplyLanguage(languageCode);
         }
@@ -262,43 +262,8 @@ namespace Woi.DataHandler
                 ApplyWaitingContent();
         }
 
-        private static void ApplyLanguageToGame(string languageCode)
-        {
-            if (string.IsNullOrWhiteSpace(languageCode))
-                return;
-
-            if (ServiceLocator.TryGet(out LocalizationService service) && service != null)
-            {
-                service.SetLanguage(languageCode);
-                return;
-            }
-
-            if (LocalizationService.Instance != null)
-            {
-                LocalizationService.Instance.SetLanguage(languageCode);
-                return;
-            }
-
-            if (ServiceLocator.TryGet(out ILocalizationService localization) && localization != null)
-                localization.SetLanguage(languageCode);
-        }
-
-        private static string ResolveCurrentLanguageCode()
-        {
-            if (ServiceLocator.TryGet(out ILocalizationService localization) && localization != null
-                && !string.IsNullOrEmpty(localization.CurrentLanguage))
-            {
-                return localization.CurrentLanguage.Trim().ToLowerInvariant();
-            }
-
-            if (LocalizationService.Instance != null
-                && !string.IsNullOrEmpty(LocalizationService.Instance.CurrentLanguage))
-            {
-                return LocalizationService.Instance.CurrentLanguage.Trim().ToLowerInvariant();
-            }
-
-            return LocalizationService.Turkish;
-        }
+        private static void ApplyLanguageToGame(string languageCode) =>
+            SessionProfileLanguagePreference.ApplyToGame(languageCode);
 
         private void ApplyWaitingContent()
         {

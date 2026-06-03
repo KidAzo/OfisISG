@@ -1,4 +1,6 @@
 using UnityEngine;
+using Woi.DataHandler;
+using Woi.Events.Data;
 
 namespace Woi.WasteCollectionMode
 {
@@ -23,10 +25,31 @@ namespace Woi.WasteCollectionMode
 
         private void EnsureVrSession()
         {
-            if (WasteLoginSession.IsSet)
+            // Office Fire VR: identity + language come from session overlay / UDP — do not seed Turkish here.
+            if (FindSessionManager() != null)
                 return;
 
-            WasteLoginSession.Set(defaultUserName, defaultUserId, defaultLanguageCode);
+            string languageCode = SessionLanguageState.HasUserChoice
+                ? SessionLanguageState.LanguageCode
+                : defaultLanguageCode;
+
+            if (WasteLoginSession.IsSet)
+            {
+                if (SessionLanguageState.HasUserChoice)
+                    WasteLoginSession.Set(WasteLoginSession.UserName, WasteLoginSession.UserId, languageCode);
+
+                return;
+            }
+
+            WasteLoginSession.Set(defaultUserName, defaultUserId, languageCode);
+        }
+
+        private static SessionManager FindSessionManager()
+        {
+            if (SessionManager.Instance != null)
+                return SessionManager.Instance;
+
+            return FindFirstObjectByType<SessionManager>(FindObjectsInactive.Include);
         }
     }
 }
