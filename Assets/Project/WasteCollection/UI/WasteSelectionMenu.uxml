@@ -85,7 +85,10 @@
                     <ui:ScrollView name="TableBody" style="max-height: 250px;" />
                 </ui:VisualElement>
 
-                <ui:Button name="RestartButton" text="TEKRAR BAŞLA" class="restart-button" />
+                <ui:VisualElement class="result-button-group">
+                    <ui:Button name="RestartButton" text="TEKRAR BAŞLA" class="restart-button" />
+                    <ui:Button name="QuitButton" text="OYUNU KAPAT" class="quit-button" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
 

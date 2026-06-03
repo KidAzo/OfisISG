@@ -100,6 +100,9 @@ namespace Woi.WasteCollectionMode
         public static string RestartButton(bool english) =>
             T(english, "TEKRAR BAŞLA", "RESTART");
 
+        public static string QuitGameButton(bool english) =>
+            T(english, "OYUNU KAPAT", "QUIT GAME");
+
         public static string StatusCorrect(bool english) =>
             T(english, "DOĞRU", "CORRECT");
 

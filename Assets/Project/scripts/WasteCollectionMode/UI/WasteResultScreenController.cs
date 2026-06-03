@@ -67,6 +67,7 @@ namespace Woi.WasteCollectionMode
         private Label tableStatusHeader;
         private ScrollView tableBody;
         private Button restartButton;
+        private Button quitButton;
 
         private readonly PlayerMovementLookFreeze movementLookFreeze = new();
         private readonly List<WasteUncollectedRecord> uncollectedWastes = new();
@@ -170,6 +171,9 @@ namespace Woi.WasteCollectionMode
             if (restartButton != null)
                 restartButton.clicked -= OnRestartClicked;
 
+            if (quitButton != null)
+                quitButton.clicked -= OnQuitClicked;
+
             if (cancelButton != null)
                 cancelButton.clicked -= OnCancelClicked;
 
@@ -232,6 +236,7 @@ namespace Woi.WasteCollectionMode
             tableStatusHeader = root.Q<Label>("TableStatusHeader");
             tableBody = root.Q<ScrollView>("TableBody");
             restartButton = root.Q<Button>("RestartButton");
+            quitButton = root.Q<Button>("QuitButton");
 
             if (overlay == null)
             {
@@ -269,6 +274,12 @@ namespace Woi.WasteCollectionMode
             {
                 restartButton.clicked -= OnRestartClicked;
                 restartButton.clicked += OnRestartClicked;
+            }
+
+            if (quitButton != null)
+            {
+                quitButton.clicked -= OnQuitClicked;
+                quitButton.clicked += OnQuitClicked;
             }
 
             ApplyLocalizedTexts();
@@ -314,6 +325,9 @@ namespace Woi.WasteCollectionMode
 
             if (restartButton != null)
                 restartButton.text = WasteCollectionLocalization.RestartButton(english);
+
+            if (quitButton != null)
+                quitButton.text = WasteCollectionLocalization.QuitGameButton(english);
         }
 
         public void Show()
@@ -682,6 +696,17 @@ namespace Woi.WasteCollectionMode
             badge.Add(statusText);
             column.Add(badge);
             return column;
+        }
+
+        private void OnQuitClicked()
+        {
+            ExportSessionResultsIfNeeded();
+
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
 
         private void OnRestartClicked()

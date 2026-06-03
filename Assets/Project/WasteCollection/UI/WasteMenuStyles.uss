@@ -476,17 +476,25 @@
     color: rgb(251, 191, 36);
 }
 
+.result-button-group {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
 .restart-button {
+    flex-grow: 1;
     background-color: var(--color-text-white);
     color: var(--color-bg-darkest);
     font-size: 16px;
     -unity-font-style: bold;
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-left: 24px;
+    padding-right: 24px;
     padding-top: 16px;
     padding-bottom: 16px;
     border-radius: 12px;
     border-width: 0;
+    margin-right: 8px;
     transition-duration: 0.2s;
 }
 
@@ -496,6 +504,31 @@
 }
 
 .restart-button:active {
+    scale: 0.95;
+}
+
+.quit-button {
+    flex-grow: 1;
+    background-color: var(--color-danger);
+    color: var(--color-text-white);
+    font-size: 16px;
+    -unity-font-style: bold;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    border-radius: 12px;
+    border-width: 0;
+    margin-left: 8px;
+    transition-duration: 0.2s;
+}
+
+.quit-button:hover {
+    background-color: rgb(225, 29, 72);
+    scale: 1.05;
+}
+
+.quit-button:active {
     scale: 0.95;
 }
 
