@@ -1,0 +1,101 @@
+.session-overlay-root {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* World-space (VR): shrink-wrap card — avoids split layout across a giant dynamic panel */
+.session-overlay-root.session-overlay-root--vr-world {
+    flex-grow: 0;
+    width: 520px;
+    height: auto;
+    min-height: 200px;
+    align-items: center;
+    justify-content: center;
+}
+
+.session-profile-screen {
+    align-items: center;
+    justify-content: center;
+}
+
+.session-profile-card {
+    width: 420px;
+    picking-mode: position;
+}
+
+.session-status-label {
+    font-size: 14px;
+    color: var(--color-text-gray);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-bottom: 18px;
+    white-space: normal;
+}
+
+.session-status-label--ready {
+    color: var(--color-accent);
+}
+
+.session-value-row {
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+.session-field-label {
+    font-size: 12px;
+    color: var(--color-text-gray);
+    margin-bottom: 6px;
+}
+
+.session-field-value {
+    background-color: var(--color-bg-field);
+    border-width: 1px;
+    border-color: rgb(42, 48, 65);
+    border-radius: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: var(--color-text-white);
+    font-size: 14px;
+    -unity-font-style: bold;
+}
+
+.session-field-value--waiting {
+    color: var(--color-text-gray);
+    -unity-font-style: normal;
+}
+
+.session-field-value--ready {
+    border-color: rgba(0, 255, 178, 0.45);
+    color: var(--color-accent);
+}
+
+.session-language-row {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.session-lang-button {
+    picking-mode: position;
+    flex-grow: 1;
+    height: 40px;
+    margin-left: 4px;
+    margin-right: 4px;
+    border-width: 1px;
+    border-color: rgb(42, 48, 65);
+    border-radius: 10px;
+    background-color: var(--color-bg-field);
+    color: var(--color-text-white);
+    font-size: 13px;
+    -unity-font-style: bold;
+}
+
+.session-lang-button--active {
+    border-color: rgba(0, 255, 178, 0.65);
+    color: var(--color-accent);
+}

@@ -90,7 +90,7 @@ namespace Woi.WasteCollectionMode
                 selectionSystemManager.SetSelectionInputEnabled(true);
 
             if (selectionRay != null)
-                selectionRay.SetGameplayRayEnabled(true);
+                selectionRay.RefreshGameplayRay();
 
             if (locomotionGate != null)
                 locomotionGate.SetLocomotionEnabled(true);
@@ -144,7 +144,7 @@ namespace Woi.WasteCollectionMode
                 selectionSystemManager.SetSelectionInputEnabled(!open);
 
             if (selectionRay != null)
-                selectionRay.SetGameplayRayEnabled(!open);
+                selectionRay.RefreshGameplayRay();
         }
     }
 }

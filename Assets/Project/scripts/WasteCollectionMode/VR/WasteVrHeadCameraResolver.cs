@@ -1,15 +1,18 @@
+using System;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Woi.WasteCollectionMode
 {
     /// <summary>
     /// Resolves the active XR headset <see cref="Camera"/> (XROrigin.Camera), not a stale scene reference.
+    /// Handles duplicate rigs such as "XR Origin (XR Rig)" and "XR Origin (XR Rig) (1)" after scene reload.
     /// </summary>
-    internal static class WasteVrHeadCameraResolver
+    public static class WasteVrHeadCameraResolver
     {
-        private static readonly System.Type XrOriginType =
-            System.Type.GetType("Unity.XR.CoreUtils.XROrigin, Unity.XR.CoreUtils");
+        private static readonly Type XrOriginType =
+            Type.GetType("Unity.XR.CoreUtils.XROrigin, Unity.XR.CoreUtils");
 
         private static PropertyInfo s_cameraProperty;
 
@@ -17,33 +20,150 @@ namespace Woi.WasteCollectionMode
         {
             camera = null;
 
-            if (preferredRigRoot != null && TryGetCameraFromRig(preferredRigRoot, out camera))
+            if (IsUsableRigRoot(preferredRigRoot) && TryGetCameraFromRig(preferredRigRoot, out camera))
                 return true;
 
-            if (TryFindActiveMainCameraInLoadedScenes(out camera))
+            if (TryGetBestHeadCamera(out camera, out _))
                 return true;
 
-            if (XrOriginType == null)
+            return false;
+        }
+
+        public static bool TryGetBestActiveXrRig(out Transform rigRoot)
+        {
+            rigRoot = null;
+            return TryGetBestHeadCamera(out _, out rigRoot) && rigRoot != null;
+        }
+
+        public static bool IsUsableRigRoot(Transform rigRoot)
+        {
+            if (rigRoot == null || rigRoot.gameObject == null)
                 return false;
 
-            System.Array origins = Resources.FindObjectsOfTypeAll(XrOriginType);
+            if (!rigRoot.gameObject.scene.IsValid())
+                return false;
+
+            return TryGetCameraFromRig(rigRoot, out Camera camera) && IsLikelyHeadCamera(camera);
+        }
+
+        private static bool TryGetBestHeadCamera(out Camera camera, out Transform rigRoot)
+        {
+            camera = null;
+            rigRoot = null;
+            int bestScore = int.MinValue;
+
+            if (TryFindActiveMainCameraInLoadedScenes(out camera))
+            {
+                rigRoot = FindXrRigRootForCamera(camera);
+                bestScore = ScoreRigCandidate(rigRoot, camera);
+            }
+
+            if (XrOriginType == null)
+                return camera != null;
+
+            Array origins = Resources.FindObjectsOfTypeAll(XrOriginType);
             for (int i = 0; i < origins.Length; i++)
             {
                 if (origins.GetValue(i) is not Component origin || origin == null)
                     continue;
 
-                GameObject go = origin.gameObject;
-                if (!go.scene.IsValid() || !go.activeInHierarchy)
+                Transform candidateRoot = origin.transform;
+                if (!TryGetCameraFromRig(candidateRoot, out Camera candidateCamera)
+                    || !IsLikelyHeadCamera(candidateCamera))
+                {
+                    continue;
+                }
+
+                int score = ScoreRigCandidate(candidateRoot, candidateCamera);
+                if (score <= bestScore)
                     continue;
 
-                if (TryGetCameraFromOriginComponent(origin, out Camera candidate)
-                    && IsBetterHeadCamera(candidate, camera))
-                {
-                    camera = candidate;
-                }
+                bestScore = score;
+                camera = candidateCamera;
+                rigRoot = candidateRoot;
             }
 
             return camera != null;
+        }
+
+        private static int ScoreRigCandidate(Transform rigRoot, Camera camera)
+        {
+            if (camera == null)
+                return int.MinValue;
+
+            int score = 0;
+
+            if (rigRoot != null && rigRoot.gameObject.activeInHierarchy)
+                score += 40;
+
+            if (camera.gameObject.activeInHierarchy && camera.isActiveAndEnabled)
+                score += 40;
+
+            if (camera.CompareTag("MainCamera"))
+                score += 25;
+
+            if (rigRoot != null)
+            {
+                string rigName = rigRoot.name;
+                if (rigName.IndexOf("XR Origin", StringComparison.OrdinalIgnoreCase) >= 0
+                    || rigName.IndexOf("XR Rig", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    score += 15;
+                }
+            }
+
+            string cameraName = camera.gameObject.name;
+            if (cameraName.IndexOf("Main Camera", StringComparison.OrdinalIgnoreCase) >= 0)
+                score += 10;
+
+            Scene scene = camera.gameObject.scene;
+            if (scene.IsValid() && scene.isLoaded)
+            {
+                score += 10;
+                string sceneName = scene.name;
+                if (sceneName.IndexOf("Bootstrapper", StringComparison.OrdinalIgnoreCase) >= 0
+                    || string.Equals(sceneName, "WasteLogin", StringComparison.Ordinal))
+                {
+                    score -= 80;
+                }
+                else if (sceneName.IndexOf("FireModule", StringComparison.OrdinalIgnoreCase) >= 0
+                         || sceneName.IndexOf("Office", StringComparison.OrdinalIgnoreCase) >= 0
+                         || sceneName.IndexOf("Waste", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    score += 30;
+                }
+            }
+
+            score += Mathf.RoundToInt(camera.depth * 10f);
+            return score;
+        }
+
+        private static Transform FindXrRigRootForCamera(Camera camera)
+        {
+            if (camera == null)
+                return null;
+
+            if (XrOriginType != null)
+            {
+                Component origin = camera.GetComponentInParent(XrOriginType);
+                if (origin != null)
+                    return origin.transform;
+            }
+
+            Transform walk = camera.transform;
+            while (walk != null)
+            {
+                string name = walk.name;
+                if (name.IndexOf("XR Origin", StringComparison.OrdinalIgnoreCase) >= 0
+                    || name.IndexOf("XR Rig", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return walk;
+                }
+
+                walk = walk.parent;
+            }
+
+            return camera.transform.root;
         }
 
         private static bool TryGetCameraFromRig(Transform rigRoot, out Camera camera)
@@ -80,7 +200,7 @@ namespace Woi.WasteCollectionMode
             for (int i = 0; i < cameras.Length; i++)
             {
                 Camera cam = cameras[i];
-                if (cam == null || !cam.isActiveAndEnabled)
+                if (!IsLikelyHeadCamera(cam))
                     continue;
 
                 if (cam.CompareTag("MainCamera"))
@@ -99,17 +219,18 @@ namespace Woi.WasteCollectionMode
         private static bool TryFindActiveMainCameraInLoadedScenes(out Camera camera)
         {
             camera = Camera.main;
-            if (camera != null && camera.isActiveAndEnabled && camera.gameObject.scene.IsValid())
+            if (IsLikelyHeadCamera(camera) && camera.gameObject.scene.IsValid())
                 return true;
 
             Camera[] cameras = UnityEngine.Object.FindObjectsByType<Camera>(
-                FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
 
             camera = null;
             for (int i = 0; i < cameras.Length; i++)
             {
                 Camera cam = cameras[i];
-                if (cam == null || !cam.isActiveAndEnabled || !cam.gameObject.scene.IsValid())
+                if (!IsLikelyHeadCamera(cam) || !cam.gameObject.scene.IsValid())
                     continue;
 
                 if (cam.CompareTag("MainCamera"))
@@ -128,7 +249,7 @@ namespace Woi.WasteCollectionMode
         private static bool TryGetCameraFromOriginComponent(Component origin, out Camera camera)
         {
             camera = null;
-            if (origin == null || !origin.gameObject.activeInHierarchy)
+            if (origin == null)
                 return false;
 
             s_cameraProperty ??= XrOriginType?.GetProperty(
@@ -137,34 +258,75 @@ namespace Woi.WasteCollectionMode
 
             if (s_cameraProperty != null
                 && s_cameraProperty.GetValue(origin) is Camera originCamera
-                && originCamera.isActiveAndEnabled)
+                && IsLikelyHeadCamera(originCamera))
             {
                 camera = originCamera;
                 return true;
             }
 
-            Camera childMain = origin.GetComponentInChildren<Camera>(true);
-            if (childMain != null && childMain.isActiveAndEnabled)
+            Camera[] cameras = origin.GetComponentsInChildren<Camera>(true);
+            for (int i = 0; i < cameras.Length; i++)
             {
-                camera = childMain;
-                return true;
+                Camera cam = cameras[i];
+                if (!IsLikelyHeadCamera(cam))
+                    continue;
+
+                if (cam.CompareTag("MainCamera"))
+                {
+                    camera = cam;
+                    return true;
+                }
+
+                if (IsBetterHeadCamera(cam, camera))
+                    camera = cam;
             }
 
-            return false;
+            return camera != null;
+        }
+
+        private static bool IsLikelyHeadCamera(Camera camera)
+        {
+            if (camera == null || !camera.isActiveAndEnabled)
+                return false;
+
+            if (!camera.gameObject.activeInHierarchy)
+                return false;
+
+            if (camera.cullingMask == 0)
+                return false;
+
+            string objectName = camera.gameObject.name;
+            if (objectName.IndexOf("Loading", StringComparison.OrdinalIgnoreCase) >= 0
+                || objectName.IndexOf("Transition", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return false;
+            }
+
+            Transform root = camera.transform.root;
+            if (root != null)
+            {
+                string rootName = root.name;
+                if (rootName.IndexOf("Loading", StringComparison.OrdinalIgnoreCase) >= 0
+                    || rootName.IndexOf("Transition", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static bool IsBetterHeadCamera(Camera candidate, Camera current)
         {
-            if (candidate == null || !candidate.isActiveAndEnabled)
+            if (!IsLikelyHeadCamera(candidate))
                 return false;
 
             if (current == null)
                 return true;
 
-            if (candidate.CompareTag("MainCamera") && !current.CompareTag("MainCamera"))
-                return true;
-
-            return candidate.depth > current.depth;
+            int candidateScore = ScoreRigCandidate(FindXrRigRootForCamera(candidate), candidate);
+            int currentScore = ScoreRigCandidate(FindXrRigRootForCamera(current), current);
+            return candidateScore > currentScore;
         }
     }
 }

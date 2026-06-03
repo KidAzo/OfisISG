@@ -19,6 +19,14 @@ namespace Woi.WasteCollectionMode
 
         public Transform XrRigRoot => xrRigRoot;
 
+        public void RefreshCachedXrRigRoot()
+        {
+            xrRigRoot = null;
+            Transform rig = ResolveRigRoot();
+            if (rig != null)
+                xrRigRoot = rig;
+        }
+
         public void SetLocomotionEnabled(bool enabled)
         {
             if (enabled)
@@ -129,8 +137,14 @@ namespace Woi.WasteCollectionMode
 
         private Transform ResolveRigRoot()
         {
-            if (xrRigRoot != null)
+            if (WasteVrHeadCameraResolver.IsUsableRigRoot(xrRigRoot))
                 return xrRigRoot;
+
+            if (WasteVrHeadCameraResolver.TryGetBestActiveXrRig(out Transform bestRig))
+            {
+                xrRigRoot = bestRig;
+                return bestRig;
+            }
 
             System.Type originType = System.Type.GetType("Unity.XR.CoreUtils.XROrigin, Unity.XR.CoreUtils");
             if (originType != null)
@@ -138,8 +152,15 @@ namespace Woi.WasteCollectionMode
                 Array found = Resources.FindObjectsOfTypeAll(originType);
                 for (int i = 0; i < found.Length; i++)
                 {
-                    if (found.GetValue(i) is Component origin && origin != null && origin.gameObject.scene.IsValid())
-                        return origin.transform;
+                    if (found.GetValue(i) is not Component origin || origin == null)
+                        continue;
+
+                    Transform candidate = origin.transform;
+                    if (WasteVrHeadCameraResolver.IsUsableRigRoot(candidate))
+                    {
+                        xrRigRoot = candidate;
+                        return candidate;
+                    }
                 }
             }
 

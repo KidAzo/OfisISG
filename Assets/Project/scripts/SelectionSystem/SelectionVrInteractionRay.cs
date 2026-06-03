@@ -34,6 +34,33 @@ namespace Woi.SelectionSystem
 
         public Transform RayOrigin => rayOrigin;
 
+        /// <summary>
+        /// Re-registers gameplay ray ownership and forces the world line visual back on
+        /// (e.g. after session overlay or XR UI bootstrap touched interactor visuals).
+        /// </summary>
+        public void RefreshGameplayRay()
+        {
+            if (!IsVrActive())
+            {
+                if (lineRenderer != null)
+                    lineRenderer.enabled = false;
+                return;
+            }
+
+            if (rayOrigin == null && autoFindRightController)
+                rayOrigin = FindRightControllerTransform(preferControllerNameContains);
+
+            if (rayOrigin == null)
+                rayOrigin = transform;
+
+            EnsureLineRenderer();
+            enabled = true;
+            FireVrGameplayInteractionRay.Register(this, rayOrigin, rayStartInsetMeters);
+
+            if (lineRenderer != null && drawWorldRayLine)
+                lineRenderer.enabled = true;
+        }
+
         public void SetGameplayRayEnabled(bool gameplayRayEnabled)
         {
             if (!gameplayRayEnabled)
@@ -110,6 +137,9 @@ namespace Woi.SelectionSystem
             dir.Normalize();
             Vector3 origin = rayOrigin.position + dir * Mathf.Max(0f, rayStartInsetMeters);
             UpdateLineRenderer(origin, dir);
+
+            // Keep selection as the authoritative VR gameplay ray (equipment hover re-registers on enable).
+            FireVrGameplayInteractionRay.Register(this, rayOrigin, rayStartInsetMeters);
         }
 
         private void UpdateLineRenderer(Vector3 origin, Vector3 direction)

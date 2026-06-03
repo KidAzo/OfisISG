@@ -27,10 +27,30 @@ namespace Woi.OfficeFire
             StartScenario(startScenario);
         }
 
+        public void SetAutoStartOnPlay(bool enabled)
+        {
+            autoStartOnPlay = enabled;
+        }
+
+        public void StartConfiguredScenario()
+        {
+            StartConfiguredScenario(teleportPlayer: true);
+        }
+
+        public void StartConfiguredScenario(bool teleportPlayer)
+        {
+            StartScenario(startScenario, teleportPlayer);
+        }
+
         /// <summary>
         /// Entry point for scenario selection. Safe to call from future LoginUI / ScenarioSelectionUI.
         /// </summary>
         public void StartScenario(OfficeFireScenarioId scenarioId)
+        {
+            StartScenario(scenarioId, teleportPlayer: true);
+        }
+
+        public void StartScenario(OfficeFireScenarioId scenarioId, bool teleportPlayer)
         {
             if (scenarioId == OfficeFireScenarioId.None)
             {
@@ -71,7 +91,7 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            if (playerInitializer != null)
+            if (teleportPlayer && playerInitializer != null)
             {
                 playerInitializer.InitializePlayer(scenarioId);
             }

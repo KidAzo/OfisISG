@@ -1,0 +1,33 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Project/WasteCollection/UI/WasteLoginStyles.uss?fileID=7433441132597879392&amp;guid=128034c6e9a8a5941b4ea614361742f7&amp;type=3#WasteLoginStyles"/>
+    <Style src="project://database/Assets/Project/VR-Networking/UI/SessionProfileOverlay.uss"/>
+    <ui:VisualElement name="SessionOverlayRoot" class="session-overlay-root">
+        <ui:VisualElement class="login-screen flex-center session-profile-screen">
+            <ui:VisualElement class="login-card session-profile-card">
+                <ui:VisualElement class="login-header">
+                    <ui:Label name="SessionTitleSub" text="OFİS İSG" class="login-title-sub accent-color"/>
+                    <ui:Label name="SessionTitleMain" text="OTURUM" class="login-title-main"/>
+                </ui:VisualElement>
+                <ui:Label name="SessionStatusLabel" text="Sunucudan veri bekleniyor…" class="session-status-label"/>
+                <ui:VisualElement class="login-section">
+                    <ui:Label name="SessionProfileSectionLabel" text="KULLANICI PROFİLİ" class="login-section-label"/>
+                    <ui:VisualElement class="session-value-row">
+                        <ui:Label name="PlayerNameFieldLabel" text="Ad Soyad" class="session-field-label"/>
+                        <ui:Label name="PlayerNameValue" text="—" class="session-field-value session-field-value--waiting"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="session-value-row">
+                        <ui:Label name="PlayerIdFieldLabel" text="Kullanıcı ID" class="session-field-label"/>
+                        <ui:Label name="PlayerIdValue" text="—" class="session-field-value session-field-value--waiting"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="login-section">
+                    <ui:Label name="SessionLanguageSectionLabel" text="DİL" class="login-section-label"/>
+                    <ui:VisualElement name="SessionLanguageRow" class="session-language-row">
+                        <ui:Button name="SessionLangTrButton" text="Türkçe" class="session-lang-button session-lang-button--active"/>
+                        <ui:Button name="SessionLangEnButton" text="English" class="session-lang-button"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

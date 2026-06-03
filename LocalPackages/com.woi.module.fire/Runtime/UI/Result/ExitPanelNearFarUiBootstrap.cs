@@ -305,8 +305,10 @@ namespace Woi.UI.Result
 
             foreach (LineRenderer lr in n.GetComponentsInChildren<LineRenderer>(true))
             {
-                if (lr != null)
-                    lr.enabled = false;
+                if (lr == null || lr.gameObject.name == "SelectionRayVisual")
+                    continue;
+
+                lr.enabled = false;
             }
         }
 

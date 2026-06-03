@@ -74,12 +74,29 @@ namespace Woi.OfficeFire
 
         private void SubscribeInteract()
         {
+            TryBindLiveInteractEvent();
+
             if (interactInputEvent == null)
             {
                 return;
             }
 
             interactInputEvent.OnRaised += OnInteractInput;
+        }
+
+        private void TryBindLiveInteractEvent()
+        {
+            InputManager inputManager = FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            if (inputManager == null)
+                return;
+
+            VrInputContext vrContext = inputManager.GetVrInputContext();
+            ScriptableEventNoParam liveInteract = vrContext?.InteractEvent;
+            if (liveInteract == null)
+                return;
+
+            if (interactInputEvent == null || IsListeningToDifferentInteractEvent(liveInteract))
+                RebindInteractInputEvent(liveInteract);
         }
 
         private void UnsubscribeInteract()
@@ -105,9 +122,10 @@ namespace Woi.OfficeFire
         public void TrySelect()
         {
             if (TrySelectHoveredTarget())
-            {
                 return;
-            }
+
+            if (TrySelectFromGameplayRay())
+                return;
 
             Camera cam = ResolveCamera();
             if (cam == null)
@@ -123,26 +141,43 @@ namespace Woi.OfficeFire
             }
 
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-            RaycastHit[] hits = Physics.RaycastAll(ray, maxDistance, selectionMask, triggerInteraction);
+            TrySelectAlongRay(ray, cam.transform, SelectionSource.PC);
+        }
+
+        private bool TrySelectFromGameplayRay()
+        {
+            if (!TryGetGameplayRay(out Ray ray, out Transform interactorTransform))
+                return false;
+
+            return TrySelectAlongRay(ray, interactorTransform, SelectionSource.VRRay);
+        }
+
+        private bool TrySelectAlongRay(Ray ray, Transform interactorTransform, SelectionSource source)
+        {
+            RaycastHit[] hits = Physics.RaycastAll(
+                ray,
+                maxDistance,
+                selectionMask,
+                IsVrMode() ? QueryTriggerInteraction.Collide : triggerInteraction);
             if (hits == null || hits.Length == 0)
             {
                 if (enableDebugLogs)
-                {
                     Debug.Log("[PCSelectableInteractor] Raycast hit nothing.", this);
-                }
 
-                return;
+                return false;
             }
 
             Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+            Transform skipRoot = FireVrGameplayInteractionRay.RegisteredRayOriginOrNull;
 
             for (int i = 0; i < hits.Length; i++)
             {
                 RaycastHit hit = hits[i];
                 if (hit.collider == null)
-                {
                     continue;
-                }
+
+                if (skipRoot != null && hit.collider.transform.IsChildOf(skipRoot))
+                    continue;
 
                 ISelectable selectable = FindSelectable(hit.collider);
                 if (selectable == null)
@@ -169,7 +204,7 @@ namespace Woi.OfficeFire
                     continue;
                 }
 
-                SelectionContext context = new SelectionContext(SelectionSource.PC, cam.transform, ray, hit);
+                SelectionContext context = new SelectionContext(source, interactorTransform, ray, hit);
                 if (enableDebugLogs)
                 {
                     Debug.Log(
@@ -178,22 +213,20 @@ namespace Woi.OfficeFire
                 }
 
                 selectable.Select(context);
-                return;
+                return true;
             }
 
             if (enableDebugLogs)
-            {
                 Debug.Log("[PCSelectableInteractor] No ISelectable found along ray hits.", this);
-            }
+
+            return false;
         }
 
         private bool TrySelectHoveredTarget()
         {
             PCHoverInteractor hoverInteractor = ResolveHoverInteractor();
             if (hoverInteractor == null)
-            {
                 return false;
-            }
 
             IHoverable hoverable = hoverInteractor.CurrentHoverable;
             ISelectable selectable = hoverInteractor.ResolveSelectableHoverTarget();
@@ -210,19 +243,20 @@ namespace Woi.OfficeFire
             }
 
             if (selectable is not IHoverable selectableHoverable)
-            {
                 return false;
-            }
 
             hoverable = selectableHoverable;
 
-            Camera cam = ResolveCamera();
-            if (cam == null)
+            if (!TryGetGameplayRay(out Ray ray, out Transform interactorTransform))
             {
-                return false;
+                Camera cam = ResolveCamera();
+                if (cam == null)
+                    return false;
+
+                ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+                interactorTransform = cam.transform;
             }
 
-            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
             RaycastHit hit = default;
             if (hoverable is Component hoverComponent)
             {
@@ -234,14 +268,10 @@ namespace Woi.OfficeFire
                 {
                     Collider collider = colliders[i];
                     if (collider == null || !collider.Raycast(ray, out RaycastHit candidate, maxDistance))
-                    {
                         continue;
-                    }
 
                     if (candidate.distance >= bestDistance)
-                    {
                         continue;
-                    }
 
                     bestDistance = candidate.distance;
                     hit = candidate;
@@ -261,7 +291,8 @@ namespace Woi.OfficeFire
                 }
             }
 
-            SelectionContext context = new SelectionContext(SelectionSource.PC, cam.transform, ray, hit);
+            SelectionSource source = IsVrMode() ? SelectionSource.VRRay : SelectionSource.PC;
+            SelectionContext context = new SelectionContext(source, interactorTransform, ray, hit);
             if (enableDebugLogs)
             {
                 Debug.Log(
@@ -271,6 +302,24 @@ namespace Woi.OfficeFire
 
             selectable.Select(context);
             return true;
+        }
+
+        private static bool TryGetGameplayRay(out Ray ray, out Transform interactorTransform)
+        {
+            ray = default;
+            interactorTransform = null;
+
+            if (!IsVrMode() || !FireVrGameplayInteractionRay.TryGetRay(out Vector3 origin, out Vector3 direction))
+                return false;
+
+            interactorTransform = FireVrGameplayInteractionRay.RegisteredRayOriginOrNull;
+            ray = new Ray(origin, direction);
+            return true;
+        }
+
+        private static bool IsVrMode()
+        {
+            return FirePlatformRuntime.IsSourceInitialized && FirePlatformRuntime.IsVR;
         }
 
         private static ISelectable FindSelectable(Collider collider)

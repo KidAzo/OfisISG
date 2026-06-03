@@ -15,7 +15,6 @@ namespace Obvious.Soap
     {
         private readonly List<EventListenerNoParam> _eventListeners = new List<EventListenerNoParam>();
         private readonly List<Object> _listenersObjects = new List<Object>();
-        private readonly List<Object> _cachedAllListeners = new List<Object>();
 
 #if ODIN_INSPECTOR
         [HideInEditorMode]
@@ -84,16 +83,7 @@ namespace Obvious.Soap
                 _eventListeners.Remove(listener);
         }
 
-        public IReadOnlyList<Object> EditorListeners
-        {
-            get
-            {
-                _cachedAllListeners.Clear();
-                _cachedAllListeners.AddRange(_eventListeners);
-                _cachedAllListeners.AddRange(_listenersObjects);
-                return _cachedAllListeners.AsReadOnly();
-            }
-        }
+        public IReadOnlyList<Object> EditorListeners => _listenersObjects.AsReadOnly();
 
         protected virtual void Debug()
         {

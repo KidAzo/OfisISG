@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Woi.Events;
 using Woi.Events.Data;
+using Woi.DataHandler;
 using Woi.OfficeFire;
 using Woi.Player;
 using Woi.Settings;
@@ -778,6 +779,8 @@ namespace Woi.WasteCollectionMode
         {
             if (isRestarting)
                 return;
+
+            SessionFlowRestarter.PrepareForNewSession();
 
             if (collectTracker != null)
                 collectTracker.ClearSession();

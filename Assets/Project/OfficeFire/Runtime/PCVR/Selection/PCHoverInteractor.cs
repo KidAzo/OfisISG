@@ -139,24 +139,37 @@ namespace Woi.OfficeFire
 
         private IHoverable[] TryGetHoverablesFromRay()
         {
-            Camera cam = ResolveCamera();
-            if (cam == null)
+            Ray ray;
+            Transform skipHierarchyRoot = null;
+            if (!TryGetGameplayRay(out ray, out skipHierarchyRoot))
             {
-                if (!_loggedMissingCamera)
+                Camera cam = ResolveCamera();
+                if (cam == null)
                 {
-                    Debug.LogWarning(
-                        "[PCHoverInteractor] No camera found. Assign Ray Camera or enable Auto Resolve Player Camera.",
-                        this);
-                    _loggedMissingCamera = true;
+                    if (!_loggedMissingCamera)
+                    {
+                        Debug.LogWarning(
+                            "[PCHoverInteractor] No camera found. Assign Ray Camera or enable Auto Resolve Player Camera.",
+                            this);
+                        _loggedMissingCamera = true;
+                    }
+
+                    return EmptyHoverables;
                 }
 
-                return EmptyHoverables;
+                _loggedMissingCamera = false;
+                ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            }
+            else
+            {
+                _loggedMissingCamera = false;
             }
 
-            _loggedMissingCamera = false;
-
-            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-            RaycastHit[] hits = Physics.RaycastAll(ray, maxDistance, hoverMask, triggerInteraction);
+            RaycastHit[] hits = Physics.RaycastAll(
+                ray,
+                maxDistance,
+                hoverMask,
+                IsVrMode() ? QueryTriggerInteraction.Collide : triggerInteraction);
             if (hits == null || hits.Length == 0)
             {
                 return EmptyHoverables;
@@ -168,20 +181,37 @@ namespace Woi.OfficeFire
             {
                 RaycastHit hit = hits[i];
                 if (hit.collider == null)
-                {
                     continue;
-                }
+
+                if (skipHierarchyRoot != null && hit.collider.transform.IsChildOf(skipHierarchyRoot))
+                    continue;
 
                 IHoverable[] hoverables = CollectHoverablesFromCollider(hit.collider);
                 if (hoverables.Length == 0)
-                {
                     continue;
-                }
 
                 return hoverables;
             }
 
             return EmptyHoverables;
+        }
+
+        private static bool TryGetGameplayRay(out Ray ray, out Transform skipHierarchyRoot)
+        {
+            ray = default;
+            skipHierarchyRoot = null;
+
+            if (!IsVrMode() || !FireVrGameplayInteractionRay.TryGetRay(out Vector3 origin, out Vector3 direction))
+                return false;
+
+            skipHierarchyRoot = FireVrGameplayInteractionRay.RegisteredRayOriginOrNull;
+            ray = new Ray(origin, direction);
+            return true;
+        }
+
+        private static bool IsVrMode()
+        {
+            return FirePlatformRuntime.IsSourceInitialized && FirePlatformRuntime.IsVR;
         }
 
         private static IHoverable[] CollectHoverablesFromCollider(Collider collider)

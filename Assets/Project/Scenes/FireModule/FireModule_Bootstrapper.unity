@@ -401,6 +401,154 @@ MonoBehaviour:
   m_EditorClassIdentifier: Woi.Fire.ServiceInstaller::WOI.Module.Fire.DI.FireServiceInstaller
   inputManagerAddress: Managers/InputManager
   sceneLoaderAddress: Managers/SceneLoader
+--- !u!114 &617430979756021720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054286030144197591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 566a11caf90e00d46ac2425b32f2f13d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2035914501702743334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054286030144197591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83c2b2a04ad2fa14b97b6ab4bc792e74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AutoUnparentOnAwake: 0
+  discoveryPort: 7778
+  intervalSeconds: 1
+  discoverMessage: WOI_DISCOVER
+  log: 1
+--- !u!114 &6774733852852079338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054286030144197591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95711faca4a1ec74bb2b0e6d9c64f804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  discoveryPort: 7778
+  retryInterval: 1
+  maxAttempts: 15
+--- !u!1 &7054286030144197591
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8617255801385998319}
+  - component: {fileID: 6774733852852079338}
+  - component: {fileID: 2035914501702743334}
+  - component: {fileID: 8452335070266941234}
+  - component: {fileID: 617430979756021720}
+  - component: {fileID: 7274010590841370749}
+  - component: {fileID: 8822334454237084123}
+  m_Layer: 0
+  m_Name: NetworkingSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &7274010590841370749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054286030144197591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79a941ac6d6448143aad5e2421a0b3f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Woi.DataHandler.SessionGameplayGate
+  sessionProfileUiRoot: {fileID: 0}
+  profileOverlay: {fileID: 0}
+  worldUiPresenter: {fileID: 0}
+  sessionOverlaySceneNames:
+  - FireModule_Office
+  blockedSceneNames:
+  - FireModule_Bootstrapper
+  - Bootstrapper
+  - WasteLogin
+  logGateDecisions: 0
+  revealDurationSeconds: 2.5
+  startScenarioWhenSessionReady: 1
+  scenarioBootstrapper: {fileID: 0}
+  disableScenarioAutoStartOnAwake: 1
+  teleportPlayerOnScenarioStart: 0
+  playerRoot: {fileID: 0}
+  findPlayerByTagIfMissing: 1
+  playerTag: Player
+  freezeMovementWhileOverlayVisible: 1
+--- !u!114 &8452335070266941234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054286030144197591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f46859d905bef04a95f86febda7e461, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AutoUnparentOnAwake: 0
+  udpListenPort: 7777
+  pcServerUrl: http://192.168.1.50:8080
+  showDebugLogs: 0
+  autoStartTestSessionInEditor: 1
+  editorTestSessionDelaySeconds: 3
+  onSessionStarted: {fileID: 11400000, guid: d89d40b741c123d43a0f9eea32eacaa8, type: 2}
+  discovery: {fileID: 6774733852852079338}
+  useManualUrl: 0
+  manualServerUrl: http://192.168.1.32:8080
+--- !u!4 &8617255801385998319
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054286030144197591}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8822334454237084123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054286030144197591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb4075b1d8c128d419af940d5706b5d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Woi.WasteCollectionMode.WasteVrLocomotionGate
+  xrRigRoot: {fileID: 0}
+  playerTag: Player
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -408,3 +556,4 @@ SceneRoots:
   - {fileID: 344354780}
   - {fileID: 1363170166}
   - {fileID: 1918529850}
+  - {fileID: 8617255801385998319}
