@@ -123,12 +123,18 @@ namespace Woi.DataHandler
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            ScheduleOverlayRefresh();
+            if (IsOverlayScene(scene))
+                HandleOverlaySceneLoaded();
+            else
+                ScheduleOverlayRefresh();
         }
 
         private void OnActiveSceneChanged(Scene previous, Scene next)
         {
-            ScheduleOverlayRefresh();
+            if (IsOverlayScene(next) && (gameplayUnlocked || revealRoutineRunning))
+                HandleOverlaySceneLoaded();
+            else
+                ScheduleOverlayRefresh();
         }
 
         private void ScheduleOverlayRefresh()
@@ -449,12 +455,10 @@ namespace Woi.DataHandler
 
         private void ShowOverlayWaiting()
         {
-            if (overlayContentShown && profileOverlay != null && profileOverlay.IsVisible)
-                return;
-
             BindSessionUiComponents();
             ApplySessionUiPresentation(true);
             profileOverlay?.ShowWaiting();
+            profileOverlay?.EnableInteraction();
             overlayContentShown = true;
         }
 
@@ -463,6 +467,7 @@ namespace Woi.DataHandler
             BindSessionUiComponents();
             ApplySessionUiPresentation(true);
             profileOverlay?.ShowSession(session);
+            profileOverlay?.EnableInteraction();
             overlayContentShown = true;
         }
 
@@ -663,10 +668,44 @@ namespace Woi.DataHandler
             return tagged != null ? tagged.transform : null;
         }
 
-        /// <summary>
-        /// Resets gate state so the session profile panel can appear again (e.g. after "Tekrar Başla").
-        /// </summary>
-        public void ResetForNewSession()
+        private void HandleOverlaySceneLoaded()
+        {
+            BindSessionManager();
+
+            if (gameplayUnlocked || revealRoutineRunning || overlayContentShown)
+                ResetGateStateOnly();
+
+            PrepareSessionAfterOverlaySceneLoad();
+            ScheduleOverlayRefresh();
+        }
+
+        private void BindSessionManager()
+        {
+            if (sessionManager != null)
+                return;
+
+            sessionManager = SessionManager.Instance;
+            if (sessionManager == null)
+                sessionManager = FindFirstObjectByType<SessionManager>();
+        }
+
+        private void PrepareSessionAfterOverlaySceneLoad()
+        {
+            BindSessionManager();
+            if (sessionManager == null)
+                return;
+
+#if UNITY_EDITOR
+            sessionManager.PrepareForOverlaySceneReload();
+#else
+            if (sessionManager.CurrentSession != null && sessionManager.CurrentSession.IsActive)
+                sessionManager.ReNotifySessionReady();
+            else
+                sessionManager.PrepareForOverlaySceneReload();
+#endif
+        }
+
+        private void ResetGateStateOnly()
         {
             if (revealRoutine != null)
             {
@@ -685,10 +724,17 @@ namespace Woi.DataHandler
 
             ResolveSessionUiRoot();
             BindSessionUiComponents();
-
             RestoreMovementAfterOverlay();
             RestoreVrSessionInputState();
             HideOverlayImmediate();
+        }
+
+        /// <summary>
+        /// Resets gate state so the session profile panel can appear again (e.g. after "Tekrar Başla").
+        /// </summary>
+        public void ResetForNewSession()
+        {
+            ResetGateStateOnly();
             ScheduleOverlayRefresh();
         }
     }

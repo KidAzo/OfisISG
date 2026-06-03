@@ -310,10 +310,34 @@ namespace Woi.DataHandler
         /// </summary>
         public void PrepareForRestart()
         {
+            PrepareForOverlaySceneReload();
+        }
+
+        /// <summary>
+        /// Called when a gameplay overlay scene (e.g. FireModule_Office) loads again.
+        /// Editor: schedules a fresh test session. Player build: re-notifies listeners if a session is still active.
+        /// </summary>
+        public void PrepareForOverlaySceneReload()
+        {
             ClearSession();
 #if UNITY_EDITOR
             ScheduleEditorTestSession();
+#else
+            // Player build relies on UDP; nothing to schedule here.
 #endif
+        }
+
+        /// <summary>
+        /// Re-fires <see cref="OnSessionReady"/> for an active session (e.g. after overlay scene reload).
+        /// </summary>
+        public void ReNotifySessionReady()
+        {
+            if (CurrentSession == null || !CurrentSession.IsActive)
+                return;
+
+            Log($"🔁 Session re-notified: {CurrentSession}");
+            OnSessionReady?.Invoke(CurrentSession);
+            onSessionStarted?.Raise();
         }
 
 #if UNITY_EDITOR
