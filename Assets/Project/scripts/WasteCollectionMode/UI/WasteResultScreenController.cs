@@ -433,11 +433,12 @@ namespace Woi.WasteCollectionMode
             ExportSessionResultsIfNeeded();
             overlay.style.display = DisplayStyle.Flex;
             FreezePlayerInput();
-            RefreshVrWorldPanelLayout();
+            RefreshVrWorldPanelLayout(settleFrames: 12);
+            StartCoroutine(DeferredResultPanelColliderSync());
         }
 
         /// <summary>
-        /// Office Fire / VR: wait for <see cref="SessionManager.SessionBecameReady"/> (UDP or editor test session).
+        /// Office Fire / VR: wait for <see cref="SessionManager.SessionBecameReady"/> (UDP or auto test session).
         /// Waste login scene has no SessionManager — play intro when the scene opens.
         /// </summary>
         private static bool ShouldDeferResultIntroUntilSessionEvent() =>
@@ -635,7 +636,7 @@ namespace Woi.WasteCollectionMode
             OnQuitClicked();
         }
 
-        private void RefreshVrWorldPanelLayout()
+        private void RefreshVrWorldPanelLayout(int settleFrames = 4)
         {
             if (!WasteCollectionPlatform.ShouldUseVrPresentation())
                 return;
@@ -643,7 +644,24 @@ namespace Woi.WasteCollectionMode
             if (worldUiPresenter == null)
                 worldUiPresenter = GetComponent<WasteWorldUiPresenter>();
 
-            worldUiPresenter?.NotifyContentLayoutChanged();
+            worldUiPresenter?.NotifyContentLayoutChanged(settleFrames);
+        }
+
+        /// <summary>
+        /// Result table layout and world-space pick meshes settle a frame after display:flex.
+        /// Without this, the first XR trigger on Tekrar Oyna often misses the collider.
+        /// </summary>
+        private IEnumerator DeferredResultPanelColliderSync()
+        {
+            if (!WasteCollectionPlatform.ShouldUseVrPresentation())
+                yield break;
+
+            yield return null;
+            RefreshVrWorldPanelLayout(settleFrames: 12);
+            yield return new WaitForEndOfFrame();
+            RefreshVrWorldPanelLayout(settleFrames: 8);
+            yield return null;
+            RefreshVrWorldPanelLayout(settleFrames: 4);
         }
 
         private void OnCancelClicked()

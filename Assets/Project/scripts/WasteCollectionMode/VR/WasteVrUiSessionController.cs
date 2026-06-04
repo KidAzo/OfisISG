@@ -4,7 +4,8 @@ using Woi.SelectionSystem;
 namespace Woi.WasteCollectionMode
 {
     /// <summary>
-    /// VR waste UI session: modal panels share one HMD-centered distance, locomotion/teleport off, UI-only input.
+    /// VR waste UI session: only the waste bin menu tracks the HMD. Locomotion/selection are off during menu
+    /// and result; they stay on during the Doğru/Yanlış explanation popup.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class WasteVrUiSessionController : MonoBehaviour
@@ -24,6 +25,8 @@ namespace Woi.WasteCollectionMode
         [SerializeField] private SelectionVrInteractionRay selectionRay;
 
         private bool modalUiOpen;
+        private bool gameplayInputBlocked;
+        private bool headTrackingActive;
         private bool sessionApplied;
         private int lastModalFingerprint = -1;
 
@@ -57,17 +60,28 @@ namespace Woi.WasteCollectionMode
                 return;
 
             bool shouldBeOpen = IsAnyModalUiVisible();
-            if (shouldBeOpen == modalUiOpen && sessionApplied)
+            bool shouldBlockInput = ShouldBlockGameplayInput();
+            bool shouldTrackHead = ShouldTrackHead();
+            if (shouldBeOpen == modalUiOpen && sessionApplied && shouldBlockInput == gameplayInputBlocked
+                && shouldTrackHead == headTrackingActive)
                 return;
 
             modalUiOpen = shouldBeOpen;
-            ApplySession(modalUiOpen);
+            gameplayInputBlocked = shouldBlockInput;
+            headTrackingActive = shouldTrackHead;
+            ApplySession(modalUiOpen, gameplayInputBlocked, headTrackingActive);
 
             int fingerprint = ComputeModalFingerprint();
             if (modalUiOpen && fingerprint != lastModalFingerprint)
             {
                 lastModalFingerprint = fingerprint;
-                worldUiPresenter?.NotifyContentLayoutChanged();
+                int settleFrames = 4;
+                if (resultScreen != null && resultScreen.IsResultVisible)
+                    settleFrames = 12;
+                else if (explanationPopup != null && explanationPopup.IsVisible)
+                    settleFrames = 8;
+
+                worldUiPresenter?.NotifyContentLayoutChanged(settleFrames);
             }
             else if (!modalUiOpen)
             {
@@ -82,6 +96,8 @@ namespace Woi.WasteCollectionMode
 
             sessionApplied = false;
             modalUiOpen = false;
+            gameplayInputBlocked = false;
+            headTrackingActive = false;
 
             if (worldUiPresenter != null)
                 worldUiPresenter.SetFollowActive(false);
@@ -110,6 +126,25 @@ namespace Woi.WasteCollectionMode
             return false;
         }
 
+        private bool ShouldBlockGameplayInput()
+        {
+            if (selectionMenu != null && selectionMenu.IsVisible)
+                return true;
+
+            if (resultScreen != null && resultScreen.IsVisible)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Only the waste bin menu follows the HMD. Doğru/Yanlış, result and exit stay fixed for stable XR hits.
+        /// </summary>
+        private bool ShouldTrackHead()
+        {
+            return selectionMenu != null && selectionMenu.IsVisible;
+        }
+
         private int ComputeModalFingerprint()
         {
             int fingerprint = 0;
@@ -126,22 +161,22 @@ namespace Woi.WasteCollectionMode
             return fingerprint;
         }
 
-        private void ApplySession(bool open)
+        private void ApplySession(bool worldUiOpen, bool blockGameplayInput, bool trackHead)
         {
-            sessionApplied = open;
+            sessionApplied = worldUiOpen;
 
             if (worldUiPresenter != null)
             {
                 worldUiPresenter.SetUiDistance(uiDistanceInFrontOfHmd);
                 worldUiPresenter.ApplyLayoutFromInspector();
-                worldUiPresenter.SetFollowActive(open);
+                worldUiPresenter.SetFollowActive(worldUiOpen, trackHead);
             }
 
             if (locomotionGate != null)
-                locomotionGate.SetLocomotionEnabled(!open);
+                locomotionGate.SetLocomotionEnabled(!blockGameplayInput);
 
             if (selectionSystemManager != null)
-                selectionSystemManager.SetSelectionInputEnabled(!open);
+                selectionSystemManager.SetSelectionInputEnabled(!blockGameplayInput);
 
             if (selectionRay != null)
                 selectionRay.RefreshGameplayRay();

@@ -23,6 +23,7 @@ namespace Woi.WasteCollectionMode
 
         [Header("VR")]
         [SerializeField] private WasteVrLocomotionGate vrLocomotionGate;
+        [SerializeField] private WasteWorldUiPresenter worldUiPresenter;
 
         private readonly PlayerMovementLookFreeze movementLookFreeze = new();
         private bool playerInputFrozen;
@@ -44,6 +45,9 @@ namespace Woi.WasteCollectionMode
 
             if (vrLocomotionGate == null)
                 vrLocomotionGate = FindFirstObjectByType<WasteVrLocomotionGate>();
+
+            if (worldUiPresenter == null)
+                worldUiPresenter = GetComponent<WasteWorldUiPresenter>();
 
             if (wasteSelectionMenu != null)
             {
@@ -67,6 +71,8 @@ namespace Woi.WasteCollectionMode
 
         private void OnWasteCollected(WasteCollectedEvent evt)
         {
+            CancelActiveExplanationFlowIfNeeded();
+
             pendingWasteName = evt.WasteName;
             FreezePlayerInput();
 
@@ -75,6 +81,8 @@ namespace Woi.WasteCollectionMode
 
             if (wasteSelectionMenu != null)
                 wasteSelectionMenu.Show(evt.WasteName);
+
+            RefreshVrPanelForMenu();
         }
 
         private void OnBinSelected(string binId)
@@ -114,6 +122,8 @@ namespace Woi.WasteCollectionMode
             if (explanationPopup != null)
                 explanationPopup.Show(isCorrect, definition.ExplanationText);
 
+            EnableGameplayInputDuringExplanation();
+
             if (ServiceLocator.TryGet(out WasteAudioFeedback wasteAudio))
                 wasteAudio.PlayClassificationResult(isCorrect, OnClassificationSoundFinished);
             else
@@ -122,6 +132,9 @@ namespace Woi.WasteCollectionMode
 
         private void OnClassificationSoundFinished()
         {
+            if (!explanationFlowActive)
+                return;
+
             if (pendingDefinition == null || !pendingDefinition.HasExplanation)
             {
                 FinishExplanationFlow();
@@ -165,6 +178,46 @@ namespace Woi.WasteCollectionMode
 
             if (selectionSystemManager != null)
                 selectionSystemManager.SetSelectionInputEnabled(true);
+        }
+
+        private void EnableGameplayInputDuringExplanation()
+        {
+            RestorePlayerInput();
+
+            if (selectionSystemManager != null)
+                selectionSystemManager.SetSelectionInputEnabled(true);
+        }
+
+        /// <summary>Stops explanation audio/UI (e.g. player opens exit with grip mid-voiceover).</summary>
+        public void InterruptActiveExplanationFlow()
+        {
+            CancelActiveExplanationFlowIfNeeded();
+        }
+
+        private void CancelActiveExplanationFlowIfNeeded()
+        {
+            if (!explanationFlowActive && (explanationPopup == null || !explanationPopup.IsVisible))
+                return;
+
+            if (ServiceLocator.TryGet(out WasteAudioFeedback wasteAudio))
+                wasteAudio.StopActiveFeedback();
+
+            explanationFlowActive = false;
+            pendingDefinition = null;
+
+            if (explanationPopup != null)
+                explanationPopup.Hide();
+        }
+
+        private void RefreshVrPanelForMenu()
+        {
+            if (!WasteCollectionPlatform.ShouldUseVrPresentation())
+                return;
+
+            if (worldUiPresenter == null)
+                worldUiPresenter = GetComponent<WasteWorldUiPresenter>();
+
+            worldUiPresenter?.NotifyContentLayoutChanged(8);
         }
 
         private void FreezePlayerInput()

@@ -22,6 +22,8 @@ namespace Woi.WasteCollectionMode
 
     /// VR: positions the shared WasteCollection UIDocument in world space in front of the HMD.
 
+    /// While modal UI is open (WasteMenu, explanation, result), the panel follows the head each frame.
+
     /// Keeps <see cref="WasteCollectionUI"/> under its scene parent — never reparents to the camera.
 
     /// </summary>
@@ -80,6 +82,8 @@ namespace Woi.WasteCollectionMode
 
         private bool followActive;
 
+        private bool headFollowActive;
+
         private bool pendingFollowRequest;
 
         private int layoutRefreshFramesRemaining;
@@ -114,7 +118,7 @@ namespace Woi.WasteCollectionMode
 
 
 
-        public void SetFollowActive(bool active)
+        public void SetFollowActive(bool active, bool trackHead = true)
 
         {
 
@@ -125,6 +129,8 @@ namespace Woi.WasteCollectionMode
 
 
             bool wasFollowing = followActive;
+
+            bool wasHeadFollow = headFollowActive;
 
             if (active && !configuredForVr)
 
@@ -142,15 +148,25 @@ namespace Woi.WasteCollectionMode
 
             followActive = active && configuredForVr;
 
+            headFollowActive = followActive && trackHead;
 
 
-            if (followActive && !wasFollowing)
+
+            if (followActive && (!wasFollowing || headFollowActive != wasHeadFollow))
 
             {
 
-                ScheduleLayoutRefresh();
+                ScheduleLayoutRefresh(frames: trackHead ? 4 : 12);
 
                 SnapInFrontOfEye();
+
+            }
+
+            else if (!followActive)
+
+            {
+
+                headFollowActive = false;
 
             }
 
@@ -178,7 +194,7 @@ namespace Woi.WasteCollectionMode
 
         /// </summary>
 
-        public void NotifyContentLayoutChanged()
+        public void NotifyContentLayoutChanged(int settleFrames = 4)
 
         {
 
@@ -188,11 +204,17 @@ namespace Woi.WasteCollectionMode
 
 
 
-            ScheduleLayoutRefresh();
+            ScheduleLayoutRefresh(settleFrames);
 
             if (followActive)
 
+            {
+
+                SnapInFrontOfEye();
+
                 SyncUidocumentWorldTransform();
+
+            }
 
         }
 
@@ -250,15 +272,11 @@ namespace Woi.WasteCollectionMode
 
             followActive = false;
 
+            headFollowActive = false;
+
             UnregisterGeometryCallback();
 
         }
-
-
-
-        // No per-frame follow: the panel is placed once when it opens (see LateUpdate's
-
-        // settle window) and then stays fixed in world space — it does not track the head.
 
 
 
@@ -326,23 +344,41 @@ namespace Woi.WasteCollectionMode
 
         {
 
-            // Settle window after opening: place the panel in front of the eye and refresh
+            if (!configuredForVr)
 
-            // its world mesh for a few frames (head pose can still be moving on the exact
+                return;
 
-            // open frame), then freeze. After this there is no head-following.
 
-            if (layoutRefreshFramesRemaining > 0 && configuredForVr)
+
+            if (headFollowActive)
+
+            {
+
+                SnapInFrontOfEye();
+
+                SyncUidocumentWorldTransform();
+
+            }
+
+
+
+            if (layoutRefreshFramesRemaining > 0)
 
             {
 
                 layoutRefreshFramesRemaining--;
 
-                SnapInFrontOfEye();
-
                 ApplyLayoutFromInspector();
 
-                SyncUidocumentWorldTransform();
+                if (followActive)
+
+                {
+
+                    SnapInFrontOfEye();
+
+                    SyncUidocumentWorldTransform();
+
+                }
 
             }
 
@@ -586,11 +622,11 @@ namespace Woi.WasteCollectionMode
 
         /// </summary>
 
-        private void ScheduleLayoutRefresh()
+        private void ScheduleLayoutRefresh(int frames = 4)
 
         {
 
-            layoutRefreshFramesRemaining = 4;
+            layoutRefreshFramesRemaining = Mathf.Max(layoutRefreshFramesRemaining, Mathf.Max(1, frames));
 
         }
 
@@ -649,6 +685,12 @@ namespace Woi.WasteCollectionMode
             if (!configuredForVr || !followActive)
 
                 return;
+
+
+
+            if (!headFollowActive)
+
+                SnapInFrontOfEye();
 
 
 

@@ -124,7 +124,8 @@ namespace Woi.WasteCollectionMode.Editor
             SetReferenceIfNull(host.GetComponent<WasteCollectionResultController>(), "explanationPopup", popup);
             SetReferenceIfNull(host.GetComponent<WasteVrUiSessionController>(), "explanationPopup", popup);
             SetReferenceIfNull(host.GetComponent<WasteSelectionInputGate>(), "explanationPopup", popup);
-            SetReferenceIfNull(host.GetComponent<WasteVrExitInput>(), "explanationPopup", popup);
+            SetReferenceIfNull(host.GetComponent<WasteVrExitInput>(), "collectionFlow",
+                host.GetComponent<WasteCollectionResultController>());
 
             EditorUtility.SetDirty(host);
             EditorSceneManager.MarkSceneDirty(host.scene);
@@ -556,8 +557,8 @@ namespace Woi.WasteCollectionMode.Editor
                 SerializedObject serializedExit = new SerializedObject(exitInput);
                 if (gripEvent != null)
                     serializedExit.FindProperty("gripInputEvent").objectReferenceValue = gripEvent;
-                serializedExit.FindProperty("explanationPopup").objectReferenceValue =
-                    host.GetComponent<WasteExplanationPopup>();
+                serializedExit.FindProperty("collectionFlow").objectReferenceValue =
+                    host.GetComponent<WasteCollectionResultController>();
                 serializedExit.ApplyModifiedPropertiesWithoutUndo();
             }
 

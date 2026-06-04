@@ -22,6 +22,7 @@ namespace Woi.WasteCollectionMode
             ["13"] = "Hazardous Waste",
             ["14"] = "Medical Waste",
             ["15"] = "Composite Waste",
+            ["16"] = "Domestic Waste",
         };
 
         private static readonly Dictionary<string, string> BinNames = new(StringComparer.OrdinalIgnoreCase)
@@ -41,6 +42,7 @@ namespace Woi.WasteCollectionMode
             ["13"] = "Tehlikeli Atık",
             ["14"] = "Tıbbi Atık",
             ["15"] = "Kompozit Atık",
+            ["16"] = "Evsel Atık",
         };
 
         private static readonly Dictionary<string, string> WasteNameToBinId = new(StringComparer.OrdinalIgnoreCase)
@@ -48,7 +50,7 @@ namespace Woi.WasteCollectionMode
             ["Paper"] = "1",
             ["CardboardBox"] = "1",   // Kağıt-Karton birleşik kutu (Sıfır Atık standardı)
             ["WaterBottle"] = "3",
-            ["BabyWipe"] = "12",      // Geri Kazanılabilir
+            ["BabyWipe"] = "16",      // Evsel Atık (ıslak mendil)
             ["WBCap"] = "9",
             ["GlassBottle"] = "4",
             ["Chicken_Pile"] = "5",

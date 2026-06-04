@@ -7,6 +7,7 @@ namespace Woi.WasteCollectionMode
 {
     /// <summary>
     /// VR: right grip opens/closes the waste exit overlay (same as Tab on PC).
+    /// Works during Doğru/Yanlış voiceover; waste bin menu still blocks grip until dismissed.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class WasteVrExitInput : MonoBehaviour, ISoapVrGripInputListener
@@ -17,7 +18,7 @@ namespace Woi.WasteCollectionMode
         [SerializeField] private ScriptableEventNoParam gripInputEvent;
         [SerializeField] private WasteResultScreenController resultScreen;
         [SerializeField] private WasteSelectionMenu selectionMenu;
-        [SerializeField] private WasteExplanationPopup explanationPopup;
+        [SerializeField] private WasteCollectionResultController collectionFlow;
 
         private void Awake()
         {
@@ -26,8 +27,8 @@ namespace Woi.WasteCollectionMode
                 resultScreen = GetComponent<WasteResultScreenController>();
             if (selectionMenu == null)
                 selectionMenu = GetComponent<WasteSelectionMenu>();
-            if (explanationPopup == null)
-                explanationPopup = GetComponent<WasteExplanationPopup>();
+            if (collectionFlow == null)
+                collectionFlow = GetComponent<WasteCollectionResultController>();
         }
 
         private void OnEnable()
@@ -77,8 +78,7 @@ namespace Woi.WasteCollectionMode
             if (selectionMenu != null && selectionMenu.IsVisible)
                 return;
 
-            if (explanationPopup != null && explanationPopup.IsVisible)
-                return;
+            collectionFlow?.InterruptActiveExplanationFlow();
 
             resultScreen.ToggleExitOverlay();
         }

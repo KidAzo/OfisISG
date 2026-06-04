@@ -4,7 +4,8 @@ using Woi.SelectionSystem;
 namespace Woi.WasteCollectionMode
 {
     /// <summary>
-    /// Blocks <see cref="SelectionSystemManager"/> while waste bin UI or result screen is open.
+    /// Blocks <see cref="SelectionSystemManager"/> while the waste bin menu or result screen is open.
+    /// The correct/wrong explanation popup does not block selection so the player can move on.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class WasteSelectionInputGate : MonoBehaviour, ISelectionInputGate
@@ -21,9 +22,6 @@ namespace Woi.WasteCollectionMode
                     return false;
 
                 if (selectionMenu != null && selectionMenu.IsVisible)
-                    return false;
-
-                if (explanationPopup != null && explanationPopup.IsVisible)
                     return false;
 
                 return true;

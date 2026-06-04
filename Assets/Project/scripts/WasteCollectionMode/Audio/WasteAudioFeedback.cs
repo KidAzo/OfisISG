@@ -22,6 +22,37 @@ namespace Woi.WasteCollectionMode
         [SerializeField] private LocalizedWasteSound wrongSound;
 
         private AudioSystem audioSystem;
+        private AudioVoice activeFlowVoice;
+        private Coroutine activeFlowCoroutine;
+        private int flowGeneration;
+
+        /// <summary>
+        /// Stops the current waste voice chain (doğru/yanlış + explanation). Call when the player collects
+        /// another item while feedback is still playing — not between chained classification → explanation.
+        /// </summary>
+        public void StopActiveFeedback()
+        {
+            flowGeneration++;
+
+            if (activeFlowCoroutine != null)
+            {
+                StopCoroutine(activeFlowCoroutine);
+                activeFlowCoroutine = null;
+            }
+
+            if (activeFlowVoice != null)
+            {
+                activeFlowVoice.Stop();
+                activeFlowVoice = null;
+            }
+
+            EnsureAudioSystem();
+            if (audioSystem == null)
+                return;
+
+            StopLocalizedInstances(correctSound);
+            StopLocalizedInstances(wrongSound);
+        }
 
         private void Awake()
         {
@@ -50,6 +81,8 @@ namespace Woi.WasteCollectionMode
                 Debug.LogWarning("[WasteAudioFeedback] PlayWasteSelected: WasteDefinition is NULL.", this);
                 return;
             }
+
+            StopActiveFeedback();
 
             Debug.Log($"[WasteAudioFeedback] PlayWasteSelected for '{definition.Name}', SelectSound={(definition.SelectSound != null ? definition.SelectSound.name : "NULL")}.", this);
             PlayLocalized(definition.SelectSound, position, true);
@@ -81,6 +114,18 @@ namespace Woi.WasteCollectionMode
 
         private void PlayLocalizedThen(LocalizedWasteSound localized, Action onComplete)
         {
+            if (activeFlowCoroutine != null)
+            {
+                StopCoroutine(activeFlowCoroutine);
+                activeFlowCoroutine = null;
+            }
+
+            if (activeFlowVoice != null)
+            {
+                activeFlowVoice.Stop();
+                activeFlowVoice = null;
+            }
+
             SoundDefinition sound = localized != null ? localized.Resolve() : null;
             EnsureAudioSystem();
 
@@ -91,18 +136,22 @@ namespace Woi.WasteCollectionMode
                 return;
             }
 
+            int generation = flowGeneration;
             Debug.Log($"[WasteAudioFeedback] PlayLocalizedThen playing '{sound.name}'.", this);
             AudioVoice voice = audioSystem.Play(sound);
             if (voice != null)
             {
-                int generation = voice.Generation;
+                activeFlowVoice = voice;
+                int voiceGeneration = voice.Generation;
                 Action<int> handler = null;
                 handler = completedGeneration =>
                 {
-                    if (completedGeneration != generation)
+                    if (completedGeneration != voiceGeneration || generation != flowGeneration)
                         return;
 
                     voice.OnCompleted -= handler;
+                    if (ReferenceEquals(activeFlowVoice, voice))
+                        activeFlowVoice = null;
                     onComplete?.Invoke();
                 };
                 voice.OnCompleted += handler;
@@ -111,7 +160,7 @@ namespace Woi.WasteCollectionMode
 
             // Play() returned no voice (queue/delay/cooldown) — fall back to a clip-length wait.
             if (isActiveAndEnabled)
-                StartCoroutine(WaitThenInvoke(EstimateDuration(sound), onComplete));
+                activeFlowCoroutine = StartCoroutine(WaitThenInvoke(EstimateDuration(sound), generation, onComplete));
             else
                 onComplete?.Invoke();
         }
@@ -132,12 +181,28 @@ namespace Woi.WasteCollectionMode
             return longest;
         }
 
-        private static IEnumerator WaitThenInvoke(float seconds, Action onComplete)
+        private IEnumerator WaitThenInvoke(float seconds, int generation, Action onComplete)
         {
             if (seconds > 0f)
                 yield return new WaitForSecondsRealtime(seconds);
 
+            activeFlowCoroutine = null;
+            if (generation != flowGeneration)
+                yield break;
+
             onComplete?.Invoke();
+        }
+
+        private void StopLocalizedInstances(LocalizedWasteSound localized)
+        {
+            if (localized == null)
+                return;
+
+            EnsureAudioSystem();
+            if (audioSystem == null)
+                return;
+
+            localized.StopAllInstances(audioSystem);
         }
 
         private void PlayLocalized(LocalizedWasteSound localized, Vector3 position, bool positional)

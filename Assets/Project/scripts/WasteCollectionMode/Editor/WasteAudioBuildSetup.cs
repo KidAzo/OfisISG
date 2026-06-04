@@ -76,6 +76,9 @@ namespace Woi.WasteCollectionMode.Editor
             new CategoryEntry(10, "GeriKazanilabilir", "12",
                 "Kağıt, cam, plastik ve metal gibi karışık ambalajlar 'Geri Kazanılabilir Atıklar' atık kutusuna atılmalıdır.",
                 "Paper, glass, plastic, and metal packaging should be placed in the 'Recyclable Waste' bin."),
+            new CategoryEntry(13, "Evsel", "16",
+                "Islak mendiller 'Evsel Atık' atık kutusuna atılmalıdır.",
+                "Wet wipes should be placed in the 'Domestic Waste' bin."),
             new CategoryEntry(11, "Tibbi", "14",
                 "Enfeksiyon yapıcı atıklar, patolojik atıklar ve kesici-delici atıklar 'Tıbbi Atık' atık kutusuna atılmalıdır.",
                 "Infectious, pathological, and sharps waste should be placed in the 'Medical Waste' bin."),
@@ -101,6 +104,7 @@ namespace Woi.WasteCollectionMode.Editor
             ["12"] = 10, // Geri Kazanılabilir
             ["14"] = 11, // Tıbbi
             ["15"] = 9,  // Kompozit
+            ["16"] = 13, // Evsel (ıslak mendil)
         };
 
         private const string SelectTrNewRoot = "Assets/Project/Sounds/WasteSounds/TR/New";
@@ -116,8 +120,8 @@ namespace Woi.WasteCollectionMode.Editor
             [7] = $"{SelectTrNewRoot}/Yazıcı kartuşu.mp3",
             [8] = $"{SelectTrNewRoot}/Bozuk bilgisayar klavyesi.mp3",
             [9] = $"{SelectTrNewRoot}/meyve suyu kutusu.mp3",
-            [10] = $"{SelectTrNewRoot}/Islak mendil.mp3",
             [11] = $"{SelectTrNewRoot}/Cerrahi maske.mp3",
+            [13] = $"{SelectTrNewRoot}/Islak mendil.mp3",
             [12] = $"{SelectTrNewRoot}/Plastik şişe kapağı.mp3",
         };
 

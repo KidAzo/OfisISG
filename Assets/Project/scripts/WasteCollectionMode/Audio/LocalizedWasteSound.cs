@@ -23,5 +23,17 @@ namespace Woi.WasteCollectionMode
 
             return turkish != null ? turkish : english;
         }
+
+        public void StopAllInstances(AudioSystem audioSystem)
+        {
+            if (audioSystem == null)
+                return;
+
+            if (turkish != null)
+                audioSystem.StopAllInstances(turkish);
+
+            if (english != null)
+                audioSystem.StopAllInstances(english);
+        }
     }
 }

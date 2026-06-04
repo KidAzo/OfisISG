@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Serialization;
 using FireExtinguisher.Core;
 using WoiUtils;
 using Woi.Events;
@@ -22,10 +23,11 @@ namespace Woi.DataHandler
 
         [Header("━━━━━━━ DEBUG AYARLARI ━━━━━━━")]
         [SerializeField] private bool showDebugLogs = true;
-#if UNITY_EDITOR
-        [SerializeField] private bool autoStartTestSessionInEditor = true;
-        [SerializeField, Min(0f)] private float editorTestSessionDelaySeconds = 3f;
-#endif
+        [Tooltip("When true, starts a local test session if no UDP session arrives (Editor and builds).")]
+        [FormerlySerializedAs("autoStartTestSessionInEditor")]
+        [SerializeField] private bool autoStartTestSession = true;
+        [FormerlySerializedAs("editorTestSessionDelaySeconds")]
+        [SerializeField, Min(0f)] private float testSessionDelaySeconds = 3f;
         [SerializeField] private ScriptableEventNoParam onSessionStarted;
         [SerializeField] private ServerDiscoveryClient discovery;
         [SerializeField] private bool useManualUrl = false;
@@ -35,15 +37,13 @@ namespace Woi.DataHandler
 
         private UdpClient udpListener;
         private bool isListening;
-#if UNITY_EDITOR
-        private Coroutine editorTestSessionRoutine;
-#endif
+        private Coroutine testSessionRoutine;
 
         public event Action<PlayerSession> OnSessionReady;
         public event Action<string> OnError;
 
         /// <summary>
-        /// Fired when UDP/editor test session is committed (same moment as <see cref="OnSessionReady"/> / onSessionStarted).
+        /// Fired when UDP or auto test session is committed (same moment as <see cref="OnSessionReady"/> / onSessionStarted).
         /// </summary>
         public static event Action<PlayerSession> SessionBecameReady;
 
@@ -58,10 +58,8 @@ namespace Woi.DataHandler
         {
             StartListening();
 
-#if UNITY_EDITOR
-            if (autoStartTestSessionInEditor)
-                ScheduleEditorTestSession();
-#endif
+            if (autoStartTestSession)
+                ScheduleAutoTestSession();
 
             if (useManualUrl)
             {
@@ -301,7 +299,7 @@ namespace Woi.DataHandler
         }
 
         /// <summary>
-        /// Clears the active session and, in the Editor, schedules the auto test session again.
+        /// Clears the active session and schedules auto test session again when enabled.
         /// </summary>
         public void PrepareForRestart()
         {
@@ -310,16 +308,14 @@ namespace Woi.DataHandler
 
         /// <summary>
         /// Called when a gameplay overlay scene (e.g. FireModule_Office) loads again.
-        /// Editor: schedules a fresh test session. Player build: re-notifies listeners if a session is still active.
+        /// Schedules a fresh test session when <see cref="autoStartTestSession"/> is enabled.
         /// </summary>
         public void PrepareForOverlaySceneReload()
         {
             ClearSession();
-#if UNITY_EDITOR
-            ScheduleEditorTestSession();
-#else
-            // Player build relies on UDP; nothing to schedule here.
-#endif
+
+            if (autoStartTestSession)
+                ScheduleAutoTestSession();
         }
 
         /// <summary>
@@ -334,18 +330,16 @@ namespace Woi.DataHandler
             RaiseSessionStarted(CurrentSession);
         }
 
-#if UNITY_EDITOR
-        private void ScheduleEditorTestSession()
+        private void ScheduleAutoTestSession()
         {
-            if (!autoStartTestSessionInEditor)
+            if (!autoStartTestSession)
                 return;
 
-            if (editorTestSessionRoutine != null)
-                StopCoroutine(editorTestSessionRoutine);
+            if (testSessionRoutine != null)
+                StopCoroutine(testSessionRoutine);
 
-            editorTestSessionRoutine = StartCoroutine(AutoStartTestSessionInEditorRoutine());
+            testSessionRoutine = StartCoroutine(AutoStartTestSessionRoutine());
         }
-#endif
 
         public void CreateTestSession(string name, int id)
         {
@@ -380,20 +374,18 @@ namespace Woi.DataHandler
             onSessionStarted?.Raise();
         }
 
-#if UNITY_EDITOR
-        private IEnumerator AutoStartTestSessionInEditorRoutine()
+        private IEnumerator AutoStartTestSessionRoutine()
         {
-            if (editorTestSessionDelaySeconds > 0f)
-                yield return new WaitForSecondsRealtime(editorTestSessionDelaySeconds);
+            if (testSessionDelaySeconds > 0f)
+                yield return new WaitForSecondsRealtime(testSessionDelaySeconds);
 
-            editorTestSessionRoutine = null;
+            testSessionRoutine = null;
 
             if (CurrentSession != null && CurrentSession.IsActive)
                 yield break;
 
             CreateTestSession("Test Oyuncu", 9999);
         }
-#endif
 
         private void Log(string message)
         {
