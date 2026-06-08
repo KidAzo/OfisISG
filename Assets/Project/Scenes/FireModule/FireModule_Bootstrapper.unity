@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3225f43e6ea76e47858daa602f79348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Woi.OfficeFire.Integration::Woi.OfficeFire.OfficeGameModulesBootstrapper
-  gameModule: 1
+  gameModule: 0
   loadOnStart: 1
   loadAfterFireInstallerReady: 1
   loadDelay: 0
@@ -466,7 +466,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &7274010590841370749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,7 +481,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Woi.DataHandler.SessionGameplayGate
   sessionProfileUiRoot: {fileID: 0}
   profileOverlay: {fileID: 0}
-  worldUiPresenter: {fileID: 0}
   sessionOverlaySceneNames:
   - FireModule_Office
   blockedSceneNames:
@@ -514,8 +513,8 @@ MonoBehaviour:
   udpListenPort: 7777
   pcServerUrl: http://192.168.1.50:8080
   showDebugLogs: 0
-  autoStartTestSessionInEditor: 1
-  editorTestSessionDelaySeconds: 3
+  autoStartTestSession: 1
+  testSessionDelaySeconds: 3
   onSessionStarted: {fileID: 11400000, guid: d89d40b741c123d43a0f9eea32eacaa8, type: 2}
   discovery: {fileID: 6774733852852079338}
   useManualUrl: 0

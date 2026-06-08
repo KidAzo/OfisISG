@@ -10,6 +10,12 @@ namespace Woi.OfficeFire
     {
         [Tooltip("This stage activates and scales these objects from 0 to their original local scale.")]
         public GameObject[] objects = Array.Empty<GameObject>();
+
+        [Tooltip("These objects are NOT hidden on start. They will grow from their original scale to the multiplied scale.")]
+        public GameObject[] objectsToScaleFurther = Array.Empty<GameObject>();
+
+        [Tooltip("Scale multiplier for objectsToScaleFurther")]
+        public float scaleMultiplier = 1.5f;
     }
 
     /// <summary>
@@ -52,6 +58,8 @@ namespace Woi.OfficeFire
         {
             public Transform Transform;
             public Vector3 TargetLocalScale;
+            public Vector3 StartLocalScale;
+            public bool SetInactiveOnPrepare;
         }
 
         private CachedObject[][] _cachedStages = Array.Empty<CachedObject[]>();
@@ -126,33 +134,50 @@ namespace Woi.OfficeFire
             for (int stageIndex = 0; stageIndex < stages.Length; stageIndex++)
             {
                 FireGrowthStage stage = stages[stageIndex];
-                GameObject[] objects = stage != null ? stage.objects : null;
-                if (objects == null || objects.Length == 0)
+                if (stage == null)
                 {
                     _cachedStages[stageIndex] = Array.Empty<CachedObject>();
                     continue;
                 }
 
-                CachedObject[] cachedObjects = new CachedObject[objects.Length];
-                for (int objectIndex = 0; objectIndex < objects.Length; objectIndex++)
-                {
-                    GameObject target = objects[objectIndex];
-                    if (target == null)
-                    {
-                        continue;
-                    }
+                int objCount = stage.objects != null ? stage.objects.Length : 0;
+                int scaleFurtherCount = stage.objectsToScaleFurther != null ? stage.objectsToScaleFurther.Length : 0;
+                
+                CachedObject[] cachedObjects = new CachedObject[objCount + scaleFurtherCount];
+                int cacheIndex = 0;
 
-                    Transform targetTransform = target.transform;
-                    cachedObjects[objectIndex] = new CachedObject
+                for (int i = 0; i < objCount; i++)
+                {
+                    GameObject target = stage.objects[i];
+                    if (target == null) continue;
+
+                    cachedObjects[cacheIndex++] = new CachedObject
                     {
-                        Transform = targetTransform,
-                        TargetLocalScale = targetTransform.localScale,
+                        Transform = target.transform,
+                        StartLocalScale = Vector3.zero,
+                        TargetLocalScale = target.transform.localScale,
+                        SetInactiveOnPrepare = true
                     };
 
-                    targetTransform.localScale = Vector3.zero;
+                    target.transform.localScale = Vector3.zero;
                     target.SetActive(false);
                 }
 
+                for (int i = 0; i < scaleFurtherCount; i++)
+                {
+                    GameObject target = stage.objectsToScaleFurther[i];
+                    if (target == null) continue;
+
+                    cachedObjects[cacheIndex++] = new CachedObject
+                    {
+                        Transform = target.transform,
+                        StartLocalScale = target.transform.localScale,
+                        TargetLocalScale = target.transform.localScale * stage.scaleMultiplier,
+                        SetInactiveOnPrepare = false
+                    };
+                }
+
+                Array.Resize(ref cachedObjects, cacheIndex);
                 _cachedStages[stageIndex] = cachedObjects;
             }
 
@@ -202,8 +227,11 @@ namespace Woi.OfficeFire
                     continue;
                 }
 
-                cached.Transform.gameObject.SetActive(true);
-                cached.Transform.localScale = Vector3.zero;
+                if (cached.SetInactiveOnPrepare)
+                {
+                    cached.Transform.gameObject.SetActive(true);
+                }
+                cached.Transform.localScale = cached.StartLocalScale;
             }
 
             float elapsed = 0f;
@@ -222,7 +250,7 @@ namespace Woi.OfficeFire
                     }
 
                     cached.Transform.localScale = Vector3.LerpUnclamped(
-                        Vector3.zero,
+                        cached.StartLocalScale,
                         cached.TargetLocalScale,
                         smoothT);
                 }
@@ -260,8 +288,11 @@ namespace Woi.OfficeFire
                         continue;
                     }
 
-                    cached.Transform.localScale = Vector3.zero;
-                    cached.Transform.gameObject.SetActive(false);
+                    cached.Transform.localScale = cached.StartLocalScale;
+                    if (cached.SetInactiveOnPrepare)
+                    {
+                        cached.Transform.gameObject.SetActive(false);
+                    }
                 }
             }
         }

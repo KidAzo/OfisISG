@@ -63,7 +63,6 @@ namespace Woi.OfficeFire
             }
 
             worldPosition = position;
-            worldTangent = tangent;
 
             if (math.lengthsq(tangent) < 1e-6f)
             {

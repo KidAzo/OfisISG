@@ -39,9 +39,10 @@ namespace Woi.OfficeFire
         [Min(0f)]
         private float walkSpeed = -1f;
 
+        [Tooltip("Uses path default speed when <= 0.")]
         [SerializeField]
-        [Min(0.1f)]
-        private float runSpeed = 4.5f;
+        [Min(0f)]
+        private float runSpeed = -1f;
 
         [Header("Animation")]
         [SerializeField]
@@ -74,6 +75,11 @@ namespace Woi.OfficeFire
         [SerializeField]
         private bool keepUpright = true;
 
+        [Tooltip("Meters ahead on the path used for facing. Longer = less left/right wobble on straight segments.")]
+        [SerializeField]
+        [Min(0.1f)]
+        private float rotationLookAheadDistance = 1.5f;
+
         [SerializeField]
         private bool playIdleAtPathEnd = true;
 
@@ -82,6 +88,9 @@ namespace Woi.OfficeFire
 
         private Vector3 _resetPosition;
         private Quaternion _resetRotation;
+        private Quaternion _animatorInitialLocalRotation;
+        private Vector3 _lastPathPosition;
+        private bool _hasLastPathPosition;
         private float _normalizedTime;
         private float _delayRemaining;
         private bool _isRunning;
@@ -105,6 +114,10 @@ namespace Woi.OfficeFire
             if (animator == null)
             {
                 animator = GetComponentInChildren<Animator>();
+            }
+            if (animator != null && animator.transform != transform)
+            {
+                _animatorInitialLocalRotation = animator.transform.localRotation;
             }
 
             CacheAnimationHashes();
@@ -130,7 +143,7 @@ namespace Woi.OfficeFire
             Begin();
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if (!_isRunning || !MovesAlongPath)
             {
@@ -159,7 +172,8 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            ApplyPose(_normalizedTime);
+            SyncAnimatorPlaybackSpeed(speed);
+            ApplyPose(_normalizedTime, speed, false);
         }
 
         public void Begin()
@@ -173,6 +187,7 @@ namespace Woi.OfficeFire
             _delayRemaining = startDelay;
             _isRunning = true;
             _loggedMovementBlocked = false;
+            _hasLastPathPosition = false;
 
             if (!gameObject.activeInHierarchy)
             {
@@ -183,7 +198,9 @@ namespace Woi.OfficeFire
 
             if (MovesAlongPath)
             {
-                ApplyPose(_normalizedTime);
+                float speed = GetMoveSpeed();
+                SyncAnimatorPlaybackSpeed(speed);
+                ApplyPose(_normalizedTime, speed, true);
             }
         }
 
@@ -192,6 +209,7 @@ namespace Woi.OfficeFire
             _isRunning = false;
             _delayRemaining = 0f;
             _loggedMovementBlocked = false;
+            _hasLastPathPosition = false;
 
             if (locomotionMode != NpcLocomotionMode.Idle)
             {
@@ -216,7 +234,7 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            ApplyPose(Mathf.Clamp01(startNormalizedT));
+            ApplyPose(Mathf.Clamp01(startNormalizedT), GetMoveSpeed(), true);
 
             if (storeAsResetPose)
             {
@@ -227,7 +245,7 @@ namespace Woi.OfficeFire
         private void HandlePathEnd()
         {
             _normalizedTime = 1f;
-            ApplyPose(1f);
+            ApplyPose(1f, GetMoveSpeed(), false);
 
             switch (endBehaviour)
             {
@@ -253,14 +271,43 @@ namespace Woi.OfficeFire
         {
             return locomotionMode switch
             {
-                NpcLocomotionMode.Run => runSpeed,
+                NpcLocomotionMode.Run when runSpeed > 0f => runSpeed,
+                NpcLocomotionMode.Run => path != null ? path.DefaultMoveSpeed * 1.6f : 0f,
                 NpcLocomotionMode.Walk when walkSpeed > 0f => walkSpeed,
                 NpcLocomotionMode.Walk => path != null ? path.DefaultMoveSpeed : 0f,
                 _ => 0f,
             };
         }
 
-        private void ApplyPose(float normalizedTime)
+        private float GetReferenceMoveSpeed()
+        {
+            if (locomotionMode == NpcLocomotionMode.Run)
+            {
+                return runSpeed > 0f ? runSpeed : path != null ? path.DefaultMoveSpeed * 1.6f : 0f;
+            }
+
+            return walkSpeed > 0f ? walkSpeed : path != null ? path.DefaultMoveSpeed : 0f;
+        }
+
+        private void SyncAnimatorPlaybackSpeed(float moveSpeed)
+        {
+            if (animator == null || locomotionMode == NpcLocomotionMode.Idle)
+            {
+                return;
+            }
+
+            float baseSpeed = locomotionMode == NpcLocomotionMode.Run ? runAnimatorSpeed : walkAnimatorSpeed;
+            float referenceSpeed = GetReferenceMoveSpeed();
+            if (referenceSpeed <= 0.001f || moveSpeed <= 0.001f)
+            {
+                animator.speed = baseSpeed;
+                return;
+            }
+
+            animator.speed = baseSpeed * (moveSpeed / referenceSpeed);
+        }
+
+        private void ApplyPose(float normalizedTime, float moveSpeed, bool instantRotation = false)
         {
             if (!path.TrySample(normalizedTime, out Vector3 position, out Vector3 tangent))
             {
@@ -271,24 +318,96 @@ namespace Woi.OfficeFire
 
             if (!faceMovementDirection)
             {
+                _lastPathPosition = position;
+                _hasLastPathPosition = true;
                 return;
             }
 
-            Vector3 forward = tangent;
-            if (keepUpright)
+            Vector3 forward = ComputeFacingDirection(normalizedTime, position, tangent, moveSpeed);
+            if (forward.sqrMagnitude <= 1e-6f)
             {
-                forward.y = 0f;
-                if (forward.sqrMagnitude < 1e-6f)
+                return;
+            }
+
+            Quaternion targetRot = Quaternion.LookRotation(forward.normalized, Vector3.up);
+            if (instantRotation || !Application.isPlaying)
+            {
+                transform.rotation = targetRot;
+            }
+            else
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 25f);
+            }
+
+            // Forcefully prevent the Run animation clip from twisting the child mesh's local rotation
+            if (Application.isPlaying && animator != null && animator.transform != transform)
+            {
+                animator.transform.localRotation = _animatorInitialLocalRotation;
+            }
+        }
+
+        private Vector3 ComputeFacingDirection(
+            float normalizedTime,
+            Vector3 position,
+            Vector3 tangentFallback,
+            float moveSpeed)
+        {
+            if (_hasLastPathPosition)
+            {
+                Vector3 travel = position - _lastPathPosition;
+                if (travel.sqrMagnitude > 1e-6f)
                 {
-                    forward = transform.forward;
-                    forward.y = 0f;
+                    _lastPathPosition = position;
+                    return FlattenForward(travel);
                 }
             }
 
+            _lastPathPosition = position;
+            _hasLastPathPosition = true;
+            return ComputeStableForward(normalizedTime, position, tangentFallback, moveSpeed);
+        }
+
+        private Vector3 ComputeStableForward(
+            float normalizedTime,
+            Vector3 position,
+            Vector3 tangentFallback,
+            float moveSpeed)
+        {
+            float pathLength = path.GetLength();
+            if (pathLength > 0.1f)
+            {
+                float lookAhead = Mathf.Max(rotationLookAheadDistance, moveSpeed * 0.45f);
+                float lookAheadT = Mathf.Clamp01(normalizedTime + (lookAhead / pathLength));
+                if (lookAheadT > normalizedTime + 1e-5f
+                    && path.TrySample(lookAheadT, out Vector3 aheadPos, out _))
+                {
+                    Vector3 delta = aheadPos - position;
+                    if (delta.sqrMagnitude > 1e-4f)
+                    {
+                        return FlattenForward(delta);
+                    }
+                }
+            }
+
+            return FlattenForward(tangentFallback);
+        }
+
+        private Vector3 FlattenForward(Vector3 forward)
+        {
+            if (!keepUpright)
+            {
+                return forward;
+            }
+
+            forward.y = 0f;
             if (forward.sqrMagnitude > 1e-6f)
             {
-                transform.rotation = Quaternion.LookRotation(forward.normalized, Vector3.up);
+                return forward;
             }
+
+            forward = transform.forward;
+            forward.y = 0f;
+            return forward;
         }
 
         private void PlayAnimation(NpcLocomotionMode mode)

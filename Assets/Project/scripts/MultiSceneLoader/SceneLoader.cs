@@ -86,7 +86,10 @@ namespace Woi.Settings
 		void Start()
 		{
 			RefreshLoadingScreenSettings();
-			GetComponent<LoadingScreenController>()?.HideAllLoadingUi();
+			if (!isLoading)
+			{
+				GetComponent<LoadingScreenController>()?.HideAllLoadingUi();
+			}
 		}
 
 		void RefreshLoadingScreenSettings()

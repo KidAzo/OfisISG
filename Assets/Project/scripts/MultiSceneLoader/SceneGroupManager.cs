@@ -70,7 +70,10 @@ namespace Systems.SceneManagement
 					Debug.Log($"[SGM] SceneManager.LoadSceneAsync name='{sceneData.SceneName}'");
 					var operation = SceneManager.LoadSceneAsync(sceneData.SceneName, LoadSceneMode.Additive);
 					if (operation == null)
+					{
 						Debug.LogError($"[SGM] LoadSceneAsync returned NULL for '{sceneData.SceneName}' — is it in Build Settings?");
+						continue;
+					}
 					operationGroup.Operations.Add(operation);
 				}
 				else
@@ -192,8 +195,8 @@ namespace Systems.SceneManagement
 	{
 		public readonly List<AsyncOperation> Operations;
 
-		public float Progress => Operations.Count == 0 ? 0 : Operations.Average(o => o.progress);
-		public bool IsDone => Operations.All(o => o.isDone);
+		public float Progress => Operations.Count == 0 ? 0 : Operations.Average(o => o != null ? o.progress : 1f);
+		public bool IsDone => Operations.All(o => o == null || o.isDone);
 
 		public AsyncOperationGroup(int initialCapacity)
 		{
