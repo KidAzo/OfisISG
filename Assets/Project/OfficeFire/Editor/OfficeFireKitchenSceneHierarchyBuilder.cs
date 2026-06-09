@@ -339,6 +339,13 @@ namespace Woi.OfficeFire.Editor
                 componentsAlreadyPresent,
                 componentWarnings);
 
+            OfficeFireSceneHierarchyBuilder.TryAddComponent<OfficeFireKitchenBlanketScenarioBridge>(
+                controller.gameObject,
+                "OfficeFireKitchenBlanketScenarioBridge",
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
             OfficeFireKitchenFireExtinguishBridge extinguishBridge =
                 controller.GetComponent<OfficeFireKitchenFireExtinguishBridge>();
             if (extinguishBridge != null)

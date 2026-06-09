@@ -39,6 +39,7 @@ namespace Woi.OfficeFire
 
         private bool _hasTriggered;
         private Coroutine _reminderRoutine;
+        private readonly System.Collections.Generic.HashSet<Collider> _insideColliders = new System.Collections.Generic.HashSet<Collider>();
 
         private void OnEnable()
         {
@@ -46,21 +47,89 @@ namespace Woi.OfficeFire
             {
                 StartReminderRoutine();
             }
+
+            // Unity's physics engine often puts non-moving Rigidbodies to sleep.
+            // If the player is standing perfectly still when this trigger is enabled, 
+            // OnTriggerStay will NOT fire. We must manually check for overlaps.
+            StartCoroutine(ManualOverlapCheckRoutine());
+        }
+
+        private IEnumerator ManualOverlapCheckRoutine()
+        {
+            // Wait for the physics engine to register the enabled collider
+            yield return new WaitForFixedUpdate();
+
+            Collider c = GetComponent<Collider>();
+            if (c == null || !c.enabled) yield break;
+
+            Collider[] overlaps = null;
+            if (c is BoxCollider box)
+            {
+                overlaps = Physics.OverlapBox(
+                    transform.TransformPoint(box.center), 
+                    Vector3.Scale(box.size, transform.lossyScale) * 0.5f, 
+                    transform.rotation, 
+                    playerLayer, 
+                    QueryTriggerInteraction.Collide);
+            }
+            else if (c is SphereCollider sphere)
+            {
+                float maxScale = Mathf.Max(transform.lossyScale.x, Mathf.Max(transform.lossyScale.y, transform.lossyScale.z));
+                overlaps = Physics.OverlapSphere(
+                    transform.TransformPoint(sphere.center), 
+                    sphere.radius * maxScale, 
+                    playerLayer, 
+                    QueryTriggerInteraction.Collide);
+            }
+            else
+            {
+                overlaps = Physics.OverlapBox(
+                    c.bounds.center, 
+                    c.bounds.extents, 
+                    Quaternion.identity, 
+                    playerLayer, 
+                    QueryTriggerInteraction.Collide);
+            }
+
+            if (overlaps != null)
+            {
+                for (int i = 0; i < overlaps.Length; i++)
+                {
+                    ProcessTrigger(overlaps[i]);
+                }
+            }
         }
 
         private void OnDisable()
         {
             StopReminderRoutine();
+            _insideColliders.Clear();
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (triggerOnce && _hasTriggered)
+            ProcessTrigger(other);
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            ProcessTrigger(other);
+        }
+
+        private void ProcessTrigger(Collider other)
+        {
+            if (!IsInPlayerLayer(other.gameObject.layer))
             {
                 return;
             }
 
-            if (!IsInPlayerLayer(other.gameObject.layer))
+            if (!_insideColliders.Add(other))
+            {
+                // Already inside
+                return;
+            }
+
+            if (triggerOnce && _hasTriggered)
             {
                 return;
             }
@@ -68,6 +137,11 @@ namespace Woi.OfficeFire
             _hasTriggered = true;
             StopReminderRoutine();
             DispatchAction();
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            _insideColliders.Remove(other);
         }
 
         private void StartReminderRoutine()

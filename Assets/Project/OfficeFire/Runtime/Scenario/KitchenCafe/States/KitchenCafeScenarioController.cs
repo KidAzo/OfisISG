@@ -124,6 +124,7 @@ namespace Woi.OfficeFire
         private void Awake()
         {
             EnsureFireExtinguishBridge();
+            EnsureBlanketBridge();
             EnsureExtinguisherHudBridge();
             DisableLegacySuppressionActions();
 
@@ -147,6 +148,16 @@ namespace Woi.OfficeFire
             }
 
             gameObject.AddComponent<OfficeFireKitchenFireExtinguishBridge>();
+        }
+
+        private void EnsureBlanketBridge()
+        {
+            if (GetComponent<OfficeFireKitchenBlanketScenarioBridge>() != null)
+            {
+                return;
+            }
+
+            gameObject.AddComponent<OfficeFireKitchenBlanketScenarioBridge>();
         }
 
         private void EnsureExtinguisherHudBridge()
@@ -534,6 +545,20 @@ namespace Woi.OfficeFire
             onFireControlled?.Invoke();
         }
 
+        public void HandleBlanketUsedOnFire()
+        {
+            if (!CanProcessActions())
+            {
+                return;
+            }
+
+            RegisterCorrectAction(OfficeFireCorrectActionId.SelectedFireBlanket);
+            RegisterCorrectAction(OfficeFireCorrectActionId.PlacedFireBlanketCorrectly);
+            RegisterCorrectAction(OfficeFireCorrectActionId.ControlledKitchenFire);
+            MarkFireControlled();
+            InvokeFireControlled();
+        }
+
         public void InvokeEvacuationStarted()
         {
             onEvacuationStarted?.Invoke();
@@ -581,7 +606,13 @@ namespace Woi.OfficeFire
                 CompleteScenario();
             }
 
-            OfficeFireScenarioReportHolder.Stash(Report);
+            OfficeFireScenarioReport report = Report;
+            if (report != null && report.scenarioId != ScenarioId)
+            {
+                report.scenarioId = ScenarioId;
+            }
+
+            OfficeFireScenarioReportHolder.Stash(report);
 
             Debug.Log(
                 $"[KitchenCafeScenarioController] Loading outdoor scene group '{outdoorSceneGroupName.Trim()}'.",
@@ -906,9 +937,6 @@ namespace Woi.OfficeFire
                         _kitchen.InvokeDoorOpened();
                         _kitchen.ChangeState(KitchenCafeState.Intervention);
                         break;
-                    case Actions.UseWater:
-                        _kitchen.LogWaterIgnoredFireNotAccessible();
-                        break;
                     default:
                         LogUnknownAction(actionId);
                         break;
@@ -956,8 +984,7 @@ namespace Woi.OfficeFire
                         _kitchen.InvokeWaterMistake();
                         break;
                     case Actions.UseBlanket:
-                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.SelectedFireBlanket);
-                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.PlacedFireBlanketCorrectly);
+                        _kitchen.HandleBlanketUsedOnFire();
                         break;
                     case Actions.GrabExtinguisher:
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.EstinguisherHandled);
@@ -968,6 +995,13 @@ namespace Woi.OfficeFire
                         break;
                     case Actions.FireGrowth:
                         _kitchen.ChangeState(KitchenCafeState.WaitingForExitRoom);
+                        break;
+                    case Actions.LeaveKitchenCafe:
+                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas);
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
+                        _kitchen.InvokeEvacuationStarted();
+                        _kitchen.StartEvacuationNpcs();
+                        _kitchen.ChangeState(KitchenCafeState.WaitingForAssemblyArea);
                         break;
                     default:
                         LogUnknownAction(actionId);
@@ -1010,14 +1044,23 @@ namespace Woi.OfficeFire
                         _kitchen.InvokeWaterMistake();
                         break;
                     case Actions.UseBlanket:
-                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.SelectedFireBlanket);
-                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.PlacedFireBlanketCorrectly);
+                        _kitchen.HandleBlanketUsedOnFire();
                         break;
                     case Actions.GrabExtinguisher:
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.EstinguisherHandled);
                         break;
                     case Actions.FireGrowth:
                         _kitchen.ChangeState(KitchenCafeState.WaitingForExitRoom);
+                        break;
+                    case Actions.LeaveKitchenCafe:
+                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas);
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
+                        _kitchen.InvokeEvacuationStarted();
+                        _kitchen.StartEvacuationNpcs();
+                        _kitchen.ChangeState(KitchenCafeState.WaitingForAssemblyArea);
+                        break;
+                    case Actions.PlayerLeaned:
+                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeanedCorrectly);
                         break;
                     default:
                         LogUnknownAction(actionId);
@@ -1053,6 +1096,12 @@ namespace Woi.OfficeFire
             {
                 switch (actionId)
                 {
+                    case Actions.PressSuppressionButton:
+                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
+                        _kitchen.AllowExtinguisherSpray();
+                        _kitchen.InvokeSuppressionActivated();
+                        _kitchen.LogFireExtinguishStatus("Baski dusurme aktif — sondurucu asamasina geciliyor");
+                        break;
                     case Actions.LeaveKitchenCafe:
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas);
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);

@@ -448,17 +448,22 @@ namespace Woi.OfficeFire.Editor
 
             for (int i = unityEvent.GetPersistentEventCount() - 1; i >= 0; i--)
             {
-                if (ReferenceEquals(unityEvent.GetPersistentTarget(i), kitchen)
-                    && unityEvent.GetPersistentMethodName(i) == nameof(KitchenCafeScenarioController.HandleAction))
+                if (!ReferenceEquals(unityEvent.GetPersistentTarget(i), kitchen))
+                {
+                    continue;
+                }
+
+                string methodName = unityEvent.GetPersistentMethodName(i);
+                if (methodName == nameof(KitchenCafeScenarioController.HandleBlanketUsedOnFire)
+                    || methodName == nameof(KitchenCafeScenarioController.HandleAction))
                 {
                     return;
                 }
             }
 
-            UnityEventTools.AddStringPersistentListener(
+            UnityEventTools.AddPersistentListener(
                 unityEvent,
-                kitchen.HandleAction,
-                KitchenCafeScenarioController.Actions.UseBlanket);
+                kitchen.HandleBlanketUsedOnFire);
             EditorUtility.SetDirty(useController);
         }
 

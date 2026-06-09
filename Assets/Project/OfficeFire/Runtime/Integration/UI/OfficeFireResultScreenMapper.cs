@@ -138,6 +138,8 @@ namespace Woi.OfficeFire
                 OfficeFireCorrectActionId.LeanedCorrectly => ("Leaned correctly in smoke", "Duman içinde doğru eğilme"),
                 OfficeFireCorrectActionId.ReachedExitDoor => ("Reached exit door", "Çıkış kapısına ulaşıldı"),
                 OfficeFireCorrectActionId.ExitedArchiveRoom => ("Exited archive room", "Arşiv odasından çıkıldı"),
+                OfficeFireCorrectActionId.EnteredKitchenCafeSafely => ("Entered kitchen safely", "Mutfak alanına güvenli giriş"),
+                OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas => ("Left kitchen before gas release", "Gaz salınımından önce mutfaktan çıkıldı"),
                 _ => (id.ToString(), id.ToString()),
             };
 
