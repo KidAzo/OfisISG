@@ -48,6 +48,7 @@ namespace Woi.UI.Announcements
 
         private AudioVoice _voice;
         private SoundDefinition _activeHoverSound;
+        private ExtinguisherPickupItem _pickupItem;
 
         private static ExtinguisherHoverController _activeHover;
 
@@ -59,6 +60,15 @@ namespace Woi.UI.Announcements
 
         /// <summary>Used by <see cref="ExtinguisherHoverRaycaster"/> to skip non–ray-driven tubes.</summary>
         public HoverPointerMode PointerMode => pointerMode;
+
+        private void Awake()
+        {
+            _pickupItem = GetComponent<ExtinguisherPickupItem>();
+            if (_pickupItem == null)
+            {
+                _pickupItem = GetComponentInParent<ExtinguisherPickupItem>();
+            }
+        }
 
         private void OnEnable()
         {
@@ -102,11 +112,32 @@ namespace Woi.UI.Announcements
 
         private void LateUpdate()
         {
+            if (IsThisTubeEquipped())
+            {
+                if (_activeHover == this)
+                {
+                    NotifyRayHoverEnd();
+                }
+
+                return;
+            }
+
             if (_activeHover != this)
+            {
                 return;
+            }
+
             if (!IsPlayerHoldingExtinguisherForTubeHover())
+            {
                 return;
+            }
+
             NotifyRayHoverEnd();
+        }
+
+        private bool IsThisTubeEquipped()
+        {
+            return _pickupItem != null && _pickupItem.IsEquipped;
         }
 
         /// <summary>
@@ -212,7 +243,7 @@ namespace Woi.UI.Announcements
                 return false;
             }
 
-            if (IsPlayerHoldingExtinguisherForTubeHover())
+            if (IsThisTubeEquipped() || IsPlayerHoldingExtinguisherForTubeHover())
                 return false;
 
             if (_activeHover != null && _activeHover != this)

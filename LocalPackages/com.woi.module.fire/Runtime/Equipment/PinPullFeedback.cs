@@ -1,7 +1,9 @@
 using System.Collections;
 using FireExtinguisher.Core;
+using FireExtinguisher.VR;
 using PrimeTween;
 using UnityEngine;
+using Woi.Equipment;
 using WoiUtils.AudioSystem;
 
 namespace Woi.Game
@@ -147,7 +149,10 @@ namespace Woi.Game
             target.localPosition = _initialLocalPosition;
             target.localScale = _initialScale;
 
-            EnableYellowOutline();
+            if (!ShouldSuppressTubeOutline())
+            {
+                EnableYellowOutline();
+            }
 
             float moveDuration = Mathf.Max(0.01f, _pullMoveDuration);
             Tween.LocalPosition(target, pulledPosition, moveDuration, Ease.OutQuad);
@@ -167,8 +172,31 @@ namespace Woi.Game
             _feedbackRoutine = null;
         }
 
+        private static bool ShouldSuppressTubeOutline()
+        {
+            if (VRHandExtinguisherGrabber.GlobalHeldExtinguisherCount > 0)
+            {
+                return true;
+            }
+
+            PlayerExtinguisherEquipment equipment =
+                Object.FindFirstObjectByType<PlayerExtinguisherEquipment>(FindObjectsInactive.Exclude);
+            return equipment != null && equipment.CurrentItem != null;
+        }
+
         private void EnableYellowOutline()
         {
+            if (ShouldSuppressTubeOutline())
+            {
+                return;
+            }
+
+            ExtinguisherPickupItem pickup = GetComponentInParent<ExtinguisherPickupItem>();
+            if (pickup != null && pickup.IsEquipped)
+            {
+                return;
+            }
+
             if (_outline == null)
             {
                 Debug.LogWarning("[PinPullFeedback] No Quick Outline component assigned.", this);

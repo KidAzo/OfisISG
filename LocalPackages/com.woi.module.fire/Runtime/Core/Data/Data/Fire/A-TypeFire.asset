@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: FireExtinguisher.Core::FireExtinguisher.Core.FireData
   _fireClass: 0
   _maxIntensity: 0.75
-  _extinguishResistance: 1
+  _extinguishResistance: 3
   _allowedExtinguisherTypes: 00000000010000000300000002000000
   _forbiddenExtinguisherTypes: 

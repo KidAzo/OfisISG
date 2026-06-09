@@ -1,4 +1,5 @@
 using UnityEngine;
+using Woi.Equipment;
 
 namespace Woi.OfficeFire
 {
@@ -38,9 +39,41 @@ namespace Woi.OfficeFire
             ApplyHoverState(false);
         }
 
+        private void LateUpdate()
+        {
+            ExtinguisherPickupItem pickup = GetComponent<ExtinguisherPickupItem>();
+            if (pickup == null || !pickup.IsEquipped || outline == null)
+            {
+                return;
+            }
+
+            if (_isHovered || outline.enabled)
+            {
+                _isHovered = false;
+                outline.enabled = false;
+            }
+        }
+
         public void Hover(bool isHovered)
         {
-            if (_isHovered == isHovered || outline == null)
+            if (outline == null)
+            {
+                return;
+            }
+
+            ExtinguisherPickupItem pickup = GetComponent<ExtinguisherPickupItem>();
+            if (pickup != null && pickup.IsEquipped)
+            {
+                if (_isHovered)
+                {
+                    _isHovered = false;
+                    ApplyHoverState(false);
+                }
+
+                return;
+            }
+
+            if (_isHovered == isHovered)
             {
                 return;
             }

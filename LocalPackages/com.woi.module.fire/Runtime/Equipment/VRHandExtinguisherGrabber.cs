@@ -315,6 +315,7 @@ namespace Woi.Equipment
 
             // Reflection to set IsEquipped = true without modifying PC code
             SetIsEquipped(item, true);
+            item.ClearWallHoverPresentation();
 
             ResolveTrainingEquipmentNotify();
             _trainingEquipmentNotify?.NotifyVrEquipped(item);
@@ -463,6 +464,7 @@ namespace Woi.Equipment
                 }
 
                 SetIsEquipped(heldExtinguisher, false);
+                heldExtinguisher.RestoreWallHoverPresentation();
             }
 
             heldExtinguisher = null;

@@ -1,6 +1,7 @@
 using FireExtinguisher.Core;
 using FireExtinguisher.PC;
 using UnityEngine;
+using Woi.Game;
 
 namespace Woi.Equipment
 {
@@ -138,6 +139,7 @@ namespace Woi.Equipment
             }
 
             IsEquipped = true;
+            ClearWallHoverPresentation();
 
             // Parent under the equip anchor — the item now moves with the player hierarchy.
             transform.SetParent(equipAnchor, worldPositionStays: false);
@@ -240,6 +242,7 @@ namespace Woi.Equipment
 
             // Re-enable colliders so the world object can be picked up again.
             SetCollidersEnabled(true);
+            RestoreWallHoverPresentation();
         }
 
         public void ReturnUnusedToHome()
@@ -278,8 +281,89 @@ namespace Woi.Equipment
 
         private void SetCollidersEnabled(bool enabled)
         {
+            if (_colliders == null || _colliders.Length == 0)
+            {
+                _colliders = GetComponentsInChildren<Collider>(includeInactive: true);
+            }
+
             foreach (Collider col in _colliders)
-                col.enabled = enabled;
+            {
+                if (col != null)
+                {
+                    col.enabled = enabled;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Hides wall-mount hover outline and 3D hover UI. Called on PC equip and from VR grab.
+        /// </summary>
+        public void ClearWallHoverPresentation()
+        {
+            gameObject.SendMessage("ResetHover", SendMessageOptions.DontRequireReceiver);
+
+            MonoBehaviour[] behaviours = GetComponentsInChildren<MonoBehaviour>(true);
+            for (int i = 0; i < behaviours.Length; i++)
+            {
+                MonoBehaviour behaviour = behaviours[i];
+                if (behaviour == null || behaviour == this)
+                {
+                    continue;
+                }
+
+                if (behaviour.GetType().Name == "HoverableOutline")
+                {
+                    behaviour.SendMessage("Hover", false, SendMessageOptions.DontRequireReceiver);
+                }
+            }
+
+            SendWallPromptActiveMessage(gameObject, false);
+
+            HoverOutline[] hoverOutlines = GetComponentsInChildren<HoverOutline>(true);
+            for (int i = 0; i < hoverOutlines.Length; i++)
+            {
+                if (hoverOutlines[i] != null)
+                {
+                    hoverOutlines[i].ResetHover();
+                }
+            }
+
+            Outline[] outlines = GetComponentsInChildren<Outline>(true);
+            for (int i = 0; i < outlines.Length; i++)
+            {
+                if (outlines[i] != null)
+                {
+                    outlines[i].enabled = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Re-enables wall-mount instruction prompts after the item is dropped.
+        /// </summary>
+        public void RestoreWallHoverPresentation()
+        {
+            SendWallPromptActiveMessage(gameObject, true);
+        }
+
+        private static void SendWallPromptActiveMessage(GameObject root, bool active)
+        {
+            if (root == null)
+            {
+                return;
+            }
+
+            MonoBehaviour[] behaviours = root.GetComponentsInChildren<MonoBehaviour>(true);
+            for (int i = 0; i < behaviours.Length; i++)
+            {
+                MonoBehaviour behaviour = behaviours[i];
+                if (behaviour == null || behaviour.GetType().Name != "SelectableInstructionPrompt")
+                {
+                    continue;
+                }
+
+                behaviour.SendMessage("SetWallPromptActive", active, SendMessageOptions.DontRequireReceiver);
+            }
         }
 
 #if UNITY_EDITOR

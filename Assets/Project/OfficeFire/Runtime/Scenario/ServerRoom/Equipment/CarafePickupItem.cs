@@ -93,6 +93,7 @@ namespace Woi.OfficeFire
             }
 
             Hover(false);
+            SetWallPromptActive(false);
             IsEquipped = true;
             transform.SetParent(equipAnchor, worldPositionStays: false);
             transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
@@ -129,6 +130,7 @@ namespace Woi.OfficeFire
             }
 
             SetCollidersEnabled(true);
+            SetWallPromptActive(true);
         }
 
         /// <summary>
@@ -350,6 +352,21 @@ namespace Woi.OfficeFire
                 {
                     _colliders[i].enabled = enabled;
                 }
+            }
+        }
+
+        private void SetWallPromptActive(bool active)
+        {
+            MonoBehaviour[] behaviours = GetComponentsInChildren<MonoBehaviour>(true);
+            for (int i = 0; i < behaviours.Length; i++)
+            {
+                MonoBehaviour behaviour = behaviours[i];
+                if (behaviour == null || behaviour.GetType().Name != "SelectableInstructionPrompt")
+                {
+                    continue;
+                }
+
+                behaviour.SendMessage("SetWallPromptActive", active, SendMessageOptions.DontRequireReceiver);
             }
         }
     }

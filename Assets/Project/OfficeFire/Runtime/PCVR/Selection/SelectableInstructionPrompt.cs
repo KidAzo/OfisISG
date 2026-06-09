@@ -105,12 +105,37 @@ namespace Woi.OfficeFire
 
         public void Hover(bool isHovered)
         {
+            if (!enabled)
+            {
+                return;
+            }
+
             if (_hoverOutline != null)
             {
                 return;
             }
 
             ApplyHoveredState(isHovered);
+        }
+
+        /// <summary>
+        /// Wall-mounted prompt only. Disabled while the object is held; re-enabled when dropped.
+        /// </summary>
+        public void SetWallPromptActive(bool active)
+        {
+            if (!active)
+            {
+                if (_hoverOutline != null)
+                {
+                    _lastHoverOutlineState = false;
+                }
+
+                ApplyHoveredState(false);
+                enabled = false;
+                return;
+            }
+
+            enabled = true;
         }
 
         private void ApplyHoveredState(bool isHovered)

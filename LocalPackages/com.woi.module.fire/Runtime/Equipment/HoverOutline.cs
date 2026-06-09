@@ -75,6 +75,18 @@ namespace Woi.Game
             if (!ValidateReferences())
                 return;
 
+            ExtinguisherPickupItem pickup = GetComponentInParent<ExtinguisherPickupItem>();
+            if (pickup != null && pickup.IsEquipped)
+            {
+                if (_isHovered)
+                {
+                    _isHovered = false;
+                    ApplyOutlineVisual(false);
+                }
+
+                return;
+            }
+
             bool hovered = IsRayHoveringThisObject();
             if (_isHovered == hovered)
                 return;
