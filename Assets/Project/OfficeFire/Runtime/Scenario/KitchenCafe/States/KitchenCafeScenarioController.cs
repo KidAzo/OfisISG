@@ -899,7 +899,6 @@ namespace Woi.OfficeFire
                         break;
                     case Actions.EnterKitchenCafe:
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.EnteredKitchenCafeSafely);
-                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveElectricalFireWarning);
                         _kitchen.InvokeDoorOpened();
                         _kitchen.ChangeState(KitchenCafeState.Intervention);
                         break;
@@ -961,7 +960,6 @@ namespace Woi.OfficeFire
                 _kitchen.SetObjective(OfficeFireObjectiveId.ActivateKitchenSuppression);
                 _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ArchivePressAlarmInstruction);
                 _kitchen.AllowExtinguisherSpray();
-                _kitchen.BeginKitchenFireGrowth();
             }
 
             public override void HandleAction(string actionId)
@@ -973,21 +971,23 @@ namespace Woi.OfficeFire
                         _kitchen.AllowExtinguisherSpray();
                         _kitchen.InvokeSuppressionActivated();
                         _kitchen.LogFireExtinguishStatus("Baski dusurme aktif — sondurucu asamasina geciliyor");
-                        _kitchen.ChangeState(KitchenCafeState.WaitingForExtinguisherUse);
                         break;
                     case Actions.PlayerLeaned:
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.LeanCorrectly);
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeanedCorrectly);
                         break;
                     case Actions.UseWater:
                         _kitchen.RegisterMistake(OfficeFireMistakeId.UsedWaterOnKitchenFire);
-                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveWaterMistake);
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.CarafeUsed);
                         _kitchen.InvokeWaterMistake();
                         break;
                     case Actions.UseBlanket:
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.KitchenBlanketSuccess);
                         _kitchen.HandleBlanketUsedOnFire();
                         break;
                     case Actions.GrabExtinguisher:
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.EstinguisherHandled);
+                        _kitchen.AllowExtinguisherSpray();
                         break;
                     case Actions.UseExtinguisher:
                         _kitchen.LogFireExtinguishStatus("Sondurme basladi — EstinguishingStarted anonsu");
@@ -995,6 +995,7 @@ namespace Woi.OfficeFire
                         break;
                     case Actions.FireGrowth:
                         _kitchen.ChangeState(KitchenCafeState.WaitingForExitRoom);
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.KitchenFireGrowingEvacuate);
                         break;
                     case Actions.LeaveKitchenCafe:
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas);
@@ -1024,10 +1025,6 @@ namespace Woi.OfficeFire
 
             public override void Enter()
             {
-                _kitchen.AllowExtinguisherSpray();
-                _kitchen.SetObjective(OfficeFireObjectiveId.LeaveKitchenCafe);
-                _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveUseExtinguisherInstruction);
-                _kitchen.LogFireExtinguishStatus("Baski dusurme sonrasi asama — yangin sondurulebilir");
             }
 
             public override void HandleAction(string actionId)
@@ -1040,10 +1037,11 @@ namespace Woi.OfficeFire
                         break;
                     case Actions.UseWater:
                         _kitchen.RegisterMistake(OfficeFireMistakeId.UsedWaterOnKitchenFire);
-                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveWaterMistake);
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.CarafeUsed);
                         _kitchen.InvokeWaterMistake();
                         break;
                     case Actions.UseBlanket:
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.KitchenBlanketSuccess);
                         _kitchen.HandleBlanketUsedOnFire();
                         break;
                     case Actions.GrabExtinguisher:
@@ -1060,6 +1058,7 @@ namespace Woi.OfficeFire
                         _kitchen.ChangeState(KitchenCafeState.WaitingForAssemblyArea);
                         break;
                     case Actions.PlayerLeaned:
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.LeanCorrectly);
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeanedCorrectly);
                         break;
                     default:
@@ -1098,6 +1097,7 @@ namespace Woi.OfficeFire
                 {
                     case Actions.PressSuppressionButton:
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.AlarmInstruction);
                         _kitchen.AllowExtinguisherSpray();
                         _kitchen.InvokeSuppressionActivated();
                         _kitchen.LogFireExtinguishStatus("Baski dusurme aktif — sondurucu asamasina geciliyor");
@@ -1147,6 +1147,7 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.ReachAssemblyArea:
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ReachAssemblyArea);
                         _kitchen.HandleReachedAssemblyAreaDoor();
                         break;
                     case Actions.ElevatorProximity:

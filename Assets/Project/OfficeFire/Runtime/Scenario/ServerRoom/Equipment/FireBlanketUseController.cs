@@ -5,6 +5,7 @@ using FireExtinguisher.Core;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using Woi.OfficeFire;
 
 namespace Woi.OfficeFire
 {

@@ -9128,6 +9128,57 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2304996, guid: dab5db0c0226560499e1021898aafb64, type: 3}
   m_PrefabInstance: {fileID: 262062789}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &269532855
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 269532856}
+  - component: {fileID: 269532857}
+  m_Layer: 0
+  m_Name: Archive
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &269532856
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269532855}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1035735734}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &269532857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269532855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd9d26a0c304505a9e26e237b663bf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Woi.OfficeFire.Integration::Woi.OfficeFire.OfficeFireVoiceLineContentPresenter
+  database: {fileID: 11400000, guid: acaf8a2297cd4d31aa12582e8a3adfab, type: 2}
+  announcementAudioAdapter: {fileID: 885847761}
+  popupService: {fileID: 0}
+  popupType: 4
+  defaultPopupDurationSeconds: 5
+  replaceCurrentPopup: 1
+  queueAnnouncements: 1
 --- !u!1001 &273364300
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11647,26 +11698,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2304996, guid: dab5db0c0226560499e1021898aafb64, type: 3}
   m_PrefabInstance: {fileID: 350982788}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &352941014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49490255aaf1a2641a4c5771511bd253, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GSPAWN.ObjectProjectionSettings
-  _halfSpace: 1
-  _alignAxis: 0
-  _alignmentAxis: 1
-  _invertAlignmentAxis: 0
-  _projectAsUnit: 0
-  _embedInSurface: 1
-  _inFrontOffset: 0
-  _behindOffset: 0
 --- !u!1001 &353528901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18190,6 +18221,26 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2304996, guid: dab5db0c0226560499e1021898aafb64, type: 3}
   m_PrefabInstance: {fileID: 542237051}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &544268001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49490255aaf1a2641a4c5771511bd253, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GSPAWN.ObjectProjectionSettings
+  _halfSpace: 1
+  _alignAxis: 0
+  _alignmentAxis: 1
+  _invertAlignmentAxis: 0
+  _projectAsUnit: 0
+  _embedInSurface: 1
+  _inFrontOffset: 0
+  _behindOffset: 0
 --- !u!1001 &544646313
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21305,6 +21356,57 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2379746, guid: ae7b8255185ace64ca379cb1ca3b24e6, type: 3}
   m_PrefabInstance: {fileID: 624697647}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &625383878
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 625383880}
+  - component: {fileID: 625383879}
+  m_Layer: 0
+  m_Name: Server
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &625383879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625383878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd9d26a0c304505a9e26e237b663bf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Woi.OfficeFire.Integration::Woi.OfficeFire.OfficeFireVoiceLineContentPresenter
+  database: {fileID: 11400000, guid: 25c04d5e2832dca4f91c179e7f7cf1c4, type: 2}
+  announcementAudioAdapter: {fileID: 885847761}
+  popupService: {fileID: 0}
+  popupType: 4
+  defaultPopupDurationSeconds: 5
+  replaceCurrentPopup: 1
+  queueAnnouncements: 1
+--- !u!4 &625383880
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625383878}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1035735734}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &626829019
 GameObject:
   m_ObjectHideFlags: 0
@@ -25171,6 +25273,21 @@ Transform:
   - {fileID: 750618482}
   m_Father: {fileID: 503886872}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &749024365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38a40404d9721ed4f984030fbce11d53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GSPAWN.ObjectModularSnapSession
+  _snapMode: 0
+  _snapHalfSpace: 0
+  _projectionSettings: {fileID: 0}
 --- !u!1001 &749759473
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27295,6 +27412,57 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2327410, guid: fa07ca939fb86614e840203d85f23f08, type: 3}
   m_PrefabInstance: {fileID: 814134195}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &822417204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 822417205}
+  - component: {fileID: 822417206}
+  m_Layer: 0
+  m_Name: Kitchen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &822417205
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822417204}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1035735734}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &822417206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822417204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd9d26a0c304505a9e26e237b663bf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Woi.OfficeFire.Integration::Woi.OfficeFire.OfficeFireVoiceLineContentPresenter
+  database: {fileID: 11400000, guid: 405075dddbc1e594f9846bc2905923c0, type: 2}
+  announcementAudioAdapter: {fileID: 885847761}
+  popupService: {fileID: 0}
+  popupType: 4
+  defaultPopupDurationSeconds: 5
+  replaceCurrentPopup: 1
+  queueAnnouncements: 1
 --- !u!1001 &824234699
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28766,21 +28934,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2304996, guid: dab5db0c0226560499e1021898aafb64, type: 3}
   m_PrefabInstance: {fileID: 862097013}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &863635747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38a40404d9721ed4f984030fbce11d53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GSPAWN.ObjectModularSnapSession
-  _snapMode: 0
-  _snapHalfSpace: 0
-  _projectionSettings: {fileID: 0}
 --- !u!1001 &866350480
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32569,6 +32722,21 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 441798, guid: 06a9858b4309bcf4cbe7ef09ae436c1d, type: 3}
   m_PrefabInstance: {fileID: 961794379}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &961921608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38a40404d9721ed4f984030fbce11d53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GSPAWN.ObjectModularSnapSession
+  _snapMode: 0
+  _snapHalfSpace: 0
+  _projectionSettings: {fileID: 0}
 --- !u!114 &966410476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34713,7 +34881,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8725edae6a1fd4408036dedaf0199f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _projectionSettings: {fileID: 352941014}
+  _projectionSettings: {fileID: 544268001}
   _dragAndDropGuide: {fileID: 0}
 --- !u!114 &1017373035
 MonoBehaviour:
@@ -35574,6 +35742,40 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2304996, guid: dab5db0c0226560499e1021898aafb64, type: 3}
   m_PrefabInstance: {fileID: 1034377886}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1035735733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1035735734}
+  m_Layer: 0
+  m_Name: ContentPresenters
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1035735734
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035735733}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 822417205}
+  - {fileID: 269532856}
+  - {fileID: 625383880}
+  m_Father: {fileID: 1384763835}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1037295769
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -176309,6 +176511,7 @@ Transform:
   - {fileID: 941995544}
   - {fileID: 695028565}
   - {fileID: 1720525517}
+  - {fileID: 1035735734}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1384763836
@@ -176349,7 +176552,10 @@ MonoBehaviour:
   playerRoot: {fileID: 1812491345}
   xrOriginRoot: {fileID: 0}
   assemblyPoint: {fileID: 941995544}
-  voiceLinePresenter: {fileID: 1384763836}
+  voiceLinePresenters:
+  - {fileID: 822417206}
+  - {fileID: 269532857}
+  - {fileID: 625383879}
   announcements: 3a010000
   resultScreenRoot: {fileID: 1720525516}
   resultScreenController: {fileID: 1720525519}
@@ -185271,6 +185477,7 @@ MonoBehaviour:
   endBehaviour: 2
   faceMovementDirection: 1
   keepUpright: 1
+  rotationLookAheadDistance: 1.5
   playIdleAtPathEnd: 1
   playOnStartForTesting: 0
 --- !u!95 &1604714878
@@ -185290,13 +185497,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-    'mixamorig:LeftHandIndex1'\n\tTransform 'mixamorig:LeftHandPinky2'\n\tTransform
-    'mixamorig:RightHandRing2'\n\tTransform 'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform
-    'mixamorig:RightArm'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tand
-    more ...\n\tFrom animation clip 'Running'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -190512,6 +190713,15 @@ MonoBehaviour:
   onContinueClicked:
     m_PersistentCalls:
       m_Calls: []
+  playerRoot: {fileID: 0}
+  playerTag: Player
+  playerInputBehaviours: []
+  autoFindPlayerInputBehaviours: 1
+  autoFindBehaviourTypeNames:
+  - PCHoverInteractor
+  - PCSelectableInteractor
+  - PlayerLeanController
+  disablePlayerInputWhileVisible: 1
 --- !u!1001 &1721691511
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -194375,7 +194585,7 @@ MonoBehaviour:
   _extensionPlane:
     _refOBBFace: 4
   _heightPatternDirection: 0
-  _modularSnapSession: {fileID: 1978134135}
+  _modularSnapSession: {fileID: 749024365}
   _mirrorGizmo: {fileID: 1845210638}
 --- !u!114 &1820068133
 MonoBehaviour:
@@ -194869,7 +195079,7 @@ MonoBehaviour:
   _spawnGuide: {fileID: 592641524}
   _extensionPlane:
     _refOBBFace: 4
-  _modularSnapSession: {fileID: 863635747}
+  _modularSnapSession: {fileID: 961921608}
   _mirrorGizmo: {fileID: 1056103634}
 --- !u!1001 &1834124658
 PrefabInstance:
@@ -200356,21 +200566,6 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2304996, guid: dab5db0c0226560499e1021898aafb64, type: 3}
   m_PrefabInstance: {fileID: 1977273907}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1978134135
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38a40404d9721ed4f984030fbce11d53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GSPAWN.ObjectModularSnapSession
-  _snapMode: 0
-  _snapHalfSpace: 0
-  _projectionSettings: {fileID: 0}
 --- !u!114 &1985194209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215809,13 +216004,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-    'mixamorig:LeftHandIndex1'\n\tTransform 'mixamorig:LeftHandPinky2'\n\tTransform
-    'mixamorig:RightHandRing2'\n\tTransform 'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform
-    'mixamorig:RightArm'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tand
-    more ...\n\tFrom animation clip 'Running'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -215847,6 +216036,7 @@ MonoBehaviour:
   endBehaviour: 2
   faceMovementDirection: 1
   keepUpright: 1
+  rotationLookAheadDistance: 1.5
   playIdleAtPathEnd: 1
   playOnStartForTesting: 0
 --- !u!95 &5866666020466701749
@@ -215866,13 +216056,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-    'mixamorig:LeftHandIndex1'\n\tTransform 'mixamorig:LeftHandPinky2'\n\tTransform
-    'mixamorig:RightHandRing2'\n\tTransform 'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform
-    'mixamorig:RightArm'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tand
-    more ...\n\tFrom animation clip 'Running'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -215904,6 +216088,7 @@ MonoBehaviour:
   endBehaviour: 2
   faceMovementDirection: 1
   keepUpright: 1
+  rotationLookAheadDistance: 1.5
   playIdleAtPathEnd: 1
   playOnStartForTesting: 0
 --- !u!95 &5866666020570557129
@@ -215923,13 +216108,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-    'mixamorig:LeftHandIndex1'\n\tTransform 'mixamorig:LeftHandPinky2'\n\tTransform
-    'mixamorig:RightHandRing2'\n\tTransform 'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform
-    'mixamorig:RightArm'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tand
-    more ...\n\tFrom animation clip 'Running'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -215961,6 +216140,7 @@ MonoBehaviour:
   endBehaviour: 1
   faceMovementDirection: 1
   keepUpright: 1
+  rotationLookAheadDistance: 1.5
   playIdleAtPathEnd: 1
   playOnStartForTesting: 0
 --- !u!95 &5866666020923294917
@@ -215980,13 +216160,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-    'mixamorig:LeftHandIndex1'\n\tTransform 'mixamorig:LeftHandPinky2'\n\tTransform
-    'mixamorig:RightHandRing2'\n\tTransform 'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform
-    'mixamorig:RightArm'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tand
-    more ...\n\tFrom animation clip 'Running'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -216018,6 +216192,7 @@ MonoBehaviour:
   endBehaviour: 2
   faceMovementDirection: 1
   keepUpright: 1
+  rotationLookAheadDistance: 1.5
   playIdleAtPathEnd: 1
   playOnStartForTesting: 0
 --- !u!95 &5866666021127052195
@@ -216037,13 +216212,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-    'mixamorig:LeftHandIndex1'\n\tTransform 'mixamorig:LeftHandPinky2'\n\tTransform
-    'mixamorig:RightHandRing2'\n\tTransform 'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform
-    'mixamorig:RightArm'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tand
-    more ...\n\tFrom animation clip 'Running'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -216075,6 +216244,7 @@ MonoBehaviour:
   endBehaviour: 2
   faceMovementDirection: 1
   keepUpright: 1
+  rotationLookAheadDistance: 1.5
   playIdleAtPathEnd: 1
   playOnStartForTesting: 0
 --- !u!95 &5866666021782924445
@@ -216094,13 +216264,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-    'mixamorig:LeftHandIndex1'\n\tTransform 'mixamorig:LeftHandPinky2'\n\tTransform
-    'mixamorig:RightHandRing2'\n\tTransform 'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform
-    'mixamorig:RightArm'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftShoulder'\n\tand
-    more ...\n\tFrom animation clip 'Running'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -216132,6 +216296,7 @@ MonoBehaviour:
   endBehaviour: 2
   faceMovementDirection: 1
   keepUpright: 1
+  rotationLookAheadDistance: 1.5
   playIdleAtPathEnd: 1
   playOnStartForTesting: 0
 --- !u!4 &5901452233595752700

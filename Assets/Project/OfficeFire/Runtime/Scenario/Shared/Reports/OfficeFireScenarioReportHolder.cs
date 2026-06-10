@@ -14,6 +14,12 @@ namespace Woi.OfficeFire
             _stashedReport = report == null ? null : Copy(report);
         }
 
+        public static bool TryPeek(out OfficeFireScenarioReport report)
+        {
+            report = _stashedReport;
+            return report != null;
+        }
+
         public static bool TryConsume(out OfficeFireScenarioReport report)
         {
             report = _stashedReport;

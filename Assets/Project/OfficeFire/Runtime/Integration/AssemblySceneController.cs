@@ -54,7 +54,7 @@ namespace Woi.OfficeFire
 
         [Header("Announcements")]
         [SerializeField]
-        private OfficeFireVoiceLineContentPresenter voiceLinePresenter;
+        private OfficeFireVoiceLineContentPresenter[] voiceLinePresenters;
 
         [SerializeField]
         private OfficeFireVoiceLineId[] announcements =
@@ -136,6 +136,7 @@ namespace Woi.OfficeFire
         {
             TeleportPlayer();
 
+            OfficeFireVoiceLineContentPresenter voiceLinePresenter = ResolveVoiceLinePresenter();
             if (voiceLinePresenter != null && announcements != null)
             {
                 for (int i = 0; i < announcements.Length; i++)
@@ -158,6 +159,46 @@ namespace Woi.OfficeFire
 
             ShowResultScreen();
             _sequence = null;
+        }
+
+        private OfficeFireVoiceLineContentPresenter ResolveVoiceLinePresenter()
+        {
+            if (voiceLinePresenters == null || voiceLinePresenters.Length == 0)
+            {
+                return null;
+            }
+
+            int index = 0;
+            if (OfficeFireScenarioReportHolder.TryPeek(out OfficeFireScenarioReport report))
+            {
+                index = GetVoiceLinePresenterIndex(report.scenarioId);
+            }
+
+            if (index < 0 || index >= voiceLinePresenters.Length)
+            {
+                Debug.LogWarning(
+                    $"[AssemblySceneController] Voice line presenter index {index} is out of range " +
+                    $"(length {voiceLinePresenters.Length}). Falling back to 0.",
+                    this);
+                index = 0;
+            }
+
+            return voiceLinePresenters[index];
+        }
+
+        private static int GetVoiceLinePresenterIndex(OfficeFireScenarioId scenarioId)
+        {
+            switch (scenarioId)
+            {
+                case OfficeFireScenarioId.KitchenCafe:
+                    return 0;
+                case OfficeFireScenarioId.ArchiveRoom:
+                    return 1;
+                case OfficeFireScenarioId.ServerRoom:
+                    return 2;
+                default:
+                    return 0;
+            }
         }
 
         private void ShowResultScreen()

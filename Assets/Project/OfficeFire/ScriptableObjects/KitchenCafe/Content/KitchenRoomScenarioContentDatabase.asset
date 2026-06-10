@@ -21,7 +21,7 @@ MonoBehaviour:
         uygulay\u0131n."
       EnglishTitle: Smoke detected
       EnglishBody: Check the area and follow safety instructions.
-    Voice: {fileID: 11400000, guid: 7700df6ac45f878438502b0e29521b07, type: 2}
+    Voice: {fileID: 11400000, guid: d84ad78dc59deac46bb6faf3d3f698f6, type: 2}
   - Id: 309
     Popup:
       TurkishTitle: "Egil\t"
@@ -52,7 +52,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: GoToAssemblyArea
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 11400000, guid: 31f8a5a23b0f417282faf7bf8ed35919, type: 2}
+    Voice: {fileID: 11400000, guid: a3fd4b27fb814f6bbd8ae889e763dde7, type: 2}
   - Id: 310
     Popup:
       TurkishTitle: "T\xFCp al\u0131nd\u0131"
@@ -97,7 +97,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveCutPowerInstruction
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 11400000, guid: 31f8a5a23b0f417282faf7bf8ed35919, type: 2}
+    Voice: {fileID: 11400000, guid: 0d8270f81c5315441a83fdf482b55ff5, type: 2}
   - Id: 315
     Popup:
       TurkishTitle: ArchivePowerCutSuccess

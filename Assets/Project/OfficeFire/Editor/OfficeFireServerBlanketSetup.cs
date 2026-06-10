@@ -81,7 +81,7 @@ namespace Woi.OfficeFire.Editor
             WirePlayerBlanketEquipment(controller);
             int promptWired = WireFireZoneUsePrompts(controller);
             WireScenarioBridge(controller);
-            WireKitchenBlanketCorrectAction();
+            WireServerBlanketCorrectAction();
 
             EditorSceneManager.MarkSceneDirty(scene);
             Undo.CollapseUndoOperations(undoGroup);
@@ -425,14 +425,14 @@ namespace Woi.OfficeFire.Editor
             return wired;
         }
 
-        private static void WireKitchenBlanketCorrectAction()
+        private static void WireServerBlanketCorrectAction()
         {
             FireBlanketUseController useController =
                 Object.FindFirstObjectByType<FireBlanketUseController>(FindObjectsInactive.Include);
-            KitchenCafeScenarioController kitchen =
-                Object.FindFirstObjectByType<KitchenCafeScenarioController>(FindObjectsInactive.Include);
+            ServerRoomScenarioController serverRoom =
+                Object.FindFirstObjectByType<ServerRoomScenarioController>(FindObjectsInactive.Include);
 
-            if (useController == null || kitchen == null)
+            if (useController == null || serverRoom == null)
             {
                 return;
             }
@@ -448,14 +448,14 @@ namespace Woi.OfficeFire.Editor
 
             for (int i = unityEvent.GetPersistentEventCount() - 1; i >= 0; i--)
             {
-                if (!ReferenceEquals(unityEvent.GetPersistentTarget(i), kitchen))
+                if (!ReferenceEquals(unityEvent.GetPersistentTarget(i), serverRoom))
                 {
                     continue;
                 }
 
                 string methodName = unityEvent.GetPersistentMethodName(i);
-                if (methodName == nameof(KitchenCafeScenarioController.HandleBlanketUsedOnFire)
-                    || methodName == nameof(KitchenCafeScenarioController.HandleAction))
+                if (methodName == nameof(ServerRoomScenarioController.HandleBlanketUsed)
+                    || methodName == nameof(ServerRoomScenarioController.HandleAction))
                 {
                     return;
                 }
@@ -463,7 +463,7 @@ namespace Woi.OfficeFire.Editor
 
             UnityEventTools.AddPersistentListener(
                 unityEvent,
-                kitchen.HandleBlanketUsedOnFire);
+                serverRoom.HandleBlanketUsed);
             EditorUtility.SetDirty(useController);
         }
 
