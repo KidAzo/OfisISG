@@ -170,27 +170,58 @@ namespace Woi.OfficeFire
                 maxDistance,
                 hoverMask,
                 IsVrMode() ? QueryTriggerInteraction.Collide : triggerInteraction);
-            if (hits == null || hits.Length == 0)
+
+            // To fix "Raycast misses when origin is inside collider" issue:
+            Collider[] overlaps = Physics.OverlapSphere(
+                ray.origin,
+                0.15f,
+                hoverMask,
+                IsVrMode() ? QueryTriggerInteraction.Collide : triggerInteraction);
+
+            if ((hits == null || hits.Length == 0) && (overlaps == null || overlaps.Length == 0))
             {
                 return EmptyHoverables;
             }
 
-            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
-
-            for (int i = 0; i < hits.Length; i++)
+            if (hits != null && hits.Length > 0)
             {
-                RaycastHit hit = hits[i];
-                if (hit.collider == null)
-                    continue;
+                Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
 
-                if (skipHierarchyRoot != null && hit.collider.transform.IsChildOf(skipHierarchyRoot))
-                    continue;
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    RaycastHit hit = hits[i];
+                    if (hit.collider == null)
+                        continue;
 
-                IHoverable[] hoverables = CollectHoverablesFromCollider(hit.collider);
-                if (hoverables.Length == 0)
-                    continue;
+                    if (skipHierarchyRoot != null && hit.collider.transform.IsChildOf(skipHierarchyRoot))
+                        continue;
 
-                return hoverables;
+                    IHoverable[] hoverables = CollectHoverablesFromCollider(hit.collider);
+                    if (hoverables.Length == 0)
+                        continue;
+
+                    return hoverables;
+                }
+            }
+
+            // Fallback for when camera is already inside the interaction trigger
+            if (overlaps != null && overlaps.Length > 0)
+            {
+                for (int i = 0; i < overlaps.Length; i++)
+                {
+                    Collider col = overlaps[i];
+                    if (col == null)
+                        continue;
+
+                    if (skipHierarchyRoot != null && col.transform.IsChildOf(skipHierarchyRoot))
+                        continue;
+
+                    IHoverable[] hoverables = CollectHoverablesFromCollider(col);
+                    if (hoverables.Length == 0)
+                        continue;
+
+                    return hoverables;
+                }
             }
 
             return EmptyHoverables;

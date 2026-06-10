@@ -23,6 +23,8 @@ namespace Woi.OfficeFire
         private float _defaultOutlineWidth;
         private bool _isHovered;
 
+        public bool IsHovered => _isHovered;
+
         private void Start()
         {
             if (outline == null)

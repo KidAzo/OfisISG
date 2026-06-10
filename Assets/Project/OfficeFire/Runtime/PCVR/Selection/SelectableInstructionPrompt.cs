@@ -62,6 +62,7 @@ namespace Woi.OfficeFire
 
         private InstructionPromptController _controller;
         private HoverOutline _hoverOutline;
+        private HoverableOutline _hoverableOutline;
         private bool _lastHoverOutlineState;
 
         public string InstructionText
@@ -79,6 +80,7 @@ namespace Woi.OfficeFire
         private void Awake()
         {
             _hoverOutline = GetComponent<HoverOutline>();
+            _hoverableOutline = GetComponent<HoverableOutline>();
             EnsureController();
             SyncInstruction();
         }
@@ -99,6 +101,15 @@ namespace Woi.OfficeFire
                     ApplyHoveredState(hovered);
                 }
             }
+            else if (_hoverableOutline != null)
+            {
+                bool hovered = _hoverableOutline.IsHovered;
+                if (hovered != _lastHoverOutlineState)
+                {
+                    _lastHoverOutlineState = hovered;
+                    ApplyHoveredState(hovered);
+                }
+            }
 
             _controller?.Tick();
         }
@@ -110,7 +121,7 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            if (_hoverOutline != null)
+            if (_hoverOutline != null || _hoverableOutline != null)
             {
                 return;
             }
@@ -125,7 +136,7 @@ namespace Woi.OfficeFire
         {
             if (!active)
             {
-                if (_hoverOutline != null)
+                if (_hoverOutline != null || _hoverableOutline != null)
                 {
                     _lastHoverOutlineState = false;
                 }
