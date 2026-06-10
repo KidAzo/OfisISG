@@ -165,63 +165,45 @@ namespace Woi.OfficeFire
                 _loggedMissingCamera = false;
             }
 
-            RaycastHit[] hits = Physics.RaycastAll(
-                ray,
-                maxDistance,
-                hoverMask,
-                IsVrMode() ? QueryTriggerInteraction.Collide : triggerInteraction);
-
             // To fix "Raycast misses when origin is inside collider" issue:
-            Collider[] overlaps = Physics.OverlapSphere(
-                ray.origin,
-                0.15f,
+            // Pull the ray origin back slightly so it can hit triggers the player is standing right in front of.
+            float pullBackDistance = 0.3f;
+            Ray adjustedRay = new Ray(ray.origin - ray.direction * pullBackDistance, ray.direction);
+
+            RaycastHit[] hits = Physics.RaycastAll(
+                adjustedRay,
+                maxDistance + pullBackDistance,
                 hoverMask,
                 IsVrMode() ? QueryTriggerInteraction.Collide : triggerInteraction);
 
-            if ((hits == null || hits.Length == 0) && (overlaps == null || overlaps.Length == 0))
+            if (hits == null || hits.Length == 0)
             {
                 return EmptyHoverables;
             }
 
-            if (hits != null && hits.Length > 0)
+            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+            for (int i = 0; i < hits.Length; i++)
             {
-                Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+                RaycastHit hit = hits[i];
+                if (hit.collider == null)
+                    continue;
 
-                for (int i = 0; i < hits.Length; i++)
+                if (skipHierarchyRoot != null && hit.collider.transform.IsChildOf(skipHierarchyRoot))
+                    continue;
+
+                // Ignore hits that are purely behind the original camera (so we don't hover walls behind us)
+                if (hit.distance < pullBackDistance * 0.5f && Vector3.Dot(hit.point - ray.origin, ray.direction) < 0)
                 {
-                    RaycastHit hit = hits[i];
-                    if (hit.collider == null)
-                        continue;
-
-                    if (skipHierarchyRoot != null && hit.collider.transform.IsChildOf(skipHierarchyRoot))
-                        continue;
-
-                    IHoverable[] hoverables = CollectHoverablesFromCollider(hit.collider);
-                    if (hoverables.Length == 0)
-                        continue;
-
-                    return hoverables;
+                    // Let it pass if it's a trigger we are currently inside, but if it's strictly behind us, ignore.
+                    // Actually, if we are inside it, distance might be 0, so just proceed.
                 }
-            }
 
-            // Fallback for when camera is already inside the interaction trigger
-            if (overlaps != null && overlaps.Length > 0)
-            {
-                for (int i = 0; i < overlaps.Length; i++)
-                {
-                    Collider col = overlaps[i];
-                    if (col == null)
-                        continue;
+                IHoverable[] hoverables = CollectHoverablesFromCollider(hit.collider);
+                if (hoverables.Length == 0)
+                    continue;
 
-                    if (skipHierarchyRoot != null && col.transform.IsChildOf(skipHierarchyRoot))
-                        continue;
-
-                    IHoverable[] hoverables = CollectHoverablesFromCollider(col);
-                    if (hoverables.Length == 0)
-                        continue;
-
-                    return hoverables;
-                }
+                return hoverables;
             }
 
             return EmptyHoverables;
@@ -269,6 +251,11 @@ namespace Woi.OfficeFire
             {
                 IHoverable hoverable = hoverables[i];
                 if (hoverable == null)
+                {
+                    continue;
+                }
+
+                if (hoverable is Behaviour behaviour && !behaviour.isActiveAndEnabled)
                 {
                     continue;
                 }
