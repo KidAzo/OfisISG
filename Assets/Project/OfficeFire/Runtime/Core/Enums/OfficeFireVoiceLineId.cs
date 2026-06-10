@@ -48,5 +48,7 @@ namespace Woi.OfficeFire
         ReachAssemblyArea = 314,
         ReachedExitDoor = 315,
         ReachedAssemblyAreaDoor = 316,
+        CarafeHandled = 317,
+        CarafeUsed = 318,
     }
 }
