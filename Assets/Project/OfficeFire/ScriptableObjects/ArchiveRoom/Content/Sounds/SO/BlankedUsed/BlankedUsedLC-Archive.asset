@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50147cf09dbd8b447938a05c73c5c4d9, type: 3}
+  m_Name: BlankedUsedLC-Archive
+  m_EditorClassIdentifier: WoiUtils.AudioSystem.Runtime::WoiUtils.AudioSystem.LocalizedSoundDefinition
+  english: {fileID: 11400000, guid: 999212cace7e41a689f7af724e94fd62, type: 2}
+  turkish: {fileID: 11400000, guid: 095f75a5475d47d59766dce787a06a57, type: 2}

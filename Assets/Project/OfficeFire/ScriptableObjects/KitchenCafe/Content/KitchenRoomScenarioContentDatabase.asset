@@ -138,7 +138,7 @@ MonoBehaviour:
       EnglishTitle: CrouchInSmoke
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.
-    Voice: {fileID: 11400000, guid: 7700df6ac45f878438502b0e29521b07, type: 2}
+    Voice: {fileID: 11400000, guid: 275f7ab63dba47ef90af7e6d15c08952, type: 2}
   - Id: 305
     Popup:
       TurkishTitle: AlarmInstruction
@@ -147,7 +147,7 @@ MonoBehaviour:
       EnglishTitle: AlarmInstruction
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.
-    Voice: {fileID: 11400000, guid: 3e0b8623f6414087b439d960822b8fc3, type: 2}
+    Voice: {fileID: 11400000, guid: 5ea02c7f840f45368d09cd7d7bc48873, type: 2}
   - Id: 318
     Popup:
       TurkishTitle: ScenarioCompleted
@@ -156,14 +156,14 @@ MonoBehaviour:
       EnglishTitle: ScenarioCompleted
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.
-    Voice: {fileID: 11400000, guid: e35aad4b20f04060b1a4014a86bc563f, type: 2}
+    Voice: {fileID: 11400000, guid: 4046cb5719ea41c49e58b53f96e43432, type: 2}
   - Id: 317
     Popup:
       TurkishTitle: "Ar\u015Fiv olay\u0131"
       TurkishBody: "Ar\u015Fiv odas\u0131n\u0131 kontrol edin."
       EnglishTitle: Archive incident
       EnglishBody: Inspect the archive room.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: 028e3a76ce54445d85a9d58c35b0fb55, type: 2}
   - Id: 101
     Popup:
       TurkishTitle: ArchiveElectricalFireWarning
