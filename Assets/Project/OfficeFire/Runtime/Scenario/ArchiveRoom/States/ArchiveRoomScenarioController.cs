@@ -1120,9 +1120,9 @@ namespace Woi.OfficeFire
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
                         if (_archive._alarmPressed)
                         {
+                            _archive.InvokeEvacuationStarted();
                             _archive.StartEvacuationNpcs();
                         }
-                        _archive.InvokeEvacuationStarted();
                         _archive.ChangeState(ArchiveRoomState.WaitingForAssemblyArea);
                         break;
                     default:

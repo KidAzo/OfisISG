@@ -1089,9 +1089,9 @@ namespace Woi.OfficeFire
                     case Actions.LeaveServerRoom:
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.LeftServerRoomBeforeGas);
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
-                        _server.InvokeEvacuationStarted();
                         if (_server._alarmPressed)
                         {
+                            _server.InvokeEvacuationStarted();
                             _server.StartEvacuationNpcs();
                         }
                         _server.ChangeState(ServerRoomState.WaitingForAssemblyArea);

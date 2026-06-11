@@ -1003,9 +1003,9 @@ namespace Woi.OfficeFire
                     case Actions.LeaveKitchenCafe:
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas);
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
-                        _kitchen.InvokeEvacuationStarted();
                         if (_kitchen._alarmPressed)
                         {
+                            _kitchen.InvokeEvacuationStarted();
                             _kitchen.StartEvacuationNpcs();
                         }
                         _kitchen.ChangeState(KitchenCafeState.WaitingForAssemblyArea);
