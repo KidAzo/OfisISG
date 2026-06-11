@@ -1148,8 +1148,6 @@ namespace Woi.OfficeFire
             {
                 _archive.SetObjective(OfficeFireObjectiveId.GoToAssemblyArea);
                 _archive.BeginAssemblyAreaReminderLoop();
-                _archive.InvokeEvacuationStarted();
-                _archive.StartEvacuationNpcs();
             }
 
             public override void Exit()

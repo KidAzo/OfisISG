@@ -1144,11 +1144,6 @@ namespace Woi.OfficeFire
             {
                 _kitchen.SetObjective(OfficeFireObjectiveId.GoToAssemblyArea);
                 _kitchen.BeginAssemblyAreaReminderLoop();
-                _kitchen.InvokeEvacuationStarted();
-                if (_kitchen._alarmPressed)
-                {
-                    _kitchen.StartEvacuationNpcs();
-                }
             }
 
             public override void Exit()

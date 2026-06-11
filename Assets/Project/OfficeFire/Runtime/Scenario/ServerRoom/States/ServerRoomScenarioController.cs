@@ -1119,11 +1119,6 @@ namespace Woi.OfficeFire
             {
                 _server.SetObjective(OfficeFireObjectiveId.GoToAssemblyArea);
                 _server.BeginAssemblyAreaReminderLoop();
-                _server.InvokeEvacuationStarted();
-                if (_server._alarmPressed)
-                {
-                    _server.StartEvacuationNpcs();
-                }
             }
 
             public override void Exit()
