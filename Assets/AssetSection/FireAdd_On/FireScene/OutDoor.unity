@@ -176563,7 +176563,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   delayBeforeResultScreenSeconds: 5.5
-  beginOnStartForTesting: 1
+  beginOnStartForTesting: 0
 --- !u!1001 &1385646102
 PrefabInstance:
   m_ObjectHideFlags: 0

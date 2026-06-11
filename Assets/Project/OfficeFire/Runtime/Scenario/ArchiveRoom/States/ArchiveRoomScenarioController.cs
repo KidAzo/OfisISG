@@ -121,6 +121,8 @@ namespace Woi.OfficeFire
         private bool _extinguishingStarted;
         private bool _fireGrowthCompleted;
 
+        private bool _alarmPressed;
+
         public override OfficeFireScenarioId ScenarioId => OfficeFireScenarioId.ArchiveRoom;
 
         public ArchiveRoomState CurrentState => _stateMachine != null ? _stateMachine.CurrentStateId : ArchiveRoomState.None;
@@ -1007,6 +1009,7 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.PressAlarm:
+                        _archive._alarmPressed = true;
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
                         _archive.AllowExtinguisherSpray();
                         _archive.InvokeAlarmActivated();
@@ -1115,8 +1118,11 @@ namespace Woi.OfficeFire
                     case Actions.ExitArchiveRoom:
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.ExitedArchiveRoom);
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
+                        if (_archive._alarmPressed)
+                        {
+                            _archive.StartEvacuationNpcs();
+                        }
                         _archive.InvokeEvacuationStarted();
-                        _archive.StartEvacuationNpcs();
                         _archive.ChangeState(ArchiveRoomState.WaitingForAssemblyArea);
                         break;
                     default:

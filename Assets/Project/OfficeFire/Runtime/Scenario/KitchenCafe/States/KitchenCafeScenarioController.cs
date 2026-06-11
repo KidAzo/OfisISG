@@ -116,6 +116,7 @@ namespace Woi.OfficeFire
         private bool _outdoorSceneLoadRequested;
         private bool _isWaitingForNoticeSmokeAction;
         private bool _fireGrowthCompleted;
+        private bool _alarmPressed;
 
         public override OfficeFireScenarioId ScenarioId => OfficeFireScenarioId.KitchenCafe;
 
@@ -698,6 +699,7 @@ namespace Woi.OfficeFire
             _fireGrowthCompleted = false;
             _hasReachedExitDoor = false;
             _outdoorSceneLoadRequested = false;
+            _alarmPressed = false;
             if (_stateMachine != null)
             {
                 _stateMachine.SnapTo(KitchenCafeState.None);
@@ -967,6 +969,7 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.PressSuppressionButton:
+                        _kitchen._alarmPressed = true;
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
                         _kitchen.AllowExtinguisherSpray();
                         _kitchen.InvokeSuppressionActivated();
@@ -1001,7 +1004,10 @@ namespace Woi.OfficeFire
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas);
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
                         _kitchen.InvokeEvacuationStarted();
-                        _kitchen.StartEvacuationNpcs();
+                        if (_kitchen._alarmPressed)
+                        {
+                            _kitchen.StartEvacuationNpcs();
+                        }
                         _kitchen.ChangeState(KitchenCafeState.WaitingForAssemblyArea);
                         break;
                     default:
@@ -1054,7 +1060,10 @@ namespace Woi.OfficeFire
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas);
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
                         _kitchen.InvokeEvacuationStarted();
-                        _kitchen.StartEvacuationNpcs();
+                        if (_kitchen._alarmPressed)
+                        {
+                            _kitchen.StartEvacuationNpcs();
+                        }
                         _kitchen.ChangeState(KitchenCafeState.WaitingForAssemblyArea);
                         break;
                     case Actions.PlayerLeaned:
@@ -1106,7 +1115,10 @@ namespace Woi.OfficeFire
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas);
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
                         _kitchen.InvokeEvacuationStarted();
-                        _kitchen.StartEvacuationNpcs();
+                        if (_kitchen._alarmPressed)
+                        {
+                            _kitchen.StartEvacuationNpcs();
+                        }
                         _kitchen.ChangeState(KitchenCafeState.WaitingForAssemblyArea);
                         break;
                     default:
@@ -1133,7 +1145,10 @@ namespace Woi.OfficeFire
                 _kitchen.SetObjective(OfficeFireObjectiveId.GoToAssemblyArea);
                 _kitchen.BeginAssemblyAreaReminderLoop();
                 _kitchen.InvokeEvacuationStarted();
-                _kitchen.StartEvacuationNpcs();
+                if (_kitchen._alarmPressed)
+                {
+                    _kitchen.StartEvacuationNpcs();
+                }
             }
 
             public override void Exit()

@@ -120,6 +120,7 @@ namespace Woi.OfficeFire
         private bool _outdoorSceneLoadRequested;
         private bool _isWaitingForNoticeSmokeAction;
         private bool _fireGrowthCompleted;
+        private bool _alarmPressed;
 
         public override OfficeFireScenarioId ScenarioId => OfficeFireScenarioId.ServerRoom;
 
@@ -703,6 +704,7 @@ namespace Woi.OfficeFire
             _fireGrowthCompleted = false;
             _hasReachedExitDoor = false;
             _outdoorSceneLoadRequested = false;
+            _alarmPressed = false;
             if (_stateMachine != null)
             {
                 _stateMachine.SnapTo(ServerRoomState.None);
@@ -977,6 +979,7 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.PressSuppressionButton:
+                        _server._alarmPressed = true;
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
                         _server.AllowExtinguisherSpray();
                         _server.InvokeSuppressionActivated();
@@ -1087,7 +1090,10 @@ namespace Woi.OfficeFire
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.LeftServerRoomBeforeGas);
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
                         _server.InvokeEvacuationStarted();
-                        _server.StartEvacuationNpcs();
+                        if (_server._alarmPressed)
+                        {
+                            _server.StartEvacuationNpcs();
+                        }
                         _server.ChangeState(ServerRoomState.WaitingForAssemblyArea);
                         break;
                     default:
@@ -1114,7 +1120,10 @@ namespace Woi.OfficeFire
                 _server.SetObjective(OfficeFireObjectiveId.GoToAssemblyArea);
                 _server.BeginAssemblyAreaReminderLoop();
                 _server.InvokeEvacuationStarted();
-                _server.StartEvacuationNpcs();
+                if (_server._alarmPressed)
+                {
+                    _server.StartEvacuationNpcs();
+                }
             }
 
             public override void Exit()

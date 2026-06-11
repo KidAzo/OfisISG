@@ -17,6 +17,9 @@ MonoBehaviour:
   - clip: {fileID: 8300000, guid: b67458b3861e1874ab1d52de38b0d7bc, type: 3}
     weight: 0
     delay: 0
+  - clip: {fileID: 8300000, guid: 63790ac01c0b62147b6cf2993b149b7a, type: 3}
+    weight: 0
+    delay: 0
   noImmediateRepeat: 1
   category: 0
   useCustomCategory: 0

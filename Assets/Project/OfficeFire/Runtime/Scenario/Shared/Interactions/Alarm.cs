@@ -1,5 +1,6 @@
 using Obvious.Soap;
 using UnityEngine;
+using WoiUtils.AudioSystem;
 
 namespace Woi.OfficeFire
 {
@@ -57,6 +58,10 @@ namespace Woi.OfficeFire
         [SerializeField]
         [Min(0f)]
         private float hoverOutlineWidth = 5f;
+
+        [Header("Audio")]
+        [SerializeField]
+        private SoundDefinition alarmSound;
 
         [Header("Debug")]
         [SerializeField]
@@ -150,6 +155,13 @@ namespace Woi.OfficeFire
             }
 
             PressAlarm();
+
+            if (alarmSound != null &&
+                AudioSystem.TryGetFromServiceLocator(out AudioSystem audioSystem) &&
+                audioSystem != null)
+            {
+                audioSystem.PlayAt(alarmSound, transform.position);
+            }
         }
 
         public void PressAlarm()

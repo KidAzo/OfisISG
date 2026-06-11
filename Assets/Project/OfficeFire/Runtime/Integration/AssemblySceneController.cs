@@ -77,9 +77,6 @@ namespace Woi.OfficeFire
         [Min(0f)]
         private float delayBeforeResultScreenSeconds = 5.5f;
 
-        [Header("Debug")]
-        [SerializeField]
-        private bool beginOnStartForTesting;
 
         private Coroutine _sequence;
 
@@ -106,7 +103,7 @@ namespace Woi.OfficeFire
 
         private void Start()
         {
-            if (beginOnStartForTesting || (beginWhenSceneLoads && _beginWhenSceneLoads))
+            if (beginWhenSceneLoads && _beginWhenSceneLoads)
             {
                 _beginWhenSceneLoads = false;
                 Begin();
