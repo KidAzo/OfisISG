@@ -266,6 +266,43 @@ public class InputManager : MonoBehaviour, IInputProvider
                 $"[InputManager] SyncPcPlayerSoapEvents: rebound interact on {interactRebound} listener(s). " +
                 $"interactEvent='{interact.name}'");
         }
+
+        GameplayInputContext liveGameplayContext = GetPcGameplayContext();
+        int gameplayContextRebound = 0;
+        if (liveGameplayContext != null)
+        {
+            for (int i = 0; i < allBehaviours.Length; i++)
+            {
+                if (allBehaviours[i] is not ISoapGameplayInputContextListener gameplayListener)
+                    continue;
+
+                if (!allBehaviours[i].gameObject.activeInHierarchy)
+                    continue;
+
+                bool contextSplit = gameplayListener.IsUsingDifferentGameplayInputContext(liveGameplayContext);
+                gameplayListener.RebindGameplayInputContext(liveGameplayContext);
+                gameplayContextRebound++;
+
+                if (contextSplit)
+                {
+                    Debug.LogWarning(
+                        $"[InputManager] Rebound GameplayInputContext on '{allBehaviours[i].name}' — Addressables had split context instance (E/pickup fix).",
+                        allBehaviours[i]);
+                }
+            }
+        }
+
+        if (gameplayContextRebound == 0)
+        {
+            Debug.LogWarning(
+                "[InputManager] SyncPcPlayerSoapEvents: no active ISoapGameplayInputContextListener (extinguisher/pickup) found yet.");
+        }
+        else
+        {
+            Debug.Log(
+                $"[InputManager] SyncPcPlayerSoapEvents: rebound GameplayInputContext on {gameplayContextRebound} listener(s). " +
+                $"context='{liveGameplayContext.name}'");
+        }
     }
 
     public GameplayInputContext GetPcGameplayContext()

@@ -14,6 +14,9 @@ public abstract class InputContext : ScriptableObject
     public bool BlockLowerContexts => blockLowerContexts;
     
     protected PlayerInputActions inputActions;
+
+    /// <summary>True after <see cref="InputManager"/> pushed this context onto the input stack.</summary>
+    public bool HasInitializedInputActions => inputActions != null;
     
     public void Initialize(PlayerInputActions actions)
     {

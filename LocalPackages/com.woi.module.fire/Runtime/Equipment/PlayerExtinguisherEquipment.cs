@@ -21,7 +21,7 @@ namespace Woi.Equipment
     /// core framework components on the extinguisher itself.
     /// </remarks>
     [AddComponentMenu("Woi/Equipment/Player Extinguisher Equipment")]
-    public sealed class PlayerExtinguisherEquipment : MonoBehaviour
+    public sealed class PlayerExtinguisherEquipment : MonoBehaviour, ISoapGameplayInputContextListener
     {
         // ── Inspector ─────────────────────────────────────────────────────────────
 
@@ -114,7 +114,51 @@ namespace Woi.Equipment
 
         // ── Unity lifecycle ───────────────────────────────────────────────────────
 
+        public bool IsUsingDifferentGameplayInputContext(GameplayInputContext liveContext) =>
+            _inputContext != null
+            && liveContext != null
+            && !ReferenceEquals(_inputContext, liveContext);
+
+        public void RebindGameplayInputContext(GameplayInputContext liveContext)
+        {
+            if (liveContext == null)
+                return;
+
+            UnsubscribeInputEvents();
+            _inputContext = liveContext;
+
+            if (isActiveAndEnabled)
+                SubscribeInputEvents();
+        }
+
         private void OnEnable()
+        {
+            TryBindLiveInputContext();
+            SubscribeInputEvents();
+        }
+
+        private void Start()
+        {
+            TryBindLiveInputContext();
+        }
+
+        private void OnDisable()
+        {
+            UnsubscribeInputEvents();
+        }
+
+        private void TryBindLiveInputContext()
+        {
+            InputManager inputManager = FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            GameplayInputContext liveContext = inputManager?.GetPcGameplayContext();
+            if (liveContext == null)
+                return;
+
+            if (_inputContext == null || IsUsingDifferentGameplayInputContext(liveContext))
+                RebindGameplayInputContext(liveContext);
+        }
+
+        private void SubscribeInputEvents()
         {
             if (_inputContext == null)
             {
@@ -137,7 +181,7 @@ namespace Woi.Equipment
                 _inputContext.PinPulling.OnRaised += HandlePinPull;
         }
 
-        private void OnDisable()
+        private void UnsubscribeInputEvents()
         {
             if (_inputContext == null) return;
 

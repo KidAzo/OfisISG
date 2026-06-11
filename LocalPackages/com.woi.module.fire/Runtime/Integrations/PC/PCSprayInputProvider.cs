@@ -1,57 +1,68 @@
 using FireExtinguisher.Core;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.PlayerLoop;
 using Woi.InputSystem;
 
 namespace FireExtinguisher.PC
 {
     /// <summary>
-    /// PC implementation of <see cref="ISprayInputProvider"/> using Unity's
-    /// new Input System (<c>UnityEngine.InputSystem</c>).
+    /// PC implementation of <see cref="ISprayInputProvider"/> using the live
+    /// <see cref="GameplayInputContext"/> from <see cref="InputManager"/> (Gameplay/Fire action).
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The spray action is configured as an inline <see cref="InputAction"/> serialized
-    /// directly on this component. Click the field in the Inspector to change the binding
-    /// (default: left mouse button). Any button, key, or gamepad trigger can be assigned
-    /// without code changes.
-    /// </para>
-    /// <para>
-    /// The action is enabled automatically in <c>OnEnable</c> and disabled in
-    /// <c>OnDisable</c>. Do not enable it manually from outside this component.
-    /// </para>
-    /// </remarks>
     [AddComponentMenu("Fire Extinguisher/PC/PC Spray Input Provider")]
-    public sealed class PCSprayInputProvider : MonoBehaviour, ISprayInputProvider
+    public sealed class PCSprayInputProvider : MonoBehaviour, ISprayInputProvider, ISoapGameplayInputContextListener
     {
-        // ── Inspector ─────────────────────────────────────────────────────────────
-        [SerializeField] private GameplayInputContext inputContext; // veya inject et
-        private IFireInputReader fireInputReader => inputContext;
+        [SerializeField]
+        private GameplayInputContext inputContext;
 
-        // ── Unity lifecycle ───────────────────────────────────────────────────────
+        private void OnEnable()
+        {
+            TryBindLiveInputContext();
+        }
 
-        // ── ISprayInputProvider ───────────────────────────────────────────────────
+        private void Start()
+        {
+            TryBindLiveInputContext();
+        }
 
-        /// <inheritdoc/>
-        /// <remarks>
-        /// Uses <see cref="InputAction.IsPressed()"/> — true every frame the
-        /// action value exceeds the press threshold.
-        /// </remarks>
-        public bool IsSprayHeld => fireInputReader.IsFireHolding;
+        public bool IsUsingDifferentGameplayInputContext(GameplayInputContext liveContext) =>
+            inputContext != null
+            && liveContext != null
+            && !ReferenceEquals(inputContext, liveContext);
 
-        /// <inheritdoc/>
-        /// <remarks>
-        /// Uses <see cref="InputAction.WasPressedThisFrame()"/> — true for exactly
-        /// one frame when the action transitions from released to pressed.
-        /// </remarks>
-        public bool IsSprayStartedThisFrame => fireInputReader.IsFireStartedThisFrame;
+        public void RebindGameplayInputContext(GameplayInputContext liveContext)
+        {
+            if (liveContext != null)
+                inputContext = liveContext;
+        }
 
-        /// <inheritdoc/>
-        /// <remarks>
-        /// Uses <see cref="InputAction.WasReleasedThisFrame()"/> — true for exactly
-        /// one frame when the action transitions from pressed to released.
-        /// </remarks>
-        public bool IsSprayStoppedThisFrame => fireInputReader.IsFireStoppedThisFrame;
+        private void TryBindLiveInputContext()
+        {
+            InputManager inputManager = FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            GameplayInputContext liveContext = inputManager?.GetPcGameplayContext();
+            if (liveContext == null)
+                return;
+
+            if (inputContext == null || IsUsingDifferentGameplayInputContext(liveContext))
+                RebindGameplayInputContext(liveContext);
+        }
+
+        private IFireInputReader ResolveFireInputReader()
+        {
+            if (inputContext != null && inputContext.HasInitializedInputActions)
+                return inputContext;
+
+            InputManager inputManager = FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            GameplayInputContext liveContext = inputManager?.GetPcGameplayContext();
+            if (liveContext != null)
+                return liveContext;
+
+            return inputContext;
+        }
+
+        public bool IsSprayHeld => ResolveFireInputReader()?.IsFireHolding ?? false;
+
+        public bool IsSprayStartedThisFrame => ResolveFireInputReader()?.IsFireStartedThisFrame ?? false;
+
+        public bool IsSprayStoppedThisFrame => ResolveFireInputReader()?.IsFireStoppedThisFrame ?? false;
     }
 }

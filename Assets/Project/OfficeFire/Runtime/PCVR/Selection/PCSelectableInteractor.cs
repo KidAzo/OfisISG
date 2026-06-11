@@ -52,6 +52,11 @@ namespace Woi.OfficeFire
             SubscribeInteract();
         }
 
+        private void Start()
+        {
+            TryBindLiveInteractEvent();
+        }
+
         private void OnDisable()
         {
             UnsubscribeInteract();
@@ -90,8 +95,10 @@ namespace Woi.OfficeFire
             if (inputManager == null)
                 return;
 
-            VrInputContext vrContext = inputManager.GetVrInputContext();
-            ScriptableEventNoParam liveInteract = vrContext?.InteractEvent;
+            ScriptableEventNoParam liveInteract = IsVrMode()
+                ? inputManager.GetVrInputContext()?.InteractEvent
+                : inputManager.GetPcGameplayContext()?.InteractEvent;
+
             if (liveInteract == null)
                 return;
 

@@ -45,9 +45,14 @@ namespace Woi.InputSystem
             private bool dropEnabled = true;
             private bool pinPullingEnabled = true;
 
-            public bool IsFireHolding => inputActions.Gameplay.Fire.IsPressed();
-            public bool IsFireStartedThisFrame => inputActions.Gameplay.Fire.WasPressedThisFrame();
-            public bool IsFireStoppedThisFrame => inputActions.Gameplay.Fire.WasReleasedThisFrame();
+            public bool IsFireHolding =>
+                inputActions != null && inputActions.Gameplay.Fire.IsPressed();
+
+            public bool IsFireStartedThisFrame =>
+                inputActions != null && inputActions.Gameplay.Fire.WasPressedThisFrame();
+
+            public bool IsFireStoppedThisFrame =>
+                inputActions != null && inputActions.Gameplay.Fire.WasReleasedThisFrame();
             
             public override void OnEnter()
             {
