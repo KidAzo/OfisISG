@@ -32,7 +32,7 @@ MonoBehaviour:
   delayRange: {x: 0, y: 0}
   loop: 0
   priority: 128
-  volume: 1
+  volume: 0.5
   pitch: 1
   spatialBlend: 0
   minDistance: 1
