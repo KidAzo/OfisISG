@@ -13,6 +13,7 @@ namespace Woi.OfficeFire
         CutPower = 101,
         UsedExtinguisherCorrectly = 102,
         ControlledArchiveFire = 103,
+        GrabbedExtinguisher = 104,
 
         EnteredServerRoomSafely = 200,
         ActivatedSuppressionSystem = 201,

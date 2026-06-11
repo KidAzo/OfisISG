@@ -24,7 +24,15 @@ namespace Woi.OfficeFire
             if (!autoStartOnPlay)
                 return;
 
-            StartScenario(startScenario);
+            OfficeFireScenarioId scenarioToStart = startScenario;
+
+            if (OfficeFireLoginSession.IsSet)
+            {
+                scenarioToStart = OfficeFireLoginSession.SelectedScenarioId;
+                OfficeFireLoginSession.MarkScenarioConsumed();
+            }
+
+            StartScenario(scenarioToStart);
         }
 
         public void SetAutoStartOnPlay(bool enabled)

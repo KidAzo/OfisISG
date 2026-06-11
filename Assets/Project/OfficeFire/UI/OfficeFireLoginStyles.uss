@@ -1,0 +1,281 @@
+:root {
+    --color-bg-darkest: rgb(8, 7, 5);
+    --color-bg-panel: rgb(18, 15, 10);
+    --color-bg-field: rgb(28, 22, 14);
+    --color-border: rgb(55, 40, 20);
+    --color-accent: rgb(255, 82, 0);
+    --color-accent-hover: rgb(255, 120, 40);
+    --color-danger: rgb(244, 63, 94);
+    --color-text-white: white;
+    --color-text-gray: rgb(168, 148, 120);
+}
+
+.flex-center {
+    align-items: center;
+    justify-content: center;
+}
+
+.accent-color {
+    color: var(--color-accent);
+}
+
+.login-root {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.login-background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-bg-darkest);
+    background-image: url("project://database/Assets/Project/Sprites/gaussImage.jpg");
+    -unity-background-scale-mode: scale-and-crop;
+    overflow: hidden;
+}
+
+.login-glow-accent {
+    position: absolute;
+    width: 560px;
+    height: 560px;
+    border-radius: 280px;
+    top: 15%;
+    left: 50%;
+    translate: -50% 0;
+    background-color: rgba(255, 82, 0, 0.10);
+}
+
+.login-glow-bottom {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 200px;
+    bottom: -80px;
+    right: -80px;
+    background-color: rgba(255, 40, 0, 0.07);
+}
+
+.login-screen {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.login-card {
+    width: 460px;
+    flex-direction: column;
+    background-color: var(--color-bg-panel);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 24px;
+    padding: 32px;
+    align-items: stretch;
+}
+
+.login-header {
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.login-icon-box {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    background-color: rgba(255, 82, 0, 0.10);
+    border-width: 1px;
+    border-color: rgba(255, 82, 0, 0.30);
+    margin-bottom: 16px;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-flame-label {
+    font-size: 32px;
+    -unity-text-align: middle-center;
+    padding-bottom: 2px;
+}
+
+.login-title-sub {
+    font-size: 13px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    color: var(--color-accent);
+}
+
+.login-title-main {
+    font-size: 28px;
+    -unity-font-style: bold;
+    color: var(--color-text-white);
+    -unity-text-align: middle-center;
+}
+
+.login-section {
+    margin-bottom: 20px;
+}
+
+.login-section-label {
+    font-size: 12px;
+    -unity-font-style: bold;
+    color: var(--color-text-gray);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.login-field {
+    margin-bottom: 10px;
+}
+
+.login-field > Label {
+    font-size: 12px;
+    color: var(--color-text-gray);
+    margin-bottom: 6px;
+}
+
+.login-field > TextInput {
+    background-color: var(--color-bg-field);
+    border-width: 1px;
+    border-color: rgb(60, 42, 22);
+    border-radius: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: var(--color-text-white);
+    font-size: 14px;
+}
+
+.login-field:focus > TextInput {
+    border-color: rgba(255, 82, 0, 0.55);
+}
+
+.login-dropdown {
+    margin-bottom: 4px;
+}
+
+.login-dropdown > Label {
+    display: none;
+}
+
+.login-dropdown > VisualElement {
+    background-color: var(--color-bg-field);
+    border-width: 1px;
+    border-color: rgb(60, 42, 22);
+    border-radius: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: var(--color-text-white);
+    font-size: 14px;
+}
+
+.login-dropdown > VisualElement:focus {
+    border-color: rgba(255, 82, 0, 0.55);
+}
+
+.login-error {
+    color: var(--color-danger);
+    font-size: 13px;
+    -unity-font-style: bold;
+    margin-bottom: 12px;
+    white-space: normal;
+    -unity-text-align: middle-center;
+}
+
+.login-start-button {
+    background-color: var(--color-accent);
+    color: var(--color-text-white);
+    font-size: 15px;
+    -unity-font-style: bold;
+    border-width: 0;
+    border-radius: 12px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    margin-top: 8px;
+    transition-duration: 0.2s;
+    letter-spacing: 1px;
+}
+
+.login-start-button:hover {
+    background-color: var(--color-accent-hover);
+    scale: 1.02;
+}
+
+.login-start-button:active {
+    scale: 0.98;
+}
+
+.login-start-button:disabled {
+    background-color: rgb(71, 55, 35);
+    color: rgb(148, 123, 84);
+}
+
+.leaderboard-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    max-height: 52%;
+    background-color: var(--color-bg-panel);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: 14px;
+    padding: 14px 12px 12px 12px;
+}
+
+.leaderboard-title {
+    color: var(--color-text-gray);
+    font-size: 10px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    -unity-text-align: middle-left;
+}
+
+.leaderboard-rows {
+    flex-direction: column;
+}
+
+.leaderboard-row {
+    font-size: 12px;
+    margin-bottom: 3px;
+    padding-left: 2px;
+    padding-right: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.leaderboard-row.leaderboard-row--rank-plain {
+    color: var(--color-text-white);
+}
+
+.leaderboard-row.leaderboard-row--rank1 {
+    color: rgb(255, 201, 51);
+    -unity-font-style: bold;
+    font-size: 13px;
+}
+
+.leaderboard-row.leaderboard-row--rank2 {
+    color: rgb(125, 219, 255);
+    -unity-font-style: bold;
+    font-size: 13px;
+}
+
+.leaderboard-row.leaderboard-row--rank3 {
+    color: rgb(255, 159, 90);
+    -unity-font-style: bold;
+    font-size: 13px;
+}
+
+.leaderboard-row--empty {
+    color: rgba(168, 148, 120, 0.55);
+    -unity-font-style: italic;
+}

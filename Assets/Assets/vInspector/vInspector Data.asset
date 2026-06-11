@@ -27,13 +27,6 @@ MonoBehaviour:
     isAsset: 1
     _typeString: UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset, Unity.RenderPipelines.Universal.Runtime,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  - _obj: {fileID: 11400000, guid: acaf8a2297cd4d31aa12582e8a3adfab, type: 2}
-    globalId:
-      globalObjectIdString: GlobalObjectId_V1-3-acaf8a2297cd4d31aa12582e8a3adfab-11400000-0
-    isSceneGameObject: 0
-    isAsset: 1
-    _typeString: Woi.OfficeFire.OfficeFireVoiceLineContentDatabase, Woi.OfficeFire.Core,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - _obj: {fileID: 11400000, guid: d6a0c74088c2fa747a9332d4158c4dfa, type: 2}
     globalId:
       globalObjectIdString: GlobalObjectId_V1-3-d6a0c74088c2fa747a9332d4158c4dfa-11400000-0
@@ -41,3 +34,17 @@ MonoBehaviour:
     isAsset: 1
     _typeString: ScriptableEnumPortingVariable, Woi.Porting, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  - _obj: {fileID: 11400000, guid: acaf8a2297cd4d31aa12582e8a3adfab, type: 2}
+    globalId:
+      globalObjectIdString: GlobalObjectId_V1-3-acaf8a2297cd4d31aa12582e8a3adfab-11400000-0
+    isSceneGameObject: 0
+    isAsset: 1
+    _typeString: Woi.OfficeFire.OfficeFireVoiceLineContentDatabase, Woi.OfficeFire.Core,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - _obj: {fileID: 11400000, guid: 405075dddbc1e594f9846bc2905923c0, type: 2}
+    globalId:
+      globalObjectIdString: GlobalObjectId_V1-3-405075dddbc1e594f9846bc2905923c0-11400000-0
+    isSceneGameObject: 0
+    isAsset: 1
+    _typeString: Woi.OfficeFire.OfficeFireVoiceLineContentDatabase, Woi.OfficeFire.Core,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null

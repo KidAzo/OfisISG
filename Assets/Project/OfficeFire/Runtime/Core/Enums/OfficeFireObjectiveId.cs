@@ -8,6 +8,7 @@ namespace Woi.OfficeFire
         GoToEmergencyExit = 11,
         GoToStairs = 12,
         GoToAssemblyArea = 13,
+        PressAlarm = 14,
 
         CheckArchiveRoom = 100,
         OpenArchiveDoor = 101,
@@ -32,5 +33,7 @@ namespace Woi.OfficeFire
         ActivateKitchenSuppression = 306,
         LeaveKitchenCafe = 307,
         EnterKitchenCafe = 308,
+        KitchenBlanketUsage = 309,
+        KitchenWaterUsage = 310,
     }
 }

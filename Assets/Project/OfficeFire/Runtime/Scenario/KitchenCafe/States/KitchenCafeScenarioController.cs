@@ -14,6 +14,7 @@ namespace Woi.OfficeFire
             public const string OpenKitchenDoor = "open_kitchen_door";
             public const string EnterKitchenCafe = "enter_kitchen_cafe";
             public const string UseWater = "use_water";
+            public const string PressAlarm = "press_alarm";
             public const string UseBlanket = "use_blanket";
             public const string PressSuppressionButton = "press_suppression_button";
             public const string GrabExtinguisher = "grab_extinguisher";
@@ -685,6 +686,12 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            if (actionId == Actions.PressAlarm)
+            {
+                RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
+                return;
+            }
+
             _stateMachine.HandleAction(actionId);
         }
 
@@ -1037,6 +1044,12 @@ namespace Woi.OfficeFire
             {
                 switch (actionId)
                 {
+                    case Actions.PressSuppressionButton:
+                        _kitchen._alarmPressed = true;
+                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
+                        _kitchen.AllowExtinguisherSpray();
+                        _kitchen.InvokeSuppressionActivated();
+                        break;
                     case Actions.UseExtinguisher:
                         _kitchen.LogFireExtinguishStatus("Sondurme basladi — EstinguishingStarted anonsu");
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.EstinguishingStarted);
@@ -1059,10 +1072,10 @@ namespace Woi.OfficeFire
                     case Actions.LeaveKitchenCafe:
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas);
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
-                        _kitchen.InvokeEvacuationStarted();
                         if (_kitchen._alarmPressed)
                         {
                             _kitchen.StartEvacuationNpcs();
+                            _kitchen.InvokeEvacuationStarted();
                         }
                         _kitchen.ChangeState(KitchenCafeState.WaitingForAssemblyArea);
                         break;
@@ -1105,18 +1118,18 @@ namespace Woi.OfficeFire
                 switch (actionId)
                 {
                     case Actions.PressSuppressionButton:
+                        _kitchen._alarmPressed = true;
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.AlarmInstruction);
                         _kitchen.AllowExtinguisherSpray();
                         _kitchen.InvokeSuppressionActivated();
-                        _kitchen.LogFireExtinguishStatus("Baski dusurme aktif — sondurucu asamasina geciliyor");
                         break;
                     case Actions.LeaveKitchenCafe:
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas);
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
-                        _kitchen.InvokeEvacuationStarted();
                         if (_kitchen._alarmPressed)
                         {
+                            _kitchen.InvokeEvacuationStarted();
                             _kitchen.StartEvacuationNpcs();
                         }
                         _kitchen.ChangeState(KitchenCafeState.WaitingForAssemblyArea);
@@ -1156,6 +1169,19 @@ namespace Woi.OfficeFire
             {
                 switch (actionId)
                 {
+                    case Actions.PressSuppressionButton:
+                        _kitchen._alarmPressed = true;
+                        _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
+                        _kitchen.AllowExtinguisherSpray();
+                        _kitchen.InvokeSuppressionActivated();
+                        break;
+                    case Actions.LeaveKitchenCafe:
+                        if (_kitchen._alarmPressed)
+                        {
+                            _kitchen.InvokeEvacuationStarted();
+                            _kitchen.StartEvacuationNpcs();
+                        }
+                        break;
                     case Actions.ReachAssemblyArea:
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.ReachAssemblyArea);
                         _kitchen.HandleReachedAssemblyAreaDoor();

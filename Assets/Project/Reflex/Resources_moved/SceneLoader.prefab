@@ -217,6 +217,11 @@ MonoBehaviour:
     - SceneName: FireModule_Office
       AddressableKey: 
       SceneType: 0
+  - GroupName: OfficeFireModule_Login
+    Scenes:
+    - SceneName: OfficeFireModule_Login
+      AddressableKey: 
+      SceneType: 0
   _runCatalogHealthBeforeSelectedGroups: 1
   _catalogHealthGroupNames:
   - Fire_Train

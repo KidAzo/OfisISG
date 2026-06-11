@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Woi.OfficeFire
 {
@@ -36,6 +37,9 @@ namespace Woi.OfficeFire
         [Tooltip("Seconds between reminder calls after the first one. Ignored after the player has entered.")]
         [SerializeField, Min(0.1f)]
         private float reminderLoopInterval = 15f;
+
+        [SerializeField]
+        private UnityEvent onTrigger;
 
         private bool _hasTriggered;
         private Coroutine _reminderRoutine;
@@ -137,6 +141,7 @@ namespace Woi.OfficeFire
             _hasTriggered = true;
             StopReminderRoutine();
             DispatchAction();
+            onTrigger?.Invoke();
         }
 
         private void OnTriggerExit(Collider other)

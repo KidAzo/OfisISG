@@ -14,6 +14,7 @@ namespace Woi.OfficeFire
             public const string OpenServerDoor = "open_server_door";
             public const string EnterServerRoom = "enter_server_room";
             public const string UseWater = "use_water";
+            public const string PressAlarm = "press_alarm";
             public const string PressSuppressionButton = "press_suppression_button";
             public const string GrabExtinguisher = "grab_extinguisher";
             public const string GrabBlanket = "grab_blanket";
@@ -678,6 +679,12 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            if (actionId == Actions.PressAlarm)
+            {
+                RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
+                return;
+            }
+
             if (actionId == Actions.GrabBlanket)
             {
                 HandleBlanketGrabbed();
@@ -1036,6 +1043,12 @@ namespace Woi.OfficeFire
             {
                 switch (actionId)
                 {
+                   case Actions.PressSuppressionButton:
+                        _server._alarmPressed = true;
+                        _server.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
+                        _server.AllowExtinguisherSpray();
+                        _server.InvokeSuppressionActivated();
+                        break;       
                     case Actions.UseExtinguisher:
                         _server.LogFireExtinguishStatus("Sondurme basladi — EstinguishingStarted anonsu");
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.EstinguishingStarted);
@@ -1086,6 +1099,12 @@ namespace Woi.OfficeFire
             {
                 switch (actionId)
                 {
+                    case Actions.PressSuppressionButton:
+                        _server._alarmPressed = true;
+                        _server.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
+                        _server.AllowExtinguisherSpray();
+                        _server.InvokeSuppressionActivated();
+                        break;
                     case Actions.LeaveServerRoom:
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.LeftServerRoomBeforeGas);
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
@@ -1131,6 +1150,19 @@ namespace Woi.OfficeFire
             {
                 switch (actionId)
                 {
+                    case Actions.PressSuppressionButton:
+                        _server._alarmPressed = true;
+                        _server.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
+                        _server.AllowExtinguisherSpray();
+                        _server.InvokeSuppressionActivated();
+                        break;
+                    case Actions.LeaveServerRoom:
+                        if (_server._alarmPressed)
+                        {
+                            _server.InvokeEvacuationStarted();
+                            _server.StartEvacuationNpcs();
+                        }
+                        break;
                     case Actions.ReachAssemblyArea:
                         _server.HandleReachedAssemblyAreaDoor();
                         break;

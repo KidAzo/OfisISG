@@ -1,0 +1,40 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="OfficeFireLoginStyles.uss" />
+    <ui:VisualElement class="login-root">
+        <ui:VisualElement name="LoginBackground" class="login-background">
+            <ui:VisualElement class="login-glow-accent"/>
+            <ui:VisualElement class="login-glow-bottom"/>
+            <ui:VisualElement style="flex-grow: 1; align-content: flex-end; align-self: flex-start; position: absolute; left: 20px; bottom: 20px; min-width: auto; min-height: auto; background-image: url(&quot;project://database/Assets/Project/Sprites/ISG_DT_Logo_Original.png?fileID=2800000&amp;guid=018c8f1c5b33a0340b454aea997df672&amp;type=3#ISG_DT_Logo_Original&quot;);"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="LeaderboardPanel" class="leaderboard-panel">
+            <ui:Label name="LeaderboardTitle" text="BAŞARI TABLOSU" class="leaderboard-title"/>
+            <ui:VisualElement name="leaderboard-rows" class="leaderboard-rows"/>
+        </ui:VisualElement>
+        <ui:VisualElement class="login-screen flex-center">
+            <ui:VisualElement class="login-card">
+                <ui:VisualElement class="login-header">
+                    <ui:VisualElement class="login-icon-box flex-center">
+                        <ui:Label name="FlameIconLabel" text="🔥" class="login-flame-label"/>
+                    </ui:VisualElement>
+                    <ui:Label name="LoginTitleSub" text="YANGIN GÜVENLİĞİ" class="login-title-sub accent-color"/>
+                    <ui:Label name="LoginTitleMain" text="EĞİTİM SİMÜLATÖRÜ" class="login-title-main"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="login-section">
+                    <ui:Label name="ProfileSectionLabel" text="KULLANICI PROFİLİ" class="login-section-label"/>
+                    <ui:TextField name="UserNameField" label="Ad Soyad" class="login-field"/>
+                    <ui:TextField name="UserIdField" label="Kullanıcı ID" class="login-field"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="login-section">
+                    <ui:Label name="ScenarioSectionLabel" text="SENARYO" class="login-section-label"/>
+                    <ui:DropdownField name="ScenarioDropdown" choices="Sunucu Odası,Arşiv Odası,Mutfak-Kafe" value="Sunucu Odası" class="login-dropdown"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="login-section">
+                    <ui:Label name="LanguageSectionLabel" text="DİL" class="login-section-label"/>
+                    <ui:DropdownField name="LanguageDropdown" choices="Türkçe,English" value="Türkçe" class="login-dropdown"/>
+                </ui:VisualElement>
+                <ui:Label name="LoginErrorLabel" text="" class="login-error" style="display: none;"/>
+                <ui:Button name="StartButton" text="▶ OYUNU BAŞLAT" class="login-start-button"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

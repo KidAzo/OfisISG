@@ -68,21 +68,19 @@ namespace Woi.OfficeFire
             };
         }
 
+        private static readonly ObjectiveRule AlarmRule = new ObjectiveRule(
+            OfficeFireObjectiveId.PressAlarm,
+            report => HasAction(report, OfficeFireCorrectActionId.PressedAlarm));
+
         private static readonly ObjectiveRule[] ArchiveRules =
         {
             new ObjectiveRule(
                 OfficeFireObjectiveId.CheckArchiveRoom,
                 report => HasAction(report, OfficeFireCorrectActionId.NoticedSmoke)),
-            new ObjectiveRule(
-                OfficeFireObjectiveId.PressArchiveAlarm,
-                report => HasAction(report, OfficeFireCorrectActionId.PressedAlarm)),
+            AlarmRule,
             new ObjectiveRule(
                 OfficeFireObjectiveId.UseArchiveExtinguisher,
-                report => HasAnyAction(
-                    report,
-                    OfficeFireCorrectActionId.UsedExtinguisherCorrectly,
-                    OfficeFireCorrectActionId.ControlledArchiveFire)
-                    || report.fireControlled),
+                report => HasAction(report, OfficeFireCorrectActionId.GrabbedExtinguisher)),
             new ObjectiveRule(
                 OfficeFireObjectiveId.ExitArchiveRoom,
                 report => HasAnyAction(
@@ -100,6 +98,7 @@ namespace Woi.OfficeFire
             new ObjectiveRule(
                 OfficeFireObjectiveId.CheckServerRoom,
                 report => HasAction(report, OfficeFireCorrectActionId.NoticedSmoke)),
+            AlarmRule,
             new ObjectiveRule(
                 OfficeFireObjectiveId.EnterServerRoom,
                 report => HasAction(report, OfficeFireCorrectActionId.EnteredServerRoomSafely)),
@@ -119,18 +118,16 @@ namespace Woi.OfficeFire
             new ObjectiveRule(
                 OfficeFireObjectiveId.CheckKitchenArea,
                 report => HasAction(report, OfficeFireCorrectActionId.NoticedSmoke)),
+            AlarmRule,
             new ObjectiveRule(
                 OfficeFireObjectiveId.EnterKitchenCafe,
                 report => HasAction(report, OfficeFireCorrectActionId.EnteredKitchenCafeSafely)),
             new ObjectiveRule(
-                OfficeFireObjectiveId.GetFireBlanket,
-                report => KitchenUsedSuppressionPath(report)
-                    || HasAction(report, OfficeFireCorrectActionId.SelectedFireBlanket)),
+                OfficeFireObjectiveId.KitchenBlanketUsage,
+                report => KitchenUsedBlanketPath(report)),
             new ObjectiveRule(
-                OfficeFireObjectiveId.PlaceFireBlanket,
-                report => KitchenUsedSuppressionPath(report)
-                    || HasAction(report, OfficeFireCorrectActionId.PlacedFireBlanketCorrectly)
-                    || report.fireControlled),
+                OfficeFireObjectiveId.KitchenWaterUsage,
+                report => !HasMistake(report, OfficeFireMistakeId.UsedWaterOnKitchenFire)),
             new ObjectiveRule(
                 OfficeFireObjectiveId.ActivateKitchenSuppression,
                 report => KitchenUsedBlanketPath(report)
@@ -151,18 +148,14 @@ namespace Woi.OfficeFire
                 OfficeFireCorrectActionId.PlacedFireBlanketCorrectly);
         }
 
-        private static bool KitchenUsedSuppressionPath(OfficeFireScenarioReport report)
-        {
-            return HasAction(report, OfficeFireCorrectActionId.ActivatedSuppressionSystem)
-                || HasAnyAction(
-                    report,
-                    OfficeFireCorrectActionId.UsedExtinguisherCorrectly,
-                    OfficeFireCorrectActionId.ControlledKitchenFire);
-        }
-
         private static bool HasAction(OfficeFireScenarioReport report, OfficeFireCorrectActionId actionId)
         {
             return report != null && report.correctActions.Contains(actionId);
+        }
+
+        private static bool HasMistake(OfficeFireScenarioReport report, OfficeFireMistakeId mistakeId)
+        {
+            return report != null && report.mistakes.Contains(mistakeId);
         }
 
         private static bool HasAnyAction(OfficeFireScenarioReport report, params OfficeFireCorrectActionId[] actionIds)

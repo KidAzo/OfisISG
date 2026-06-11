@@ -88,6 +88,7 @@ namespace Woi.OfficeFire
 
         private OfficeFireScenarioReport _lastReport;
         private bool _uiBound;
+        private bool _sessionResultsExported;
         private Coroutine _deferredBindRoutine;
         private bool _playerInputCaptured;
         private bool[] _savedBehaviourEnabledStates;
@@ -153,6 +154,25 @@ namespace Woi.OfficeFire
             _lastPresentTurkish = turkish;
             OfficeFireResultScreenModel model = OfficeFireResultScreenMapper.FromReport(report, turkish);
             ApplyModel(model);
+            ExportSessionResultsIfNeeded(report, turkish);
+        }
+
+        private void ExportSessionResultsIfNeeded(OfficeFireScenarioReport report, bool turkish)
+        {
+            if (_sessionResultsExported || report == null || report.scenarioId == OfficeFireScenarioId.None)
+            {
+                return;
+            }
+
+            string path = OfficeFireSessionResultCsvExporter.ExportSession(report, turkish);
+            _sessionResultsExported = true;
+
+            if (string.IsNullOrEmpty(path))
+            {
+                Debug.LogWarning(
+                    "[OfficeFireResultScreenController] CSV export path unavailable.",
+                    this);
+            }
         }
 
         public void HideScreen()

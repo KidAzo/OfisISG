@@ -153,9 +153,9 @@ namespace Woi.OfficeFire
         {
             return module switch
             {
-                OfficeGameModule.FireTraining => "FireModule_Office",
+                OfficeGameModule.FireTraining => "OfficeFireModule_Login",
                 OfficeGameModule.WasteCollector => ResolveWasteCollectorEntryScene(),
-                _ => "FireModule_Office",
+                _ => "OfficeFireModule_Login",
             };
         }
 

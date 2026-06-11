@@ -15,8 +15,8 @@ namespace Woi.OfficeFire
                 FireControlledLabel = turkish ? "YANGIN" : "FIRE",
                 FireControlledValue = FormatBool(
                     report != null && report.fireControlled,
-                    turkish ? "Kontrol altında" : "Controlled",
-                    turkish ? "Kontrol edilmedi" : "Not controlled"),
+                    turkish ? "Kontrol Altına Alındı" : "Brought Under Control",
+                    turkish ? "Kontrol Altına Alınmadı" : "Not Brought Under Control"),
                 EvacuatedLabel = turkish ? "TAHLİYE" : "EVACUATION",
                 EvacuatedValue = FormatBool(
                     report != null && report.evacuated,
@@ -71,6 +71,7 @@ namespace Woi.OfficeFire
                 OfficeFireObjectiveId.GoToEmergencyExit => ("Go to the emergency exit", "Acil çıkışa gidin"),
                 OfficeFireObjectiveId.GoToStairs => ("Go to the stairs", "Merdivenlere gidin"),
                 OfficeFireObjectiveId.GoToAssemblyArea => ("Go to the assembly area", "Toplanma alanına gidin"),
+                OfficeFireObjectiveId.PressAlarm => ("Press the alarm", "Alarmı çalıştırın"),
                 OfficeFireObjectiveId.CheckArchiveRoom => ("Inspect the archive room", "Arşiv odasını kontrol edin"),
                 OfficeFireObjectiveId.OpenArchiveDoor => ("Open the archive door", "Arşiv kapısını açın"),
                 OfficeFireObjectiveId.PressArchiveAlarm => ("Press the alarm", "Alarmı çalıştırın"),
@@ -92,6 +93,8 @@ namespace Woi.OfficeFire
                 OfficeFireObjectiveId.ExitKitchenArea => ("Exit the kitchen area", "Mutfak alanından çıkın"),
                 OfficeFireObjectiveId.ActivateKitchenSuppression => ("Activate suppression system", "Söndürme sistemini devreye alın"),
                 OfficeFireObjectiveId.LeaveKitchenCafe => ("Leave the kitchen area", "Mutfak alanından çıkın"),
+                OfficeFireObjectiveId.KitchenBlanketUsage => ("Fire blanket usage", "Battaniye kullanımı"),
+                OfficeFireObjectiveId.KitchenWaterUsage => ("Water usage", "Su kullanımı"),
                 _ => (id.ToString(), id.ToString()),
             };
 
@@ -126,6 +129,7 @@ namespace Woi.OfficeFire
                 OfficeFireCorrectActionId.CutPower => ("Cut electrical power", "Elektrik kesildi"),
                 OfficeFireCorrectActionId.UsedExtinguisherCorrectly => ("Used extinguisher correctly", "Söndürücü doğru kullanıldı"),
                 OfficeFireCorrectActionId.ControlledArchiveFire => ("Controlled archive fire", "Arşiv yangını kontrol altına alındı"),
+                OfficeFireCorrectActionId.GrabbedExtinguisher => ("Grabbed extinguisher", "Söndürücü alındı"),
                 OfficeFireCorrectActionId.EnteredServerRoomSafely => ("Entered server room safely", "Sunucu odasına güvenli giriş"),
                 OfficeFireCorrectActionId.ActivatedSuppressionSystem => ("Activated suppression system", "Söndürme sistemi devreye alındı"),
                 OfficeFireCorrectActionId.LeftServerRoomBeforeGas => ("Left server room before gas release", "Gaz salınımından önce odadan çıkıldı"),
@@ -191,6 +195,16 @@ namespace Woi.OfficeFire
             if (seconds <= 0.01f)
             {
                 return "—";
+            }
+
+            return seconds.ToString("0.0", CultureInfo.InvariantCulture) + " s";
+        }
+
+        public static string FormatReactionTimeForExport(float seconds)
+        {
+            if (seconds <= 0.01f)
+            {
+                return "-";
             }
 
             return seconds.ToString("0.0", CultureInfo.InvariantCulture) + " s";

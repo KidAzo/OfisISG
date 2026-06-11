@@ -697,6 +697,11 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            if (actionId == Actions.GrabExtinguisher)
+            {
+                RegisterCorrectAction(OfficeFireCorrectActionId.GrabbedExtinguisher);
+            }
+
             _stateMachine.HandleAction(actionId);
         }
 
@@ -1013,7 +1018,6 @@ namespace Woi.OfficeFire
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
                         _archive.AllowExtinguisherSpray();
                         _archive.InvokeAlarmActivated();
-                        _archive.LogFireExtinguishStatus("Alarm basildi — sondurucu asamasina geciliyor");
                         _archive.ChangeState(ArchiveRoomState.WaitingForExtinguisherUse);
                         break;
                     case Actions.PlayerLeaned:
@@ -1066,6 +1070,12 @@ namespace Woi.OfficeFire
             {
                 switch (actionId)
                 {
+                    case Actions.PressAlarm:
+                        _archive._alarmPressed = true;
+                        _archive.RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
+                        _archive.AllowExtinguisherSpray();
+                        _archive.InvokeAlarmActivated();
+                        break;
                     case Actions.UseExtinguisher:
                         _archive.LogFireExtinguishStatus("Sondurme basladi — EstinguishingStarted anonsu");
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.EstinguishingStarted);
@@ -1115,6 +1125,12 @@ namespace Woi.OfficeFire
             {
                 switch (actionId)
                 {
+                    case Actions.PressAlarm:
+                        _archive._alarmPressed = true;
+                        _archive.RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
+                        _archive.AllowExtinguisherSpray();
+                        _archive.InvokeAlarmActivated();
+                        break;
                     case Actions.ExitArchiveRoom:
                         _archive.RegisterCorrectAction(OfficeFireCorrectActionId.ExitedArchiveRoom);
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
@@ -1160,6 +1176,19 @@ namespace Woi.OfficeFire
             {
                 switch (actionId)
                 {
+                    case Actions.PressAlarm:
+                        _archive._alarmPressed = true;
+                        _archive.RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
+                        _archive.AllowExtinguisherSpray();
+                        _archive.InvokeAlarmActivated();
+                        break;
+                    case Actions.ExitArchiveRoom:
+                        if (_archive._alarmPressed)
+                        {
+                            _archive.InvokeEvacuationStarted();
+                            _archive.StartEvacuationNpcs();
+                        }
+                        break;
                     case Actions.ReachAssemblyArea:
                         _archive.HandleReachedAssemblyAreaDoor();
                         break;
