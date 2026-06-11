@@ -697,6 +697,20 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            if (actionId == Actions.PressAlarm)
+            {
+                RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
+                if (!_alarmPressed)
+                {
+                    _alarmPressed = true;
+                    AllowExtinguisherSpray();
+                    InvokeAlarmActivated();
+                }
+
+                _stateMachine.HandleAction(actionId);
+                return;
+            }
+
             if (actionId == Actions.GrabExtinguisher)
             {
                 RegisterCorrectAction(OfficeFireCorrectActionId.GrabbedExtinguisher);

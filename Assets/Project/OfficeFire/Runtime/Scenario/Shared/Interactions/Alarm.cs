@@ -205,6 +205,11 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            if (scenario.CanProcessActions())
+            {
+                scenario.RegisterCorrectAction(OfficeFireCorrectActionId.PressedAlarm);
+            }
+
             scenario.HandleAction(actionId);
 
             if (enableDebugLogs)
@@ -215,13 +220,19 @@ namespace Woi.OfficeFire
 
         private bool TryResolveScenario(out OfficeFireScenarioController scenario)
         {
-            if (targetScenario != null)
+            if (OfficeFireActiveScenarioLocator.TryGetActive(out scenario))
+            {
+                return true;
+            }
+
+            if (targetScenario != null && targetScenario.IsScenarioActive)
             {
                 scenario = targetScenario;
                 return true;
             }
 
-            return OfficeFireActiveScenarioLocator.TryGetActive(out scenario);
+            scenario = null;
+            return false;
         }
 
         private void EnsureInstructionPrompt()
