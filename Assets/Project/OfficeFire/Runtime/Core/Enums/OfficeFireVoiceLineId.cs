@@ -50,5 +50,7 @@ namespace Woi.OfficeFire
         ReachedAssemblyAreaDoor = 316,
         CarafeHandled = 317,
         CarafeUsed = 318,
+        ServerRoomEntered = 319,
+        ServerFireGrowth = 320,
     }
 }

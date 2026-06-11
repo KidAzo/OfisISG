@@ -21,7 +21,7 @@ MonoBehaviour:
         uygulay\u0131n."
       EnglishTitle: Smoke detected
       EnglishBody: Check the area and follow safety instructions.
-    Voice: {fileID: 11400000, guid: 7700df6ac45f878438502b0e29521b07, type: 2}
+    Voice: {fileID: 11400000, guid: a3467b6391a04a6ab3aba26de72ca0bc, type: 2}
   - Id: 309
     Popup:
       TurkishTitle: "Egil\t"
@@ -52,7 +52,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: GoToAssemblyArea
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 11400000, guid: 31f8a5a23b0f417282faf7bf8ed35919, type: 2}
+    Voice: {fileID: 11400000, guid: ba83217242a147c9acb76479f329a8ae, type: 2}
   - Id: 310
     Popup:
       TurkishTitle: "T\xFCp al\u0131nd\u0131"
@@ -97,7 +97,7 @@ MonoBehaviour:
         \xFCzerinden d\xFCzenleyin."
       EnglishTitle: ArchiveCutPowerInstruction
       EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 11400000, guid: 31f8a5a23b0f417282faf7bf8ed35919, type: 2}
+    Voice: {fileID: 11400000, guid: ba83217242a147c9acb76479f329a8ae, type: 2}
   - Id: 315
     Popup:
       TurkishTitle: ArchivePowerCutSuccess
@@ -130,7 +130,7 @@ MonoBehaviour:
       EnglishTitle: ArchiveFireNotControlledEvacuate
       EnglishBody: Assign audio clip and edit this text in the content database.
     Voice: {fileID: 11400000, guid: 949f1f0fd7ce4498b2a8d77253e6b380, type: 2}
-  - Id: 11
+  - Id: 320
     Popup:
       TurkishTitle: CrouchInSmoke
       TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
@@ -138,8 +138,8 @@ MonoBehaviour:
       EnglishTitle: CrouchInSmoke
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.
-    Voice: {fileID: 0}
-  - Id: 12
+    Voice: {fileID: 11400000, guid: 431496f6d9a3481e87ab68b68f997103, type: 2}
+  - Id: 319
     Popup:
       TurkishTitle: AlarmInstruction
       TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
@@ -147,7 +147,7 @@ MonoBehaviour:
       EnglishTitle: AlarmInstruction
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: a5f77cb302cc43a6898e5e74f10f99bd, type: 2}
   - Id: 16
     Popup:
       TurkishTitle: ScenarioCompleted

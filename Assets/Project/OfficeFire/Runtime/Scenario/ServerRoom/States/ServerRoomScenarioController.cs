@@ -904,7 +904,7 @@ namespace Woi.OfficeFire
                         break;
                     case Actions.EnterServerRoom:
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.EnteredServerRoomSafely);
-                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ArchiveElectricalFireWarning);
+                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerRoomEntered);
                         _server.InvokeDoorOpened();
                         _server.ChangeState(ServerRoomState.Intervention);
                         break;
@@ -999,6 +999,7 @@ namespace Woi.OfficeFire
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.EstinguishingStarted);
                         break;
                     case Actions.FireGrowth:
+                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerFireGrowth);
                         _server.ChangeState(ServerRoomState.WaitingForExitRoom);
                         break;
                     default:
@@ -1045,6 +1046,7 @@ namespace Woi.OfficeFire
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.EstinguisherHandled);
                         break;
                     case Actions.FireGrowth:
+                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerFireGrowth);
                         _server.ChangeState(ServerRoomState.WaitingForExitRoom);
                         break;
                     default:
