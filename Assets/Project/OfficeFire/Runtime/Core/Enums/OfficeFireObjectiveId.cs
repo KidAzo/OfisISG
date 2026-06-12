@@ -9,6 +9,7 @@ namespace Woi.OfficeFire
         GoToStairs = 12,
         GoToAssemblyArea = 13,
         PressAlarm = 14,
+        HoldHandrail = 15,
 
         CheckArchiveRoom = 100,
         OpenArchiveDoor = 101,

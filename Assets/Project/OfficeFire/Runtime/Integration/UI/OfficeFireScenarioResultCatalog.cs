@@ -50,6 +50,11 @@ namespace Woi.OfficeFire
                 {
                     completed.Add(label);
                 }
+                else if (rule.Objective == OfficeFireObjectiveId.HoldHandrail &&
+                         HasMistake(report, OfficeFireMistakeId.DidNotHoldHandrail))
+                {
+                    // Failure recorded as mistake — do not also list as missing.
+                }
                 else
                 {
                     missing.Add(label);
@@ -72,6 +77,10 @@ namespace Woi.OfficeFire
             OfficeFireObjectiveId.PressAlarm,
             report => HasAction(report, OfficeFireCorrectActionId.PressedAlarm));
 
+        private static readonly ObjectiveRule HoldHandrailRule = new ObjectiveRule(
+            OfficeFireObjectiveId.HoldHandrail,
+            report => HasAction(report, OfficeFireCorrectActionId.HeldHandrailCorrectly));
+
         private static readonly ObjectiveRule[] ArchiveRules =
         {
             new ObjectiveRule(
@@ -88,6 +97,7 @@ namespace Woi.OfficeFire
                     OfficeFireCorrectActionId.ExitedArchiveRoom,
                     OfficeFireCorrectActionId.ReachedExitDoor,
                     OfficeFireCorrectActionId.ReachedAssemblyArea)),
+            HoldHandrailRule,
             new ObjectiveRule(
                 OfficeFireObjectiveId.GoToAssemblyArea,
                 report => HasAction(report, OfficeFireCorrectActionId.ReachedAssemblyArea) || report.evacuated),
@@ -108,6 +118,7 @@ namespace Woi.OfficeFire
             new ObjectiveRule(
                 OfficeFireObjectiveId.LeaveServerRoom,
                 report => HasAction(report, OfficeFireCorrectActionId.LeftServerRoomBeforeGas)),
+            HoldHandrailRule,
             new ObjectiveRule(
                 OfficeFireObjectiveId.GoToAssemblyArea,
                 report => HasAction(report, OfficeFireCorrectActionId.ReachedAssemblyArea) || report.evacuated),
@@ -135,6 +146,7 @@ namespace Woi.OfficeFire
             new ObjectiveRule(
                 OfficeFireObjectiveId.LeaveKitchenCafe,
                 report => HasAction(report, OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas)),
+            HoldHandrailRule,
             new ObjectiveRule(
                 OfficeFireObjectiveId.GoToAssemblyArea,
                 report => HasAction(report, OfficeFireCorrectActionId.ReachedAssemblyArea) || report.evacuated),

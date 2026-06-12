@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - Pin
+  - Hand
+  - Railing
   layers:
   - Default
   - TransparentFX

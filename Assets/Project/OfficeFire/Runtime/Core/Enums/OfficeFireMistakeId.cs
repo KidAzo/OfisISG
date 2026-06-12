@@ -9,6 +9,7 @@ namespace Woi.OfficeFire
         ReturnedToFireZone = 12,
         UsedElevator = 13,
         DelayedEvacuation = 14,
+        DidNotHoldHandrail = 15,
 
         UsedWaterOnElectricalFire = 100,
         UsedExtinguisherBeforeAlarm = 101,

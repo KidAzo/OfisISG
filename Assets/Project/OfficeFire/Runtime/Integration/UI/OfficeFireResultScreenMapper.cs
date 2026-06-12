@@ -72,6 +72,7 @@ namespace Woi.OfficeFire
                 OfficeFireObjectiveId.GoToStairs => ("Go to the stairs", "Merdivenlere gidin"),
                 OfficeFireObjectiveId.GoToAssemblyArea => ("Go to the assembly area", "Toplanma alanına gidin"),
                 OfficeFireObjectiveId.PressAlarm => ("Press the alarm", "Alarmı çalıştırın"),
+                OfficeFireObjectiveId.HoldHandrail => ("Hold the handrail on the stairs", "Merdivende trabzana tutun"),
                 OfficeFireObjectiveId.CheckArchiveRoom => ("Inspect the archive room", "Arşiv odasını kontrol edin"),
                 OfficeFireObjectiveId.OpenArchiveDoor => ("Open the archive door", "Arşiv kapısını açın"),
                 OfficeFireObjectiveId.PressArchiveAlarm => ("Press the alarm", "Alarmı çalıştırın"),
@@ -144,6 +145,7 @@ namespace Woi.OfficeFire
                 OfficeFireCorrectActionId.ExitedArchiveRoom => ("Exited archive room", "Arşiv odasından çıkıldı"),
                 OfficeFireCorrectActionId.EnteredKitchenCafeSafely => ("Entered kitchen safely", "Mutfak alanına güvenli giriş"),
                 OfficeFireCorrectActionId.LeftKitchenCafeBeforeGas => ("Left kitchen before gas release", "Gaz salınımından önce mutfaktan çıkıldı"),
+                OfficeFireCorrectActionId.HeldHandrailCorrectly => ("Held handrail correctly", "Trabzana doğru tutuldu"),
                 _ => (id.ToString(), id.ToString()),
             };
 
@@ -164,6 +166,7 @@ namespace Woi.OfficeFire
                 OfficeFireMistakeId.ReturnedToFireZone => ("Returned to fire zone", "Yangın bölgesine geri dönüldü"),
                 OfficeFireMistakeId.UsedElevator => ("Used elevator during evacuation", "Tahliyede asansör kullanıldı"),
                 OfficeFireMistakeId.DelayedEvacuation => ("Delayed evacuation", "Tahliye geciktirildi"),
+                OfficeFireMistakeId.DidNotHoldHandrail => ("Did not hold handrail long enough", "Trabzana yeterince tutulmadı"),
                 OfficeFireMistakeId.UsedWaterOnElectricalFire => ("Used water on electrical fire", "Elektrik yangınına su kullanıldı"),
                 OfficeFireMistakeId.UsedExtinguisherBeforeAlarm => ("Used extinguisher before alarm", "Alarmdan önce söndürücü kullanıldı"),
                 OfficeFireMistakeId.UsedExtinguisherBeforePowerCut => ("Used extinguisher before power cut", "Elektrik kesilmeden söndürücü kullanıldı"),

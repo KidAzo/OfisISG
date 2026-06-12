@@ -30,5 +30,6 @@ namespace Woi.OfficeFire
         ExitedArchiveRoom = 307,
         EnteredKitchenCafeSafely = 308,
         LeftKitchenCafeBeforeGas = 309,
+        HeldHandrailCorrectly = 310,
     }
 }

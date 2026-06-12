@@ -39,5 +39,15 @@ namespace Woi.OfficeFire
                 mistakes.Add(id);
             }
         }
+
+        public void RemoveMistake(OfficeFireMistakeId id)
+        {
+            if (id == OfficeFireMistakeId.None)
+            {
+                return;
+            }
+
+            mistakes.Remove(id);
+        }
     }
 }
