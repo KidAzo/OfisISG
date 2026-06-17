@@ -73,6 +73,7 @@ namespace Woi.OfficeFire
                 OfficeFireObjectiveId.GoToAssemblyArea => ("Go to the assembly area", "Toplanma alanına gidin"),
                 OfficeFireObjectiveId.PressAlarm => ("Press the alarm", "Alarmı çalıştırın"),
                 OfficeFireObjectiveId.HoldHandrail => ("Hold the handrail on the stairs", "Merdivende trabzana tutun"),
+                OfficeFireObjectiveId.LeanInSmoke => ("Crouch in smoke", "Duman içinde eğilin"),
                 OfficeFireObjectiveId.CheckArchiveRoom => ("Inspect the archive room", "Arşiv odasını kontrol edin"),
                 OfficeFireObjectiveId.OpenArchiveDoor => ("Open the archive door", "Arşiv kapısını açın"),
                 OfficeFireObjectiveId.PressArchiveAlarm => ("Press the alarm", "Alarmı çalıştırın"),

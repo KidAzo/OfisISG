@@ -1051,6 +1051,7 @@ namespace Woi.OfficeFire
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.EstinguishingStarted);
                         break;
                     case Actions.FireGrowth:
+                        _archive.RegisterStoodInSmokeIfNotLeaned();
                         _archive.ChangeState(ArchiveRoomState.WaitingForExitRoom);
                         break;
                     default:
@@ -1103,6 +1104,7 @@ namespace Woi.OfficeFire
                         _archive.PlayAnnouncement(OfficeFireVoiceLineId.EstinguisherHandled);
                         break;
                     case Actions.FireGrowth:
+                        _archive.RegisterStoodInSmokeIfNotLeaned();
                         _archive.ChangeState(ArchiveRoomState.WaitingForExitRoom);
                         break;
                     default:

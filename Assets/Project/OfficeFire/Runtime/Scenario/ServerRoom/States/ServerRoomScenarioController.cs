@@ -1009,6 +1009,7 @@ namespace Woi.OfficeFire
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.EstinguishingStarted);
                         break;
                     case Actions.FireGrowth:
+                        _server.RegisterStoodInSmokeIfNotLeaned();
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerFireGrowth);
                         _server.ChangeState(ServerRoomState.WaitingForExitRoom);
                         break;
@@ -1062,6 +1063,7 @@ namespace Woi.OfficeFire
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.EstinguisherHandled);
                         break;
                     case Actions.FireGrowth:
+                        _server.RegisterStoodInSmokeIfNotLeaned();
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.ServerFireGrowth);
                         _server.ChangeState(ServerRoomState.WaitingForExitRoom);
                         break;

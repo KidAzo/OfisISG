@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using Woi.Settings;
 using WOI.Modules.SDK;
 
 namespace Woi.OfficeFire
@@ -12,11 +15,23 @@ namespace Woi.OfficeFire
     [AddComponentMenu("Woi/Office Fire/Result Screen Controller")]
     public sealed class OfficeFireResultScreenController : MonoBehaviour
     {
+        private const string LoginSceneGroup = "OfficeFireModule_Login";
+
         [SerializeField]
         private UIDocument uiDocument;
 
         [SerializeField]
         private UnityEvent onContinueClicked;
+
+        [Header("Scene Flow")]
+        [SerializeField]
+        private bool loadLoginSceneOnContinue = true;
+
+        [SerializeField]
+        private string loginSceneGroupName = LoginSceneGroup;
+
+        [SerializeField]
+        private bool allowKeyboardContinue = true;
 
         [Header("Player Input")]
         [SerializeField]
@@ -89,6 +104,7 @@ namespace Woi.OfficeFire
         private OfficeFireScenarioReport _lastReport;
         private bool _uiBound;
         private bool _sessionResultsExported;
+        private bool _isReturningToLogin;
         private Coroutine _deferredBindRoutine;
         private bool _playerInputCaptured;
         private bool[] _savedBehaviourEnabledStates;
@@ -118,12 +134,28 @@ namespace Woi.OfficeFire
                 _deferredBindRoutine = null;
             }
 
-            ReleasePlayerInput();
-            ReleaseUiBinding();
+            if (!_isReturningToLogin)
+            {
+                ReleasePlayerInput();
+                ReleaseUiBinding();
+            }
         }
 
         private void LateUpdate()
         {
+            if (_uiBound && _lastReport != null && allowKeyboardContinue && !_isReturningToLogin)
+            {
+                Keyboard keyboard = Keyboard.current;
+                if (keyboard != null
+                    && (keyboard.enterKey.wasPressedThisFrame
+                        || keyboard.numpadEnterKey.wasPressedThisFrame
+                        || keyboard.spaceKey.wasPressedThisFrame))
+                {
+                    BeginReturnToLogin();
+                    return;
+                }
+            }
+
             if (!_uiBound || _lastReport == null)
             {
                 return;
@@ -427,8 +459,74 @@ namespace Woi.OfficeFire
 
         private void HandleContinueClicked()
         {
-            HideScreen();
+            BeginReturnToLogin();
+        }
+
+        private void BeginReturnToLogin()
+        {
+            if (_isReturningToLogin)
+            {
+                return;
+            }
+
+            _isReturningToLogin = true;
+
+            if (_continueButton != null)
+            {
+                _continueButton.SetEnabled(false);
+            }
+
+            HideOverlayOnly();
+            ApplyMenuCursorForLogin();
             onContinueClicked?.Invoke();
+
+            if (!loadLoginSceneOnContinue)
+            {
+                return;
+            }
+
+            string sceneGroup = string.IsNullOrWhiteSpace(loginSceneGroupName)
+                ? LoginSceneGroup
+                : loginSceneGroupName.Trim();
+
+            if (ServiceLocator.TryGet(out OfficeGameModulesBootstrapper bootstrapper) && bootstrapper != null)
+            {
+                bootstrapper.LoadScene(sceneGroup);
+                return;
+            }
+
+            LoginReturnRunner.StartLoad(sceneGroup);
+        }
+
+        private void HideOverlayOnly()
+        {
+            if (_root != null)
+            {
+                _root.style.display = DisplayStyle.None;
+            }
+        }
+
+        private static void ApplyMenuCursorForLogin()
+        {
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+            UnityEngine.Cursor.visible = true;
+        }
+
+        private static bool TryResolveSceneLoader(out ISceneLoaderService loader)
+        {
+            if (ServiceLocator.TryGet(out loader) && loader != null)
+            {
+                return true;
+            }
+
+            if (ServiceLocator.TryGet(out SceneLoader concreteLoader) && concreteLoader != null)
+            {
+                loader = concreteLoader;
+                return true;
+            }
+
+            loader = null;
+            return false;
         }
 
         private void CapturePlayerInput()
@@ -677,6 +775,77 @@ namespace Woi.OfficeFire
 
             OfficeFireLanguageResolver found = FindFirstObjectByType<OfficeFireLanguageResolver>();
             return found == null || found.IsTurkish();
+        }
+
+        /// <summary>
+        /// Loads login on a DontDestroyOnLoad runner so scene unload does not cancel the load task.
+        /// </summary>
+        private sealed class LoginReturnRunner : MonoBehaviour
+        {
+            private const string RunnerName = "OfficeFireResultLoginReturn";
+
+            public static void StartLoad(string sceneGroup)
+            {
+                GameObject existing = GameObject.Find(RunnerName);
+                if (existing != null)
+                {
+                    return;
+                }
+
+                GameObject runner = new GameObject(RunnerName);
+                DontDestroyOnLoad(runner);
+                runner.AddComponent<LoginReturnRunner>().Begin(sceneGroup);
+            }
+
+            private void Begin(string sceneGroup)
+            {
+                StartCoroutine(LoadRoutine(sceneGroup));
+            }
+
+            private IEnumerator LoadRoutine(string sceneGroup)
+            {
+                if (!TryResolveSceneLoader(out ISceneLoaderService loader))
+                {
+                    Debug.LogError(
+                        "[OfficeFireResultScreenController] Scene loader not found. Ensure SceneLoader is registered on ServiceLocator.");
+                    Destroy(gameObject);
+                    yield break;
+                }
+
+                Task loadTask;
+                try
+                {
+                    loadTask = loader.LoadScene(sceneGroup);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"[OfficeFireResultScreenController] Login scene load failed: {ex.Message}");
+                    Destroy(gameObject);
+                    yield break;
+                }
+
+                if (loadTask == null)
+                {
+                    Destroy(gameObject);
+                    yield break;
+                }
+
+                while (!loadTask.IsCompleted)
+                {
+                    yield return null;
+                }
+
+                if (loadTask.IsFaulted)
+                {
+                    Debug.LogError("[OfficeFireResultScreenController] Login scene load task faulted.");
+                    if (loadTask.Exception != null)
+                    {
+                        Debug.LogException(loadTask.Exception.GetBaseException());
+                    }
+                }
+
+                Destroy(gameObject);
+            }
         }
     }
 }

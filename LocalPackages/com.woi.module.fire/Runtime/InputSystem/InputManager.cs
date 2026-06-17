@@ -182,10 +182,11 @@ public class InputManager : MonoBehaviour, IInputProvider
         ScriptableEventBool sprint = gameplay.SprintInputEvent;
 
         ScriptableEventNoParam interact = gameplay.InteractEvent;
+        ScriptableEventFloat lean = gameplay.LeanInputEvent;
 
-        if (move == null || look == null || sprint == null || interact == null)
+        if (move == null || look == null || sprint == null || interact == null || lean == null)
         {
-            Debug.LogError("[InputManager] PC GameplayInputContext has null move/look/sprint/interact Soap events.");
+            Debug.LogError("[InputManager] PC GameplayInputContext has null move/look/sprint/interact/lean Soap events.");
             return;
         }
 
@@ -265,6 +266,43 @@ public class InputManager : MonoBehaviour, IInputProvider
             Debug.Log(
                 $"[InputManager] SyncPcPlayerSoapEvents: rebound interact on {interactRebound} listener(s). " +
                 $"interactEvent='{interact.name}'");
+        }
+
+        int leanRebound = 0;
+        for (int i = 0; i < allBehaviours.Length; i++)
+        {
+            if (allBehaviours[i] is not ISoapLeanInputListener leanListener)
+            {
+                continue;
+            }
+
+            if (!allBehaviours[i].gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+
+            bool leanSplit = leanListener.IsListeningToDifferentLeanEvent(lean);
+            leanListener.RebindLeanInputEvent(lean);
+            leanRebound++;
+
+            if (leanSplit)
+            {
+                Debug.LogWarning(
+                    $"[InputManager] Rebound lean (Ctrl) on '{allBehaviours[i].name}' — split onLeanInput instance.",
+                    allBehaviours[i]);
+            }
+        }
+
+        if (leanRebound == 0)
+        {
+            Debug.LogWarning(
+                "[InputManager] SyncPcPlayerSoapEvents: no active ISoapLeanInputListener (Ctrl lean) found yet.");
+        }
+        else
+        {
+            Debug.Log(
+                $"[InputManager] SyncPcPlayerSoapEvents: rebound lean on {leanRebound} listener(s). " +
+                $"leanEvent='{lean.name}'");
         }
 
         GameplayInputContext liveGameplayContext = GetPcGameplayContext();

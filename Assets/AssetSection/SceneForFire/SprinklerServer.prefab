@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 20971154914408469}
+  - component: {fileID: 8115959148438032527}
   m_Layer: 0
   m_Name: SprinklerServer
   m_TagString: Untagged
@@ -39,6 +40,36 @@ Transform:
   - {fileID: 6084501748006798484}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8115959148438032527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4736993790483533660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbbcbe7d915229848805a1ac52523909, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: WoiUtils.AudioSystem.Runtime::WoiUtils.AudioSystem.AudioTrigger
+  localizedSound: {fileID: 0}
+  sound: {fileID: 11400000, guid: d59dc8a7937e99b4a9483a83f8ca2570, type: 2}
+  fireMode: 1
+  triggerCooldown: 0
+  overrideClipIndex: 0
+  clipIndex: 0
+  blockSameFrame: 1
+  spatialMode: 0
+  positionSource: {fileID: 0}
+  followTarget: {fileID: 0}
+  volumeMul: 1
+  pitchMul: 1
+  onPlayed:
+    m_PersistentCalls:
+      m_Calls: []
+  onBlocked:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &445860467231623335
 PrefabInstance:
   m_ObjectHideFlags: 0

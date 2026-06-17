@@ -175,6 +175,19 @@ namespace Woi.OfficeFire
             }
         }
 
+        /// <summary>
+        /// Records <see cref="OfficeFireMistakeId.StoodInSmoke"/> when the smoke phase ends without a lean.
+        /// </summary>
+        public void RegisterStoodInSmokeIfNotLeaned()
+        {
+            if (report.correctActions.Contains(OfficeFireCorrectActionId.LeanedCorrectly))
+            {
+                return;
+            }
+
+            RegisterMistake(OfficeFireMistakeId.StoodInSmoke);
+        }
+
         public void MarkReactionIfNeeded()
         {
             if (_hasRecordedReaction)

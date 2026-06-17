@@ -1,6 +1,7 @@
 using System;
 using Obvious.Soap;
 using UnityEngine;
+using Woi.InputSystem;
 
 namespace Woi.OfficeFire
 {
@@ -10,7 +11,7 @@ namespace Woi.OfficeFire
     /// </summary>
     [AddComponentMenu("Woi/Office Fire/Player Lean Controller")]
     [DefaultExecutionOrder(200)]
-    public sealed class PlayerLeanController : MonoBehaviour
+    public sealed class PlayerLeanController : MonoBehaviour, ISoapLeanInputListener
     {
         [Header("Input")]
         [SerializeField]
@@ -64,24 +65,80 @@ namespace Woi.OfficeFire
 
         private void OnEnable()
         {
-            if (leanInputEvent != null)
-            {
-                leanInputEvent.OnRaised += OnLeanInput;
-            }
+            SubscribeLean();
+        }
+
+        private void Start()
+        {
+            TryBindLiveLeanEvent();
         }
 
         private void OnDisable()
         {
-            if (leanInputEvent != null)
-            {
-                leanInputEvent.OnRaised -= OnLeanInput;
-            }
+            UnsubscribeLean();
 
             _targetLean = 0f;
             _currentLean = 0f;
             _wasLeaning = false;
             ApplyCameraLean(0f);
             SetBodyLeanActive(false);
+        }
+
+        public bool IsListeningToDifferentLeanEvent(ScriptableEventFloat liveLeanEvent) =>
+            leanInputEvent != null
+            && liveLeanEvent != null
+            && !ReferenceEquals(leanInputEvent, liveLeanEvent);
+
+        public void RebindLeanInputEvent(ScriptableEventFloat liveLeanEvent)
+        {
+            UnsubscribeLean();
+            leanInputEvent = liveLeanEvent;
+            if (isActiveAndEnabled)
+            {
+                SubscribeLean();
+            }
+        }
+
+        private void SubscribeLean()
+        {
+            TryBindLiveLeanEvent();
+
+            if (leanInputEvent == null)
+            {
+                return;
+            }
+
+            leanInputEvent.OnRaised += OnLeanInput;
+        }
+
+        private void TryBindLiveLeanEvent()
+        {
+            InputManager inputManager = FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            if (inputManager == null)
+            {
+                return;
+            }
+
+            ScriptableEventFloat liveLean = inputManager.GetPcGameplayContext()?.LeanInputEvent;
+            if (liveLean == null)
+            {
+                return;
+            }
+
+            if (leanInputEvent == null || IsListeningToDifferentLeanEvent(liveLean))
+            {
+                RebindLeanInputEvent(liveLean);
+            }
+        }
+
+        private void UnsubscribeLean()
+        {
+            if (leanInputEvent == null)
+            {
+                return;
+            }
+
+            leanInputEvent.OnRaised -= OnLeanInput;
         }
 
         private void LateUpdate()

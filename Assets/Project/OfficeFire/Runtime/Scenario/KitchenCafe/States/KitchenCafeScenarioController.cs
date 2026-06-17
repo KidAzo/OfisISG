@@ -1004,6 +1004,7 @@ namespace Woi.OfficeFire
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.EstinguishingStarted);
                         break;
                     case Actions.FireGrowth:
+                        _kitchen.RegisterStoodInSmokeIfNotLeaned();
                         _kitchen.ChangeState(KitchenCafeState.WaitingForExitRoom);
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.KitchenFireGrowingEvacuate);
                         break;
@@ -1067,6 +1068,7 @@ namespace Woi.OfficeFire
                         _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.EstinguisherHandled);
                         break;
                     case Actions.FireGrowth:
+                        _kitchen.RegisterStoodInSmokeIfNotLeaned();
                         _kitchen.ChangeState(KitchenCafeState.WaitingForExitRoom);
                         break;
                     case Actions.LeaveKitchenCafe:

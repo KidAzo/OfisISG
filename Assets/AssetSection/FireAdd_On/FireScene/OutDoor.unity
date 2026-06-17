@@ -367847,6 +367847,9 @@ MonoBehaviour:
   onContinueClicked:
     m_PersistentCalls:
       m_Calls: []
+  loadLoginSceneOnContinue: 1
+  loginSceneGroupName: OfficeFireModule_Login
+  allowKeyboardContinue: 1
   playerRoot: {fileID: 0}
   playerTag: Player
   playerInputBehaviours: []
@@ -406615,7 +406618,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &482566045423920321
 GameObject:
   m_ObjectHideFlags: 0
@@ -421345,7 +421348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &8866790979696318930
 GameObject:
   m_ObjectHideFlags: 0

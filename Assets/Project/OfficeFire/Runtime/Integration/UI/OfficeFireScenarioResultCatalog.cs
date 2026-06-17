@@ -55,6 +55,11 @@ namespace Woi.OfficeFire
                 {
                     // Failure recorded as mistake — do not also list as missing.
                 }
+                else if (rule.Objective == OfficeFireObjectiveId.LeanInSmoke &&
+                         HasMistake(report, OfficeFireMistakeId.StoodInSmoke))
+                {
+                    // Failure recorded as mistake — do not also list as missing.
+                }
                 else
                 {
                     missing.Add(label);
@@ -81,12 +86,17 @@ namespace Woi.OfficeFire
             OfficeFireObjectiveId.HoldHandrail,
             report => HasAction(report, OfficeFireCorrectActionId.HeldHandrailCorrectly));
 
+        private static readonly ObjectiveRule LeanInSmokeRule = new ObjectiveRule(
+            OfficeFireObjectiveId.LeanInSmoke,
+            report => HasAction(report, OfficeFireCorrectActionId.LeanedCorrectly));
+
         private static readonly ObjectiveRule[] ArchiveRules =
         {
             new ObjectiveRule(
                 OfficeFireObjectiveId.CheckArchiveRoom,
                 report => HasAction(report, OfficeFireCorrectActionId.NoticedSmoke)),
             AlarmRule,
+            LeanInSmokeRule,
             new ObjectiveRule(
                 OfficeFireObjectiveId.UseArchiveExtinguisher,
                 report => HasAction(report, OfficeFireCorrectActionId.GrabbedExtinguisher)),
@@ -109,6 +119,7 @@ namespace Woi.OfficeFire
                 OfficeFireObjectiveId.CheckServerRoom,
                 report => HasAction(report, OfficeFireCorrectActionId.NoticedSmoke)),
             AlarmRule,
+            LeanInSmokeRule,
             new ObjectiveRule(
                 OfficeFireObjectiveId.EnterServerRoom,
                 report => HasAction(report, OfficeFireCorrectActionId.EnteredServerRoomSafely)),
@@ -130,6 +141,7 @@ namespace Woi.OfficeFire
                 OfficeFireObjectiveId.CheckKitchenArea,
                 report => HasAction(report, OfficeFireCorrectActionId.NoticedSmoke)),
             AlarmRule,
+            LeanInSmokeRule,
             new ObjectiveRule(
                 OfficeFireObjectiveId.EnterKitchenCafe,
                 report => HasAction(report, OfficeFireCorrectActionId.EnteredKitchenCafeSafely)),

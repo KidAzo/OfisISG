@@ -27,6 +27,7 @@ namespace Woi.InputSystem
             public ScriptableEventVector2 MoveInputEvent => onMoveInput;
             public ScriptableEventVector2 LookInputEvent => onLookInput;
             public ScriptableEventBool SprintInputEvent => onSprintInput;
+            public ScriptableEventFloat LeanInputEvent => onLeanInput;
 
             public ScriptableEventNoParam EquipEvent => onEquipInput;
             public ScriptableEventNoParam DropEvent     => onDropInput;
