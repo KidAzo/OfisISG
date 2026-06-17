@@ -1,0 +1,63 @@
+<linker>
+  <assembly fullname="Obvious.Soap, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="Obvious.Soap.ScriptableEventBool" preserve="all" />
+    <type fullname="Obvious.Soap.ScriptableEventFloat" preserve="all" />
+    <type fullname="Obvious.Soap.ScriptableEventNoParam" preserve="all" />
+    <type fullname="Obvious.Soap.ScriptableEventVector2" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Rendering.Universal.UniversalAdditionalCameraData" preserve="all" />
+    <type fullname="UnityEngine.Rendering.Universal.TemporalAA/Settings" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.AudioListener" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Camera" preserve="all" />
+    <type fullname="UnityEngine.GameObject" preserve="all" />
+    <type fullname="UnityEngine.Object" preserve="all" />
+    <type fullname="UnityEngine.RectTransform" preserve="all" />
+    <type fullname="UnityEngine.Sprite" preserve="all" />
+    <type fullname="UnityEngine.Texture2D" preserve="all" />
+    <type fullname="UnityEngine.Transform" preserve="all" />
+    <type fullname="UnityEngine.Events.PersistentCallGroup" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.UI.CanvasScaler" preserve="all" />
+    <type fullname="UnityEngine.UI.GraphicRaycaster" preserve="all" />
+    <type fullname="UnityEngine.UI.Image" preserve="all" />
+    <type fullname="UnityEngine.UI.MaskableGraphic/CullStateChangedEvent" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Canvas" preserve="all" />
+    <type fullname="UnityEngine.CanvasRenderer" preserve="all" />
+  </assembly>
+  <assembly fullname="Woi.InputSystem, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="Woi.InputSystem.GameplayInputContext" preserve="all" />
+    <type fullname="Woi.InputSystem.InputManager" preserve="all" />
+    <type fullname="Woi.InputSystem.VrInputContext" preserve="all" />
+    <type fullname="Woi.InputSystem.InputManager/InputSets" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Woi.Porting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="ScriptableEnumPortingVariable" preserve="all" />
+  </assembly>
+  <assembly fullname="Woi.SceneGroup, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="Woi.Settings.LoadingScreenController" preserve="all" />
+    <type fullname="Woi.Settings.SceneLoader" preserve="all" />
+    <type fullname="Woi.Settings.LoadingScreenController/LoadingScreenSettings" preserve="nothing" serialized="true" />
+    <type fullname="Woi.Settings.SceneData" preserve="nothing" serialized="true" />
+    <type fullname="Woi.Settings.SceneGroup" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Sirenix.Serialization">
+    <type fullname="Sirenix.Serialization.SerializationData" preserve="nothing" serialized="true" />
+  </assembly>
+</linker>
