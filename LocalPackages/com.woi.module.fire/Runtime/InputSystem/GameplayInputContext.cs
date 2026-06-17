@@ -176,33 +176,45 @@ namespace Woi.InputSystem
             
             private void OnInteract(InputAction.CallbackContext ctx)
             {
-                if (interactEnabled) onInteractInput?.Raise();
+                if (interactEnabled)
+                {
+                    SoapScriptableEventUtility.RaiseNoParam(onInteractInput);
+                }
             }
 
             private void OnEquip(InputAction.CallbackContext ctx)
             {
-                if (equipEnabled) onEquipInput?.Raise();
+                if (equipEnabled)
+                {
+                    SoapScriptableEventUtility.RaiseNoParam(onEquipInput);
+                }
             }
 
             private void OnDrop(InputAction.CallbackContext ctx)
             {
-                if (dropEnabled) onDropInput?.Raise();
+                if (dropEnabled)
+                {
+                    SoapScriptableEventUtility.RaiseNoParam(onDropInput);
+                }
             }
 
             private void OnPinPulling(InputAction.CallbackContext ctx)
             {
-                if (pinPullingEnabled) onPinPullingInput?.Raise();
+                if (pinPullingEnabled)
+                {
+                    SoapScriptableEventUtility.RaiseNoParam(onPinPullingInput);
+                }
             }
 
             private void OnGameplayFinished(InputAction.CallbackContext ctx)
             {
                 if (portingVariable != null && portingVariable.CurrentValue == AppMode.XR)
                 {
-                    preOnGameplayFinishedInput?.Raise();
+                    SoapScriptableEventUtility.RaiseNoParam(preOnGameplayFinishedInput);
                     return;
                 }
 
-                onGameplayFinishedInput?.Raise();
+                SoapScriptableEventUtility.RaiseNoParam(onGameplayFinishedInput);
             }
             
             // Runtime input control methods

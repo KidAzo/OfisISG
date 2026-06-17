@@ -152,45 +152,40 @@ MonoBehaviour:
     Voice: {fileID: 11400000, guid: 028e3a76ce54445d85a9d58c35b0fb55, type: 2}
   - Id: 101
     Popup:
-      TurkishTitle: ArchiveElectricalFireWarning
-      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
-        \xFCzerinden d\xFCzenleyin."
+      TurkishTitle: 
+      TurkishBody: 
       EnglishTitle: ArchiveElectricalFireWarning
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.
     Voice: {fileID: 0}
   - Id: 102
     Popup:
-      TurkishTitle: ArchiveWaterMistake
-      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
-        \xFCzerinden d\xFCzenleyin."
+      TurkishTitle: 
+      TurkishBody: 
       EnglishTitle: ArchiveWaterMistake
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.
     Voice: {fileID: 0}
   - Id: 104
     Popup:
-      TurkishTitle: ArchiveCutPowerInstruction
-      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
-        \xFCzerinden d\xFCzenleyin."
+      TurkishTitle: 
+      TurkishBody: 
       EnglishTitle: ArchiveCutPowerInstruction
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.
     Voice: {fileID: 0}
   - Id: 105
     Popup:
-      TurkishTitle: ArchivePowerCutSuccess
-      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
-        \xFCzerinden d\xFCzenleyin."
+      TurkishTitle: 
+      TurkishBody: 
       EnglishTitle: ArchivePowerCutSuccess
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.
     Voice: {fileID: 0}
   - Id: 316
     Popup:
-      TurkishTitle: ReachedAssemblyAreaDoor
-      TurkishBody: "Localized Sound Definition atay\u0131p bu metni content database
-        \xFCzerinden d\xFCzenleyin."
+      TurkishTitle: 
+      TurkishBody: 
       EnglishTitle: ReachedAssemblyAreaDoor
       EnglishBody: Assign a Localized Sound Definition and edit this text in the
         content database.

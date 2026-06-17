@@ -118,6 +118,11 @@ namespace Woi.OfficeFire
 
         private void OnInteractInput()
         {
+            if (!isActiveAndEnabled)
+            {
+                return;
+            }
+
             if (enableDebugLogs)
             {
                 Debug.Log("[PCSelectableInteractor] Interact input received (E).", this);

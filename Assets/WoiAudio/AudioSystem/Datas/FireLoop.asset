@@ -32,11 +32,11 @@ MonoBehaviour:
   delayRange: {x: 0, y: 0}
   loop: 1
   priority: 128
-  volume: 1
+  volume: 0.2
   pitch: 1
   spatialBlend: 1
-  minDistance: 1
-  maxDistance: 2
+  minDistance: 2
+  maxDistance: 15
   rolloffMode: 0
   mute: 0
   bypassEffects: 0

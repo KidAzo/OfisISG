@@ -57,19 +57,43 @@ namespace Woi.OfficeFire
 
         public static WoiAnnouncementAudioAdapter ResolveAdapter(WoiAnnouncementAudioAdapter adapter)
         {
-            if (adapter != null)
+            if (IsLiveAdapter(adapter))
             {
                 return adapter;
             }
 
-            return Object.FindFirstObjectByType<WoiAnnouncementAudioAdapter>();
+            WoiAnnouncementAudioAdapter[] adapters = Object.FindObjectsByType<WoiAnnouncementAudioAdapter>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < adapters.Length; i++)
+            {
+                WoiAnnouncementAudioAdapter candidate = adapters[i];
+                if (IsLiveAdapter(candidate))
+                {
+                    return candidate;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool IsLiveAdapter(WoiAnnouncementAudioAdapter adapter)
+        {
+            return adapter != null && adapter.isActiveAndEnabled;
         }
 
         public static WoiAnnouncementAudioAdapter EnsureAdapter(GameObject host, WoiAnnouncementAudioAdapter adapter)
         {
-            if (adapter != null)
+            if (IsLiveAdapter(adapter))
             {
                 return adapter;
+            }
+
+            WoiAnnouncementAudioAdapter resolved = ResolveAdapter(null);
+            if (resolved != null)
+            {
+                return resolved;
             }
 
             if (host == null)

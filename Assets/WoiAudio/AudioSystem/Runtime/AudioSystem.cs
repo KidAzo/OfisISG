@@ -201,7 +201,8 @@ namespace WoiUtils.AudioSystem
 
             if (_persistedInstance != null && !ReferenceEquals(_persistedInstance, this))
             {
-                Destroy(gameObject);
+                // Keep sibling components (e.g. WoiAnnouncementAudioAdapter on OutDoor) alive.
+                Destroy(this);
                 return;
             }
 
@@ -266,11 +267,16 @@ namespace WoiUtils.AudioSystem
 
         void OnDestroy()
         {
-            if (ReferenceEquals(_persistedInstance, this))
-                _persistedInstance = null;
+            bool isPersistedInstance = ReferenceEquals(_persistedInstance, this);
+            if (!isPersistedInstance)
+            {
+                // Scene reload often instantiates a second AudioSystem; Awake destroys that duplicate.
+                // Do not flip the global shutdown flag while the DontDestroyOnLoad instance is still alive.
+                return;
+            }
 
+            _persistedInstance = null;
             TryUnregisterWithServiceLocator();
-
             IsShuttingDown = true;
 
             CancelAllPendingDelayedPlays();

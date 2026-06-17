@@ -11,7 +11,7 @@ namespace Woi.OfficeFire
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Woi/Office Fire/Player Fire Blanket Equipment")]
-    public sealed class PlayerFireBlanketEquipment : MonoBehaviour
+    public sealed class PlayerFireBlanketEquipment : MonoBehaviour, ISoapGameplayInputContextListener
     {
         [Header("Input")]
         [SerializeField]
@@ -62,13 +62,51 @@ namespace Woi.OfficeFire
         private void OnEnable()
         {
             TryAutoResolveReferences();
+            TryBindLiveInputContext();
             BindInput();
         }
 
         private void Start()
         {
             TryAutoResolveReferences();
+            TryBindLiveInputContext();
             BindInput();
+        }
+
+        public bool IsUsingDifferentGameplayInputContext(GameplayInputContext liveContext) =>
+            inputContext != null
+            && liveContext != null
+            && !ReferenceEquals(inputContext, liveContext);
+
+        public void RebindGameplayInputContext(GameplayInputContext liveContext)
+        {
+            if (liveContext == null)
+            {
+                return;
+            }
+
+            UnbindInput();
+            inputContext = liveContext;
+
+            if (isActiveAndEnabled)
+            {
+                BindInput();
+            }
+        }
+
+        private void TryBindLiveInputContext()
+        {
+            InputManager inputManager = FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            GameplayInputContext liveContext = inputManager?.GetPcGameplayContext();
+            if (liveContext == null)
+            {
+                return;
+            }
+
+            if (inputContext == null || IsUsingDifferentGameplayInputContext(liveContext))
+            {
+                RebindGameplayInputContext(liveContext);
+            }
         }
 
         private void OnDisable()
@@ -138,6 +176,11 @@ namespace Woi.OfficeFire
 
         private void HandleInteractInput()
         {
+            if (!isActiveAndEnabled)
+            {
+                return;
+            }
+
             if (FireVrGameplayInteractionRay.RegisteredRayOriginOrNull != null)
             {
                 return;

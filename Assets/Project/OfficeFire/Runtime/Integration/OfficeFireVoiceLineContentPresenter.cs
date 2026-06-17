@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WOI.Modules.SDK;
@@ -110,6 +111,88 @@ namespace Woi.OfficeFire
             _pendingVoiceLines.Clear();
         }
 
+        /// <summary>
+        /// Clears stale queue/state and plays one finale line (OutDoor assembly).
+        /// </summary>
+        public void PlayAssemblyVoiceLine(OfficeFireVoiceLineId voiceLineId)
+        {
+            if (voiceLineId == OfficeFireVoiceLineId.None)
+            {
+                return;
+            }
+
+            if (database == null)
+            {
+                Debug.LogWarning("[OfficeFireVoiceLineContentPresenter] database is not assigned.", this);
+                return;
+            }
+
+            _pendingVoiceLines.Clear();
+            _isProcessingQueue = false;
+            popupService = null;
+            announcementAudioAdapter = OfficeFireAnnouncementAudioPlayback.EnsureAdapter(gameObject, null);
+
+            if (announcementAudioAdapter != null && !announcementAudioAdapter.gameObject.activeSelf)
+            {
+                announcementAudioAdapter.gameObject.SetActive(true);
+            }
+
+            if (IsAnnouncementAudioPlaying())
+            {
+                StopCurrentAnnouncementInternal();
+            }
+
+            PlayVoiceLineNow(voiceLineId);
+        }
+
+        public IEnumerator WaitForCurrentVoiceLineAudio()
+        {
+            WoiAnnouncementAudioAdapter adapter =
+                OfficeFireAnnouncementAudioPlayback.ResolveAdapter(announcementAudioAdapter);
+            if (adapter == null)
+            {
+                Debug.LogWarning(
+                    "[OfficeFireVoiceLineContentPresenter] No live announcement audio adapter — waiting fallback.",
+                    this);
+                yield return new WaitForSeconds(5f);
+                yield break;
+            }
+
+            const float startupTimeoutSeconds = 3f;
+            float startupElapsed = 0f;
+            while (!adapter.IsAnnouncementPlaying && startupElapsed < startupTimeoutSeconds)
+            {
+                startupElapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+
+            if (!adapter.IsAnnouncementPlaying)
+            {
+                yield break;
+            }
+
+            bool finished = false;
+            void OnFinished() => finished = true;
+            adapter.OnAnnouncementAudioFinished += OnFinished;
+
+            const float maxWaitSeconds = 120f;
+            float elapsed = 0f;
+            while (!finished && elapsed < maxWaitSeconds)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+
+            adapter.OnAnnouncementAudioFinished -= OnFinished;
+        }
+
+        private bool IsAnnouncementAudioPlaying()
+        {
+            WoiAnnouncementAudioAdapter adapter =
+                OfficeFireAnnouncementAudioPlayback.ResolveAdapter(announcementAudioAdapter);
+            return adapter != null && adapter.IsAnnouncementPlaying;
+        }
+
         private void ProcessNextQueuedVoiceLine()
         {
             if (_pendingVoiceLines.Count == 0)
@@ -151,6 +234,9 @@ namespace Woi.OfficeFire
             bool hasAudio = localizedSound != null;
             if (hasAudio)
             {
+                announcementAudioAdapter = OfficeFireAnnouncementAudioPlayback.EnsureAdapter(
+                    gameObject,
+                    announcementAudioAdapter);
                 OfficeFireAnnouncementAudioPlayback.Play(announcementAudioAdapter, localizedSound);
                 Debug.Log($"[OfficeFire Voice] {voiceLineId}", this);
             }
@@ -305,7 +391,7 @@ namespace Woi.OfficeFire
             bool replacePopup)
         {
             ResolvePopupService();
-            if (popupService == null)
+            if (popupService == null || !popupService.isActiveAndEnabled)
             {
                 Debug.LogWarning("[OfficeFireVoiceLineContentPresenter] PopupService not found — popup skipped.", this);
                 return;
@@ -329,24 +415,30 @@ namespace Woi.OfficeFire
 
         private void ResolvePopupService()
         {
-            if (popupService != null)
+            if (popupService != null && popupService.isActiveAndEnabled)
             {
                 return;
             }
+
+            popupService = null;
 
             if (ServiceLocator.TryGet<PopupService>(out PopupService concrete) && concrete != null)
             {
                 popupService = concrete;
-                return;
             }
-
-            if (ServiceLocator.TryGet<IPopupService>(out IPopupService service) && service is PopupService resolved)
+            else if (ServiceLocator.TryGet<IPopupService>(out IPopupService service) && service is PopupService resolved)
             {
                 popupService = resolved;
-                return;
+            }
+            else
+            {
+                popupService = FindFirstObjectByType<PopupService>(FindObjectsInactive.Include);
             }
 
-            popupService = FindFirstObjectByType<PopupService>();
+            if (popupService != null && !popupService.gameObject.activeSelf)
+            {
+                popupService.gameObject.SetActive(true);
+            }
         }
 
         private void ResolveLanguageResolver()

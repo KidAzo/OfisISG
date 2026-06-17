@@ -118,7 +118,7 @@ namespace WoiUtils.AudioSystem
             if (AudioSystem.TryGetFromServiceLocator(out _cachedSystem) && _cachedSystem != null)
                 return;
 
-            // ServiceLocator registration happens in AudioSystem.Start — UI may fire earlier or bootstrap order may differ.
+            // ServiceLocator registration happens in AudioSystem.Awake — UI may fire earlier or bootstrap order may differ.
             _cachedSystem = UnityEngine.Object.FindFirstObjectByType<AudioSystem>();
 
             if (_cachedSystem != null && !_loggedSceneAudioFallback)
@@ -131,8 +131,22 @@ namespace WoiUtils.AudioSystem
             }
         }
 
+        private bool TryResolveLiveAudioSystem(out AudioSystem system)
+        {
+            system = null;
+
+            if (AudioSystem.IsShuttingDown)
+                return false;
+
+            ResolveAudioSystem();
+            system = _cachedSystem;
+            return system != null;
+        }
+
         private void OnEnable()
         {
+            _cachedSystem = null;
+
             if (fireMode == FireMode.OnEnable)
                 StartCoroutine(FireNextFrame());
         }
@@ -215,9 +229,19 @@ namespace WoiUtils.AudioSystem
 
         private void TryFire(bool ignoreCooldowns = false, bool manualFromUnityEvent = false)
         {
-            if (AudioSystem.IsShuttingDown)
+            if (!TryResolveLiveAudioSystem(out AudioSystem liveSystem))
             {
-                LogBlocked("AudioSystem is shutting down.");
+                if (AudioSystem.IsShuttingDown)
+                {
+                    LogBlocked("AudioSystem is shutting down.");
+                }
+                else
+                {
+                    LogBlocked(
+                        "No AudioSystem — nothing registered on ServiceLocator and no instance found in loaded scenes. " +
+                        "Add AudioSystem (bootstrap), enable Register With Service Locator, or load it before this UI.");
+                }
+
                 onBlocked?.Invoke();
                 return;
             }
@@ -233,16 +257,7 @@ namespace WoiUtils.AudioSystem
                 return;
             }
 
-            ResolveAudioSystem();
-
-            if (_cachedSystem == null)
-            {
-                LogBlocked(
-                    "No AudioSystem — nothing registered on ServiceLocator and no instance found in loaded scenes. " +
-                    "Add AudioSystem (bootstrap), enable Register With Service Locator, or load it before this UI.");
-                onBlocked?.Invoke();
-                return;
-            }
+            _cachedSystem = liveSystem;
 
             // Trigger-level anti-spam (independent from SoundDefinition.cooldown).
             float now = Time.unscaledTime;
@@ -290,7 +305,17 @@ namespace WoiUtils.AudioSystem
                     break;
                 }
                 default:
-                    _cachedSystem.Play(playSound, ctx);
+                    // 3D sounds need a world position; UseSoundDefinition only supplies rolloff/blend from the asset.
+                    if (playSound.spatialBlend > 0.001f)
+                    {
+                        var t = followTarget != null ? followTarget : transform;
+                        _cachedSystem.PlayFollow(playSound, t, ctx);
+                    }
+                    else
+                    {
+                        _cachedSystem.Play(playSound, ctx);
+                    }
+
                     break;
             }
 

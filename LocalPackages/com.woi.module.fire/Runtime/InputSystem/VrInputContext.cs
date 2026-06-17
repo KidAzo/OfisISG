@@ -44,7 +44,7 @@ namespace Woi.InputSystem
 
         private void OnInteract(InputAction.CallbackContext ctx)
         {
-            onInteractInput?.Raise();
+            SoapScriptableEventUtility.RaiseNoParam(onInteractInput);
         }
 
         private void OnGameplayFinished(InputAction.CallbackContext ctx)

@@ -265,6 +265,11 @@ namespace Woi.Equipment
 
         private void HandleInteractInput()
         {
+            if (!isActiveAndEnabled)
+            {
+                return;
+            }
+
             TryPickupOrSwapFromRay();
         }
 

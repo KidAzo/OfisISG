@@ -5,7 +5,6 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using Woi.Settings;
 using WOI.Modules.SDK;
-using Woi.UI.Announcements;
 
 namespace Woi.OfficeFire
 {
@@ -20,6 +19,7 @@ namespace Woi.OfficeFire
         private const string FadeOverlayName = "OfficeFireAssemblyFadeOverlay";
 
         private static bool _beginWhenSceneLoads;
+        private static bool _assemblyTransitionInProgress;
 
         [Header("Scene Load")]
         [Tooltip("SceneLoader SceneGroup GroupName for the assembly scene.")]
@@ -63,6 +63,11 @@ namespace Woi.OfficeFire
             OfficeFireVoiceLineId.ScenarioCompleted,
         };
 
+        [SerializeField]
+        [Min(0f)]
+        [Tooltip("Pause between assembly announcement voice lines.")]
+        private float gapBetweenAnnouncementsSeconds = 0.35f;
+
         [Header("Result Screen")]
         [SerializeField]
         private GameObject resultScreenRoot;
@@ -75,10 +80,12 @@ namespace Woi.OfficeFire
 
         [SerializeField]
         [Min(0f)]
-        private float delayBeforeResultScreenSeconds = 5.5f;
+        [Tooltip("Seconds after assembly arrival before the result UI is shown. Announcements may still play in the background.")]
+        private float delayBeforeResultScreenSeconds = 8f;
 
 
         private Coroutine _sequence;
+        private Coroutine _announcementsRoutine;
 
         public static void LoadAssemblyScene(string sceneGroupName = "OutDoor")
         {
@@ -94,6 +101,7 @@ namespace Woi.OfficeFire
             }
 
             _beginWhenSceneLoads = true;
+            _assemblyTransitionInProgress = true;
 
             GameObject runner = new GameObject(TransitionRunnerName);
             DontDestroyOnLoad(runner);
@@ -103,7 +111,7 @@ namespace Woi.OfficeFire
 
         private void Start()
         {
-            if (beginWhenSceneLoads && _beginWhenSceneLoads)
+            if (beginWhenSceneLoads && _beginWhenSceneLoads && !_assemblyTransitionInProgress)
             {
                 _beginWhenSceneLoads = false;
                 Begin();
@@ -115,6 +123,13 @@ namespace Woi.OfficeFire
             if (_sequence != null)
             {
                 StopCoroutine(_sequence);
+                _sequence = null;
+            }
+
+            if (_announcementsRoutine != null)
+            {
+                StopCoroutine(_announcementsRoutine);
+                _announcementsRoutine = null;
             }
 
             if (resultScreenController != null)
@@ -129,33 +144,65 @@ namespace Woi.OfficeFire
             _sequence = StartCoroutine(Run());
         }
 
+        internal static void TryBeginLoadedAssemblyScene()
+        {
+            if (!_beginWhenSceneLoads)
+            {
+                return;
+            }
+
+            AssemblySceneController controller = FindFirstObjectByType<AssemblySceneController>();
+            if (controller == null)
+            {
+                return;
+            }
+
+            _beginWhenSceneLoads = false;
+            controller.Begin();
+        }
+
         private IEnumerator Run()
         {
+            yield return null;
+
             TeleportPlayer();
 
-            OfficeFireVoiceLineContentPresenter voiceLinePresenter = ResolveVoiceLinePresenter();
-            if (voiceLinePresenter != null && announcements != null)
-            {
-                for (int i = 0; i < announcements.Length; i++)
-                {
-                    OfficeFireVoiceLineId voiceLineId = announcements[i];
-                    if (voiceLineId == OfficeFireVoiceLineId.None)
-                    {
-                        continue;
-                    }
+            _announcementsRoutine = StartCoroutine(PlayAnnouncementsRoutine());
 
-                    voiceLinePresenter.PlayVoiceLine(voiceLineId);
-                    yield return WaitForAnnouncementFinished();
-                }
-            }
-
-            if (delayBeforeResultScreenSeconds > 0f)
-            {
-                yield return new WaitForSeconds(delayBeforeResultScreenSeconds);
-            }
+            float resultDelay = delayBeforeResultScreenSeconds > 0f ? delayBeforeResultScreenSeconds : 8f;
+            yield return new WaitForSeconds(resultDelay);
 
             ShowResultScreen();
             _sequence = null;
+        }
+
+        private IEnumerator PlayAnnouncementsRoutine()
+        {
+            OfficeFireVoiceLineContentPresenter voiceLinePresenter = ResolveVoiceLinePresenter();
+            if (voiceLinePresenter == null || announcements == null)
+            {
+                _announcementsRoutine = null;
+                yield break;
+            }
+
+            for (int i = 0; i < announcements.Length; i++)
+            {
+                OfficeFireVoiceLineId voiceLineId = announcements[i];
+                if (voiceLineId == OfficeFireVoiceLineId.None)
+                {
+                    continue;
+                }
+
+                voiceLinePresenter.PlayAssemblyVoiceLine(voiceLineId);
+                yield return voiceLinePresenter.WaitForCurrentVoiceLineAudio();
+
+                if (gapBetweenAnnouncementsSeconds > 0f && i < announcements.Length - 1)
+                {
+                    yield return new WaitForSeconds(gapBetweenAnnouncementsSeconds);
+                }
+            }
+
+            _announcementsRoutine = null;
         }
 
         private OfficeFireVoiceLineContentPresenter ResolveVoiceLinePresenter()
@@ -358,23 +405,6 @@ namespace Woi.OfficeFire
             }
         }
 
-        private static IEnumerator WaitForAnnouncementFinished()
-        {
-            WoiAnnouncementAudioAdapter adapter = OfficeFireAnnouncementAudioPlayback.ResolveAdapter(null);
-            if (adapter == null)
-            {
-                yield return new WaitForSeconds(5f);
-                yield break;
-            }
-
-            bool finished = false;
-            void OnFinished() => finished = true;
-
-            adapter.OnAnnouncementAudioFinished += OnFinished;
-            yield return new WaitUntil(() => finished);
-            adapter.OnAnnouncementAudioFinished -= OnFinished;
-        }
-
         private sealed class AssemblySceneTransitionRunner : MonoBehaviour
         {
             public void StartLoad(string sceneGroupName, float fadeInSeconds, float fadeOutSeconds)
@@ -390,6 +420,7 @@ namespace Woi.OfficeFire
                         "[AssemblySceneController] ISceneLoaderService not found. Ensure FireServiceInstaller / SceneLoader is registered.",
                         this);
                     _beginWhenSceneLoads = false;
+                    _assemblyTransitionInProgress = false;
                     Destroy(gameObject);
                     yield break;
                 }
@@ -410,6 +441,7 @@ namespace Woi.OfficeFire
                 {
                     Debug.LogException(loadTask.Exception.GetBaseException(), this);
                     _beginWhenSceneLoads = false;
+                    _assemblyTransitionInProgress = false;
                     yield return SceneFadeOverlay.Fade(fadeOverlay, fadeOverlay.alpha, 0f, fadeOutSeconds);
                     SceneFadeOverlay.SetTransitionCameraActive(fadeOverlay, false);
                     fadeOverlay.gameObject.SetActive(false);
@@ -423,6 +455,10 @@ namespace Woi.OfficeFire
                 yield return SceneFadeOverlay.Fade(fadeOverlay, 1f, 0f, revealFadeSeconds);
                 SceneFadeOverlay.SetTransitionCameraActive(fadeOverlay, false);
                 fadeOverlay.gameObject.SetActive(false);
+
+                _assemblyTransitionInProgress = false;
+                TryBeginLoadedAssemblyScene();
+
                 Destroy(gameObject);
             }
 

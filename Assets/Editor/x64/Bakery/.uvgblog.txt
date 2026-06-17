@@ -12877,3 +12877,24 @@ Finished compiling graph: 751 nodes, 1949 flattened edges (1949 ToBuild, 0 ToUse
 
 
 
+abort_threads: Failed aborting id: 0000000000001A34, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 00000000000035B4, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000006F04, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000AF6C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 00000000000033FC, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000001A34, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 00000000000035B4, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000006F04, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 000000000000AF6C, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 00000000000033FC, mono_thread_manage will ignore it
+
+Error reading command from socketError reading command from socket

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionMode: 0
   clips:
-  - clip: {fileID: 8300000, guid: 757976f09b3d07447bbc8be50c91115d, type: 3}
+  - clip: {fileID: 8300000, guid: 1d97410068c924648a265c1d7f389b3c, type: 3}
     weight: 0
     delay: 0
   noImmediateRepeat: 1
@@ -32,11 +32,11 @@ MonoBehaviour:
   delayRange: {x: 0, y: 0}
   loop: 0
   priority: 128
-  volume: 1
+  volume: 0.2
   pitch: 1
   spatialBlend: 1
   minDistance: 1
-  maxDistance: 2
+  maxDistance: 15
   rolloffMode: 0
   mute: 0
   bypassEffects: 0

@@ -51,6 +51,12 @@ public class InputManager : MonoBehaviour, IInputProvider
         EnsureInputSystemInitialized();
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    private void OnSceneUnloaded(Scene scene)
+    {
+        SoapScriptableEventUtility.PruneGameplayNoParamListeners(GetPcGameplayContext());
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -67,6 +73,7 @@ public class InputManager : MonoBehaviour, IInputProvider
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
         ShutdownInputSystem();
     }
 
@@ -183,6 +190,8 @@ public class InputManager : MonoBehaviour, IInputProvider
 
         ScriptableEventNoParam interact = gameplay.InteractEvent;
         ScriptableEventFloat lean = gameplay.LeanInputEvent;
+
+        SoapScriptableEventUtility.PruneGameplayNoParamListeners(gameplay);
 
         if (move == null || look == null || sprint == null || interact == null || lean == null)
         {

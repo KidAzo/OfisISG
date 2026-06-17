@@ -326293,12 +326293,13 @@ MonoBehaviour:
   - {fileID: 269532857}
   - {fileID: 625383879}
   announcements: 3a010000
+  gapBetweenAnnouncementsSeconds: 0.35
   resultScreenRoot: {fileID: 1720525516}
   resultScreenController: {fileID: 1720525519}
   onResultScreenRequested:
     m_PersistentCalls:
       m_Calls: []
-  delayBeforeResultScreenSeconds: 5.5
+  delayBeforeResultScreenSeconds: 8
 --- !u!1001 &1385646102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -375742,19 +375743,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 65088896027444030, guid: cc10ce20cd2faea4ca8cb6505e5861d5, type: 3}
       propertyPath: m_Size.x
-      value: 0
+      value: 1.7182087
       objectReference: {fileID: 0}
     - target: {fileID: 65088896027444030, guid: cc10ce20cd2faea4ca8cb6505e5861d5, type: 3}
       propertyPath: m_Size.z
-      value: 28.402739
+      value: 29.959288
       objectReference: {fileID: 0}
     - target: {fileID: 65088896027444030, guid: cc10ce20cd2faea4ca8cb6505e5861d5, type: 3}
       propertyPath: m_Center.x
-      value: 4.9999948
+      value: 2.11999
       objectReference: {fileID: 0}
     - target: {fileID: 65088896027444030, guid: cc10ce20cd2faea4ca8cb6505e5861d5, type: 3}
       propertyPath: m_Center.z
-      value: 13.98088
+      value: 14.759154
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

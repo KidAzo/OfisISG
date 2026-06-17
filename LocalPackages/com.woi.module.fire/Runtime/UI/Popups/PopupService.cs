@@ -130,10 +130,42 @@ namespace Woi.UI.Popups
 
         private void OnDestroy()
         {
-            if (_instance == this)
-                _instance = null;
+            if (_instance != this)
+            {
+                return;
+            }
 
+            _instance = null;
             TryUnregisterWithServiceLocator();
+        }
+
+        private void EnsureGameObjectActive()
+        {
+            if (!gameObject.activeSelf)
+            {
+                gameObject.SetActive(true);
+            }
+        }
+
+        private bool TryStartRoutine(IEnumerator routine, out Coroutine started)
+        {
+            started = null;
+            if (routine == null)
+            {
+                return false;
+            }
+
+            EnsureGameObjectActive();
+            if (!isActiveAndEnabled)
+            {
+                Debug.LogWarning(
+                    "[PopupService] Cannot start coroutine because the GameObject is inactive.",
+                    this);
+                return false;
+            }
+
+            started = StartCoroutine(routine);
+            return true;
         }
 
         private void TryRegisterWithServiceLocator()
@@ -207,7 +239,12 @@ namespace Woi.UI.Popups
             }
 
             if (_subscribeRootRoutine == null && isActiveAndEnabled)
-                _subscribeRootRoutine = StartCoroutine(WaitForRootAndSubscribe());
+            {
+                if (TryStartRoutine(WaitForRootAndSubscribe(), out Coroutine subscribeRoutine))
+                {
+                    _subscribeRootRoutine = subscribeRoutine;
+                }
+            }
         }
 
         private void RegisterAttachToPanelOnRoot(VisualElement root)
@@ -350,6 +387,8 @@ namespace Woi.UI.Popups
             PopupType type,
             float visibleSeconds)
         {
+            EnsureGameObjectActive();
+
             float seconds = Mathf.Max(0.02f, visibleSeconds);
             PopupDefinition transient = PopupDefinition.CreateTransientBilingual(
                 titleTr,
@@ -423,7 +462,16 @@ namespace Woi.UI.Popups
             int token = _animToken;
 
             if (gameObject.activeInHierarchy && _root != null && _root.style.display == DisplayStyle.Flex)
-                _routine = StartCoroutine(HideRoutine(token, dequeueAfter: dequeuePendingAfterHide));
+            {
+                if (TryStartRoutine(HideRoutine(token, dequeueAfter: dequeuePendingAfterHide), out Coroutine hideRoutine))
+                {
+                    _routine = hideRoutine;
+                }
+                else
+                {
+                    SnapHidden(dequeueAfter: dequeuePendingAfterHide);
+                }
+            }
             else
                 SnapHidden(dequeueAfter: dequeuePendingAfterHide);
         }
@@ -436,6 +484,7 @@ namespace Woi.UI.Popups
             int contentEntryIndex = -1,
             bool? blockInputOverride = null)
         {
+            EnsureGameObjectActive();
             TryBind();
             if (!_bound)
                 return;
@@ -490,13 +539,28 @@ namespace Woi.UI.Popups
                     return;
                 }
 
-                _routine = StartCoroutine(ContentRefreshRoutine(
-                    definition,
-                    hasDurationOverride,
-                    durationOverride,
-                    contentEntryIndex,
-                    swapToken,
-                    blockInputOverride));
+                _routine = TryStartRoutine(
+                    ContentRefreshRoutine(
+                        definition,
+                        hasDurationOverride,
+                        durationOverride,
+                        contentEntryIndex,
+                        swapToken,
+                        blockInputOverride),
+                    out Coroutine refreshRoutine)
+                    ? refreshRoutine
+                    : null;
+
+                if (_routine == null)
+                {
+                    ShowImmediate(
+                        definition,
+                        hasDurationOverride,
+                        durationOverride,
+                        contentEntryIndex,
+                        blockInputOverride);
+                }
+
                 return;
             }
 
@@ -511,10 +575,92 @@ namespace Woi.UI.Popups
             _animToken++;
             int token = _animToken;
 
-            if (hasOccupant && replaceCurrent)
-                _routine = StartCoroutine(SwitchRoutine(definition, hasDurationOverride, durationOverride, token, contentEntryIndex, blockInputOverride));
+            IEnumerator routine = hasOccupant && replaceCurrent
+                ? SwitchRoutine(definition, hasDurationOverride, durationOverride, token, contentEntryIndex, blockInputOverride)
+                : ShowRoutine(definition, hasDurationOverride, durationOverride, token, contentEntryIndex, blockInputOverride);
+
+            if (TryStartRoutine(routine, out Coroutine started))
+            {
+                _routine = started;
+            }
             else
-                _routine = StartCoroutine(ShowRoutine(definition, hasDurationOverride, durationOverride, token, contentEntryIndex, blockInputOverride));
+            {
+                ShowImmediate(
+                    definition,
+                    hasDurationOverride,
+                    durationOverride,
+                    contentEntryIndex,
+                    blockInputOverride);
+            }
+        }
+
+        private void ShowImmediate(
+            PopupDefinition definition,
+            bool hasDurationOverride,
+            float durationOverride,
+            int contentEntryIndex,
+            bool? blockInputOverride)
+        {
+            ApplyDefinitionToUi(definition, contentEntryIndex);
+            bool block = GetBlockInput(definition, blockInputOverride);
+
+            if (_root != null)
+            {
+                _root.style.display = DisplayStyle.Flex;
+            }
+
+            _currentDefinition = definition;
+            _isOpen = true;
+            SetInteractable(block);
+
+            if (_panel != null)
+            {
+                _panel.style.opacity = 1f;
+                _panel.style.translate = new Translate(0f, 0f);
+            }
+
+            if (_backdrop != null)
+            {
+                _backdrop.style.opacity = block ? 0.55f : 0f;
+            }
+
+            OnPopupShown?.Invoke(definition);
+
+            if (!definition.autoClose)
+            {
+                return;
+            }
+
+            float wait = hasDurationOverride && durationOverride >= 0f
+                ? durationOverride
+                : definition.defaultDuration;
+
+            if (wait <= 0f)
+            {
+                HideInternal(dequeuePendingAfterHide: true);
+                return;
+            }
+
+            if (TryStartRoutine(AutoHideAfterSeconds(wait), out Coroutine autoHide))
+            {
+                _routine = autoHide;
+            }
+            else
+            {
+                HideInternal(dequeuePendingAfterHide: true);
+            }
+        }
+
+        private IEnumerator AutoHideAfterSeconds(float waitSeconds)
+        {
+            float elapsed = 0f;
+            while (elapsed < waitSeconds)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+
+            HideInternal(dequeuePendingAfterHide: true);
         }
 
         private IEnumerator SwitchRoutine(

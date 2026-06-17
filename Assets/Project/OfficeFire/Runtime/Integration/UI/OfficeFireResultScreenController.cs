@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Woi.Settings;
 using WOI.Modules.SDK;
+using Woi.InputSystem;
 
 namespace Woi.OfficeFire
 {
@@ -112,6 +113,9 @@ namespace Woi.OfficeFire
         private readonly List<FloatFieldSnapshot> _frozenFloatFields = new List<FloatFieldSnapshot>();
         private UnityEngine.CursorLockMode _savedCursorLockState;
         private bool _savedCursorVisible;
+        private bool _savedGameplayInteractEnabled = true;
+        private bool _savedGameplayEquipEnabled = true;
+        private bool _gameplayInteractCaptured;
 
         private void Awake()
         {
@@ -119,11 +123,19 @@ namespace Woi.OfficeFire
             {
                 uiDocument = GetComponent<UIDocument>();
             }
+
+            if (_lastReport == null && !_isReturningToLogin)
+            {
+                gameObject.SetActive(false);
+            }
         }
 
         private void OnEnable()
         {
-            TryBindUi();
+            if (_lastReport != null)
+            {
+                TryBindUi();
+            }
         }
 
         private void OnDisable()
@@ -137,8 +149,9 @@ namespace Woi.OfficeFire
             if (!_isReturningToLogin)
             {
                 ReleasePlayerInput();
-                ReleaseUiBinding();
             }
+
+            ReleaseUiBinding();
         }
 
         private void LateUpdate()
@@ -174,6 +187,7 @@ namespace Woi.OfficeFire
 
         public void Present(OfficeFireScenarioReport report)
         {
+            ResetPresentationState();
             _lastReport = report;
             ShowScreen();
 
@@ -187,6 +201,24 @@ namespace Woi.OfficeFire
             OfficeFireResultScreenModel model = OfficeFireResultScreenMapper.FromReport(report, turkish);
             ApplyModel(model);
             ExportSessionResultsIfNeeded(report, turkish);
+        }
+
+        private void ResetPresentationState()
+        {
+            _isReturningToLogin = false;
+            _sessionResultsExported = false;
+
+            if (_playerInputCaptured)
+            {
+                ReleasePlayerInput();
+            }
+
+            ReleaseUiBinding();
+
+            if (_continueButton != null)
+            {
+                _continueButton.SetEnabled(true);
+            }
         }
 
         private void ExportSessionResultsIfNeeded(OfficeFireScenarioReport report, bool turkish)
@@ -210,13 +242,16 @@ namespace Woi.OfficeFire
         public void HideScreen()
         {
             ReleasePlayerInput();
+            HideOverlayOnly();
+            gameObject.SetActive(false);
+        }
 
+        public void HideOverlayOnly()
+        {
             if (_root != null)
             {
                 _root.style.display = DisplayStyle.None;
             }
-
-            gameObject.SetActive(false);
         }
 
         public void ShowScreen()
@@ -498,14 +533,6 @@ namespace Woi.OfficeFire
             LoginReturnRunner.StartLoad(sceneGroup);
         }
 
-        private void HideOverlayOnly()
-        {
-            if (_root != null)
-            {
-                _root.style.display = DisplayStyle.None;
-            }
-        }
-
         private static void ApplyMenuCursorForLogin()
         {
             UnityEngine.Cursor.lockState = CursorLockMode.None;
@@ -559,7 +586,58 @@ namespace Woi.OfficeFire
             _savedCursorVisible = UnityEngine.Cursor.visible;
             UnityEngine.Cursor.lockState = UnityEngine.CursorLockMode.None;
             UnityEngine.Cursor.visible = true;
+            CaptureGameplayInteract();
             _playerInputCaptured = true;
+        }
+
+        private void CaptureGameplayInteract()
+        {
+            if (_gameplayInteractCaptured)
+            {
+                return;
+            }
+
+            GameplayInputContext gameplay = ResolvePcGameplayContext();
+            if (gameplay == null)
+            {
+                return;
+            }
+
+            _savedGameplayInteractEnabled = true;
+            _savedGameplayEquipEnabled = true;
+            gameplay.SetInteractEnabled(false);
+            gameplay.SetEquipEnabled(false);
+            _gameplayInteractCaptured = true;
+        }
+
+        private void ReleaseGameplayInteract()
+        {
+            if (!_gameplayInteractCaptured)
+            {
+                return;
+            }
+
+            GameplayInputContext gameplay = ResolvePcGameplayContext();
+            if (gameplay != null)
+            {
+                if (_savedGameplayInteractEnabled)
+                {
+                    gameplay.SetInteractEnabled(true);
+                }
+
+                if (_savedGameplayEquipEnabled)
+                {
+                    gameplay.SetEquipEnabled(true);
+                }
+            }
+
+            _gameplayInteractCaptured = false;
+        }
+
+        private static GameplayInputContext ResolvePcGameplayContext()
+        {
+            InputManager inputManager = FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            return inputManager != null ? inputManager.GetPcGameplayContext() : null;
         }
 
         private void ReleasePlayerInput()
@@ -587,6 +665,7 @@ namespace Woi.OfficeFire
 
             UnityEngine.Cursor.lockState = _savedCursorLockState;
             UnityEngine.Cursor.visible = _savedCursorVisible;
+            ReleaseGameplayInteract();
             _playerInputCaptured = false;
             _capturedBehaviours = null;
             _savedBehaviourEnabledStates = null;
