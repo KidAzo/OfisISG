@@ -12,11 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c789d55c4f1cff34799abba03737e8f7, type: 3}
   m_Name: ftGlobalStorage
   m_EditorClassIdentifier: BakeryRuntimeAssembly::ftGlobalStorage
-  modifiedAssetPathList: []
-  modifiedAssetPaddingHash: 
+  modifiedAssetPathList:
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeRound_Base_01.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeSquare_Base_01.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOld_Small_02.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOctagon_Base_01.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOld_Large_02.fbx
+  modifiedAssetPaddingHash: 8e5fd2b1e1db5432d93980335cbe8b9ad7c2a693
   modifiedMeshList: []
   modifiedMeshPaddingList: 
-  modifiedAssets: []
+  modifiedAssets:
+  - meshName:
+    - SM_Bld_OfficeRound_Base_01
+    - SM_Bld_OfficeRound_Base_01_Glass
+    padding: 160000003c000000
+    unwrapper: 0000000000000000
+  - meshName:
+    - SM_Bld_OfficeSquare_Base_01
+    - SM_Bld_OfficeSquare_Base_01_Glass
+    padding: 1a00000055000000
+    unwrapper: 0000000000000000
+  - meshName:
+    - SM_Bld_OfficeOld_Small_02
+    padding: 23000000
+    unwrapper: 00000000
+  - meshName:
+    - SM_Bld_OfficeOctagon_Base_01
+    - SM_Bld_OfficeOctagon_Base_01_Glass
+    padding: 140000005f000000
+    unwrapper: 0000000000000000
+  - meshName:
+    - SM_Bld_OfficeOld_Large_02
+    padding: 13000000
+    unwrapper: 00000000
   assetList:
   - Assets/AssetSection/FireTool/FireBlanket.fbx
   - Assets/watervFx/Carafe.fbx
@@ -48,13 +76,13 @@ MonoBehaviour:
   - Assets/Project/Hand (2).fbx
   uvOverlapAssetList: 00000000010100000000000001010000000000000000000000000000000000000000000001010000000000000101000000000000000000000000000000000000000000000000000000000000010100000000000001010000000000000101000000000000000000000000000000000000
   xatlasWarningShown: 0
-  foundCompatibleSetup: 0
-  gpuName_2: 
-  runsNonRTX: 1
-  runsRTX6: 1
+  foundCompatibleSetup: 1
+  gpuName_2: NVIDIA GeForce RTX 3060 Ti
+  runsNonRTX: 0
+  runsRTX6: 0
   runsRTX9: 1
-  runsOptix5: 1
-  runsOptix6: 1
+  runsOptix5: 0
+  runsOptix6: 0
   runsOptix7: 1
   runsOIDN: 1
   runsOIDN2: 1
@@ -148,5 +176,5 @@ MonoBehaviour:
   renderSettingsRTPVExposure: 1
   renderSettingsRemoveDuplicateLightmaps: 0
   tagOverrides: []
-  modifiedMeshPaddingArray: 
-  modifiedMeshUnwrapperArray: 
+  modifiedMeshPaddingArray: 13000000
+  modifiedMeshUnwrapperArray: 00000000

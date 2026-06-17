@@ -33,4 +33,9 @@ MonoBehaviour:
   - Assets/AssetSection/BKAsset/Mesh/NewAddLobby/LobiSecond.fbx
   - Assets/AssetSection/BKAsset/Mesh/StairLow.fbx
   - Assets/AssetSection/BKAsset/logo.fbx
-  modifiedAssetPaddingHash: d6a958ff52ad1b3b2ee0802045447b5a88cd6a7becc12491ed6a7abcc2fc00669b1d3466930b74321b3a80333f09ecc087430bca19b707053ec5d890b05c02fe80c5d8906d67e2a8035feb64be398033
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeRound_Base_01.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeSquare_Base_01.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOld_Small_02.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOctagon_Base_01.fbx
+  - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOld_Large_02.fbx
+  modifiedAssetPaddingHash: d6a958ff52ad1b3b2ee0802045447b5a88cd6a7becc12491ed6a7abcc2fc00669b1d3466930b74321b3a80333f09ecc087430bca19b707053ec5d890b05c02fe80c5d8906d67e2a8035feb64be3980338e5fd2b1e1db5432d93980335cbe8b9ad7c2a693
