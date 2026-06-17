@@ -60,6 +60,11 @@ namespace Woi.OfficeFire
                 {
                     // Failure recorded as mistake — do not also list as missing.
                 }
+                else if (rule.Objective == OfficeFireObjectiveId.KitchenWaterUsage &&
+                         HasMistake(report, OfficeFireMistakeId.UsedWaterOnKitchenFire))
+                {
+                    // Failure recorded as mistake — do not also list as missing.
+                }
                 else
                 {
                     missing.Add(label);
