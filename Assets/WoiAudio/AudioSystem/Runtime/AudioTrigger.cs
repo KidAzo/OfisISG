@@ -305,17 +305,7 @@ namespace WoiUtils.AudioSystem
                     break;
                 }
                 default:
-                    // 3D sounds need a world position; UseSoundDefinition only supplies rolloff/blend from the asset.
-                    if (playSound.spatialBlend > 0.001f)
-                    {
-                        var t = followTarget != null ? followTarget : transform;
-                        _cachedSystem.PlayFollow(playSound, t, ctx);
-                    }
-                    else
-                    {
-                        _cachedSystem.Play(playSound, ctx);
-                    }
-
+                    _cachedSystem.Play(playSound, ctx);
                     break;
             }
 

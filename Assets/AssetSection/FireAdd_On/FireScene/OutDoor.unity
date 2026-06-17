@@ -15964,7 +15964,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &322160491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326299,7 +326299,7 @@ MonoBehaviour:
   onResultScreenRequested:
     m_PersistentCalls:
       m_Calls: []
-  delayBeforeResultScreenSeconds: 8
+  delayBeforeResultScreenSeconds: 5.5
 --- !u!1001 &1385646102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -375743,19 +375743,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 65088896027444030, guid: cc10ce20cd2faea4ca8cb6505e5861d5, type: 3}
       propertyPath: m_Size.x
-      value: 1.7182087
+      value: 1.9197755
       objectReference: {fileID: 0}
     - target: {fileID: 65088896027444030, guid: cc10ce20cd2faea4ca8cb6505e5861d5, type: 3}
       propertyPath: m_Size.z
-      value: 29.959288
+      value: 29.741194
       objectReference: {fileID: 0}
     - target: {fileID: 65088896027444030, guid: cc10ce20cd2faea4ca8cb6505e5861d5, type: 3}
       propertyPath: m_Center.x
-      value: 2.11999
+      value: 2.240022
       objectReference: {fileID: 0}
     - target: {fileID: 65088896027444030, guid: cc10ce20cd2faea4ca8cb6505e5861d5, type: 3}
       propertyPath: m_Center.z
-      value: 14.759154
+      value: 14.650107
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

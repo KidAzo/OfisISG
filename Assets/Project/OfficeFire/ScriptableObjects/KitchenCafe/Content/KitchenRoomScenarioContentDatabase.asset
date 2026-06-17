@@ -67,7 +67,7 @@ MonoBehaviour:
     Voice: {fileID: 11400000, guid: 949f1f0fd7ce4498b2a8d77253e6b380, type: 2}
   - Id: 312
     Popup:
-      TurkishTitle: "Ar\u015Fiv Yang\u0131n\u0131 B\xFCy\xFCd\xFC\t"
+      TurkishTitle: "Yang\u0131n B\xFCy\xFCd\xFC\t"
       TurkishBody: 
       EnglishTitle: ArchiveElectricalFireWarning
       EnglishBody: Assign audio clip and edit this text in the content database.

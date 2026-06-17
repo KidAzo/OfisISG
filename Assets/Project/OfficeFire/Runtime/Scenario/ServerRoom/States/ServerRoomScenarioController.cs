@@ -421,7 +421,7 @@ namespace Woi.OfficeFire
                    && CurrentState == ServerRoomState.WaitingForExitRoom
                    && _fireGrowthCompleted)
             {
-                PlayAnnouncement(OfficeFireVoiceLineId.ArchiveFireGrowth);
+                PlayAnnouncement(OfficeFireVoiceLineId.ServerFireGrowth);
                 yield return new WaitForSeconds(fireGrowthReminderIntervalSeconds);
             }
         }

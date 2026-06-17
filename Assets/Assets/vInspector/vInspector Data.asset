@@ -48,3 +48,10 @@ MonoBehaviour:
     isAsset: 1
     _typeString: Woi.OfficeFire.OfficeFireVoiceLineContentDatabase, Woi.OfficeFire.Core,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  - _obj: {fileID: 11400000, guid: 25c04d5e2832dca4f91c179e7f7cf1c4, type: 2}
+    globalId:
+      globalObjectIdString: GlobalObjectId_V1-3-25c04d5e2832dca4f91c179e7f7cf1c4-11400000-0
+    isSceneGameObject: 0
+    isAsset: 1
+    _typeString: Woi.OfficeFire.OfficeFireVoiceLineContentDatabase, Woi.OfficeFire.Core,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
