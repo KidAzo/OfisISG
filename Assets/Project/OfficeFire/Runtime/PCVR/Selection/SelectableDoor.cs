@@ -71,6 +71,8 @@ namespace Woi.OfficeFire
 
         public bool IsSelectable => isSelectable;
 
+        public bool IsOpen => _isOpen;
+
         private void Awake()
         {
             _pivot = doorPivot != null ? doorPivot : transform;

@@ -16,22 +16,22 @@ MonoBehaviour:
   entries:
   - Id: 10
     Popup:
-      TurkishTitle: Ocak yangını
-      TurkishBody: Alevlere güvenli mesafede yaklaşın.
+      TurkishTitle: "Ocak yang\u0131n\u0131"
+      TurkishBody: "Alevlere g\xFCvenli mesafede yakla\u015F\u0131n."
       EnglishTitle: Stove fire
       EnglishBody: Keep a safe distance from the flames.
     Voice: {fileID: 11400000, guid: 587aa7a738cb4d6eb7acaec480959b46, type: 2}
   - Id: 309
     Popup:
-      TurkishTitle: Eğilin
-      TurkishBody: Dumanın altında ilerleyin.
+      TurkishTitle: "E\u011Filin"
+      TurkishBody: "Duman\u0131n alt\u0131nda ilerleyin."
       EnglishTitle: Stay low
       EnglishBody: Move below the smoke.
     Voice: {fileID: 11400000, guid: 9da018856b824fb7a9dd8162d267b02a, type: 2}
   - Id: 13
     Popup:
-      TurkishTitle: Acil çıkış
-      TurkishBody: En yakın acil çıkışa yönelin.
+      TurkishTitle: "Acil \xE7\u0131k\u0131\u015F"
+      TurkishBody: "En yak\u0131n acil \xE7\u0131k\u0131\u015Fa y\xF6nelin."
       EnglishTitle: Emergency exit
       EnglishBody: Proceed to the nearest emergency exit.
     Voice: {fileID: 11400000, guid: 4ace002ebdd545b6a7191fb8f25151ef, type: 2}
@@ -44,8 +44,8 @@ MonoBehaviour:
     Voice: {fileID: 11400000, guid: 6dfd2d017e24442386dd2cc79946c3f6, type: 2}
   - Id: 15
     Popup:
-      TurkishTitle: Acil çıkış
-      TurkishBody: En yakın acil çıkışa yönelin.
+      TurkishTitle: "Acil \xE7\u0131k\u0131\u015F"
+      TurkishBody: "En yak\u0131n acil \xE7\u0131k\u0131\u015Fa y\xF6nelin."
       EnglishTitle: Emergency exit
       EnglishBody: Proceed to the nearest emergency exit.
     Voice: {fileID: 11400000, guid: 4ace002ebdd545b6a7191fb8f25151ef, type: 2}
@@ -59,49 +59,52 @@ MonoBehaviour:
   - Id: 311
     Popup:
       TurkishTitle: "S\xF6nd\xFCrme ba\u015Flad\u0131"
-      TurkishBody: "Alevlerin taban\u0131na y\xF6nelerek s\xF6nd\xFCr\xFCc\xFCy\xFC uygulay\u0131n."
+      TurkishBody: "Alevlerin taban\u0131na y\xF6nelerek s\xF6nd\xFCr\xFCc\xFCy\xFC
+        uygulay\u0131n."
       EnglishTitle: Extinguishing started
       EnglishBody: Aim at the base of the flames and discharge the extinguisher.
     Voice: {fileID: 11400000, guid: b38c2552208a4043aaef7880e0c9ba49, type: 2}
   - Id: 312
     Popup:
       TurkishTitle: Derhal tahliye
-      TurkishBody: Yangın büyüyorsa müdahaleyi bırakın.
+      TurkishBody: "Yang\u0131n b\xFCy\xFCyorsa m\xFCdahaleyi b\u0131rak\u0131n."
       EnglishTitle: Evacuate now
       EnglishBody: Stop responding and evacuate immediately.
     Voice: {fileID: 11400000, guid: b256f8afe1fd46a196e0cae4b69bf0aa, type: 2}
   - Id: 313
     Popup:
       TurkishTitle: Tahliye
-      TurkishBody: En yakın acil çıkışa yönelin.
+      TurkishBody: "En yak\u0131n acil \xE7\u0131k\u0131\u015Fa y\xF6nelin."
       EnglishTitle: Evacuate
       EnglishBody: Proceed to the nearest emergency exit.
     Voice: {fileID: 11400000, guid: bf4a3339c64647f1a04512d6870c18f0, type: 2}
   - Id: 103
     Popup:
-      TurkishTitle: Alarmı devreye alın
-      TurkishBody: Önce bina alarm sistemini aktive edin.
+      TurkishTitle: "Alarm\u0131 devreye al\u0131n"
+      TurkishBody: "\xD6nce bina alarm sistemini aktive edin."
       EnglishTitle: Activate alarm
       EnglishBody: Activate the building fire alarm first.
     Voice: {fileID: 11400000, guid: ba72f7810ed94cadb2ac9926ba73d651, type: 2}
   - Id: 314
     Popup:
-      TurkishTitle: Toplanma alanı
-      TurkishBody: Toplanma alanına ulaştınız.
+      TurkishTitle: "Toplanma alan\u0131"
+      TurkishBody: "Toplanma alan\u0131na ula\u015Ft\u0131n\u0131z."
       EnglishTitle: Assembly area
       EnglishBody: You have reached the assembly area.
     Voice: {fileID: 11400000, guid: 235aaa01d746412884ac3db042917998, type: 2}
   - Id: 315
     Popup:
-      TurkishTitle: Korkulukları kullanın
-      TurkishBody: Panik yapmadan sakin ilerleyin.
-      EnglishTitle: Use handrails
-      EnglishBody: Move calmly without panic.
-    Voice: {fileID: 11400000, guid: ef3e3c5562054843b3aeebcf462b280c, type: 2}
+      TurkishTitle: "Ç\u0131k\u0131\u015F g\xFCzerg\xE2h\u0131"
+      TurkishBody: "Acil \xE7\u0131k\u0131\u015F g\xFCzerg\xE2h\u0131n\u0131 takip ederek binay\u0131
+        terk edin."
+      EnglishTitle: Exit route
+      EnglishBody: Follow the emergency exit route and leave the building.
+    Voice: {fileID: 11400000, guid: 4ace002ebdd545b6a7191fb8f25151ef, type: 2}
   - Id: 106
     Popup:
-      TurkishTitle: Güvenli müdahale
-      TurkishBody: Kaçış yolu açıksa güvenli müdahale edin.
+      TurkishTitle: "G\xFCvenli m\xFCdahale"
+      TurkishBody: "Ka\xE7\u0131\u015F yolu a\xE7\u0131ksa g\xFCvenli m\xFCdahale
+        edin."
       EnglishTitle: Respond safely
       EnglishBody: Respond safely if your escape route is clear.
     Voice: {fileID: 11400000, guid: 80f6b9b74bfe42a4b41f85a955273679, type: 2}
@@ -115,28 +118,28 @@ MonoBehaviour:
   - Id: 108
     Popup:
       TurkishTitle: Derhal tahliye
-      TurkishBody: Yangın büyüyorsa müdahaleyi bırakın.
+      TurkishBody: "Yang\u0131n b\xFCy\xFCyorsa m\xFCdahaleyi b\u0131rak\u0131n."
       EnglishTitle: Evacuate now
       EnglishBody: Stop responding and evacuate immediately.
     Voice: {fileID: 11400000, guid: b256f8afe1fd46a196e0cae4b69bf0aa, type: 2}
   - Id: 306
     Popup:
-      TurkishTitle: Yangın battaniyesi
-      TurkishBody: Battaniyeyi dikkatli açıp alevleri kapatın.
+      TurkishTitle: "Yang\u0131n battaniyesi"
+      TurkishBody: "Battaniyeyi dikkatli a\xE7\u0131p alevleri kapat\u0131n."
       EnglishTitle: Fire blanket
       EnglishBody: Open the blanket carefully and cover the flames.
     Voice: {fileID: 11400000, guid: 6239150c4e37465eabea057de8389f5c, type: 2}
   - Id: 305
     Popup:
-      TurkishTitle: Yangın battaniyesi
-      TurkishBody: Battaniyeyi dikkatli açıp alevleri kapatın.
+      TurkishTitle: "Yang\u0131n battaniyesi"
+      TurkishBody: "Battaniyeyi dikkatli a\xE7\u0131p alevleri kapat\u0131n."
       EnglishTitle: Fire blanket
       EnglishBody: Open the blanket carefully and cover the flames.
     Voice: {fileID: 11400000, guid: 6239150c4e37465eabea057de8389f5c, type: 2}
   - Id: 318
     Popup:
-      TurkishTitle: Su kullanmayın
-      TurkishBody: Mutfak yangınında su kullanmayın.
+      TurkishTitle: "Su kullanmay\u0131n"
+      TurkishBody: "Mutfak yang\u0131n\u0131nda su kullanmay\u0131n."
       EnglishTitle: Do not use water
       EnglishBody: Do not use water on kitchen fires.
     Voice: {fileID: 11400000, guid: e498ce0642a14380889c6874fba165d2, type: 2}
@@ -149,15 +152,15 @@ MonoBehaviour:
     Voice: {fileID: 11400000, guid: e498ce0642a14380889c6874fba165d2, type: 2}
   - Id: 101
     Popup:
-      TurkishTitle: Ocak yangını
-      TurkishBody: Alevlere güvenli mesafede yaklaşın.
+      TurkishTitle: "Ocak yang\u0131n\u0131"
+      TurkishBody: "Alevlere g\xFCvenli mesafede yakla\u015F\u0131n."
       EnglishTitle: Stove fire
       EnglishBody: Keep a safe distance from the flames.
     Voice: {fileID: 11400000, guid: 587aa7a738cb4d6eb7acaec480959b46, type: 2}
   - Id: 102
     Popup:
-      TurkishTitle: Su kullanmayın
-      TurkishBody: Mutfak yangınında su kullanmayın.
+      TurkishTitle: "Su kullanmay\u0131n"
+      TurkishBody: "Mutfak yang\u0131n\u0131nda su kullanmay\u0131n."
       EnglishTitle: Do not use water
       EnglishBody: Do not use water on kitchen fires.
     Voice: {fileID: 11400000, guid: e498ce0642a14380889c6874fba165d2, type: 2}
@@ -177,8 +180,29 @@ MonoBehaviour:
     Voice: {fileID: 11400000, guid: 89a9abe0aa834e73a8e49c795a478185, type: 2}
   - Id: 316
     Popup:
-      TurkishTitle: Toplanma alanı
-      TurkishBody: Toplanma alanına ulaştınız.
+      TurkishTitle: "Toplanma alan\u0131"
+      TurkishBody: "Toplanma alan\u0131na ula\u015Ft\u0131n\u0131z."
       EnglishTitle: Assembly area
       EnglishBody: You have reached the assembly area.
     Voice: {fileID: 11400000, guid: 235aaa01d746412884ac3db042917998, type: 2}
+  - Id: 100
+    Popup:
+      TurkishTitle: "Ola\u011Fan d\u0131\u015F\u0131 durum"
+      TurkishBody: "Mutfak alan\u0131n\u0131 kontrol edin."
+      EnglishTitle: Unusual situation
+      EnglishBody: Inspect the kitchen area.
+    Voice: {fileID: 11400000, guid: 453a950ad92e47a0bfad87f13c6ef4f1, type: 2}
+  - Id: 308
+    Popup:
+      TurkishTitle: Derhal tahliye
+      TurkishBody: "Yang\u0131n b\xFCy\xFCyorsa m\xFCdahaleyi b\u0131rak\u0131n."
+      EnglishTitle: Evacuate now
+      EnglishBody: Stop responding and evacuate immediately.
+    Voice: {fileID: 11400000, guid: b256f8afe1fd46a196e0cae4b69bf0aa, type: 2}
+  - Id: 321
+    Popup:
+      TurkishTitle: "Ocak yang\u0131n\u0131"
+      TurkishBody: "Alevlere g\xFCvenli mesafede yakla\u015F\u0131n."
+      EnglishTitle: Stove fire
+      EnglishBody: Keep a safe distance from the flames.
+    Voice: {fileID: 11400000, guid: 587aa7a738cb4d6eb7acaec480959b46, type: 2}

@@ -65,6 +65,11 @@ namespace Woi.OfficeFire
                 {
                     // Failure recorded as mistake — do not also list as missing.
                 }
+                else if (rule.Objective == OfficeFireObjectiveId.CloseServerRoomDoor &&
+                         !report.hasServerRoomDoorEndState)
+                {
+                    // Door state not captured at scenario end.
+                }
                 else
                 {
                     missing.Add(label);
@@ -134,6 +139,9 @@ namespace Woi.OfficeFire
             new ObjectiveRule(
                 OfficeFireObjectiveId.LeaveServerRoom,
                 report => HasAction(report, OfficeFireCorrectActionId.LeftServerRoomBeforeGas)),
+            new ObjectiveRule(
+                OfficeFireObjectiveId.CloseServerRoomDoor,
+                ServerRoomDoorClosed),
             HoldHandrailRule,
             new ObjectiveRule(
                 OfficeFireObjectiveId.GoToAssemblyArea,
@@ -175,6 +183,13 @@ namespace Woi.OfficeFire
                 report,
                 OfficeFireCorrectActionId.SelectedFireBlanket,
                 OfficeFireCorrectActionId.PlacedFireBlanketCorrectly);
+        }
+
+        private static bool ServerRoomDoorClosed(OfficeFireScenarioReport report)
+        {
+            return report != null
+                && report.hasServerRoomDoorEndState
+                && report.serverRoomDoorClosedAtEnd;
         }
 
         private static bool HasAction(OfficeFireScenarioReport report, OfficeFireCorrectActionId actionId)

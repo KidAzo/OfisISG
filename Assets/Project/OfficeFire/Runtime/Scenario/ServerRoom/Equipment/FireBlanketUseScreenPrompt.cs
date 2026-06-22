@@ -27,8 +27,14 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            bool useTurkish = preferTurkish && !string.IsNullOrWhiteSpace(turkish);
-            _label.text = useTurkish ? turkish : english;
+            bool useTurkish = OfficeFireSessionLanguage.UseTurkish();
+            if (useTurkish && !string.IsNullOrWhiteSpace(turkish))
+            {
+                _label.text = turkish;
+                return;
+            }
+
+            _label.text = !string.IsNullOrWhiteSpace(english) ? english : turkish;
         }
 
         public void SetVisible(bool visible)

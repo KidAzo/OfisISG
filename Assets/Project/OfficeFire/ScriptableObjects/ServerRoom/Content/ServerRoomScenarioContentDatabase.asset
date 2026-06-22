@@ -93,11 +93,12 @@ MonoBehaviour:
     Voice: {fileID: 11400000, guid: a9b0e9d8482046dea508b7c2882ed4f0, type: 2}
   - Id: 315
     Popup:
-      TurkishTitle: Korkulukları kullanın
-      TurkishBody: Panik yapmadan sakin ilerleyin.
-      EnglishTitle: Use handrails
-      EnglishBody: Move calmly without panic.
-    Voice: {fileID: 11400000, guid: ad002da8ad5847f7ab16346bc954b4d9, type: 2}
+      TurkishTitle: "Ç\u0131k\u0131\u015F g\xFCzerg\xE2h\u0131"
+      TurkishBody: "Acil \xE7\u0131k\u0131\u015F g\xFCzerg\xE2h\u0131n\u0131 takip ederek binay\u0131
+        terk edin."
+      EnglishTitle: Exit route
+      EnglishBody: Follow the emergency exit route and leave the building.
+    Voice: {fileID: 11400000, guid: 8e665fcf9e6d4e6984b6cc8f39d8cdbc, type: 2}
   - Id: 106
     Popup:
       TurkishTitle: Söndürücü kullanın

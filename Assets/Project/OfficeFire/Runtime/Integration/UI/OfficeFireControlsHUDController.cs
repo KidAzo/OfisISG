@@ -123,15 +123,6 @@ namespace Woi.OfficeFire
             return FirePlatformRuntime.IsSourceInitialized && FirePlatformRuntime.IsPC;
         }
 
-        private static bool ResolveTurkish()
-        {
-            if (ServiceLocator.TryGet(out OfficeFireLanguageResolver resolver) && resolver != null)
-            {
-                return resolver.IsTurkish();
-            }
-
-            OfficeFireLanguageResolver found = FindFirstObjectByType<OfficeFireLanguageResolver>();
-            return found == null || found.IsTurkish();
-        }
+        private static bool ResolveTurkish() => OfficeFireSessionLanguage.UseTurkish();
     }
 }

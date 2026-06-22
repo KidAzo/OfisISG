@@ -81,6 +81,13 @@ namespace Woi.OfficeFire
         [SerializeField]
         private string outdoorSceneGroupName = "OutDoor";
 
+        [Header("Server — door tracking")]
+        [Tooltip("ColorDoor (4) server room door. Auto-resolved at runtime when empty.")]
+        [SerializeField]
+        private SelectableDoor serverRoomDoor;
+
+        private const string ServerRoomDoorObjectName = "ColorDoor (4)";
+
         [SerializeField]
         [Min(0f)]
         [Tooltip("Fade to black before OutDoor loads. Does not affect OutDoor reveal — set that on OutDoor AssemblySceneController.")]
@@ -604,6 +611,7 @@ namespace Woi.OfficeFire
 
             if (!IsCompleted)
             {
+                RecordServerRoomDoorEndState();
                 CompleteScenario();
             }
 
@@ -616,6 +624,48 @@ namespace Woi.OfficeFire
                 outdoorSceneGroupName.Trim(),
                 outdoorFadeToBlackSeconds,
                 0.45f);
+        }
+
+        private void EnsureServerRoomDoorResolved()
+        {
+            if (serverRoomDoor != null)
+            {
+                return;
+            }
+
+            SelectableDoor[] doors = FindObjectsByType<SelectableDoor>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+            for (int i = 0; i < doors.Length; i++)
+            {
+                SelectableDoor door = doors[i];
+                if (door != null && door.gameObject.name == ServerRoomDoorObjectName)
+                {
+                    serverRoomDoor = door;
+                    return;
+                }
+            }
+        }
+
+        private void RecordServerRoomDoorEndState()
+        {
+            EnsureServerRoomDoorResolved();
+            if (serverRoomDoor == null)
+            {
+                Debug.LogWarning(
+                    "[ServerRoomScenarioController] Server room door not found for end-state report.",
+                    this);
+                return;
+            }
+
+            OfficeFireScenarioReport report = Report;
+            if (report == null)
+            {
+                return;
+            }
+
+            report.hasServerRoomDoorEndState = true;
+            report.serverRoomDoorClosedAtEnd = !serverRoomDoor.IsOpen;
         }
 
         public override void StartScenario()
@@ -917,6 +967,14 @@ namespace Woi.OfficeFire
                         _server.InvokeDoorOpened();
                         _server.ChangeState(ServerRoomState.Intervention);
                         break;
+                    case Actions.PressSuppressionButton:
+                        _server._alarmPressed = true;
+                        _server.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
+                        _server.AllowExtinguisherSpray();
+                        _server.InvokeSuppressionActivated();
+                        _server.InvokeEvacuationStarted();
+                        _server.StartEvacuationNpcs();
+                        break;
                     default:
                         LogUnknownAction(actionId);
                         break;
@@ -945,6 +1003,14 @@ namespace Woi.OfficeFire
             {
                 switch (actionId)
                 {
+                    case Actions.PressSuppressionButton:
+                        _server._alarmPressed = true;
+                        _server.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
+                        _server.AllowExtinguisherSpray();
+                        _server.InvokeSuppressionActivated();
+                        _server.InvokeEvacuationStarted();
+                        _server.StartEvacuationNpcs();
+                        break;
                     case Actions.EnterServerRoom:
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.EnteredServerRoomSafely);
                         _server.PlayAnnouncement(OfficeFireVoiceLineId.LeanCorrectly);
@@ -992,6 +1058,8 @@ namespace Woi.OfficeFire
                         _server.InvokeSuppressionActivated();
                         _server.LogFireExtinguishStatus("Baski dusurme aktif — sondurucu asamasina geciliyor");
                         _server.ChangeState(ServerRoomState.WaitingForExtinguisherUse);
+                        _server.InvokeEvacuationStarted();
+                        _server.StartEvacuationNpcs();
                         break;
                     case Actions.PlayerLeaned:
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.LeanedCorrectly);
@@ -1049,6 +1117,8 @@ namespace Woi.OfficeFire
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
                         _server.AllowExtinguisherSpray();
                         _server.InvokeSuppressionActivated();
+                        _server.InvokeEvacuationStarted();
+                        _server.StartEvacuationNpcs();
                         break;       
                     case Actions.UseExtinguisher:
                         _server.LogFireExtinguishStatus("Sondurme basladi — EstinguishingStarted anonsu");
@@ -1106,15 +1176,15 @@ namespace Woi.OfficeFire
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
                         _server.AllowExtinguisherSpray();
                         _server.InvokeSuppressionActivated();
-                        break;
-                    case Actions.LeaveServerRoom:
-                        _server.RegisterCorrectAction(OfficeFireCorrectActionId.LeftServerRoomBeforeGas);
-                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
                         if (_server._alarmPressed)
                         {
                             _server.InvokeEvacuationStarted();
                             _server.StartEvacuationNpcs();
                         }
+                        break;
+                    case Actions.LeaveServerRoom:
+                        _server.RegisterCorrectAction(OfficeFireCorrectActionId.LeftServerRoomBeforeGas);
+                        _server.PlayAnnouncement(OfficeFireVoiceLineId.ExittedArchiveRoom);
                         _server.ChangeState(ServerRoomState.WaitingForAssemblyArea);
                         break;
                     default:
@@ -1157,13 +1227,13 @@ namespace Woi.OfficeFire
                         _server.RegisterCorrectAction(OfficeFireCorrectActionId.ActivatedSuppressionSystem);
                         _server.AllowExtinguisherSpray();
                         _server.InvokeSuppressionActivated();
-                        break;
-                    case Actions.LeaveServerRoom:
                         if (_server._alarmPressed)
                         {
                             _server.InvokeEvacuationStarted();
                             _server.StartEvacuationNpcs();
                         }
+                        break;
+                    case Actions.LeaveServerRoom:
                         break;
                     case Actions.ReachAssemblyArea:
                         _server.HandleReachedAssemblyAreaDoor();

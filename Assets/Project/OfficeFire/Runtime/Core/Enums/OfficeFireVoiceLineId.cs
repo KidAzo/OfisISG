@@ -52,5 +52,6 @@ namespace Woi.OfficeFire
         CarafeUsed = 318,
         ServerRoomEntered = 319,
         ServerFireGrowth = 320,
+        KitchenRoomEntered = 321,
     }
 }

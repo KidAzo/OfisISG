@@ -28,6 +28,7 @@ namespace Woi.OfficeFire
 
             if (OfficeFireLoginSession.IsSet)
             {
+                OfficeFireSessionLanguage.SetRuntimeLanguageCode(OfficeFireLoginSession.LanguageCode);
                 scenarioToStart = OfficeFireLoginSession.SelectedScenarioId;
                 OfficeFireLoginSession.MarkScenarioConsumed();
             }

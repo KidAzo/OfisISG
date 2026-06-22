@@ -907,6 +907,7 @@ namespace Woi.OfficeFire
                         _kitchen.ChangeState(KitchenCafeState.WaitingForDoorOpen);
                         break;
                     case Actions.EnterKitchenCafe:
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.KitchenRoomEntered);
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.EnteredKitchenCafeSafely);
                         _kitchen.InvokeDoorOpened();
                         _kitchen.ChangeState(KitchenCafeState.Intervention);
@@ -941,7 +942,7 @@ namespace Woi.OfficeFire
                 {
                     case Actions.EnterKitchenCafe:
                         _kitchen.RegisterCorrectAction(OfficeFireCorrectActionId.EnteredKitchenCafeSafely);
-                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.LeanCorrectly);
+                        _kitchen.PlayAnnouncement(OfficeFireVoiceLineId.KitchenRoomEntered);
                         _kitchen.InvokeDoorOpened();
                         _kitchen.ChangeState(KitchenCafeState.Intervention);
                         break;

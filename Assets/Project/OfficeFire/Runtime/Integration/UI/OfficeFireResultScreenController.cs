@@ -866,16 +866,7 @@ namespace Woi.OfficeFire
             }
         }
 
-        private static bool ResolveTurkish()
-        {
-            if (ServiceLocator.TryGet(out OfficeFireLanguageResolver resolver) && resolver != null)
-            {
-                return resolver.IsTurkish();
-            }
-
-            OfficeFireLanguageResolver found = FindFirstObjectByType<OfficeFireLanguageResolver>();
-            return found == null || found.IsTurkish();
-        }
+        private static bool ResolveTurkish() => OfficeFireSessionLanguage.UseTurkish();
 
         /// <summary>
         /// Loads login on a DontDestroyOnLoad runner so scene unload does not cancel the load task.

@@ -14,6 +14,12 @@ namespace Woi.OfficeFire
         public bool evacuated;
         public bool completed;
 
+        /// <summary>Server room only: door end-state captured when the scenario finishes.</summary>
+        public bool hasServerRoomDoorEndState;
+
+        /// <summary>True when ColorDoor (4) is closed at scenario end (correct).</summary>
+        public bool serverRoomDoorClosedAtEnd;
+
         public void AddCorrectAction(OfficeFireCorrectActionId id)
         {
             if (id == OfficeFireCorrectActionId.None)

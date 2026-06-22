@@ -83,6 +83,20 @@ namespace Woi.OfficeFire
         [Tooltip("Seconds after assembly arrival before the result UI is shown. Announcements may still play in the background.")]
         private float delayBeforeResultScreenSeconds = 8f;
 
+        [Header("Sign Localization")]
+        [SerializeField]
+        private Transform assemblySignRoot;
+
+        [SerializeField]
+        private Material assemblySignTurkishMaterial;
+
+        [SerializeField]
+        private Material assemblySignEnglishMaterial;
+
+        [SerializeField]
+        [Tooltip("Optional frame material to leave unchanged on assembly signs.")]
+        private Material assemblySignFrameMaterial;
+
 
         private Coroutine _sequence;
         private Coroutine _announcementsRoutine;
@@ -165,6 +179,7 @@ namespace Woi.OfficeFire
         {
             yield return null;
 
+            ApplyAssemblySignMaterials();
             TeleportPlayer();
 
             _announcementsRoutine = StartCoroutine(PlayAnnouncementsRoutine());
@@ -281,6 +296,30 @@ namespace Woi.OfficeFire
             }
 
             return FindFirstObjectByType<OfficeFireResultScreenController>(FindObjectsInactive.Include);
+        }
+
+        private void ApplyAssemblySignMaterials()
+        {
+            Transform root = assemblySignRoot;
+            if (root == null)
+            {
+                GameObject found = GameObject.Find("Tabela");
+                root = found != null ? found.transform : null;
+            }
+
+            if (root != null &&
+                assemblySignTurkishMaterial != null &&
+                assemblySignEnglishMaterial != null)
+            {
+                OfficeFireLocalizedSignMaterials.ApplyToHierarchy(
+                    root,
+                    assemblySignTurkishMaterial,
+                    assemblySignEnglishMaterial,
+                    assemblySignFrameMaterial);
+                return;
+            }
+
+            OfficeFireLocalizedSignMaterials.ApplyAllInScene();
         }
 
         private void TeleportPlayer()

@@ -41,6 +41,8 @@ namespace Woi.OfficeFire
                 fireControlled = source.fireControlled,
                 evacuated = source.evacuated,
                 completed = source.completed,
+                hasServerRoomDoorEndState = source.hasServerRoomDoorEndState,
+                serverRoomDoorClosedAtEnd = source.serverRoomDoorClosedAtEnd,
                 correctActions = source.correctActions != null
                     ? new List<OfficeFireCorrectActionId>(source.correctActions)
                     : new List<OfficeFireCorrectActionId>(),

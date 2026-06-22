@@ -25,6 +25,7 @@ namespace Woi.OfficeFire
         EvacuateServerRoom = 203,
         LeaveServerRoom = 204,
         UseServerFireBlanket = 205,
+        CloseServerRoomDoor = 206,
 
         CheckKitchenArea = 300,
         GetFireBlanket = 301,

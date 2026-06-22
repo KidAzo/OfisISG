@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Woi.Events.Data;
 using Woi.Settings;
+using Woi.UI.Popups.Localization;
 using WOI.Modules.SDK;
 
 namespace Woi.OfficeFire
@@ -90,8 +91,8 @@ namespace Woi.OfficeFire
             if (languageDropdown != null)
             {
                 languageDropdown.UnregisterValueChangedCallback(OnLanguageChanged);
+                EnsureDefaultLanguageSelection();
                 languageDropdown.RegisterValueChangedCallback(OnLanguageChanged);
-                ApplyLanguage(languageDropdown.value);
             }
 
             RefreshLeaderboard();
@@ -161,6 +162,21 @@ namespace Woi.OfficeFire
         private void OnLanguageChanged(ChangeEvent<string> evt)
         {
             ApplyLanguage(evt.newValue);
+        }
+
+        private void EnsureDefaultLanguageSelection()
+        {
+            if (languageDropdown == null)
+            {
+                return;
+            }
+
+            languageDropdown.choices = new List<string> { "Türkçe", "English" };
+            languageDropdown.SetValueWithoutNotify("Türkçe");
+            ApplyLanguage("Türkçe");
+            SessionLanguageState.RecordUserChoice("tr");
+            SyncLocalizationService("tr");
+            OfficeFireSessionLanguage.SetRuntimeLanguageCode("tr");
         }
 
         private void ApplyLanguage(string dropdownLabel)
@@ -233,6 +249,9 @@ namespace Woi.OfficeFire
             OfficeFireScenarioId scenarioId = ScenarioIdFromDropdown(
                 scenarioDropdown != null ? scenarioDropdown.value : string.Empty);
 
+            SessionLanguageState.RecordUserChoice(langCode);
+            SyncLocalizationService(langCode);
+            OfficeFireSessionLanguage.SetRuntimeLanguageCode(langCode);
             OfficeFireLoginSession.Set(userName, userId, langCode, scenarioId);
 
             ClearError();
@@ -407,6 +426,26 @@ namespace Woi.OfficeFire
                 OfficeFireScenarioId.KitchenCafe => english ? "Kitchen-Cafe" : "Mutfak-Kafe",
                 _ => english ? "Server Room" : "Sunucu Odası",
             };
+        }
+
+        private static void SyncLocalizationService(string languageCode)
+        {
+            if (string.IsNullOrWhiteSpace(languageCode))
+            {
+                return;
+            }
+
+            if (ServiceLocator.TryGet<ILocalizationService>(out ILocalizationService service) &&
+                service is LocalizationService localizationService)
+            {
+                localizationService.SetLanguage(languageCode);
+                return;
+            }
+
+            if (LocalizationService.Instance != null)
+            {
+                LocalizationService.Instance.SetLanguage(languageCode);
+            }
         }
     }
 }

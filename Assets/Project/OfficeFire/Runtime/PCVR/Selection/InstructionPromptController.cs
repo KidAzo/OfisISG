@@ -159,13 +159,18 @@ namespace Woi.OfficeFire
 
         private string ResolveInstructionText()
         {
-            bool useTurkish = _preferTurkish && !string.IsNullOrWhiteSpace(_instructionTextTurkish);
-            if (useTurkish)
+            bool useTurkish = OfficeFireSessionLanguage.UseTurkish();
+            if (useTurkish && !string.IsNullOrWhiteSpace(_instructionTextTurkish))
             {
                 return _instructionTextTurkish;
             }
 
-            return _instructionText;
+            if (!string.IsNullOrWhiteSpace(_instructionText))
+            {
+                return _instructionText;
+            }
+
+            return _instructionTextTurkish;
         }
 
         private bool IsSelectableActive()

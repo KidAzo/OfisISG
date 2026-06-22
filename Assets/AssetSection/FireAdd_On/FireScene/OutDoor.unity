@@ -326300,6 +326300,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   delayBeforeResultScreenSeconds: 5.5
+  assemblySignRoot: {fileID: 450317783}
+  assemblySignTurkishMaterial: {fileID: 2100000, guid: b3c9dfeeb2b49a043bc776018f5d9e42, type: 2}
+  assemblySignEnglishMaterial: {fileID: 2100000, guid: 1650c77c67462bb4794cfe3e6fbb2b93, type: 2}
+  assemblySignFrameMaterial: {fileID: 2100000, guid: 91b482afdd77d0d4f8e5321f9fe183a0, type: 2}
 --- !u!1001 &1385646102
 PrefabInstance:
   m_ObjectHideFlags: 0
