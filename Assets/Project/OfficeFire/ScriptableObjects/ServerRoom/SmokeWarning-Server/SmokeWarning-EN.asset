@@ -12,14 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f0ce49fbc1e6594982f24d5ad48acf7, type: 3}
   m_Name: SmokeWarning-EN
   m_EditorClassIdentifier: WoiUtils.AudioSystem.Runtime::WoiUtils.AudioSystem.SoundDefinition
-  selectionMode: 0
-  clips: []
+  selectionMode: 3
+  clips:
+  - clip: {fileID: 8300000, guid: 1abc3f28fca7e224498a5df6f7b56688, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 425f9bfb5f50fff45bd14b7b84d3ca40, type: 3}
+    weight: 0
+    delay: 0
   noImmediateRepeat: 1
   category: 0
   useCustomCategory: 0
   customCategoryKey: 
   mixerGroup: {fileID: 0}
-  scheduleMode: 0
+  scheduleMode: 1
   queueScope: 0
   instanceMode: 0
   reTriggerMode: 0

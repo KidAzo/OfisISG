@@ -59,6 +59,11 @@ namespace Woi.OfficeFire
         [SerializeField]
         private bool disablePlayerInputWhileVisible = true;
 
+        [Header("PC Controls HUD")]
+        [Tooltip("Sol alttaki klavye / tuş HUD. Boşsa sahnede aranır.")]
+        [SerializeField]
+        private OfficeFireControlsHUDController pcControlsHud;
+
         private static readonly string[] MovementSpeedFieldNames =
         {
             "_walkSpeed",
@@ -244,6 +249,7 @@ namespace Woi.OfficeFire
             ReleasePlayerInput();
             HideOverlayOnly();
             gameObject.SetActive(false);
+            SetPcControlsHudVisible(true);
         }
 
         public void HideOverlayOnly()
@@ -258,6 +264,7 @@ namespace Woi.OfficeFire
         {
             gameObject.SetActive(true);
             CapturePlayerInput();
+            SetPcControlsHudVisible(false);
 
             if (_root != null)
             {
@@ -843,6 +850,20 @@ namespace Woi.OfficeFire
             }
 
             return matches.Count > 0 ? matches.ToArray() : null;
+        }
+
+        private void SetPcControlsHudVisible(bool visible)
+        {
+            OfficeFireControlsHUDController hud = pcControlsHud;
+            if (hud == null)
+            {
+                hud = FindAnyObjectByType<OfficeFireControlsHUDController>(FindObjectsInactive.Include);
+            }
+
+            if (hud != null)
+            {
+                hud.SetHudVisible(visible);
+            }
         }
 
         private static bool ResolveTurkish()

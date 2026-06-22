@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -16,177 +16,169 @@ MonoBehaviour:
   entries:
   - Id: 10
     Popup:
-      TurkishTitle: "Duman alg\u0131land\u0131"
-      TurkishBody: "Alan\u0131 kontrol edin ve g\xFCvenlik talimatlar\u0131n\u0131
-        uygulay\u0131n."
-      EnglishTitle: Smoke detected
-      EnglishBody: Check the area and follow safety instructions.
-    Voice: {fileID: 11400000, guid: 7700df6ac45f878438502b0e29521b07, type: 2}
+      TurkishTitle: Elektrik yangını
+      TurkishBody: Fotokopi prizinde yangın şüphesi.
+      EnglishTitle: Electrical fire
+      EnglishBody: Fire at the photocopier outlet.
+    Voice: {fileID: 11400000, guid: 2f15555a839540b9b58eb6f40d50810c, type: 2}
   - Id: 309
     Popup:
-      TurkishTitle: "Egil\t"
-      TurkishBody: "Dumandan daha az etkilenmek i\xE7in egilmeniz gerekli"
-      EnglishTitle: CrouchInSmoke
-      EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 11400000, guid: 1b683bcafd54ec449bd1539fc96a87ff, type: 2}
+      TurkishTitle: Eğilin
+      TurkishBody: Dumanın altında ilerleyin.
+      EnglishTitle: Stay low
+      EnglishBody: Move below the smoke.
+    Voice: {fileID: 11400000, guid: 0ab8873b20f2416784b9f84c428200d6, type: 2}
   - Id: 13
     Popup:
-      TurkishTitle: Tahliye
-      TurkishBody: "En yak\u0131n g\xFCvenli \xE7\u0131k\u0131\u015F\u0131 kullanarak
-        alan\u0131 terk edin."
-      EnglishTitle: Evacuate
-      EnglishBody: Leave the area using the nearest safe exit.
-    Voice: {fileID: 11400000, guid: a3fd4b27fb814f6bbd8ae889e763dde7, type: 2}
+      TurkishTitle: Acil çıkış
+      TurkishBody: En yakın acil çıkışa yönelin.
+      EnglishTitle: Emergency exit
+      EnglishBody: Proceed to the nearest emergency exit.
+    Voice: {fileID: 11400000, guid: 54c3c69e35b1477c8950a62f284970e4, type: 2}
   - Id: 14
     Popup:
-      TurkishTitle: "Asans\xF6r\xFC Kullanma\t"
-      TurkishBody: 
-      EnglishTitle: 
-      EnglishBody: 
+      TurkishTitle: "Asans\xF6r\xFC kullanmay\u0131n"
+      TurkishBody: "Yang\u0131n an\u0131nda asans\xF6r\xFC kullanmay\u0131n."
+      EnglishTitle: No elevator
+      EnglishBody: Do not use the elevator during a fire.
     Voice: {fileID: 11400000, guid: 6dfd2d017e24442386dd2cc79946c3f6, type: 2}
   - Id: 15
     Popup:
-      TurkishTitle: "Toplanma Alan\u0131na Git\t"
-      TurkishBody: 
-      EnglishTitle: 
-      EnglishBody: 
-    Voice: {fileID: 11400000, guid: 31f8a5a23b0f417282faf7bf8ed35919, type: 2}
+      TurkishTitle: Çevreyi uyarın
+      TurkishBody: Çevredeki kişileri yangın tehlikesine karşı uyarın.
+      EnglishTitle: Warn others
+      EnglishBody: Warn nearby people about the fire hazard.
+    Voice: {fileID: 11400000, guid: 4ecfc4d69ecc41cc880c41a3c974ec95, type: 2}
   - Id: 310
     Popup:
       TurkishTitle: "T\xFCp al\u0131nd\u0131"
-      TurkishBody: "T\xFCp al\u0131nd\u0131"
-      EnglishTitle: "T\xFCp al\u0131nd\u0131"
-      EnglishBody: "T\xFCp al\u0131nd\u0131"
-    Voice: {fileID: 11400000, guid: e8e865d8431349c8be82a5cdbf020f03, type: 2}
+      TurkishBody: Uygun s\xF6nd\xFCr\xFCc\xFCy\xFC al\u0131n.
+      EnglishTitle: Extinguisher picked up
+      EnglishBody: Take the appropriate extinguisher.
+    Voice: {fileID: 11400000, guid: 5ad24b0d574749ac8859845a6c89f110, type: 2}
   - Id: 311
     Popup:
-      TurkishTitle: "Yang\u0131n S\xF6nd\xFCr\xFClemedi\t"
-      TurkishBody: "Ar\u015Fiv odas\u0131n\u0131 terk edin."
-      EnglishTitle: Archive incident
-      EnglishBody: Inspect the archive room.
-    Voice: {fileID: 11400000, guid: 949f1f0fd7ce4498b2a8d77253e6b380, type: 2}
+      TurkishTitle: Alevin kaynağına yönelin
+      TurkishBody: Söndürücüyü süpürme hareketiyle uygulayın.
+      EnglishTitle: Aim at fire source
+      EnglishBody: Apply the extinguisher with a sweeping motion.
+    Voice: {fileID: 11400000, guid: 59ddfd234d9f4849b56e6fb07f1af7e4, type: 2}
   - Id: 312
     Popup:
-      TurkishTitle: "Ar\u015Fiv Yang\u0131n\u0131 B\xFCy\xFCd\xFC\t"
-      TurkishBody: 
-      EnglishTitle: 
-      EnglishBody: 
-    Voice: {fileID: 11400000, guid: e35aad4b20f04060b1a4014a86bc563f, type: 2}
+      TurkishTitle: Derhal tahliye
+      TurkishBody: Yangın kontrol altına alınamıyorsa tahliye olun.
+      EnglishTitle: Evacuate now
+      EnglishBody: Evacuate if the fire cannot be controlled.
+    Voice: {fileID: 11400000, guid: 9cc214b39c1344c595eb4c4732701b72, type: 2}
   - Id: 313
     Popup:
-      TurkishTitle: "Alan\u0131 Terk Edin"
-      TurkishBody: "G\xFCvenliginiz i\xE7in alan\u0131 terk edin"
-      EnglishTitle: 
-      EnglishBody: 
-    Voice: {fileID: 11400000, guid: a3fd4b27fb814f6bbd8ae889e763dde7, type: 2}
+      TurkishTitle: Tahliye
+      TurkishBody: En yakın acil çıkışa yönelin.
+      EnglishTitle: Evacuate
+      EnglishBody: Proceed to the nearest emergency exit.
+    Voice: {fileID: 11400000, guid: 7c767aa59de04d7faaa88de95a7096e0, type: 2}
   - Id: 103
     Popup:
-      TurkishTitle: "Alarm\u0131 \xE7al\u0131\u015Ft\u0131r\u0131n"
-      TurkishBody: "Di\u011Fer i\u015Flemlerden \xF6nce yang\u0131n alarm\u0131n\u0131
-        devreye al\u0131n."
-      EnglishTitle: Press the alarm
-      EnglishBody: Activate the fire alarm before other actions.
-    Voice: {fileID: 11400000, guid: 3aefa70408cdef04e9d5a7033d01135c, type: 2}
+      TurkishTitle: Alarmı devreye alın
+      TurkishBody: Önce bina alarm sistemini aktive edin.
+      EnglishTitle: Activate alarm
+      EnglishBody: Activate the building fire alarm first.
+    Voice: {fileID: 11400000, guid: 8194b4b3079c48c39d92364f63c69708, type: 2}
   - Id: 314
     Popup:
-      TurkishTitle: "Toplanma Alan\u0131na Ula\u015F\u0131ld\u0131"
-      TurkishBody: 
-      EnglishTitle: 
-      EnglishBody: 
-    Voice: {fileID: 11400000, guid: 31f8a5a23b0f417282faf7bf8ed35919, type: 2}
+      TurkishTitle: Toplanma alanı
+      TurkishBody: Toplanma alanına ulaştınız.
+      EnglishTitle: Assembly area
+      EnglishBody: You have reached the assembly area.
+    Voice: {fileID: 11400000, guid: d949b16db44f4f4789f28ea9c2052103, type: 2}
   - Id: 315
     Popup:
-      TurkishTitle: "\xC7\u0131k\u0131\u015F Kap\u0131s\u0131na Ula\u015F\u0131ld\u0131"
-      TurkishBody: 
-      EnglishTitle: 
-      EnglishBody: 
-    Voice: {fileID: 11400000, guid: 6de95f9a6f352384084629148c24244e, type: 2}
+      TurkishTitle: Çıkış güzergâhı
+      TurkishBody: Acil çıkış güzergâhını takip ederek binayı terk edin.
+      EnglishTitle: Exit route
+      EnglishBody: Follow the emergency exit route and leave the building.
+    Voice: {fileID: 11400000, guid: b7b1d00c21344f0ca705365ec8ebed88, type: 2}
   - Id: 106
     Popup:
-      TurkishTitle: 
-      TurkishBody: 
-      EnglishTitle: ArchiveUseExtinguisherInstruction
-      EnglishBody: Assign audio clip and edit this text in the content database.
-    Voice: {fileID: 11400000, guid: 2b375e05c71a429db530f2050e079c29, type: 2}
+      TurkishTitle: Güvenli müdahale
+      TurkishBody: Uygun söndürücü ile güvenli müdahale edin.
+      EnglishTitle: Respond safely
+      EnglishBody: Respond safely with the appropriate extinguisher.
+    Voice: {fileID: 11400000, guid: 5ad24b0d574749ac8859845a6c89f110, type: 2}
   - Id: 107
     Popup:
-      TurkishTitle: "Yang\u0131n Kontrol Alt\u0131nda\t"
-      TurkishBody: 
-      EnglishTitle: 
-      EnglishBody: 
+      TurkishTitle: Yang\u0131n kontrol alt\u0131nda
+      TurkishBody: Yang\u0131n kontrol alt\u0131na al\u0131nd\u0131.
+      EnglishTitle: Fire controlled
+      EnglishBody: The fire has been brought under control.
     Voice: {fileID: 11400000, guid: 1d57c12b1dd74b0fb34fc5efede6ecf2, type: 2}
   - Id: 108
     Popup:
-      TurkishTitle: "Yang\u0131n Kontrol Alt\u0131nda De\u011Fil\t"
-      TurkishBody: 
-      EnglishTitle: 
-      EnglishBody: 
-    Voice: {fileID: 11400000, guid: 949f1f0fd7ce4498b2a8d77253e6b380, type: 2}
+      TurkishTitle: Derhal tahliye
+      TurkishBody: Yangın kontrol altına alınamıyorsa tahliye olun.
+      EnglishTitle: Evacuate now
+      EnglishBody: Evacuate if the fire cannot be controlled.
+    Voice: {fileID: 11400000, guid: 9cc214b39c1344c595eb4c4732701b72, type: 2}
   - Id: 11
     Popup:
-      TurkishTitle: "Yang\u0131n Esans\u0131nda E\u011Fil\t"
-      TurkishBody: 
-      EnglishTitle: 
-      EnglishBody: 
-    Voice: {fileID: 0}
+      TurkishTitle: Eğilin
+      TurkishBody: Dumanın altında ilerleyin.
+      EnglishTitle: Stay low
+      EnglishBody: Move below the smoke.
+    Voice: {fileID: 11400000, guid: 0ab8873b20f2416784b9f84c428200d6, type: 2}
   - Id: 12
     Popup:
-      TurkishTitle: 
-      TurkishBody: 
-      EnglishTitle: 
-      EnglishBody: 
-    Voice: {fileID: 0}
+      TurkishTitle: Sprinkler devrede
+      TurkishBody: Otomatik sprinkler sistemi devreye girdi.
+      EnglishTitle: Sprinkler active
+      EnglishBody: The automatic sprinkler system is operating.
+    Voice: {fileID: 11400000, guid: db490841e641400c9022bb989f750400, type: 2}
   - Id: 16
     Popup:
-      TurkishTitle: "Senaryo Tamamland\u0131\t"
-      TurkishBody: 
-      EnglishTitle: 
-      EnglishBody: 
+      TurkishTitle: Senaryo tamamland\u0131
+      TurkishBody: E\u011Fitimi ba\u015Far\u0131yla tamamlad\u0131n\u0131z.
+      EnglishTitle: Scenario completed
+      EnglishBody: You have completed the training.
     Voice: {fileID: 0}
   - Id: 100
     Popup:
-      TurkishTitle: "Ar\u015Fiv olay\u0131"
-      TurkishBody: "Ar\u015Fiv odas\u0131n\u0131 kontrol edin."
-      EnglishTitle: Archive incident
+      TurkishTitle: Olağan dışı durum
+      TurkishBody: Arşiv odasını kontrol edin.
+      EnglishTitle: Unusual situation
       EnglishBody: Inspect the archive room.
-    Voice: {fileID: 0}
+    Voice: {fileID: 11400000, guid: b5ab102c614f4884b1c9c0a3a3f319c9, type: 2}
   - Id: 101
     Popup:
-      TurkishTitle: 
-      TurkishBody: 
-      EnglishTitle: ArchiveElectricalFireWarning
-      EnglishBody: Assign a Localized Sound Definition and edit this text in the
-        content database.
-    Voice: {fileID: 0}
+      TurkishTitle: Elektrik yangını
+      TurkishBody: Fotokopi prizinde yangın şüphesi.
+      EnglishTitle: Electrical fire
+      EnglishBody: Fire at the photocopier outlet.
+    Voice: {fileID: 11400000, guid: 2f15555a839540b9b58eb6f40d50810c, type: 2}
   - Id: 102
     Popup:
-      TurkishTitle: 
-      TurkishBody: 
-      EnglishTitle: ArchiveWaterMistake
-      EnglishBody: Assign a Localized Sound Definition and edit this text in the
-        content database.
-    Voice: {fileID: 0}
+      TurkishTitle: Su kullanmayın
+      TurkishBody: Elektrik yangınında su kullanılmaz.
+      EnglishTitle: Do not use water
+      EnglishBody: Do not use water on electrical fires.
+    Voice: {fileID: 11400000, guid: fb4d7ed53852454da72247345005cdb8, type: 2}
   - Id: 104
     Popup:
-      TurkishTitle: 
-      TurkishBody: 
-      EnglishTitle: ArchiveCutPowerInstruction
-      EnglishBody: Assign a Localized Sound Definition and edit this text in the
-        content database.
-    Voice: {fileID: 0}
+      TurkishTitle: Enerjiyi kesin
+      TurkishBody: Güvenliyse fotokopi beslemesini kapatın.
+      EnglishTitle: Cut power
+      EnglishBody: Shut off the photocopier power if safe.
+    Voice: {fileID: 11400000, guid: e1e64474ca55445fa928cee5fd5f3380, type: 2}
   - Id: 105
     Popup:
-      TurkishTitle: 
-      TurkishBody: 
-      EnglishTitle: ArchivePowerCutSuccess
-      EnglishBody: Assign a Localized Sound Definition and edit this text in the
-        content database.
-    Voice: {fileID: 0}
+      TurkishTitle: Enerjiyi kesin
+      TurkishBody: Güvenliyse fotokopi beslemesini kapatın.
+      EnglishTitle: Cut power
+      EnglishBody: Shut off the photocopier power if safe.
+    Voice: {fileID: 11400000, guid: e1e64474ca55445fa928cee5fd5f3380, type: 2}
   - Id: 316
     Popup:
-      TurkishTitle: 
-      TurkishBody: 
-      EnglishTitle: ReachedAssemblyAreaDoor
-      EnglishBody: Assign a Localized Sound Definition and edit this text in the
-        content database.
-    Voice: {fileID: 0}
+      TurkishTitle: Korkulukları kullanın
+      TurkishBody: Panik yapmadan sakin ilerleyin.
+      EnglishTitle: Use handrails
+      EnglishBody: Move calmly without panic.
+    Voice: {fileID: 11400000, guid: 31959747c14447b9883c275f699c7c6e, type: 2}

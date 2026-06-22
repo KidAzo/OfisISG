@@ -1,0 +1,61 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="KeyboardHUD.uss" />
+
+    <ui:VisualElement class="hud-container">
+
+        <ui:VisualElement class="keyboard-layout">
+            <ui:VisualElement class="key-row">
+                <ui:Label text="TAB" class="special-key key-tab" />
+                <ui:Label text="Q" class="key-base" />
+                <ui:Label text="W" class="key-base key-sky" />
+                <ui:Label text="E" class="key-base key-emerald" />
+                <ui:Label text="R" class="key-base key-rose" />
+                <ui:Label text="T" class="key-base" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="key-row">
+                <ui:Label text="CAPS" class="special-key key-caps" />
+                <ui:Label text="A" class="key-base key-sky" />
+                <ui:Label text="S" class="key-base key-sky" />
+                <ui:Label text="D" class="key-base key-sky" />
+                <ui:Label text="F" class="key-base" />
+                <ui:Label text="G" class="key-base key-amber" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="key-row">
+                <ui:Label text="SHIFT" class="special-key key-shift" />
+                <ui:Label text="Z" class="key-base" />
+                <ui:Label text="X" class="key-base" />
+                <ui:Label text="C" class="key-base" />
+                <ui:Label text="V" class="key-base" />
+                <ui:Label text="B" class="key-base" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement class="divider" />
+
+        <ui:VisualElement class="legend-container">
+            <ui:Label name="title-lbl" text="KEY BINDINGS" class="legend-title" />
+
+            <ui:VisualElement class="legend-row">
+                <ui:VisualElement class="legend-dot-base dot-sky" />
+                <ui:Label name="locomotion-lbl" text="Locomotion (WASD)" class="legend-text" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="legend-row">
+                <ui:VisualElement class="legend-dot-base dot-emerald" />
+                <ui:Label name="equip-lbl" text="Equip (E)" class="legend-text" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="legend-row">
+                <ui:VisualElement class="legend-dot-base dot-rose" />
+                <ui:Label name="pin-lbl" text="Pin Pulling (R)" class="legend-text" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="legend-row">
+                <ui:VisualElement class="legend-dot-base dot-amber" />
+                <ui:Label name="drop-lbl" text="Drop (G)" class="legend-text" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
