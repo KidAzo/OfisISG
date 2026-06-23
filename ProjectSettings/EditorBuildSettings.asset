@@ -5,16 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Project/Scenes/FireModule/FireModule_Bootstrapper.unity
     guid: 6f42e3fa241219d4994017267ad51a18
   - enabled: 0
     path: Assets/Project/Scenes/WasteLogin.unity
     guid: 0786b739b76e008488580b0b346aebce
-  - enabled: 1
+  - enabled: 0
     path: Assets/Project/Scenes/FireModule/OfficeFireModule_Login.unity
     guid: 7638b2d478e05b9419ed7e07ebfd9617
-  - enabled: 1
+  - enabled: 0
     path: Assets/Project/Scenes/FireModule/FireModule_Office.unity
     guid: 2a034a5d92c28e444a1e19d5ef67d9f3
   - enabled: 0
@@ -26,13 +26,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/OfficeStartScene/LoginScreen.unity
     guid: 18149f31848f1a74db4823a16a2364dd
-  - enabled: 1
+  - enabled: 0
     path: Assets/AssetSection/FireAdd_On/FireScene/FireStairsOfis.unity
     guid: 86ac583fd775cc949aa267c369d36dd2
-  - enabled: 1
+  - enabled: 0
     path: Assets/AssetSection/FireAdd_On/FireScene/FireStairsOfis 1.unity
     guid: 6e53403b119b63d4ab5ab1a8b6817a14
-  - enabled: 1
+  - enabled: 0
     path: Assets/AssetSection/FireAdd_On/FireScene/OutDoor.unity
     guid: bff5ae25ecb1c5545b27ca6f890bf48c
   m_configObjects:

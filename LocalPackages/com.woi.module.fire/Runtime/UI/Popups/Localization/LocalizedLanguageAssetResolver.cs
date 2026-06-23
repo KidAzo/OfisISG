@@ -1,5 +1,4 @@
 using System;
-using Woi.Events.Data;
 using WOI.Modules.SDK;
 
 namespace Woi.UI.Popups.Localization
@@ -27,12 +26,6 @@ namespace Woi.UI.Popups.Localization
 
         private static string ResolveLanguageCode()
         {
-            if (SessionLanguageState.HasUserChoice)
-                return SessionLanguageState.LanguageCode;
-
-            if (GameSessionData.IsSet && !string.IsNullOrEmpty(GameSessionData.LanguageCode))
-                return GameSessionData.LanguageCode.Trim().ToLowerInvariant();
-
             if (ServiceLocator.TryGet<ILocalizationService>(out var loc) && loc != null && !string.IsNullOrEmpty(loc.CurrentLanguage))
                 return loc.CurrentLanguage.Trim().ToLowerInvariant();
 

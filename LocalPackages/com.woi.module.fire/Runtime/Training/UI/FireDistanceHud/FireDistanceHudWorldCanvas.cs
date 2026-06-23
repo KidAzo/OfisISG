@@ -108,6 +108,9 @@ namespace Woi.Game.Training.UI.FireDistance
         [SerializeField, Min(0.01f)] private float readyDistance = 4f;
         [SerializeField, Min(0.01f)] private float criticalDistance = 1.2f;
 
+        [Tooltip("Critical bandından çıkış eşiği = criticalDistance + bu tampon (m). Sınırda titremeyi azaltır.")]
+        [SerializeField, Min(0f)] private float criticalExitBufferMeters = 0.5f;
+
         [Header("Minimum approach (uses Critical Distance)")]
         [Tooltip(
             "When enabled, if the player stays closer than <b>Critical Distance</b> (m) for <see cref=\"pushDelayAfterTooCloseSeconds\"/>, they are pushed once outward " +
@@ -255,7 +258,7 @@ namespace Woi.Game.Training.UI.FireDistance
             if (!_wasHudShownLastFrame)
             {
                 _wasHudShownLastFrame = true;
-                FireHudDistanceState sync = ResolveState(stateDistance);
+                FireHudDistanceState sync = ResolveStateWithHysteresis(stateDistance);
                 FireHudDistanceState previous = _currentState;
                 _currentState = sync;
                 RaiseCriticalBandTransitionsIfChanged(previous, _currentState);
@@ -269,7 +272,7 @@ namespace Woi.Game.Training.UI.FireDistance
                 distanceText.text = $"Dist. {distance:F1} m{suffix}";
             }
 
-            FireHudDistanceState newState = ResolveState(stateDistance);
+            FireHudDistanceState newState = ResolveStateWithHysteresis(stateDistance);
             if (newState != _currentState)
             {
                 FireHudDistanceState previous = _currentState;
@@ -397,6 +400,16 @@ namespace Woi.Game.Training.UI.FireDistance
             Vector3 desiredWorld = firePos + dir * targetDist;
             Vector3 delta = desiredWorld - playerPos;
 
+            if (!IsFiniteVector3(firePos) || !IsFiniteVector3(playerPos) || !IsFiniteVector3(delta))
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning(
+                    $"[{nameof(FireDistanceHudWorldCanvas)}] Skipping minimum-approach push — non-finite fire/player/delta position.",
+                    this);
+#endif
+                return distance;
+            }
+
             ApplyWorldDeltaToPlayer(delta, playerRoot);
 
             onMinimumApproachPushApplied?.Invoke();
@@ -435,9 +448,15 @@ namespace Woi.Game.Training.UI.FireDistance
             }
         }
 
+        static bool IsFiniteVector3(Vector3 v) =>
+            float.IsFinite(v.x) && float.IsFinite(v.y) && float.IsFinite(v.z);
+
         private void ApplyWorldDeltaToPlayer(Vector3 worldDelta, Transform playerRoot)
         {
             if (worldDelta.sqrMagnitude < 1e-10f || playerRoot == null)
+                return;
+
+            if (!IsFiniteVector3(worldDelta) || !IsFiniteVector3(playerRoot.position))
                 return;
 
             // XR: IXRPlayerService bazen Camera Offset / göz altı transform döner; itişi tüm rig’e uygula (PC’deki gibi).
@@ -535,6 +554,18 @@ namespace Woi.Game.Training.UI.FireDistance
 
             if (worldCanvas != null && worldCanvas.enabled != visible)
                 worldCanvas.enabled = visible;
+        }
+
+        private FireHudDistanceState ResolveStateWithHysteresis(float distance)
+        {
+            if (_currentState == FireHudDistanceState.Critical)
+            {
+                float exitAt = criticalDistance + criticalExitBufferMeters;
+                if (distance <= exitAt)
+                    return FireHudDistanceState.Critical;
+            }
+
+            return ResolveState(distance, readyDistance, criticalDistance);
         }
 
         private static FireHudDistanceState ResolveState(float distance, float ready, float critical)

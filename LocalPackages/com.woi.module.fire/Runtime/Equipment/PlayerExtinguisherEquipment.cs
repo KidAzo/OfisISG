@@ -21,7 +21,7 @@ namespace Woi.Equipment
     /// core framework components on the extinguisher itself.
     /// </remarks>
     [AddComponentMenu("Woi/Equipment/Player Extinguisher Equipment")]
-    public sealed class PlayerExtinguisherEquipment : MonoBehaviour, ISoapGameplayInputContextListener
+    public sealed class PlayerExtinguisherEquipment : MonoBehaviour
     {
         // ── Inspector ─────────────────────────────────────────────────────────────
 
@@ -75,11 +75,8 @@ namespace Woi.Equipment
         [SerializeField] private bool _suppressOnDropEventDuringSwap = true;
 
         [Header("Slot Controller")]
-        [Tooltip("Optional in scenario-only scenes. When empty, drops use each item's Drop Anchor, Home Point, or Used Extinguisher Area.")]
+        [Tooltip("Central controller that owns all extinguisher slots, used areas, and replacement spawning.")]
         [SerializeField] private ExtinguisherSlotController _slotController;
-
-        [Tooltip("Fallback for used (pin-pulled) drops when Slot Controller is not assigned.")]
-        [SerializeField] private UsedExtinguisherArea _usedExtinguisherArea;
 
         /// <summary>Slotta yedek tüp spawn (PC drop / VR pim) için; boşsa VR pim sonrası yeni tüp oluşturulamaz.</summary>
         public ExtinguisherSlotController SlotController => _slotController;
@@ -103,7 +100,10 @@ namespace Woi.Equipment
         /// <summary>Pickup için InteractionRaySource yedek kökü; genelde ana kamera.</summary>
         public Camera PlayerCamera => _playerCamera;
 
-        /// <summary>Gameplay input asset (E interact, drop, pin pull).</summary>
+        /// <summary>Shared gameplay input (E interact, G drop) for other equipment on the same player.</summary>
+        public GameplayInputContext GameplayInputContext => _inputContext;
+
+        /// <summary>Alias used by office scenario equipment that shares input with the extinguisher.</summary>
         public GameplayInputContext InputContext => _inputContext;
 
         /// <summary>
@@ -114,51 +114,7 @@ namespace Woi.Equipment
 
         // ── Unity lifecycle ───────────────────────────────────────────────────────
 
-        public bool IsUsingDifferentGameplayInputContext(GameplayInputContext liveContext) =>
-            _inputContext != null
-            && liveContext != null
-            && !ReferenceEquals(_inputContext, liveContext);
-
-        public void RebindGameplayInputContext(GameplayInputContext liveContext)
-        {
-            if (liveContext == null)
-                return;
-
-            UnsubscribeInputEvents();
-            _inputContext = liveContext;
-
-            if (isActiveAndEnabled)
-                SubscribeInputEvents();
-        }
-
         private void OnEnable()
-        {
-            TryBindLiveInputContext();
-            SubscribeInputEvents();
-        }
-
-        private void Start()
-        {
-            TryBindLiveInputContext();
-        }
-
-        private void OnDisable()
-        {
-            UnsubscribeInputEvents();
-        }
-
-        private void TryBindLiveInputContext()
-        {
-            InputManager inputManager = FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
-            GameplayInputContext liveContext = inputManager?.GetPcGameplayContext();
-            if (liveContext == null)
-                return;
-
-            if (_inputContext == null || IsUsingDifferentGameplayInputContext(liveContext))
-                RebindGameplayInputContext(liveContext);
-        }
-
-        private void SubscribeInputEvents()
         {
             if (_inputContext == null)
             {
@@ -181,7 +137,7 @@ namespace Woi.Equipment
                 _inputContext.PinPulling.OnRaised += HandlePinPull;
         }
 
-        private void UnsubscribeInputEvents()
+        private void OnDisable()
         {
             if (_inputContext == null) return;
 
@@ -265,11 +221,6 @@ namespace Woi.Equipment
 
         private void HandleInteractInput()
         {
-            if (!isActiveAndEnabled)
-            {
-                return;
-            }
-
             TryPickupOrSwapFromRay();
         }
 
@@ -382,27 +333,21 @@ namespace Woi.Equipment
                 isUsed = usageState.IsUsed;
             }
 
-            if (_slotController == null)
-            {
-                CurrentItem = null;
-                DropWithoutSlotController(item, isUsed);
-                OnExtinguisherChanged?.Invoke(null);
-                RaiseChangedEvent(null);
-                if (!suppressOnDropEvent)
-                    _onDropEvent?.Raise();
-                return;
-            }
-
+            ExtinguisherSlotController slotController = ResolveSlotController();
             CurrentItem = null;
 
-            if (isUsed)
+            if (slotController == null)
+            {
+                PerformDropWithoutSlotController(item, isUsed);
+            }
+            else if (isUsed)
             {
                 Debug.Log($"[PlayerExtinguisherEquipment] Used extinguisher '{item.name}' dropped — forwarding to SlotController.", item);
-                _slotController.HandleUsedDrop(item);
+                slotController.HandleUsedDrop(item);
             }
             else
             {
-                _slotController.HandleUnusedReturn(item);
+                slotController.HandleUnusedReturn(item);
             }
 
             OnExtinguisherChanged?.Invoke(null);
@@ -411,49 +356,33 @@ namespace Woi.Equipment
                 _onDropEvent?.Raise();
         }
 
-        private void DropWithoutSlotController(ExtinguisherPickupItem item, bool isUsed)
+        private ExtinguisherSlotController ResolveSlotController()
+        {
+            if (_slotController != null)
+                return _slotController;
+
+            _slotController = UnityEngine.Object.FindFirstObjectByType<ExtinguisherSlotController>(FindObjectsInactive.Include);
+            return _slotController;
+        }
+
+        private static void PerformDropWithoutSlotController(ExtinguisherPickupItem item, bool isUsed)
         {
             if (item == null)
-            {
                 return;
-            }
 
             if (isUsed)
             {
-                UsedExtinguisherArea usedArea = ResolveUsedExtinguisherArea();
-                if (usedArea != null)
-                {
-                    Debug.Log(
-                        $"[PlayerExtinguisherEquipment] Used extinguisher '{item.name}' dropped — placing in Used Extinguisher Area.",
-                        item);
-                    usedArea.PlaceUsedExtinguisher(item);
-                    return;
-                }
-            }
-
-            if (!isUsed && item.HomePoint != null)
-            {
                 Debug.Log(
-                    $"[PlayerExtinguisherEquipment] Unused extinguisher '{item.name}' dropped — returning to home point.",
+                    $"[PlayerExtinguisherEquipment] Used drop without ExtinguisherSlotController — dropping '{item.name}' in place.",
                     item);
-                item.ReturnUnusedToHome();
+                item.DropFromPlayer();
                 return;
             }
 
             Debug.Log(
-                $"[PlayerExtinguisherEquipment] Extinguisher '{item.name}' dropped without slot controller — using drop anchor or current pose.",
+                $"[PlayerExtinguisherEquipment] Unused return without ExtinguisherSlotController — '{item.name}'.",
                 item);
-            item.DropFromPlayer();
-        }
-
-        private UsedExtinguisherArea ResolveUsedExtinguisherArea()
-        {
-            if (_usedExtinguisherArea != null)
-            {
-                return _usedExtinguisherArea;
-            }
-
-            return FindFirstObjectByType<UsedExtinguisherArea>(FindObjectsInactive.Include);
+            item.ReturnUnusedToHome();
         }
 
         // ── SO event helper ───────────────────────────────────────────────────────

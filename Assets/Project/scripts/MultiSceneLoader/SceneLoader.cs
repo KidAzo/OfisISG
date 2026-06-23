@@ -258,7 +258,9 @@ namespace Woi.Settings
 				if (useLoadingCanvas)
 					EnableLoadingCanvas(false);
 
-				GetComponent<LoadingScreenController>()?.RefreshDisplayFallbackCamera();
+				var loadingController = GetComponent<LoadingScreenController>();
+				loadingController?.RefreshDisplayFallbackCamera();
+				loadingController?.RequestDelayedDisplayFallbackRefresh();
 			}
 		}
 

@@ -21,7 +21,16 @@ namespace Woi.WasteCollectionMode
                     return SessionLanguageState.IsEnglish;
 
                 if (GameSessionData.IsSet)
-                    return GameSessionData.IsEnglish;
+                {
+                    if (SessionLanguageState.HasUserChoice)
+                        return SessionLanguageState.IsEnglish;
+
+                    if (WasteLoginSession.IsSet)
+                        return string.Equals(
+                            WasteLoginSession.LanguageCode,
+                            LangEnglish,
+                            StringComparison.OrdinalIgnoreCase);
+                }
 
                 if (WasteLoginSession.IsSet)
                     return string.Equals(

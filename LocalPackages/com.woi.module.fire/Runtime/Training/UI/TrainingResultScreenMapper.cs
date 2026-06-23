@@ -33,9 +33,9 @@ namespace Woi.Game.Training.UI
                 resultLabel: FormatOverallResult(c),
                 resultTone: ResolveResultTone(c),
                 finalScorePercent: Mathf.Clamp(Mathf.RoundToInt(c.FinalScore * 100f), 0, 100),
-                sessionDurationDisplay: FormatSeconds(c.SessionDurationSeconds),
+                sessionDurationDisplay: FormatDuration(c.SessionDurationSeconds),
                 timeToFirstResponseDisplay: c.TimeToFirstResponseSeconds >= 0f
-                    ? FormatSeconds(c.TimeToFirstResponseSeconds)
+                    ? FormatDuration(c.TimeToFirstResponseSeconds)
                     : "—");
 
             IReadOnlyList<string> criticalRaw = c.CriticalMistakes.ToList();
@@ -90,7 +90,9 @@ namespace Woi.Game.Training.UI
                     bool correctKnown = f.HasAllowedExtinguisherTypes && f.HadSprayContactOnThisFire;
 
                     list.Add(new TrainingResultFireCardModel(
-                        cardTitle: ShortFireTitle(f.FireSourceKey),
+                        cardTitle: TrainingReportLabels.FormatFireClassShort(
+                            f.FireClass,
+                            TrainingResultUiLanguage.IsTurkish()),
                         fireClassDisplay: TrainingReportLabels.FormatFireClass(f.FireClass, TrainingResultUiLanguage.IsTurkish()),
                         requiredExtinguisherDisplay: f.HasAllowedExtinguisherTypes
                             ? TrainingReportLabels.LocalizeRequiredExtinguishersDisplay(
@@ -139,16 +141,6 @@ namespace Woi.Game.Training.UI
             return list;
         }
 
-        private static string ShortFireTitle(string fireSourceKey)
-        {
-            if (string.IsNullOrEmpty(fireSourceKey))
-                return L("Fire", "Yangın");
-            int hash = fireSourceKey.IndexOf('#', StringComparison.Ordinal);
-            if (hash > 0)
-                return fireSourceKey.Substring(0, hash).Trim();
-            return fireSourceKey;
-        }
-
         private static List<string> MistakesForFire(string fireKey, IReadOnlyList<string> all)
         {
             if (all == null || all.Count == 0 || string.IsNullOrEmpty(fireKey))
@@ -185,6 +177,13 @@ namespace Woi.Game.Training.UI
                 !correctKnown
                     ? L("Requirement or used type was not recorded", "Gerekli veya kullanılan tip kaydedilmedi")
                     : string.Empty));
+
+            rows.Add(new TrainingResultMetricRowModel(
+                L("Fire blanket used", "Yangın battaniyesi kullanıldı"),
+                c.FireBlanketUsed ? "pass" : "fail",
+                c.FireBlanketUsed
+                    ? L("Placed on fire during session", "Oturumda yangına yerleştirildi")
+                    : L("Not placed on fire", "Yangına yerleştirilmedi")));
 
             rows.Add(new TrainingResultMetricRowModel(
                 L("Distance / positioning", "Mesafe / konumlama"),
@@ -257,7 +256,7 @@ namespace Woi.Game.Training.UI
 
             rows.Add(new TrainingResultAdvancedTableRowModel(
                 L("Spray duration", "Püskürtme süresi"),
-                $"{t.TotalSprayDurationSeconds.ToString("F1", CultureInfo.InvariantCulture)} {L("s", "sn")}",
+                FormatDuration(t.TotalSprayDurationSeconds),
                 "—",
                 L("N/A", "Yok"),
                 "neutral"));
@@ -368,11 +367,25 @@ namespace Woi.Game.Training.UI
             };
         }
 
-        private static string FormatSeconds(float seconds)
+        /// <summary>Oturum süresi / ilk tepki gibi rapor alanları için dk + sn (veya yalnızca sn).</summary>
+        static string FormatDuration(float seconds)
         {
-            string n = seconds.ToString("F1", CultureInfo.InvariantCulture);
-            string unit = LocalizedUiPair.Resolve("s", "sn");
-            return $"{n} {unit}";
+            if (seconds < 0f || float.IsNaN(seconds))
+                return "—";
+
+            int totalSeconds = Mathf.Max(0, Mathf.FloorToInt(seconds));
+            int minutes = totalSeconds / 60;
+            int secs = totalSeconds % 60;
+            bool isTr = TrainingResultUiLanguage.IsTurkish();
+
+            if (minutes > 0)
+            {
+                if (secs > 0)
+                    return isTr ? $"{minutes} dk {secs} sn" : $"{minutes} min {secs} s";
+                return isTr ? $"{minutes} dk" : $"{minutes} min";
+            }
+
+            return isTr ? $"{secs} sn" : $"{secs} s";
         }
     }
 }

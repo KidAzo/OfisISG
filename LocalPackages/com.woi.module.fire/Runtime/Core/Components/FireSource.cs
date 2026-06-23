@@ -279,6 +279,49 @@ namespace FireExtinguisher.Core
             TransitionTo(FireSourceState.Active);
         }
 
+        /// <summary>
+        /// Marks recent external suppression (blanket, electrical safety, etc.) so intensification does not
+        /// counteract gradual drain while <see cref="_intensificationEnabled"/> is on.
+        /// </summary>
+        public void NotifyExternalSuppressionTick() => _timeSinceLastSpray = 0f;
+
+        /// <summary>
+        /// Drains every active zone over <paramref name="remainingDurationSeconds"/> (wall-clock).
+        /// Call once per frame from a coroutine. Returns <c>false</c> when no active zones remain.
+        /// </summary>
+        public bool ApplyGradualSuppressionStep(float remainingDurationSeconds, float deltaTime)
+        {
+            if (_state == FireSourceState.Extinguished || remainingDurationSeconds <= 0f || deltaTime <= 0f)
+                return false;
+
+            NotifyExternalSuppressionTick();
+
+            bool anyActive = false;
+            float stepWindow = Mathf.Max(remainingDurationSeconds, deltaTime);
+
+            foreach (FireTargetZone zone in _zones)
+            {
+                if (zone == null || zone.IsExtinguished)
+                    continue;
+
+                anyActive = true;
+                float drain = (zone.CurrentIntensity / stepWindow) * deltaTime;
+                zone.ApplySuppression(drain);
+            }
+
+            return anyActive;
+        }
+
+        /// <summary>Forces all zones to zero intensity immediately (e.g. end of timed blanket extinguish).</summary>
+        public void ForceExtinguishAllZones()
+        {
+            foreach (FireTargetZone zone in _zones)
+            {
+                if (zone != null && !zone.IsExtinguished)
+                    zone.ApplySuppression(zone.CurrentIntensity);
+            }
+        }
+
         // ── Private helpers ──────────────────────────────────────────────────────
 
         private void InitialiseZones()

@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Office_Safety
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Office_Safety
+  m_GUID: c4f8a2b1d3e5476098abcdef01234567
+  m_SerializeEntries:
+  - m_GUID: 2a034a5d92c28e444a1e19d5ef67d9f3
+    m_Address: FireModule_Office
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e53403b119b63d4ab5ab1a8b6817a14
+    m_Address: FireStairsOfis 1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6f42e3fa241219d4994017267ad51a18
+    m_Address: Office_Boot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7638b2d478e05b9419ed7e07ebfd9617
+    m_Address: OfficeFireModule_Login
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 86ac583fd775cc949aa267c369d36dd2
+    m_Address: FireStairsOfis
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bff5ae25ecb1c5545b27ca6f890bf48c
+    m_Address: OutDoor
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3c60501d4ea17ec4796be47a8a3f237c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: d5e6f7a8b9c0d1e2f3a4b5c6d7e8f901, type: 2}
+    - {fileID: 11400000, guid: e6f7a8b9c0d1e2f3a4b5c6d7e8f90102, type: 2}

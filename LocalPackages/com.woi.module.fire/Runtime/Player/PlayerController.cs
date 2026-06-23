@@ -61,6 +61,14 @@ namespace Woi.Player
             _isSprinting = false;
         }
 
+        /// <summary>Clears pending move/look/sprint without toggling <see cref="InputEnabled"/>.</summary>
+        public void SuppressLocomotionInput()
+        {
+            _moveInput = Vector2.zero;
+            _lookInput = Vector2.zero;
+            _isSprinting = false;
+        }
+
         private void Awake()
         {
             _characterController = GetComponent<CharacterController>();

@@ -1,6 +1,8 @@
 using System;
 using System.Text.RegularExpressions;
+using FireExtinguisher.Core;
 using WOI.Modules.SDK;
+using Woi.Game.Training;
 using Woi.UI.Popups.Localization;
 
 namespace Woi.Game.Training.UI
@@ -25,6 +27,10 @@ namespace Woi.Game.Training.UI
 
         static readonly Regex s_fireNotOutTr = new Regex(
             @"^'(?<k>[^']+)' yangını tamamen söndürülmedi\.\s*$",
+            RegexOptions.CultureInvariant | RegexOptions.Compiled);
+
+        static readonly Regex s_gameObjectClassName = new Regex(
+            @"^([A-Fa-f])\s+[Cc]lass\s*$",
             RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
         public static string ResolveCode()
@@ -67,7 +73,7 @@ namespace Woi.Game.Training.UI
             Match m = s_fireNotOutEn.Match(s);
             if (m.Success)
             {
-                string k = m.Groups["k"].Value;
+                string k = LocalizeFireSourceKeyToken(m.Groups["k"].Value);
                 return $"'{k}' yangını tamamen söndürülmedi.";
             }
 
@@ -157,6 +163,25 @@ namespace Woi.Game.Training.UI
                 "Sweep did not fully meet training criteria." => "Tarama eğitim kriterlerini tam karşılamadı.",
                 _ => tail,
             };
+        }
+
+        /// <summary>
+        /// Maps stored fire keys such as <c>A class#89088</c> (GameObject name + id) to a localized short label.
+        /// </summary>
+        static string LocalizeFireSourceKeyToken(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+                return key;
+
+            int hash = key.IndexOf('#', StringComparison.Ordinal);
+            string prefix = (hash > 0 ? key.Substring(0, hash) : key).Trim();
+
+            Match m = s_gameObjectClassName.Match(prefix);
+            if (m.Success
+                && Enum.TryParse(m.Groups[1].Value.ToUpperInvariant(), out FireClass fc))
+                return TrainingReportLabels.FormatFireClassShort(fc, turkishDisplay: true);
+
+            return prefix;
         }
 
         static string MapSweepFeedbackTrToEn(string tail)

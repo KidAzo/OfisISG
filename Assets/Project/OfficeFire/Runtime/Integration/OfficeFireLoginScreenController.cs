@@ -320,7 +320,13 @@ namespace Woi.OfficeFire
                 isLoading = false;
                 if (startButton != null)
                     startButton.SetEnabled(true);
+                yield break;
             }
+
+            OfficeFireGameplayCameraSetup.RequestEnsureReady(this, "Login→FireModule_Office");
+            isLoading = false;
+            if (startButton != null)
+                startButton.SetEnabled(true);
         }
 
         private static bool TryResolveSceneLoader(out ISceneLoaderService loader)

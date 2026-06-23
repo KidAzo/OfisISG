@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Obvious.Soap;
 
@@ -7,10 +9,13 @@ namespace Woi.Settings
 {
     public class LoadingScreenController : MonoBehaviour
     {
+        private static readonly int[] DisplayFallbackRefreshDelays = { 0, 1, 2, 5, 15, 30, 60, 120 };
+
         [SerializeField] LoadingScreenSettings[] settings;
         [SerializeField] ScriptableEnumPortingVariable portingVariable;
         LoadingScreenSettings currentLoadingScreenSettings;
         public LoadingScreenSettings CurrentLoadingScreenSettings => currentLoadingScreenSettings;
+        Coroutine _displayFallbackRefreshRoutine;
 
         void Awake()
         {
@@ -27,6 +32,31 @@ namespace Woi.Settings
             FirePlatformRuntime.TryInitialize(portingVariable);
             SetLoadingScreen(portingVariable.CurrentValue);
             HideAllLoadingUi();
+        }
+
+        void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            RequestDelayedDisplayFallbackRefresh();
+        }
+
+        public void RequestDelayedDisplayFallbackRefresh()
+        {
+            if (_displayFallbackRefreshRoutine != null)
+            {
+                StopCoroutine(_displayFallbackRefreshRoutine);
+            }
+
+            _displayFallbackRefreshRoutine = StartCoroutine(DelayedDisplayFallbackRefreshRoutine());
         }
 
         /// <summary>
@@ -102,11 +132,31 @@ namespace Woi.Settings
                 if (camera == null || camera == exclude)
                     continue;
 
-                if (camera.enabled && camera.gameObject.activeInHierarchy)
-                    return true;
+                if (!camera.enabled || !camera.gameObject.activeInHierarchy || camera.cullingMask == 0)
+                    continue;
+
+                return true;
             }
 
             return false;
+        }
+
+        private IEnumerator DelayedDisplayFallbackRefreshRoutine()
+        {
+            int previousDelay = 0;
+            for (int i = 0; i < DisplayFallbackRefreshDelays.Length; i++)
+            {
+                int extraFrames = DisplayFallbackRefreshDelays[i] - previousDelay;
+                for (int frame = 0; frame < extraFrames; frame++)
+                {
+                    yield return null;
+                }
+
+                previousDelay = DisplayFallbackRefreshDelays[i];
+                RefreshDisplayFallbackCamera();
+            }
+
+            _displayFallbackRefreshRoutine = null;
         }
 
         void SetLoadingScreen(AppMode mode)

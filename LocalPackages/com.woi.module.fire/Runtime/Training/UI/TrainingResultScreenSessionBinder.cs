@@ -64,6 +64,7 @@ namespace Woi.Game.Training.UI
 
         void OnTrainingSessionStarted()
         {
+            TrainingGameplayInputGate.SetBlocked(false);
             HideResults();
             SetPcControlsHudVisible(true);
         }
@@ -73,6 +74,8 @@ namespace Woi.Game.Training.UI
         /// </summary>
         public void HideResults()
         {
+            TrainingGameplayInputGate.SetBlocked(false);
+
             if (_resultsScreenRoot != null)
                 _resultsScreenRoot.SetActive(false);
             if (_vrResultsScreenRoot != null)
@@ -84,6 +87,9 @@ namespace Woi.Game.Training.UI
         /// </summary>
         public void ShowResultsEmpty()
         {
+            TrainingGameplayInputGate.SetBlocked(true);
+            TrainingGameplayAudioSilencer.StopAllSceneGameplayAudio();
+
             if (_resultsScreenRoot != null)
                 _resultsScreenRoot.SetActive(true);
             if (_vrResultsScreenRoot != null)
@@ -95,6 +101,7 @@ namespace Woi.Game.Training.UI
 
         private void OnSessionEnded(SessionReport report)
         {
+            TrainingGameplayInputGate.SetBlocked(true);
             SetPcControlsHudVisible(false);
             StartCoroutine(SessionEndPresentationFlow(report));
         }
@@ -114,6 +121,8 @@ namespace Woi.Game.Training.UI
 
         IEnumerator SessionEndPresentationFlow(SessionReport report)
         {
+            TrainingGameplayAudioSilencer.StopAllSceneGameplayAudio();
+
             TryRecordLeaderboardFromReport(report);
 
             ShowResultsEmpty();

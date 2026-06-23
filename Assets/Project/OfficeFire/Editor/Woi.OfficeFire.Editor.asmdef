@@ -17,7 +17,10 @@
         "GUID:d8b63aba1907145bea998dd612889d6b",
         "GUID:ced88875c7215c94492d8bcadb805864",
         "GUID:300ddb0b3e3cbe443b39a39c22fe8d86",
-        "GUID:2db6770f911c9354bb2dfcd03cf6e408"
+        "GUID:2db6770f911c9354bb2dfcd03cf6e408",
+        "Unity.Addressables",
+        "Unity.Addressables.Editor",
+        "Unity.ResourceManager"
     ],
     "includePlatforms": [
         "Editor"

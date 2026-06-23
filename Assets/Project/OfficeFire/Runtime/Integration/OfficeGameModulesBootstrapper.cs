@@ -1,20 +1,25 @@
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Scripting;
 using Woi.Settings;
 using WOI.Modules.SDK;
+using WOI.Modules.SDK.Contracts;
+using WOI.Modules.SDK.Data;
 using WOI.Module.Fire.DI;
 
 namespace Woi.OfficeFire
 {
     /// <summary>
     /// Loads office game modules through <see cref="ISceneLoaderService"/> from <see cref="ServiceLocator"/>.
+    /// Implements <see cref="IModuleBootstrap"/> so the Hub can drive the first scene load from <c>Office_Boot</c>.
     /// When <see cref="loadAfterFireInstallerReady"/> is enabled, auto-load subscribes to the static
     /// <see cref="FireServiceInstaller.OnServicesReady"/> event (fired from the Fire module after managers are registered,
     /// including <see cref="SceneLoader"/>). This is not a ServiceLocator API — it is defined on <see cref="FireServiceInstaller"/>.
     /// Does not call Unity <c>SceneManager</c> directly.
     /// </summary>
-    public sealed class OfficeGameModulesBootstrapper : MonoBehaviour
+    [Preserve]
+    public sealed class OfficeGameModulesBootstrapper : MonoBehaviour, IModuleBootstrap
     {
         public const string WasteLoginSceneGroup = "WasteLogin";
         public const string WasteCollectorSceneGroup = "WasteCollector";
@@ -68,11 +73,15 @@ namespace Woi.OfficeFire
 
         private void OnDestroy()
         {
+            ServiceLocator.Unregister<IModuleBootstrap>();
             ServiceLocator.Unregister<OfficeGameModulesBootstrapper>();
         }
 
         private void OnEnable()
         {
+            ServiceLocator.Unregister<IModuleBootstrap>();
+            ServiceLocator.Register<IModuleBootstrap>(this);
+
             if (!loadOnStart || !loadAfterFireInstallerReady)
             {
                 return;
@@ -87,10 +96,22 @@ namespace Woi.OfficeFire
 
         private void OnDisable()
         {
+            ServiceLocator.Unregister<IModuleBootstrap>();
+
             if (loadOnStart && loadAfterFireInstallerReady)
             {
                 FireServiceInstaller.OnServicesReady -= OnFireServicesReady;
             }
+        }
+
+        public Task Initialize(ModuleLaunchContext context)
+        {
+            Debug.Log(
+                $"[OfficeGameModulesBootstrapper] IModuleBootstrap.Initialize moduleId={context?.ModuleId} " +
+                $"entryKey={context?.TargetModule?.EntrySceneKey}");
+
+            TryIssueStartupLoad("IModuleBootstrap.Initialize");
+            return Task.CompletedTask;
         }
 
         private void Start()

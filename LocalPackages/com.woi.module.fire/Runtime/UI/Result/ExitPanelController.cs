@@ -1,32 +1,34 @@
 using System;
 using System.Collections;
-using Obvious.Soap;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Unity.XR.CoreUtils;
 using WOI.Modules.SDK;
-using Woi.InputSystem;
 using Woi.Player;
 using Woi.Game.Training.UI;
 using Woi.UI.Popups.Localization;
 using Woi.Training;
+using Woi.InputSystem;
 
 namespace Woi.UI.Result
 {
     /// <summary>
-    /// VR: açma girdisi (ör. sağ grip) panel kapalıyken açar; <b>açıkken tekrar basılınca kapatır</b> (Hayır düğmesi ile aynı).
-    /// Evet: önce eğitim oturumu biter (sonuç ekranı), ardından XR Origin hedefe taşınır, Locomotion + Teleportation kapatılır, <see cref="_onExitConfirmed"/> çağrılır.
-    /// Panel açıkken baş kameranın <see cref="_distanceInFrontOfCamera"/> m önünde tutulur.
+    /// VR: açma girdisi (ör. sağ grip / <c>Gameplay/ExitPanel</c>) panel kapalıyken açar; <b>açıkken tekrar basılınca kapatır</b> (Hayır ile aynı).
+    /// PC: <c>Gameplay/ExitPanel</c> (varsayılan TAB) aynı onay panelini açar; imleç serbest bırakılır, EVET/HAYIR tıklanabilir.
+    /// Evet: eğitim oturumu biter (sonuç ekranı). VR’da ek olarak XR Origin taşınır ve locomotion kapatılır.
+    /// Panel açıkken (VR) baş kameranın <see cref="_distanceInFrontOfCamera"/> m önünde tutulur; PC’de ekran ortasında overlay.
     /// </summary>
     [AddComponentMenu("Woi/UI/Exit Panel Controller")]
     [RequireComponent(typeof(UIDocument))]
-    public sealed class ExitPanelController : MonoBehaviour, ISoapVrGripInputListener
+    public sealed class ExitPanelController : MonoBehaviour
     {
+        const string ExitPanelRootName = "ExitPanelRoot";
         const string MainContainerName = "MainContainer";
         const string BtnYesName = "BtnYes";
         const string BtnNoName = "BtnNo";
+        const string PcModalUssClass = "exit-panel-root--pc-modal";
 
         [Header("UI")]
         [SerializeField]
@@ -40,10 +42,6 @@ namespace Woi.UI.Result
         [Tooltip("Kapalıyken Started = panel açılır; panel zaten açıkken aynı girdi = panel kapanır (Hayır ile aynı).")]
         [SerializeField]
         InputActionReference _openPanelAction;
-
-        [Tooltip("Boşsa InputManager/VrInputContext üzerinden preOnGameFinishEvent bağlanır (Addressables VR grip).")]
-        [SerializeField]
-        ScriptableEventNoParam _openPanelGripEvent;
 
         [Header("VR — konum (XR Origin göz kamerası)")]
         [Tooltip("Panel açıkken baş kamerasının ileri ekseninde ne kadar ileride dursun (metre).")]
@@ -93,7 +91,42 @@ namespace Woi.UI.Result
         [SerializeField]
         TrainingResultScreenSessionBinder _resultScreenSessionBinder;
 
+        [Header("Panel — PC 2D / VR 3D")]
+        [Tooltip("Klon kaynağı. Boşsa UIDocument üzerindeki Panel Settings kullanılır.")]
+        [SerializeField]
+        PanelSettings _panelSettingsTemplate;
+
+        [Tooltip("PC: Screen Space Overlay (2D). Boşsa şablondan runtime klon + Overlay.")]
+        [SerializeField]
+        PanelSettings _pcOverlayPanelSettings;
+
+        [Tooltip("VR: World Space (3D). Boşsa şablondan runtime klon + WorldSpace.")]
+        [SerializeField]
+        PanelSettings _vrWorldPanelSettings;
+
+        [SerializeField]
+        int _pcSortingOrder = 500;
+
+        [SerializeField]
+        int _vrSortingOrder = 32000;
+
+        [Header("PC")]
+        [Tooltip("PC: panel açıkken imleci serbest bırak (EVET/HAYIR tıklanabilsin). Kapatılınca oyun imleci tekrar kilitlenir.")]
+        [SerializeField]
+        bool _unlockCursorOnPcWhenOpen = true;
+
+        [Tooltip("PC: panel açıkken WASD + mouse look kapatılır. Boşsa PC-GameplayContext asset aranır.")]
+        [SerializeField]
+        GameplayInputContext _gameplayInputContext;
+
+        [Tooltip("PC: ekran ortası nişangah (sahnedeki Cross). Boşsa yüklü sahnede adı Cross olan obje aranır.")]
+        [SerializeField]
+        GameObject _pcCrosshair;
+
+        PanelSettings _runtimePanelSettings;
+        bool _pcGameplayInputSuppressed;
         VisualElement _mainContainer;
+        VisualElement _uiRoot;
         Button _btnYes;
         Button _btnNo;
         bool _isOpen;
@@ -109,21 +142,23 @@ namespace Woi.UI.Result
             if (_document == null)
                 _document = GetComponent<UIDocument>();
 
-            if (GetComponent<ExitPanelNearFarUiBootstrap>() == null)
+            if (!IsPcMode() && GetComponent<ExitPanelNearFarUiBootstrap>() == null)
                 gameObject.AddComponent<ExitPanelNearFarUiBootstrap>();
+        }
+
+        void OnDestroy()
+        {
+            if (_runtimePanelSettings != null)
+                Destroy(_runtimePanelSettings);
         }
 
         void OnEnable()
         {
-            ResolveOpenPanelGripEvent();
-
             if (_openPanelAction != null && _openPanelAction.action != null)
             {
                 _openPanelAction.action.Enable();
                 _openPanelAction.action.started += OnOpenActionStarted;
             }
-
-            SubscribeOpenPanelGripEvent();
 
             if (_bindRoutine != null)
             {
@@ -142,13 +177,14 @@ namespace Woi.UI.Result
                 _openPanelAction.action.Disable();
             }
 
-            UnsubscribeOpenPanelGripEvent();
-
             if (_bindRoutine != null)
             {
                 StopCoroutine(_bindRoutine);
                 _bindRoutine = null;
             }
+
+            if (_isOpen && IsPcMode())
+                SetPcGameplayInputSuppressed(false);
 
             UnregisterButtons();
         }
@@ -169,7 +205,8 @@ namespace Woi.UI.Result
             if (root == null)
                 yield break;
 
-            _mainContainer = root.Q<VisualElement>(MainContainerName) ?? root;
+            _uiRoot = root.Q<VisualElement>(ExitPanelRootName) ?? root;
+            _mainContainer = root.Q<VisualElement>(MainContainerName) ?? _uiRoot;
             _btnYes = root.Q<Button>(BtnYesName);
             _btnNo = root.Q<Button>(BtnNoName);
 
@@ -183,7 +220,7 @@ namespace Woi.UI.Result
             else
                 SetPanelVisible(true);
 
-            ApplyWorldDocumentPivotIfNeeded();
+            ApplyPlatformPanelPresentation();
 
             ApplyExitPanelLocalizedText(root);
 
@@ -225,7 +262,81 @@ namespace Woi.UI.Result
         }
 
         /// <summary>
-        /// UIDocument zaten World Space Panel Settings ile kurulduysa merkez pivot + dinamik boyut (önünde hizalama için).
+        /// PC: Screen Space Overlay (2D tam ekran). VR: World Space + kamera önü billboard.
+        /// </summary>
+        void ApplyPlatformPanelPresentation()
+        {
+            if (_document == null)
+                return;
+
+            if (IsPcMode())
+                ApplyPcOverlayPanelSettings();
+            else
+                ApplyVrWorldPanelSettings();
+        }
+
+        void ApplyPcOverlayPanelSettings()
+        {
+            PanelSettings settings = _pcOverlayPanelSettings;
+            if (settings == null)
+                settings = GetOrCreateRuntimePanelSettings(PanelRenderMode.ScreenSpaceOverlay);
+
+            if (settings == null)
+                return;
+
+            _document.panelSettings = settings;
+            _document.sortingOrder = _pcSortingOrder;
+            settings.sortingOrder = _pcSortingOrder;
+
+            VisualElement docRoot = _document.rootVisualElement;
+            if (docRoot != null)
+            {
+                docRoot.style.flexGrow = 1f;
+                docRoot.style.width = Length.Percent(100);
+                docRoot.style.height = Length.Percent(100);
+            }
+        }
+
+        void ApplyVrWorldPanelSettings()
+        {
+            PanelSettings settings = _vrWorldPanelSettings;
+            if (settings == null)
+                settings = GetOrCreateRuntimePanelSettings(PanelRenderMode.WorldSpace);
+
+            if (settings == null)
+                return;
+
+            _document.panelSettings = settings;
+            _document.sortingOrder = _vrSortingOrder;
+            settings.sortingOrder = _vrSortingOrder;
+
+            settings.clearColor = true;
+            settings.colorClearValue = new Color(0f, 0f, 0f, 0f);
+
+            ApplyWorldDocumentPivotIfNeeded();
+        }
+
+        PanelSettings GetOrCreateRuntimePanelSettings(PanelRenderMode mode)
+        {
+            PanelSettings source = _panelSettingsTemplate != null
+                ? _panelSettingsTemplate
+                : _document != null ? _document.panelSettings : null;
+
+            if (source == null)
+                return null;
+
+            if (_runtimePanelSettings == null)
+            {
+                _runtimePanelSettings = Instantiate(source);
+                _runtimePanelSettings.name = $"{nameof(ExitPanelController)}_RuntimePanelSettings";
+            }
+
+            _runtimePanelSettings.renderMode = mode;
+            return _runtimePanelSettings;
+        }
+
+        /// <summary>
+        /// VR World Space: merkez pivot + dinamik boyut (kamera önünde hizalama).
         /// </summary>
         void ApplyWorldDocumentPivotIfNeeded()
         {
@@ -250,19 +361,10 @@ namespace Woi.UI.Result
             _btnYes = null;
             _btnNo = null;
             _mainContainer = null;
+            _uiRoot = null;
         }
 
         void OnOpenActionStarted(InputAction.CallbackContext _)
-        {
-            TogglePanelFromGripInput();
-        }
-
-        void OnOpenPanelGripEventRaised()
-        {
-            TogglePanelFromGripInput();
-        }
-
-        void TogglePanelFromGripInput()
         {
             if (_isOpen)
                 SetPanelVisible(false);
@@ -270,60 +372,21 @@ namespace Woi.UI.Result
                 SetPanelVisible(true);
         }
 
-        public bool IsListeningToDifferentGripEvent(ScriptableEventNoParam liveGripEvent) =>
-            _openPanelGripEvent != null
-            && liveGripEvent != null
-            && !ReferenceEquals(_openPanelGripEvent, liveGripEvent);
-
-        public void RebindGripInputEvent(ScriptableEventNoParam liveGripEvent)
-        {
-            UnsubscribeOpenPanelGripEvent();
-            _openPanelGripEvent = liveGripEvent;
-            if (isActiveAndEnabled)
-                SubscribeOpenPanelGripEvent();
-        }
-
-        void ResolveOpenPanelGripEvent()
-        {
-            if (_openPanelGripEvent != null)
-                return;
-
-            if (ServiceLocator.TryGet<InputManager>(out InputManager inputManager) && inputManager != null)
-            {
-                VrInputContext vrContext = inputManager.GetVrInputContext();
-                if (vrContext != null && vrContext.PreOnGameplayFinishedEvent != null)
-                {
-                    _openPanelGripEvent = vrContext.PreOnGameplayFinishedEvent;
-                    return;
-                }
-            }
-
-#if UNITY_EDITOR
-            _openPanelGripEvent = UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableEventNoParam>(
-                "Packages/com.woi.module.fire/Runtime/InputSystem/InputsSO/InputEvents/preOnGameFinishEvent.asset");
-#endif
-        }
-
-        void SubscribeOpenPanelGripEvent()
-        {
-            if (_openPanelGripEvent != null)
-                _openPanelGripEvent.OnRaised += OnOpenPanelGripEventRaised;
-        }
-
-        void UnsubscribeOpenPanelGripEvent()
-        {
-            if (_openPanelGripEvent != null)
-                _openPanelGripEvent.OnRaised -= OnOpenPanelGripEventRaised;
-        }
-
         void OnNoClicked()
         {
-            SetPanelVisible(false);
+            SetPanelVisible(false, restoreCrosshair: true);
         }
 
         void OnYesClicked()
         {
             RequestTrainingSessionEndForVrYes();
+
+            if (IsPcMode())
+            {
+                _onExitConfirmed?.Invoke();
+                SetPanelVisible(false, restoreCrosshair: false);
+                return;
+            }
 
             if (!TryResolveXrOrigin(out XROrigin xrOrigin))
             {
@@ -552,6 +615,9 @@ namespace Woi.UI.Result
 
         void LateUpdate()
         {
+            if (IsPcMode())
+                return;
+
             if (_followCameraOnlyWhenOpen && !_isOpen)
                 return;
 
@@ -585,7 +651,7 @@ namespace Woi.UI.Result
             return Camera.main != null ? Camera.main.transform : null;
         }
 
-        void SetPanelVisible(bool visible)
+        void SetPanelVisible(bool visible, bool restoreCrosshair = true)
         {
             if (_mainContainer == null && _document != null && _document.rootVisualElement != null)
                 _mainContainer = _document.rootVisualElement.Q<VisualElement>(MainContainerName)
@@ -594,7 +660,11 @@ namespace Woi.UI.Result
             if (_mainContainer == null)
                 return;
 
-            _mainContainer.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            DisplayStyle display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            if (IsPcMode() && _uiRoot != null && _uiRoot != _mainContainer)
+                _uiRoot.style.display = display;
+
+            _mainContainer.style.display = display;
             _isOpen = visible;
 
             if (visible)
@@ -602,7 +672,133 @@ namespace Woi.UI.Result
                 HideTrainingResultsWhileExitDialogOpen();
                 if (_document != null && _document.rootVisualElement != null)
                     ApplyExitPanelLocalizedText(_document.rootVisualElement);
+                ApplyPcScreenLayout(true);
+                ApplyPcCursorForPanelOpen(true);
+                SetPcGameplayInputSuppressed(true);
+                SetPcCrosshairVisible(false);
             }
+            else
+            {
+                ApplyPcScreenLayout(false);
+                ApplyPcCursorForPanelOpen(false);
+                SetPcGameplayInputSuppressed(false);
+                if (restoreCrosshair)
+                    SetPcCrosshairVisible(true);
+            }
+        }
+
+        void SetPcCrosshairVisible(bool visible)
+        {
+            if (!IsPcMode())
+                return;
+
+            GameObject crosshair = ResolvePcCrosshair();
+            if (crosshair != null)
+                crosshair.SetActive(visible);
+        }
+
+        GameObject ResolvePcCrosshair()
+        {
+            if (_pcCrosshair != null)
+                return _pcCrosshair;
+
+            Transform[] transforms = Resources.FindObjectsOfTypeAll<Transform>();
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                Transform t = transforms[i];
+                if (t == null || !string.Equals(t.name, "Cross", StringComparison.Ordinal))
+                    continue;
+
+                GameObject go = t.gameObject;
+                if (!go.scene.IsValid() || !go.scene.isLoaded)
+                    continue;
+
+                _pcCrosshair = go;
+                return _pcCrosshair;
+            }
+
+            return null;
+        }
+
+        static bool IsPcMode() =>
+            !FirePlatformRuntime.IsSourceInitialized || FirePlatformRuntime.IsPC;
+
+        void ApplyPcScreenLayout(bool panelOpen)
+        {
+            if (!IsPcMode() || _uiRoot == null)
+                return;
+
+            if (panelOpen)
+                _uiRoot.AddToClassList(PcModalUssClass);
+            else
+                _uiRoot.RemoveFromClassList(PcModalUssClass);
+        }
+
+        void SetPcGameplayInputSuppressed(bool suppressed)
+        {
+            if (!IsPcMode())
+                return;
+
+            GameplayInputContext ctx = ResolveGameplayInputContext();
+            PlayerController player = ResolvePlayerController();
+
+            if (suppressed)
+            {
+                ctx?.DisableAllInputs();
+                player?.SuppressLocomotionInput();
+                _pcGameplayInputSuppressed = ctx != null;
+                return;
+            }
+
+            if (_pcGameplayInputSuppressed && ctx != null)
+                ctx.EnableAllInputs();
+
+            player?.SuppressLocomotionInput();
+            _pcGameplayInputSuppressed = false;
+        }
+
+        GameplayInputContext ResolveGameplayInputContext()
+        {
+            if (_gameplayInputContext != null)
+                return _gameplayInputContext;
+
+            GameplayInputContext[] contexts = Resources.FindObjectsOfTypeAll<GameplayInputContext>();
+            for (int i = 0; i < contexts.Length; i++)
+            {
+                if (contexts[i] != null)
+                    return contexts[i];
+            }
+
+            return null;
+        }
+
+        static PlayerController ResolvePlayerController()
+        {
+            if (ServiceLocator.TryGet<IPlayerService>(out IPlayerService playerService) &&
+                playerService != null)
+            {
+                Transform t = playerService.GetPlayerTransform();
+                if (t != null && t.TryGetComponent(out PlayerController onPlayer))
+                    return onPlayer;
+            }
+
+            return FindFirstObjectByType<PlayerController>();
+        }
+
+        void ApplyPcCursorForPanelOpen(bool panelOpen)
+        {
+            if (!IsPcMode() || !_unlockCursorOnPcWhenOpen)
+                return;
+
+            if (panelOpen)
+            {
+                UnityEngine.Cursor.lockState = CursorLockMode.None;
+                UnityEngine.Cursor.visible = true;
+                return;
+            }
+
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+            UnityEngine.Cursor.visible = false;
         }
 
         void HideTrainingResultsWhileExitDialogOpen()

@@ -34,6 +34,7 @@ namespace Woi.OfficeFire
             }
 
             StartScenario(scenarioToStart);
+            OfficeFireLocalizedSignMaterials.ApplyAllInScene();
         }
 
         public void SetAutoStartOnPlay(bool enabled)
@@ -107,6 +108,8 @@ namespace Woi.OfficeFire
 
             OfficeFireActiveScenarioLocator.RegisterActive(active);
             active.StartScenario();
+            OfficeFireInputSync.RequestDelayedSync(this, $"StartScenario({scenarioId})");
+            OfficeFireGameplayCameraSetup.RequestEnsureReady(this, $"StartScenario({scenarioId})");
         }
 
         private static void ApplyRootActive(OfficeFireScenarioController controller, bool active)

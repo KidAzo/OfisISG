@@ -244,6 +244,12 @@ namespace Woi.OfficeFire.Editor
                     "No ExtinguisherPickupItem under Mutfakv2 — ensure FireExtinguisherB Variant (or similar) is present.");
             }
 
+            OfficeFireLocalizedSignMaterialsEditorHelper.WireStandardFireSignsUnder(
+                mutfakRoot,
+                componentsAdded,
+                componentsAlreadyPresent,
+                componentWarnings);
+
             ExtinguisherPickupItem[] pickups = mutfakRoot.GetComponentsInChildren<ExtinguisherPickupItem>(true);
             for (int i = 0; i < pickups.Length; i++)
             {

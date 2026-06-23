@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 344354780}
   - component: {fileID: 344354781}
+  - component: {fileID: 344354782}
   m_Layer: 0
   m_Name: FireModule_Bootstrapper
   m_TagString: Untagged
@@ -164,11 +165,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Woi.OfficeFire.Integration::Woi.OfficeFire.OfficeGameModulesBootstrapper
   gameModule: 0
-  loadOnStart: 1
-  loadAfterFireInstallerReady: 1
+  loadOnStart: 0
+  loadAfterFireInstallerReady: 0
   loadDelay: 0
   preventDuplicateLoad: 1
   keepBootstrapperAlive: 1
+--- !u!114 &344354782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344354778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec60770db11828c4988781e917a96910, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Woi.Settings::Woi.Settings.OfficeFireBootstrapper
+  loginSceneGroupName: OfficeFireModule_Login
+  portingSettings: {fileID: 0}
 --- !u!1 &1363170164
 GameObject:
   m_ObjectHideFlags: 1

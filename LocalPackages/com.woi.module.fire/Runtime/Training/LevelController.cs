@@ -67,6 +67,8 @@ namespace Woi.Training
 
         private void Start()
         {
+            TrainingGameplayInputGate.ResetForSceneEntry();
+
             if (_recorder != null)
             {
                 _recorder.BeginSession(_initialScenarioId);

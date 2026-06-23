@@ -19,39 +19,11 @@ namespace Woi.UI.Announcements
         private SoundDefinition _lastSound;
         private Coroutine _fallbackRoutine;
         private bool _completionRaised;
-        private int _playGeneration;
-        private int _activeVoiceGeneration;
 
-        public bool IsAnnouncementPlaying
-        {
-            get
-            {
-                if (_voice != null && _voice.IsPlaying())
-                {
-                    return true;
-                }
-
-                if (_fallbackRoutine != null)
-                {
-                    return true;
-                }
-
-                if (audioSystem != null && _lastSound != null && audioSystem.IsQueueRunnerActive(_lastSound))
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        }
+        public bool IsAnnouncementPlaying =>
+            _voice != null && _voice.IsPlaying();
 
         public event Action OnAnnouncementAudioFinished;
-
-        private void OnEnable()
-        {
-            audioSystem = null;
-            ResolveAudioSystem();
-        }
 
         private void Start()
         {
@@ -61,54 +33,18 @@ namespace Woi.UI.Announcements
         private void ResolveAudioSystem()
         {
             if (audioSystem != null)
-            {
                 return;
-            }
 
-            if (AudioSystem.TryGetFromServiceLocator(out AudioSystem registered) && registered != null)
-            {
-                audioSystem = registered;
-                return;
-            }
+            if (AudioSystem.TryGetFromServiceLocator(out var sys))
+                audioSystem = sys;
 
-            audioSystem = FindFirstObjectByType<AudioSystem>();
-        }
-
-        private void EnsureAdapterActive()
-        {
-            if (!gameObject.activeSelf)
-            {
-                gameObject.SetActive(true);
-            }
-        }
-
-        private bool TryStartFallbackRoutine(SoundDefinition sound, int generation)
-        {
-            EnsureAdapterActive();
-            if (!isActiveAndEnabled)
-            {
-                Debug.LogWarning(
-                    "[AnnouncementAudioAdapter] Cannot start fallback coroutine — adapter GameObject is inactive.",
-                    this);
-                RaiseFinishedOnce(generation);
-                return false;
-            }
-
-            _fallbackRoutine = StartCoroutine(CoFallbackFinished(sound, generation));
-            return true;
+            if (audioSystem == null)
+                audioSystem = FindFirstObjectByType<AudioSystem>();
         }
 
         public void PlayAnnouncement(SoundDefinition sound)
         {
-            if (AudioSystem.IsShuttingDown)
-            {
-                audioSystem = null;
-            }
-
             ResolveAudioSystem();
-            EnsureAdapterActive();
-
-            int generation = ++_playGeneration;
 
             Debug.Log($"[AnnouncementAudioAdapter] Play: {sound?.name ?? "(null)"}");
 
@@ -117,7 +53,7 @@ namespace Woi.UI.Announcements
 
             if (sound == null || audioSystem == null)
             {
-                RaiseFinishedOnce(generation);
+                RaiseFinishedOnce();
                 return;
             }
 
@@ -127,7 +63,6 @@ namespace Woi.UI.Announcements
 
             if (_voice != null)
             {
-                _activeVoiceGeneration = generation;
                 _voice.OnCompleted += OnVoiceCompleted;
             }
             else
@@ -135,10 +70,7 @@ namespace Woi.UI.Announcements
                 if (_fallbackRoutine != null)
                     StopCoroutine(_fallbackRoutine);
 
-                if (!TryStartFallbackRoutine(sound, generation))
-                {
-                    return;
-                }
+                _fallbackRoutine = StartCoroutine(CoFallbackFinished(sound));
             }
         }
 
@@ -176,17 +108,13 @@ namespace Woi.UI.Announcements
                 _voice.OnCompleted -= OnVoiceCompleted;
 
             _voice = null;
-            RaiseFinishedOnce(_activeVoiceGeneration);
+            _lastSound = null;
+            RaiseFinishedOnce();
         }
 
-        private System.Collections.IEnumerator CoFallbackFinished(SoundDefinition sound, int generation)
+        private System.Collections.IEnumerator CoFallbackFinished(SoundDefinition sound)
         {
             _fallbackRoutine = null;
-
-            if (generation != _playGeneration)
-            {
-                yield break;
-            }
 
             // Queue All: Play() returned null — wait for the real queue runner to finish (not clip-length sum).
             if (sound != null && sound.selectionMode == ClipSelectionMode.QueueAll && audioSystem != null)
@@ -195,46 +123,22 @@ namespace Woi.UI.Announcements
                 const float bootTimeout = 5f;
                 while (!audioSystem.IsQueueRunnerActive(sound) && boot < bootTimeout)
                 {
-                    if (generation != _playGeneration)
-                    {
-                        yield break;
-                    }
-
                     boot += Time.unscaledDeltaTime;
                     yield return null;
                 }
 
                 while (audioSystem.IsQueueRunnerActive(sound))
-                {
-                    if (generation != _playGeneration)
-                    {
-                        yield break;
-                    }
-
                     yield return null;
-                }
 
-                RaiseFinishedOnce(generation);
+                RaiseFinishedOnce();
                 yield break;
             }
 
             float wait = EstimatePlaybackDuration(sound);
             if (wait > 0f)
-            {
-                float elapsed = 0f;
-                while (elapsed < wait)
-                {
-                    if (generation != _playGeneration)
-                    {
-                        yield break;
-                    }
+                yield return new WaitForSecondsRealtime(wait);
 
-                    elapsed += Time.unscaledDeltaTime;
-                    yield return null;
-                }
-            }
-
-            RaiseFinishedOnce(generation);
+            RaiseFinishedOnce();
         }
 
         /// <summary>
@@ -256,20 +160,12 @@ namespace Woi.UI.Announcements
             return sum;
         }
 
-        private void RaiseFinishedOnce(int generation)
+        private void RaiseFinishedOnce()
         {
-            if (generation != _playGeneration)
-            {
-                return;
-            }
-
             if (_completionRaised)
-            {
                 return;
-            }
 
             _completionRaised = true;
-            _lastSound = null;
             OnAnnouncementAudioFinished?.Invoke();
         }
 

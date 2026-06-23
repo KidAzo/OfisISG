@@ -1,4 +1,6 @@
+using System.Collections;
 using Woi.Game;
+using Woi.InputSystem;
 using FireExtinguisher.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -64,23 +66,114 @@ namespace Woi.Equipment
         InputActionReference _nozzleSnapGripHold;
 
         [Header("Input")]
-        [Tooltip("PC'deki R tuşuna denk gelen VR pimi çekme butonu")]
+        [Tooltip("PC'deki R tuşuna denk gelen VR pimi çekme butonu (Primary: sağ A / sol X). " +
+                 "Addressable build'lerde asset referansı çözümlenemezse _isLeftHand üzerinden ServiceLocator'dan fallback alınır.")]
         public InputActionReference pullInput;
+
+        [Tooltip("Bu bileşen sol elde mi? (Addressable build fallback için: sol=LeftControllerPinPulling, sağ=RightControllerPinPulling)")]
+        [SerializeField] private bool _isLeftHand = false;
+
+        private InputAction _resolvedAction;
+        private Coroutine _inputResolveCoroutine;
+        static bool s_loggedMissingPullInput;
 
         private void OnEnable()
         {
-            if (pullInput != null && pullInput.action != null)
+            _resolvedAction = ResolveInputAction();
+
+            if (_resolvedAction != null)
             {
-                pullInput.action.Enable();
-                pullInput.action.started += OnPullStarted;
+                SubscribePullAction();
+                return;
             }
+
+            if (!s_loggedMissingPullInput)
+            {
+                s_loggedMissingPullInput = true;
+                Debug.LogWarning(
+                    "[VRExtinguisherPinPuller] pullInput şu an çözümlenemedi — InputManager hazır olunca yeniden denenecek. " +
+                    "Sorun devam ederse: XR Origin prefab'ında pullInput referansı ve _isLeftHand ayarını doğrulayın.",
+                    this);
+            }
+
+            _inputResolveCoroutine = StartCoroutine(RetryResolveInputAction());
+        }
+
+        /// <summary>
+        /// Addressable build'lerde <see cref="InputActionReference"/> null dönebilir çünkü
+        /// .inputactions asset'i ayrı bir bundle'a paketlenir ve InputActionReference
+        /// bu bundle'dan yüklenen instance'ı InputSystem registry'sinde bulamaz. Bu
+        /// durumda ServiceLocator üzerinden <see cref="InputManager"/> runtime instance'ından
+        /// (new PlayerInputActions()) doğrudan action alınır — referans sorunu yoktur.
+        /// </summary>
+        private InputAction ResolveInputAction()
+        {
+            // Önce asset referansını dene (editor + non-addressable build)
+            if (pullInput != null && pullInput.action != null)
+                return pullInput.action;
+
+            // Addressable build fallback: ServiceLocator'daki InputManager runtime instance'ından al
+            if (ServiceLocator.TryGet<IInputProvider>(out var provider) && provider?.InputActions != null)
+            {
+                var gameplay = provider.InputActions.Gameplay;
+                return _isLeftHand
+                    ? gameplay.LeftControllerPinPulling
+                    : gameplay.RightControllerPinPulling;
+            }
+
+            return null;
+        }
+
+        private IEnumerator RetryResolveInputAction()
+        {
+            const int maxRetries = 120;
+            int retries = 0;
+
+            while (retries < maxRetries)
+            {
+                yield return null;
+                retries++;
+
+                _resolvedAction = ResolveInputAction();
+                if (_resolvedAction != null)
+                {
+                    SubscribePullAction();
+                    _inputResolveCoroutine = null;
+                    yield break;
+                }
+            }
+
+            bool hasProvider = ServiceLocator.TryGet<IInputProvider>(out var dbgProvider);
+            Debug.LogError(
+                $"[VRExtinguisherPinPuller] InputAction 120 frame içinde çözümlenemedi. " +
+                $"pullInput={(pullInput != null ? pullInput.name : "NULL")} " +
+                $"ServiceLocator.IInputProvider={hasProvider} " +
+                $"InputActions={(dbgProvider?.InputActions != null ? "OK" : "NULL")} " +
+                $"_isLeftHand={_isLeftHand}",
+                this);
+
+            _inputResolveCoroutine = null;
+        }
+
+        private void SubscribePullAction()
+        {
+            _resolvedAction.Enable();
+            _resolvedAction.performed += OnPullStarted;
+            Debug.Log($"[PinPuller] SubscribePullAction OK. El={(_isLeftHand?"Sol":"Sag")} Action='{_resolvedAction.name}' Enabled={_resolvedAction.enabled}");
         }
 
         private void OnDisable()
         {
-            if (pullInput != null && pullInput.action != null)
+            if (_inputResolveCoroutine != null)
             {
-                pullInput.action.started -= OnPullStarted;
+                StopCoroutine(_inputResolveCoroutine);
+                _inputResolveCoroutine = null;
+            }
+
+            if (_resolvedAction != null)
+            {
+                _resolvedAction.performed -= OnPullStarted;
+                _resolvedAction = null;
             }
 
             if (_snapCoroutine != null)
@@ -245,13 +338,16 @@ namespace Woi.Equipment
 
         private void OnPullStarted(InputAction.CallbackContext ctx)
         {
-            // Eğer bu el halihazırda bir tüp tutuyorsa pim çekemez (sadece boşta olan el çekebilir)
-            if (myGrabber != null && myGrabber.IsHoldingExtinguisher)
-                return;
+            Debug.Log($"[PinPuller] OnPullStarted tetiklendi. El={(_isLeftHand?"Sol":"Sag")} myGrabber={myGrabber?.name ?? "NULL"} IsHolding={myGrabber?.IsHoldingExtinguisher}");
 
-            // Önce etraftaki tüpleri bulabilmek için geniş bir tarama yapıyoruz (2 metre gibi)
-            // Asıl hassas mesafe ölçümü aşağıda doğrudan pime olan uzaklıkla (pullRadius ile) yapılacak.
+            if (myGrabber != null && myGrabber.IsHoldingExtinguisher)
+            {
+                Debug.Log("[PinPuller] ERKEN ÇIKIŞ: Bu el tüp tutuyor, pim çekemez.");
+                return;
+            }
+
             Collider[] hits = Physics.OverlapSphere(transform.position, 2.0f, detectionLayerMask, QueryTriggerInteraction.Collide);
+            Debug.Log($"[PinPuller] OverlapSphere buldu: {hits.Length} collider");
 
             float closestDist = float.MaxValue;
             ExtinguisherPickupItem targetItem = null;
@@ -262,30 +358,32 @@ namespace Woi.Equipment
                 if (item == null) continue;
 
                 var ctrl = item.Controller;
-                // Tüpün pimi zaten çekilmişse atla
                 if (ctrl == null || ctrl.IsPinPulled)
+                {
+                    Debug.Log($"[PinPuller] ATLANDI '{item.name}': ctrl={ctrl != null} IsPinPulled={ctrl?.IsPinPulled}");
                     continue;
+                }
 
-                // Sadece DİĞER ELİMİZDE tutulan tüpün pimi çekilebilir (Yerdeki tüpün pimi çekilemez)
                 if (!item.IsEquipped)
+                {
+                    Debug.Log($"[PinPuller] ATLANDI '{item.name}': IsEquipped=FALSE (IL2CPP reflection sorunu mu?)");
                     continue;
+                }
 
-                // İçinde "Pin" tag'ine sahip objeyi bul
                 Transform pinTransform = null;
                 foreach (Transform child in item.GetComponentsInChildren<Transform>(true))
                 {
-                    if (child.CompareTag(pinTag))
+                    if (!string.IsNullOrEmpty(pinTag) && child.tag == pinTag)
                     {
                         pinTransform = child;
                         break;
                     }
                 }
 
-                // Eğer Pin tag'li obje yoksa güvenlik amaçlı kendi merkezini alırız
                 Vector3 pinPos = pinTransform != null ? pinTransform.position : item.transform.position;
-
-                // Mesafe ölçümü PİNİN KENDİ POZİSYONU üzerinden yapılıyor
                 float dist = Vector3.Distance(transform.position, pinPos);
+                Debug.Log($"[PinPuller] '{item.name}': pinTag='{pinTag}' pinBulundu={pinTransform != null} mesafe={dist:F3} pullRadius={pullRadius}");
+
                 if (dist <= pullRadius && dist < closestDist)
                 {
                     closestDist = dist;
@@ -295,7 +393,12 @@ namespace Woi.Equipment
 
             if (targetItem != null)
             {
+                Debug.Log($"[PinPuller] Hedef bulundu: {targetItem.name} — PullPin çağrılıyor");
                 PullPinOnItem(targetItem);
+            }
+            else
+            {
+                Debug.Log("[PinPuller] Hedef bulunamadı — pim çekilmedi.");
             }
         }
 

@@ -51,6 +51,16 @@ namespace Woi.Game.Training.UI
             if (_document == null)
                 _document = GetComponent<UIDocument>();
 
+            if (_document != null)
+            {
+                // UI Toolkit VR etkileşimleri için zorunlu bileşenler
+                if (_document.gameObject.GetComponent<UnityEngine.UIElements.PanelEventHandler>() == null)
+                    _document.gameObject.AddComponent<UnityEngine.UIElements.PanelEventHandler>();
+                
+                if (_document.gameObject.GetComponent<UnityEngine.UIElements.PanelRaycaster>() == null)
+                    _document.gameObject.AddComponent<UnityEngine.UIElements.PanelRaycaster>();
+            }
+
             if (_document != null && _document.rootVisualElement != null)
             {
                 CacheRoots(_document.rootVisualElement);
@@ -83,6 +93,10 @@ namespace Woi.Game.Training.UI
                 Button menuBtn = _root.Q<Button>("btn-return-menu");
                 if (menuBtn != null)
                     menuBtn.UnregisterCallback<ClickEvent>(OnBackToLoginClicked);
+
+                Button quitBtn = _root.Q<Button>("btn-quit-application");
+                if (quitBtn != null)
+                    quitBtn.UnregisterCallback<ClickEvent>(OnQuitApplicationClicked);
             }
         }
 
@@ -108,6 +122,16 @@ namespace Woi.Game.Training.UI
             {
                 Debug.LogError("[TrainingResultScreenController] LevelController not found in scene. Cannot return to login.", this);
             }
+        }
+
+        private void OnQuitApplicationClicked(ClickEvent evt)
+        {
+            Debug.Log("[TrainingResultScreenController] Quit application requested.", this);
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
 
         public void Present(SessionReport report)
@@ -252,6 +276,13 @@ namespace Woi.Game.Training.UI
                 returnMenuBtn.RegisterCallback<ClickEvent>(OnBackToLoginClicked);
             }
 
+            Button quitBtn = root.Q<Button>("btn-quit-application");
+            if (quitBtn != null)
+            {
+                quitBtn.UnregisterCallback<ClickEvent>(OnQuitApplicationClicked);
+                quitBtn.RegisterCallback<ClickEvent>(OnQuitApplicationClicked);
+            }
+
             VisualElement modernFire = root.Q<VisualElement>("fire-analysis-grid");
             if (modernFire != null)
             {
@@ -297,12 +328,8 @@ namespace Woi.Game.Training.UI
             SetLabelText("evaluation-status", h.ResultLabel);
             SetLabelText("duration-value", h.SessionDurationDisplay);
 
-            Label unit = _root.Q<Label>("duration-unit");
-            if (unit != null)
-            {
-                unit.text = string.Empty;
-                unit.style.display = DisplayStyle.None;
-            }
+            HideDurationUnitLabel(_root, "duration-unit");
+            HideDurationUnitLabel(_root, "first-response-unit");
 
             SetLabelText("first-response-value", h.TimeToFirstResponseDisplay);
             SetLabelText("total-score", $"{h.FinalScorePercent}");
@@ -333,6 +360,19 @@ namespace Woi.Game.Training.UI
             Label label = _root.Q<Label>(name);
             if (label != null)
                 label.text = text ?? string.Empty;
+        }
+
+        static void HideDurationUnitLabel(VisualElement root, string elementName)
+        {
+            if (root == null)
+                return;
+
+            Label unit = root.Q<Label>(elementName);
+            if (unit == null)
+                return;
+
+            unit.text = string.Empty;
+            unit.style.display = DisplayStyle.None;
         }
 
         private void BindLegacyHeader(TrainingResultHeaderModel h)
@@ -770,9 +810,9 @@ namespace Woi.Game.Training.UI
             if (returnMenu != null)
                 returnMenu.text = LocalizedUiPair.Resolve("BACK TO LOGIN", "MENÜYE DÖN");
 
-            Label firstResponseUnit = _root.Q<Label>("first-response-unit");
-            if (firstResponseUnit != null)
-                firstResponseUnit.text = LocalizedUiPair.Resolve("s", "sn");
+            Button quit = _root.Q<Button>("btn-quit-application");
+            if (quit != null)
+                quit.text = LocalizedUiPair.Resolve("Quit Game", "Oyunu Kapat");
 
             Foldout advancedFoldout = _root.Q<Foldout>("advanced-foldout");
             if (advancedFoldout != null)

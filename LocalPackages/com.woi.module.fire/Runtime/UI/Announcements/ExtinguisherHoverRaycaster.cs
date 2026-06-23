@@ -26,7 +26,12 @@ namespace Woi.UI.Announcements
         [Tooltip("When cleanup runs and no HoverController is hit, also call IPopupService.Hide() if a popup is visible.")]
         [SerializeField] private bool hideVisiblePopupWhenRayMissesHover = true;
 
+        [Tooltip("When true, the ray must miss all hover targets at least once before hover audio/popup can start (prevents auto-play when the crosshair already sits on a tube/blanket at level start).")]
+        [SerializeField] private bool requireRayMissBeforeHover = true;
+
         private ExtinguisherHoverController _current;
+        private ExtinguisherHoverController _pointed;
+        private bool _rayMissedSinceEnable;
 
         private void Awake()
         {
@@ -35,6 +40,28 @@ namespace Woi.UI.Announcements
 
             if (rayCamera == null)
                 rayCamera = Camera.main;
+
+            ExtinguisherHoverController.LevelHoverGateOpened += OnLevelHoverGateOpened;
+        }
+
+        private void OnEnable()
+        {
+            _rayMissedSinceEnable = !requireRayMissBeforeHover;
+
+            if (requireRayMissBeforeHover && ExtinguisherHoverController.IsLevelHoverGateReleased())
+                OnLevelHoverGateOpened();
+        }
+
+        private void OnLevelHoverGateOpened()
+        {
+            if (_current != null)
+            {
+                _current.NotifyRayHoverEnd();
+                _current = null;
+            }
+
+            if (requireRayMissBeforeHover)
+                _rayMissedSinceEnable = false;
         }
 
         private void LateUpdate()
@@ -54,14 +81,22 @@ namespace Woi.UI.Announcements
             if (!TryResolveHoverTarget(rayCamera, out ExtinguisherHoverController target, out RaycastHit hit))
                 target = null;
 
+            if (target == null)
+                _rayMissedSinceEnable = true;
+
+            if (_pointed != null && _pointed != target && _pointed != _current)
+                _pointed.NotifyRayNotPointingAt();
+
+            _pointed = target;
+
             if (target != _current)
             {
                 if (_current != null)
                     _current.NotifyRayHoverEnd();
 
-                _current = target;
-
-                if (_current != null && !_current.NotifyRayHoverBegin(in hit))
+                if (target != null && _rayMissedSinceEnable && target.NotifyRayHoverBegin(in hit))
+                    _current = target;
+                else
                     _current = null;
             }
 
@@ -88,8 +123,18 @@ namespace Woi.UI.Announcements
             return true;
         }
 
+        private void OnDestroy()
+        {
+            ExtinguisherHoverController.LevelHoverGateOpened -= OnLevelHoverGateOpened;
+        }
+
         private void OnDisable()
         {
+            if (_pointed != null && _pointed != _current)
+                _pointed.NotifyRayNotPointingAt();
+
+            _pointed = null;
+
             if (_current != null)
             {
                 _current.NotifyRayHoverEnd();

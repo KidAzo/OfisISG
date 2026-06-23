@@ -3,6 +3,7 @@ using UnityEngine;
 using Woi.Equipment;
 using WOI.Modules.SDK;
 using Woi.UI.Popups;
+using Woi.UI.Popups.Localization;
 using WoiUtils.AudioSystem;
 
 namespace Woi.UI.Announcements
@@ -23,6 +24,14 @@ namespace Woi.UI.Announcements
         [SerializeField] private HoverPointerMode pointerMode = HoverPointerMode.CameraCenterRay;
 
         [SerializeField] private LocalizedHoverInfoDefinition content;
+
+        [Header("Inline text (when Content asset is not assigned)")]
+        [SerializeField]
+        private HoverInfoLanguageSlot _inlineTurkish;
+
+        [SerializeField]
+        private HoverInfoLanguageSlot _inlineEnglish;
+
         [SerializeField] private PopupType popupType = PopupType.Training;
         [SerializeField] private PopupAnchor popupAnchor = PopupAnchor.TopRight;
 
@@ -48,35 +57,44 @@ namespace Woi.UI.Announcements
 
         private AudioVoice _voice;
         private SoundDefinition _activeHoverSound;
-        private ExtinguisherPickupItem _pickupItem;
 
         private static ExtinguisherHoverController _activeHover;
 
         /// <summary>Set once when <see cref="hoverUnlockedAfterLevelNarration"/> fires; late-spawned replacements skip the wait.</summary>
         private static bool s_levelHoverNarrationReleased;
 
+        /// <summary>Raycasters reset their arm state when the narration gate opens so crosshair-on-target does not auto-play VO.</summary>
+        public static event System.Action LevelHoverGateOpened;
+
         /// <summary>When false, <see cref="TryBeginHover"/> does not show popup or play hover audio.</summary>
         private bool _canHover = true;
+
+        /// <summary>After the narration gate opens, block hover until the ray stops pointing at this collider once.</summary>
+        private bool _awaitingPointerLeaveAfterGate;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetLevelHoverNarrationGate()
+        {
+            s_levelHoverNarrationReleased = false;
+            LevelHoverGateOpened = null;
+        }
+
+        /// <summary>True after <see cref="hoverUnlockedAfterLevelNarration"/> has fired at least once this session.</summary>
+        public static bool IsLevelHoverGateReleased() => s_levelHoverNarrationReleased;
 
         /// <summary>Used by <see cref="ExtinguisherHoverRaycaster"/> to skip non–ray-driven tubes.</summary>
         public HoverPointerMode PointerMode => pointerMode;
 
-        private void Awake()
-        {
-            _pickupItem = GetComponent<ExtinguisherPickupItem>();
-            if (_pickupItem == null)
-            {
-                _pickupItem = GetComponentInParent<ExtinguisherPickupItem>();
-            }
-        }
-
         private void OnEnable()
         {
+            LevelHoverGateOpened += OnInstanceLevelHoverGateOpened;
+
             if (hoverUnlockedAfterLevelNarration != null)
             {
                 if (s_levelHoverNarrationReleased)
                 {
                     _canHover = true;
+                    _awaitingPointerLeaveAfterGate = true;
                 }
                 else
                 {
@@ -94,13 +112,27 @@ namespace Woi.UI.Announcements
         {
             s_levelHoverNarrationReleased = true;
             _canHover = true;
+            LevelHoverGateOpened?.Invoke();
 
             if (hoverUnlockedAfterLevelNarration != null)
                 hoverUnlockedAfterLevelNarration.OnRaised -= OnHoverUnlockedAfterLevelNarrationRaised;
         }
 
+        private void OnInstanceLevelHoverGateOpened()
+        {
+            if (hoverUnlockedAfterLevelNarration == null)
+                return;
+
+            _awaitingPointerLeaveAfterGate = true;
+
+            if (_activeHover == this)
+                NotifyRayHoverEnd();
+        }
+
         private void OnDisable()
         {
+            LevelHoverGateOpened -= OnInstanceLevelHoverGateOpened;
+
             if (hoverUnlockedAfterLevelNarration != null)
                 hoverUnlockedAfterLevelNarration.OnRaised -= OnHoverUnlockedAfterLevelNarrationRaised;
 
@@ -112,32 +144,11 @@ namespace Woi.UI.Announcements
 
         private void LateUpdate()
         {
-            if (IsThisTubeEquipped())
-            {
-                if (_activeHover == this)
-                {
-                    NotifyRayHoverEnd();
-                }
-
-                return;
-            }
-
             if (_activeHover != this)
-            {
                 return;
-            }
-
             if (!IsPlayerHoldingExtinguisherForTubeHover())
-            {
                 return;
-            }
-
             NotifyRayHoverEnd();
-        }
-
-        private bool IsThisTubeEquipped()
-        {
-            return _pickupItem != null && _pickupItem.IsEquipped;
         }
 
         /// <summary>
@@ -148,7 +159,10 @@ namespace Woi.UI.Announcements
             NotifyRayHoverEnd();
 
             if (hoverUnlockedAfterLevelNarration != null)
+            {
                 _canHover = s_levelHoverNarrationReleased;
+                _awaitingPointerLeaveAfterGate = s_levelHoverNarrationReleased;
+            }
             else
                 _canHover = true;
         }
@@ -196,6 +210,12 @@ namespace Woi.UI.Announcements
                 _activeHover.NotifyRayHoverEnd();
         }
 
+        /// <summary>Called when the ray stops pointing at this collider without an active hover (e.g. gate just opened while crosshair was already on target).</summary>
+        public void NotifyRayNotPointingAt()
+        {
+            _awaitingPointerLeaveAfterGate = false;
+        }
+
         /// <summary>Called by <see cref="ExtinguisherHoverRaycaster"/> when the ray no longer hits this collider. Always stops this instance’s audio; clears popup when we own active hover.</summary>
         public void NotifyRayHoverEnd()
         {
@@ -237,21 +257,22 @@ namespace Woi.UI.Announcements
             if (!_canHover)
                 return false;
 
-            if (content == null)
+            if (_awaitingPointerLeaveAfterGate)
+                return false;
+
+            if (!TryResolveContentSlot(out HoverInfoLanguageSlot slot))
             {
-                Debug.LogWarning("[ExtinguisherHoverController] No Localized Hover Info asset assigned.", this);
+                Debug.LogWarning("[ExtinguisherHoverController] No hover content (asset or inline TR/EN).", this);
                 return false;
             }
 
-            if (IsThisTubeEquipped() || IsPlayerHoldingExtinguisherForTubeHover())
+            if (IsPlayerHoldingExtinguisherForTubeHover())
                 return false;
 
             if (_activeHover != null && _activeHover != this)
                 _activeHover.EndHoverFromPeerSwitch();
 
             _activeHover = this;
-
-            HoverInfoLanguageSlot slot = content.ResolveForCurrentLanguage();
 
             if (FirePlatformRuntime.IsVR && ExtinguisherHoverVrWorldPopupHost.TryGetInstance(out var vrWorld) && vrWorld != null)
             {
@@ -293,7 +314,7 @@ namespace Woi.UI.Announcements
         }
 
         /// <summary>
-        /// VR: <see cref="VRHandExtinguisherGrabber.GlobalHeldExtinguisherCount"/>; PC: <see cref="PlayerExtinguisherEquipment.CurrentItem"/>.
+        /// VR: held extinguisher; PC: equipped extinguisher — rack/world hover popups stay off while carrying gear.
         /// </summary>
         internal static bool IsPlayerHoldingExtinguisherForTubeHover()
         {
@@ -301,7 +322,7 @@ namespace Woi.UI.Announcements
                 return true;
 
             PlayerExtinguisherEquipment equip =
-                Object.FindFirstObjectByType<PlayerExtinguisherEquipment>(FindObjectsInactive.Exclude);
+                UnityEngine.Object.FindFirstObjectByType<PlayerExtinguisherEquipment>(FindObjectsInactive.Exclude);
             return equip != null && equip.CurrentItem != null;
         }
 
@@ -371,6 +392,75 @@ namespace Woi.UI.Announcements
             _voice = sys.Play(sound, ctx);
 
             // Queue All / delayed Play returns null — audio still runs; stop via SoundDefinition on hover exit.
+        }
+
+        /// <summary>VR kart konumu (ör. Class C vana üstü).</summary>
+        public void ConfigureVrWorldPopupPlacement(
+            Transform anchorOverride,
+            Vector3 offsetLocal,
+            bool useHitSurfaceNormal)
+        {
+            vrPopupAnchorOverride = anchorOverride;
+            vrPopupOffsetLocal = offsetLocal;
+            vrPopupUseHitSurfaceNormal = useHitSurfaceNormal;
+        }
+
+        /// <summary>Inspector ile TR/EN metin atamak için.</summary>
+        public void SetInlineHoverContent(
+            string titleTr,
+            string messageTr,
+            string titleEn,
+            string messageEn,
+            SoundDefinition soundTr = null,
+            SoundDefinition soundEn = null)
+        {
+            _inlineTurkish = new HoverInfoLanguageSlot
+            {
+                title = titleTr,
+                message = messageTr,
+                sound = soundTr,
+            };
+            _inlineEnglish = new HoverInfoLanguageSlot
+            {
+                title = titleEn,
+                message = messageEn,
+                sound = soundEn,
+            };
+        }
+
+        bool TryResolveContentSlot(out HoverInfoLanguageSlot slot)
+        {
+            if (content != null)
+            {
+                slot = content.ResolveForCurrentLanguage();
+                return HasContent(slot);
+            }
+
+            slot = PreferTurkishInline() ? _inlineTurkish : _inlineEnglish;
+            if (!HasContent(slot))
+                slot = PreferTurkishInline() ? _inlineEnglish : _inlineTurkish;
+
+            return HasContent(slot);
+        }
+
+        static bool HasContent(HoverInfoLanguageSlot s) =>
+            !string.IsNullOrWhiteSpace(s.title)
+            || !string.IsNullOrWhiteSpace(s.message)
+            || s.sound != null;
+
+        static bool PreferTurkishInline()
+        {
+            string code = null;
+            if (ServiceLocator.TryGet<ILocalizationService>(out var iloc) && iloc != null)
+                code = iloc.CurrentLanguage;
+            else if (LocalizationService.Instance != null)
+                code = LocalizationService.Instance.CurrentLanguage;
+
+            if (string.IsNullOrWhiteSpace(code))
+                return true;
+
+            code = code.Trim().ToLowerInvariant();
+            return code == LocalizationService.Turkish || code.StartsWith("tr", System.StringComparison.Ordinal);
         }
 
         private void EndHoverAudio()

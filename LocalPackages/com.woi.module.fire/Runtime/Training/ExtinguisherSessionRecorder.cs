@@ -131,6 +131,8 @@ namespace Woi.Game.Training
         private bool _lastUsedExtinguisherTypeKnown;
         private ExtinguisherType _lastUsedExtinguisherType;
 
+        private bool _fireBlanketUsed;
+
         /// <summary>Optional outcome queued by gameplay; consumed by parameterless <see cref="EndSession()"/>.</summary>
         private TrainingSessionEndContext _pendingEndContext;
 
@@ -287,6 +289,7 @@ namespace Woi.Game.Training
             _sessionStartedUtc          = DateTime.UtcNow;
             _lastUsedExtinguisherTypeKnown = false;
             _lastUsedExtinguisherType      = default;
+            _fireBlanketUsed               = false;
             _timeline.Clear();
             _timeline.Add(new TrainingTimelineEvent(0f, TrainingTimelineEventKind.SessionStarted));
             _firstSprayTime             = -1f;
@@ -314,6 +317,22 @@ namespace Woi.Game.Training
 
             _onSessionStartedSO?.Raise();
             OnSessionStarted?.Invoke();
+        }
+
+        /// <summary>Call when the trainee places the fire blanket on the fire.</summary>
+        public void RecordFireBlanketUsed()
+        {
+            if (!_sessionActive)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning(
+                    $"[{nameof(ExtinguisherSessionRecorder)}] {nameof(RecordFireBlanketUsed)} ignored — no active session on {gameObject.name}.",
+                    this);
+#endif
+                return;
+            }
+
+            _fireBlanketUsed = true;
         }
 
         /// <summary>
@@ -366,6 +385,7 @@ namespace Woi.Game.Training
             if (_logReportOnEnd)
                 Debug.Log(report.ToString(), this);
 
+            TrainingGameplayInputGate.SetBlocked(true);
             StopAllWoiAudioBeforeSessionEndedEvent();
 
             _onSessionEndedSO?.Raise();
@@ -374,21 +394,10 @@ namespace Woi.Game.Training
         }
 
         /// <summary>
-        /// Clears Woi <see cref="AudioSystem"/> playback so gameplay VO/SFX do not overlap the results screen;
-        /// runs immediately before <see cref="_onSessionEndedSO"/> and <see cref="OnSessionEnded"/>.
+        /// Clears gameplay audio so VO/SFX/loops do not overlap the results screen.
         /// </summary>
-        static void StopAllWoiAudioBeforeSessionEndedEvent()
-        {
-            if (AudioSystem.TryGetFromServiceLocator(out AudioSystem registered) && registered != null)
-            {
-                registered.StopAll();
-                return;
-            }
-
-            AudioSystem fallback = UnityEngine.Object.FindFirstObjectByType<AudioSystem>();
-            if (fallback != null)
-                fallback.StopAll();
-        }
+        static void StopAllWoiAudioBeforeSessionEndedEvent() =>
+            TrainingGameplayAudioSilencer.StopAllSceneGameplayAudio();
 
         /// <summary>Live snapshot without ending. Uses empty end context (not evaluated / fire not out).</summary>
         public SessionReport GetPartialReport()
@@ -826,6 +835,7 @@ namespace Woi.Game.Training
                 correctExtinguisherSelected: correctType,
                 fireFullyExtinguished:      fireAllOut,
                 extinguisherDepletedBeforeCompletion: depletedBefore,
+                fireBlanketUsed:            _fireBlanketUsed,
                 overallTrainingPassed:      overallPass,
                 rulesEvaluated:             rulesEvaluated,
                 finalScore:                 finalScore,

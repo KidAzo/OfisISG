@@ -1,6 +1,5 @@
 using System.Collections;
 using FireExtinguisher.Core;
-using FireExtinguisher.VR;
 using PrimeTween;
 using UnityEngine;
 using Woi.Equipment;
@@ -14,73 +13,79 @@ namespace Woi.Game
     [AddComponentMenu("Woi/Feedback/Pin Pull Feedback")]
     public sealed class PinPullFeedback : MonoBehaviour
     {
+        const float PinOutlineWidth = 3f;
+
         [Header("Source")]
         [Tooltip("Optional gameplay controller. When assigned, feedback plays when its pin is successfully pulled.")]
-        [SerializeField] private ExtinguisherController _extinguisherController;
+        [SerializeField] ExtinguisherController _extinguisherController;
 
         [Header("Visuals")]
-        [SerializeField] private Outline _outline;
-        [SerializeField] private Transform _pinTransform;
-        [SerializeField] private Vector3 _localPullOffset = new Vector3(0.06f, 0f, 0f);
-        [SerializeField] private float _pullMoveDuration = 0.12f;
-        [SerializeField] private float _scalePunchAmount = 1.08f;
-        [SerializeField] private float _scalePunchDuration = 0.08f;
-        [SerializeField] private float _shrinkDuration = 0.12f;
-        [SerializeField] private bool _allowReplay;
+        [Tooltip("Quick Outline on Pim_low (auto-filled). Either Outline script copy works.")]
+        [SerializeField] MonoBehaviour _outline;
+        [SerializeField] Transform _pinTransform;
+        [SerializeField] Vector3 _localPullOffset = new Vector3(0.06f, 0f, 0f);
+        [SerializeField] float _pullMoveDuration = 0.12f;
+        [SerializeField] float _scalePunchAmount = 1.08f;
+        [SerializeField] float _scalePunchDuration = 0.08f;
+        [SerializeField] float _shrinkDuration = 0.12f;
+        [SerializeField] bool _allowReplay;
 
         [Header("Woi Audio")]
-        [SerializeField] private SoundDefinition _pinPullSound;
+        [SerializeField] SoundDefinition _pinPullSound;
         [Tooltip("Optional. Uses ServiceLocator after AudioSystem.Start, then falls back to FindFirstObjectByType.")]
-        [SerializeField] private AudioSystem _audioSystem;
+        [SerializeField] AudioSystem _audioSystem;
 
-        private Transform PinTransform => _pinTransform != null ? _pinTransform : transform;
+        Transform PinTransform => _pinTransform != null ? _pinTransform : transform;
 
-        private Vector3 _initialLocalPosition;
-        private Vector3 _initialScale;
-        private bool _played;
-        private Coroutine _feedbackRoutine;
+        Vector3 _initialLocalPosition;
+        Vector3 _initialScale;
+        bool _played;
+        Coroutine _feedbackRoutine;
 
-        private void Awake()
+        void Awake()
         {
             if (_pinTransform == null)
                 _pinTransform = transform;
 
             _initialLocalPosition = PinTransform.localPosition;
             _initialScale = PinTransform.localScale;
-            DisableOutline();
+
+            if (_extinguisherController == null)
+                _extinguisherController = GetComponentInParent<ExtinguisherController>(true);
+
+            QuickOutlineBehaviour.Ensure(ref _outline, gameObject);
+            QuickOutlineBehaviour.Hide(_outline);
+            BindPinPullEvent(true);
         }
 
-        private void Start()
+        void Start() => ResolveAudioSystem();
+
+        void OnEnable()
         {
-            ResolveAudioSystem();
+            QuickOutlineBehaviour.Ensure(ref _outline, gameObject);
+            QuickOutlineBehaviour.Hide(_outline);
+
+            if (_extinguisherController == null)
+                _extinguisherController = GetComponentInParent<ExtinguisherController>(true);
+
+            BindPinPullEvent(true);
         }
 
-        private void ResolveAudioSystem()
+        void OnDisable()
         {
-            if (_audioSystem != null)
+            BindPinPullEvent(false);
+            QuickOutlineBehaviour.Hide(_outline);
+        }
+
+        void BindPinPullEvent(bool bind)
+        {
+            if (_extinguisherController == null)
                 return;
 
-            if (AudioSystem.TryGetFromServiceLocator(out var sys))
-                _audioSystem = sys;
-
-            if (_audioSystem == null)
-                _audioSystem = FindFirstObjectByType<AudioSystem>();
-        }
-
-        private void OnEnable()
-        {
-            DisableOutline();
-
-            if (_extinguisherController != null)
+            if (bind)
                 _extinguisherController.OnPinPulled += PlayFeedback;
-        }
-
-        private void OnDisable()
-        {
-            if (_extinguisherController != null)
+            else
                 _extinguisherController.OnPinPulled -= PlayFeedback;
-
-            DisableOutline();
         }
 
         public void PlayFeedback()
@@ -89,7 +94,6 @@ namespace Woi.Game
                 return;
 
             _played = true;
-
             PlaySound();
             PlayVisualSequence();
         }
@@ -107,10 +111,10 @@ namespace Woi.Game
             StopActiveTweens();
             PinTransform.localPosition = _initialLocalPosition;
             PinTransform.localScale = _initialScale;
-            DisableOutline();
+            QuickOutlineBehaviour.Hide(_outline);
         }
 
-        private void PlaySound()
+        void PlaySound()
         {
             if (_pinPullSound == null)
             {
@@ -129,7 +133,7 @@ namespace Woi.Game
             _audioSystem.PlayFollow(_pinPullSound, PinTransform);
         }
 
-        private void PlayVisualSequence()
+        void PlayVisualSequence()
         {
             if (_feedbackRoutine != null)
             {
@@ -140,7 +144,7 @@ namespace Woi.Game
             _feedbackRoutine = StartCoroutine(FeedbackRoutine());
         }
 
-        private IEnumerator FeedbackRoutine()
+        IEnumerator FeedbackRoutine()
         {
             Transform target = PinTransform;
             Vector3 pulledPosition = _initialLocalPosition + _localPullOffset;
@@ -149,10 +153,7 @@ namespace Woi.Game
             target.localPosition = _initialLocalPosition;
             target.localScale = _initialScale;
 
-            if (!ShouldSuppressTubeOutline())
-            {
-                EnableYellowOutline();
-            }
+            EnablePinPullOutline();
 
             float moveDuration = Mathf.Max(0.01f, _pullMoveDuration);
             Tween.LocalPosition(target, pulledPosition, moveDuration, Ease.OutQuad);
@@ -168,54 +169,49 @@ namespace Woi.Game
 
             target.localPosition = pulledPosition;
             target.localScale = Vector3.zero;
-            DisableOutline();
+            QuickOutlineBehaviour.Hide(_outline);
             _feedbackRoutine = null;
         }
 
-        private static bool ShouldSuppressTubeOutline()
+        void EnablePinPullOutline()
         {
-            if (VRHandExtinguisherGrabber.GlobalHeldExtinguisherCount > 0)
-            {
-                return true;
-            }
+            QuickOutlineBehaviour.Ensure(ref _outline, gameObject);
 
-            PlayerExtinguisherEquipment equipment =
-                Object.FindFirstObjectByType<PlayerExtinguisherEquipment>(FindObjectsInactive.Exclude);
-            return equipment != null && equipment.CurrentItem != null;
-        }
-
-        private void EnableYellowOutline()
-        {
-            if (ShouldSuppressTubeOutline())
+            if (_outline == null)
             {
+                Debug.LogWarning("[PinPullFeedback] No Outline on Pim_low.", this);
                 return;
             }
 
             ExtinguisherPickupItem pickup = GetComponentInParent<ExtinguisherPickupItem>();
-            if (pickup != null && pickup.IsEquipped)
-            {
-                return;
-            }
+            if (pickup != null)
+                pickup.GetComponent<HoverOutline>()?.ResetHover();
 
-            if (_outline == null)
-            {
-                Debug.LogWarning("[PinPullFeedback] No Quick Outline component assigned.", this);
-                return;
-            }
-
-            _outline.OutlineColor = Color.yellow;
-            _outline.enabled = true;
+            QuickOutlineBehaviour.Show(_outline, Color.yellow, PinOutlineWidth);
         }
 
-        private void StopActiveTweens()
+        void StopActiveTweens() => Tween.StopAll(PinTransform);
+
+        void ResolveAudioSystem()
         {
-            Tween.StopAll(PinTransform);
+            if (_audioSystem != null)
+                return;
+
+            if (AudioSystem.TryGetFromServiceLocator(out var sys))
+                _audioSystem = sys;
+
+            if (_audioSystem == null)
+                _audioSystem = FindFirstObjectByType<AudioSystem>();
         }
 
-        private void DisableOutline()
+#if UNITY_EDITOR
+        void OnValidate()
         {
-            if (_outline != null)
-                _outline.enabled = false;
+            QuickOutlineBehaviour.Ensure(ref _outline, gameObject);
+
+            if (_extinguisherController == null)
+                _extinguisherController = GetComponentInParent<ExtinguisherController>(true);
         }
+#endif
     }
 }

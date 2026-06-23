@@ -31,6 +31,11 @@ namespace Woi.UI.Navigation
         [SerializeField]
         private bool useFullScreenPcBackground = true;
 
+        [Header("Background")]
+        [Tooltip("Optional runtime override for login-background-image. Leave empty to keep UXML/USS background from the editor.")]
+        [SerializeField]
+        private Sprite loginBackgroundSprite;
+
         [Tooltip("Optional second UIDocument using LoginLeaderboard.uxml. Assign so TOP SCORES lives on a separate GameObject (e.g. second VR quad). Leave empty if you do not show the leaderboard.")]
         [SerializeField] private UIDocument leaderboardUiDocument;
 
@@ -54,6 +59,7 @@ namespace Woi.UI.Navigation
         [SerializeField] private UnityEvent onLoginButtonClicked = new UnityEvent();
 
         private UIDocument _document;
+        private VisualElement _initializedUiRoot;
 
         // UI Elements
         private DropdownField _languageDropdown;
@@ -94,10 +100,29 @@ namespace Woi.UI.Navigation
         // Guard flag – prevents toggle callbacks from firing during bulk updates
         private bool _isUpdatingUI;
 
+        private void OnEnable()
+        {
+            _document = GetComponent<UIDocument>();
+            TryInitializeUi();
+        }
+
         private void Start()
         {
             ValidateBootstrapServices();
             TryPlayLoginAnnouncement();
+            TryInitializeUi();
+        }
+
+        void TryInitializeUi()
+        {
+            if (_document == null)
+                _document = GetComponent<UIDocument>();
+
+            VisualElement root = _document != null ? _document.rootVisualElement : null;
+            if (root == null)
+                return;
+
+            InitializeUi(root);
         }
 
         public void SetVisible(bool visible)
@@ -367,15 +392,15 @@ namespace Woi.UI.Navigation
             m?.Invoke(loc, new object[] { code });
         }
 
-        private void OnEnable()
+        private void InitializeUi(VisualElement root)
         {
-            _document = GetComponent<UIDocument>();
-            var root = _document.rootVisualElement;
+            if (root == null || ReferenceEquals(root, _initializedUiRoot))
+                return;
 
-            if (root == null) return;
+            _initializedUiRoot = root;
 
             StretchLoginShellToPanel(root);
-            ApplyPcBackgroundVisibility(root);
+            ScheduleApplyPcBackground(root);
 
             if (omitUserProfileSection)
             {
@@ -456,6 +481,7 @@ namespace Woi.UI.Navigation
 
         private void OnDisable()
         {
+            _initializedUiRoot = null;
             ClearLeaderboardDocumentLayoutMode();
 
             if (_loginButton != null)
@@ -502,26 +528,103 @@ namespace Woi.UI.Navigation
             }
         }
 
-        /// <summary>Full-screen plate + glows when <see cref="useFullScreenPcBackground"/> is enabled on this instance (PC branch), hidden on VR card-only instances.</summary>
+        /// <summary>Full-screen plate when <see cref="useFullScreenPcBackground"/> is enabled on this instance (PC branch), hidden on VR card-only instances.</summary>
+        void ScheduleApplyPcBackground(VisualElement root)
+        {
+            if (root == null)
+                return;
+
+            root.schedule.Execute(() => ApplyPcBackgroundVisibility(root)).ExecuteLater(0);
+        }
+
+        static StyleBackground? ResolveLoginBackgroundStyle(Sprite sprite)
+        {
+            if (sprite != null)
+                return new StyleBackground(sprite);
+
+            return null;
+        }
+
+        /// <summary>Full-screen plate when <see cref="useFullScreenPcBackground"/> is enabled on this instance (PC branch), hidden on VR card-only instances.</summary>
         void ApplyPcBackgroundVisibility(VisualElement root)
         {
             if (root == null)
                 return;
 
-            var pcBg = root.Q<VisualElement>("pc-background-layer");
+            VisualElement shell = root.Q<VisualElement>("login-shell") ?? root;
+            VisualElement bgImage = shell.Q<VisualElement>("login-background-image");
+            VisualElement pcBg = shell.Q<VisualElement>("pc-background-layer");
+
+            if (!useFullScreenPcBackground)
+            {
+                if (bgImage != null)
+                    bgImage.style.display = DisplayStyle.None;
+
+                if (pcBg != null)
+                    pcBg.style.display = DisplayStyle.None;
+
+                return;
+            }
+
+            StyleBackground? backgroundStyle = ResolveLoginBackgroundStyle(loginBackgroundSprite);
+
+            if (bgImage != null)
+            {
+                StretchAbsoluteFull(bgImage);
+                bgImage.style.display = DisplayStyle.Flex;
+                bgImage.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Cover);
+
+                if (backgroundStyle.HasValue)
+                {
+                    bgImage.style.backgroundImage = backgroundStyle.Value;
+                    bgImage.style.backgroundColor = new Color(0f, 0f, 0f, 0f);
+                }
+
+                if (pcBg != null)
+                    pcBg.style.display = DisplayStyle.None;
+
+                return;
+            }
+
             if (pcBg == null)
                 return;
 
-            if (useFullScreenPcBackground)
+            StretchAbsoluteFull(pcBg);
+            pcBg.style.display = DisplayStyle.Flex;
+
+            if (backgroundStyle.HasValue)
             {
-                pcBg.style.display = DisplayStyle.Flex;
-                // Matches LoginScreen.uss --bg-dark if USS order ever misses this node.
-                pcBg.style.backgroundColor = new Color(7f / 255f, 9f / 255f, 19f / 255f, 1f);
+                pcBg.style.backgroundImage = backgroundStyle.Value;
+                pcBg.style.backgroundColor = new Color(0f, 0f, 0f, 0f);
+                pcBg.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Cover);
+                HideLoginBackgroundGlows(pcBg);
+                return;
             }
-            else
-            {
-                pcBg.style.display = DisplayStyle.None;
-            }
+
+            pcBg.style.backgroundImage = StyleKeyword.Null;
+            pcBg.style.backgroundColor = new Color(7f / 255f, 9f / 255f, 19f / 255f, 1f);
+        }
+
+        static void StretchAbsoluteFull(VisualElement el)
+        {
+            if (el == null)
+                return;
+
+            el.style.position = Position.Absolute;
+            el.style.left = 0;
+            el.style.top = 0;
+            el.style.right = 0;
+            el.style.bottom = 0;
+        }
+
+        static void HideLoginBackgroundGlows(VisualElement pcBackgroundLayer)
+        {
+            VisualElement glowOrange = pcBackgroundLayer.Q(className: "glow-orange");
+            VisualElement glowRose = pcBackgroundLayer.Q(className: "glow-rose");
+            if (glowOrange != null)
+                glowOrange.style.display = DisplayStyle.None;
+            if (glowRose != null)
+                glowRose.style.display = DisplayStyle.None;
         }
 
         void ApplyLeaderboardDocumentLayoutMode()

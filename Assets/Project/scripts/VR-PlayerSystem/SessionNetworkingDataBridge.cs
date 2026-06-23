@@ -54,12 +54,17 @@ namespace Woi.DataHandler
                 ? session.PlayerID.ToString()
                 : string.Empty;
 
-            GameSessionData.Set(new List<FireClass>(), name, id, SessionLanguageState.LanguageCode);
-            SessionProfileLanguagePreference.ReapplyToGame();
+            GameSessionData.Set(new List<FireClass>(), name, id);
 
             string languageCode = SessionLanguageState.HasUserChoice
                 ? SessionLanguageState.LanguageCode
                 : WasteLoginSession.LanguageCode;
+
+            if (!string.IsNullOrWhiteSpace(languageCode))
+                SessionLanguageState.RecordUserChoice(languageCode);
+
+            SessionProfileLanguagePreference.ReapplyToGame();
+
             WasteLoginSession.Set(name, id, languageCode);
 
             if (sessionData == null)

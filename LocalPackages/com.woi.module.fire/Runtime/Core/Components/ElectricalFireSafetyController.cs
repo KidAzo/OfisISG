@@ -246,35 +246,21 @@ namespace FireExtinguisher.Core
         /// </summary>
         private IEnumerator ExtinguishSource(FireSource source, System.Action onDone)
         {
-            IReadOnlyList<FireTargetZone> zones = source.Zones;
+            float duration = Mathf.Max(0.01f, _extinguishDuration);
+            float elapsed = 0f;
 
-            // Pre-calculate the suppression rate per zone per second
-            // so that regardless of zone max-intensity the fire reaches zero
-            // in _extinguishDuration seconds.
-            while (true)
+            while (source != null && !source.IsExtinguished && elapsed < duration)
             {
-                if (source == null || source.IsExtinguished)
+                float remaining = duration - elapsed;
+                if (!source.ApplyGradualSuppressionStep(remaining, Time.deltaTime))
                     break;
 
-                bool anyActive = false;
-                foreach (FireTargetZone zone in zones)
-                {
-                    if (zone == null || zone.IsExtinguished)
-                        continue;
-
-                    anyActive = true;
-                    float suppressionThisFrame = zone.MaxIntensity > 0f
-                        ? (zone.MaxIntensity / _extinguishDuration) * Time.deltaTime
-                        : zone.CurrentIntensity; // drain instantly if no valid max
-
-                    zone.ApplySuppression(suppressionThisFrame);
-                }
-
-                if (!anyActive)
-                    break;
-
+                elapsed += Time.deltaTime;
                 yield return null;
             }
+
+            if (source != null && !source.IsExtinguished)
+                source.ForceExtinguishAllZones();
 
             onDone?.Invoke();
         }

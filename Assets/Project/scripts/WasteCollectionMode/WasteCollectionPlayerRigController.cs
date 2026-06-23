@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Woi.InputSystem;
 using Woi.Player;
+using Woi.Settings;
 using WOI.Modules.SDK;
 
 namespace Woi.WasteCollectionMode
@@ -126,6 +127,8 @@ namespace Woi.WasteCollectionMode
                 inputManager.EnsurePcGameplayInputEnabled();
 
             controller.ActivatePcLocomotion();
+
+            RequestLoadingCameraRefresh();
 
             if (logAppliedState)
             {
@@ -271,6 +274,18 @@ namespace Woi.WasteCollectionMode
                     continue;
 
                 root.SetActive(active);
+            }
+        }
+
+        private static void RequestLoadingCameraRefresh()
+        {
+            LoadingScreenController[] controllers = UnityEngine.Object.FindObjectsByType<LoadingScreenController>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < controllers.Length; i++)
+            {
+                controllers[i]?.RequestDelayedDisplayFallbackRefresh();
             }
         }
 

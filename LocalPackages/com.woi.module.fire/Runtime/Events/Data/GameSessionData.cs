@@ -23,13 +23,8 @@ namespace Woi.Events.Data
         /// <summary>User ID entered by the user.</summary>
         public static string UserId { get; private set; } = string.Empty;
 
-        /// <summary>Active UI language code (e.g. en, tr).</summary>
-        public static string LanguageCode { get; private set; } = SessionLanguageState.Turkish;
-
         /// <summary>True once <see cref="Set"/> has been called at least once this play session.</summary>
         public static bool IsSet { get; private set; }
-
-        public static bool IsEnglish => LanguageCode == SessionLanguageState.English;
 
         // ── Write ──────────────────────────────────────────────────────────────
 
@@ -39,23 +34,13 @@ namespace Woi.Events.Data
         /// </summary>
         public static void Set(List<FireClass> selectedClasses, string userName, string userId)
         {
-            Set(selectedClasses, userName, userId, ResolveLanguageForSession());
-        }
-
-        public static void Set(
-            List<FireClass> selectedClasses,
-            string userName,
-            string userId,
-            string languageCode)
-        {
             SelectedClasses = selectedClasses != null
                 ? new List<FireClass>(selectedClasses)
                 : new List<FireClass>();
 
-            UserName = userName ?? string.Empty;
-            UserId = userId ?? string.Empty;
-            LanguageCode = NormalizeLanguageCode(languageCode);
-            IsSet = true;
+            UserName = userName  ?? string.Empty;
+            UserId   = userId    ?? string.Empty;
+            IsSet    = true;
         }
 
         /// <summary>Resets all fields. Call when returning to the main menu / starting a fresh session.</summary>
@@ -63,25 +48,8 @@ namespace Woi.Events.Data
         {
             SelectedClasses = new List<FireClass>();
             UserName = string.Empty;
-            UserId = string.Empty;
-            LanguageCode = SessionLanguageState.Turkish;
-            IsSet = false;
-        }
-
-        private static string ResolveLanguageForSession()
-        {
-            if (SessionLanguageState.HasUserChoice)
-                return SessionLanguageState.LanguageCode;
-
-            return SessionLanguageState.Turkish;
-        }
-
-        private static string NormalizeLanguageCode(string languageCode)
-        {
-            if (string.IsNullOrWhiteSpace(languageCode))
-                return ResolveLanguageForSession();
-
-            return languageCode.Trim().ToLowerInvariant();
+            UserId   = string.Empty;
+            IsSet    = false;
         }
     }
 }

@@ -193,6 +193,9 @@ namespace Woi.Game.Training
         /// </summary>
         public bool ExtinguisherDepletedBeforeCompletion { get; }
 
+        /// <summary>True when the trainee placed the fire blanket on the assigned fire during this session.</summary>
+        public bool FireBlanketUsed { get; }
+
         public bool? OverallTrainingPassed { get; }
 
         /// <summary>True when <see cref="TrainingRuleOutcome.WasEvaluated"/> (outcome was not <see cref="TrainingRuleOutcome.Pending"/>).</summary>
@@ -223,6 +226,7 @@ namespace Woi.Game.Training
             bool correctExtinguisherSelected,
             bool fireFullyExtinguished,
             bool extinguisherDepletedBeforeCompletion,
+            bool fireBlanketUsed,
             bool? overallTrainingPassed,
             bool rulesEvaluated,
             float finalScore,
@@ -246,6 +250,7 @@ namespace Woi.Game.Training
             CorrectExtinguisherSelected = correctExtinguisherSelected;
             FireFullyExtinguished       = fireFullyExtinguished;
             ExtinguisherDepletedBeforeCompletion = extinguisherDepletedBeforeCompletion;
+            FireBlanketUsed             = fireBlanketUsed;
             OverallTrainingPassed       = overallTrainingPassed;
             RulesEvaluated              = rulesEvaluated;
             FinalScore                  = Clamp01(finalScore);
@@ -355,6 +360,29 @@ namespace Woi.Game.Training
                 _           => $"Class {fc}",
             };
 
+        /// <summary>Short card / note title (no material description).</summary>
+        public static string FormatFireClassShort(FireClass fc, bool turkishDisplay) => turkishDisplay
+            ? fc switch
+            {
+                FireClass.A => "Sınıf A",
+                FireClass.B => "Sınıf B",
+                FireClass.C => "Sınıf C",
+                FireClass.D => "Sınıf D",
+                FireClass.F => "Sınıf F",
+                FireClass.E => "Sınıf E",
+                _           => $"Sınıf {fc}",
+            }
+            : fc switch
+            {
+                FireClass.A => "Class A",
+                FireClass.B => "Class B",
+                FireClass.C => "Class C",
+                FireClass.D => "Class D",
+                FireClass.F => "Class F",
+                FireClass.E => "Class E",
+                _           => $"Class {fc}",
+            };
+
         public static string FormatExtinguisherType(ExtinguisherType type) => FormatExtinguisherType(type, turkishDisplay: false);
 
         public static string FormatExtinguisherType(ExtinguisherType type, bool turkishDisplay) => turkishDisplay
@@ -365,6 +393,7 @@ namespace Woi.Game.Training
                 ExtinguisherType.DryPowder   => "Kuru toz (ABC)",
                 ExtinguisherType.CO2         => "CO₂",
                 ExtinguisherType.WetChemical => "Yağlı ortam söndürücü",
+                ExtinguisherType.MetalPowder => "Metal yangın söndürme tozu",
                 _                            => type.ToString(),
             }
             : type switch
@@ -374,6 +403,7 @@ namespace Woi.Game.Training
                 ExtinguisherType.DryPowder   => "Dry powder (ABC)",
                 ExtinguisherType.CO2         => "CO₂",
                 ExtinguisherType.WetChemical => "Wet chemical",
+                ExtinguisherType.MetalPowder => "Metal powder",
                 _                            => type.ToString(),
             };
 
@@ -413,6 +443,8 @@ namespace Woi.Game.Training
             "Dry powder (ABC)"  => FormatExtinguisherType(ExtinguisherType.DryPowder, true),
             "CO₂"               => FormatExtinguisherType(ExtinguisherType.CO2, true),
             "Wet chemical"      => FormatExtinguisherType(ExtinguisherType.WetChemical, true),
+            "Metal powder"      => FormatExtinguisherType(ExtinguisherType.MetalPowder, true),
+            "MetalPowder"       => FormatExtinguisherType(ExtinguisherType.MetalPowder, true),
             _                   => english,
         };
     }
@@ -596,6 +628,7 @@ namespace Woi.Game.Training
             sb.AppendLine($"  Correct (session)    : {Client.CorrectExtinguisherSelected}");
             sb.AppendLine($"  All fires out        : {Client.FireFullyExtinguished}");
             sb.AppendLine($"  Depleted before done : {Client.ExtinguisherDepletedBeforeCompletion}");
+            sb.AppendLine($"  Fire blanket used    : {Client.FireBlanketUsed}");
             sb.AppendLine($"  Pass / fail          : {FormatNullableBool(Client.OverallTrainingPassed)}");
             sb.AppendLine($"  Rules evaluated      : {Client.RulesEvaluated}");
             if (Client.RulesEvaluated && Rules.FailureReasons.Count > 0)

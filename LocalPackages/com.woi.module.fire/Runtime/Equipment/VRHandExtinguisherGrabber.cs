@@ -93,6 +93,7 @@ namespace Woi.Equipment
 
         [SerializeField] private ExtinguisherPickupItem nearbyExtinguisher;
         [SerializeField] private ExtinguisherPickupItem heldExtinguisher;
+        public ExtinguisherPickupItem HeldExtinguisher => heldExtinguisher;
         [SerializeField] private bool isGrabButtonHeld;
         [SerializeField] private Vector3 lastVRDropPosition;
 
@@ -313,9 +314,14 @@ namespace Woi.Equipment
                 holdStateProvider.Equip();
             }
 
+            var sprayProvider = item.GetComponentInChildren<PCSprayInputProvider>();
+            if (sprayProvider != null)
+            {
+                sprayProvider.OverrideVrHandNode = handType == VRHandType.Left ? UnityEngine.XR.XRNode.LeftHand : UnityEngine.XR.XRNode.RightHand;
+            }
+
             // Reflection to set IsEquipped = true without modifying PC code
             SetIsEquipped(item, true);
-            item.ClearWallHoverPresentation();
 
             ResolveTrainingEquipmentNotify();
             _trainingEquipmentNotify?.NotifyVrEquipped(item);
@@ -463,8 +469,13 @@ namespace Woi.Equipment
                     holdStateProvider.Unequip();
                 }
 
+                var sprayProvider = heldExtinguisher.GetComponentInChildren<PCSprayInputProvider>();
+                if (sprayProvider != null)
+                {
+                    sprayProvider.OverrideVrHandNode = null;
+                }
+
                 SetIsEquipped(heldExtinguisher, false);
-                heldExtinguisher.RestoreWallHoverPresentation();
             }
 
             heldExtinguisher = null;
@@ -553,15 +564,7 @@ namespace Woi.Equipment
 
         private void SetIsEquipped(ExtinguisherPickupItem item, bool value)
         {
-            var prop = typeof(ExtinguisherPickupItem).GetProperty("IsEquipped", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            if (prop != null)
-            {
-                var setter = prop.GetSetMethod(true);
-                if (setter != null)
-                {
-                    setter.Invoke(item, new object[] { value });
-                }
-            }
+            item.SetEquippedVr(value);
         }
 
         private void ResolveTrainingEquipmentNotify()

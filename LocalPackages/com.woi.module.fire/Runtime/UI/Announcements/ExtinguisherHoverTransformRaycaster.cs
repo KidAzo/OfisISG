@@ -36,6 +36,10 @@ namespace Woi.UI.Announcements
         [SerializeField]
         private bool hideVisiblePopupWhenRayMissesHover = true;
 
+        [Tooltip("When true, the ray must miss all hover targets at least once before hover audio/popup can start.")]
+        [SerializeField]
+        private bool requireRayMissBeforeHover = true;
+
         [Tooltip("Editor / dev: draw Physics.Raycast in Scene view (cyan).")]
         [SerializeField]
         private bool debugDrawRay;
@@ -56,6 +60,8 @@ namespace Woi.UI.Announcements
         private Material rayLineMaterial;
 
         private ExtinguisherHoverController _current;
+        private ExtinguisherHoverController _pointed;
+        private bool _rayMissedSinceEnable;
         private LineRenderer _lineRenderer;
         private Material _runtimeRayLineMaterial;
 
@@ -69,6 +75,7 @@ namespace Woi.UI.Announcements
                 rayOrigin = transform;
 
             EnsureLineRenderer();
+            ExtinguisherHoverController.LevelHoverGateOpened += OnLevelHoverGateOpened;
         }
 
         void OnEnable()
@@ -76,11 +83,29 @@ namespace Woi.UI.Announcements
             if (rayOrigin == null)
                 rayOrigin = transform;
 
+            _rayMissedSinceEnable = !requireRayMissBeforeHover;
+
+            if (requireRayMissBeforeHover && ExtinguisherHoverController.IsLevelHoverGateReleased())
+                OnLevelHoverGateOpened();
+
             FireVrGameplayInteractionRay.Register(this, rayOrigin, rayStartInsetMeters);
+        }
+
+        void OnLevelHoverGateOpened()
+        {
+            if (_current != null)
+            {
+                _current.NotifyRayHoverEnd();
+                _current = null;
+            }
+
+            if (requireRayMissBeforeHover)
+                _rayMissedSinceEnable = false;
         }
 
         void OnDestroy()
         {
+            ExtinguisherHoverController.LevelHoverGateOpened -= OnLevelHoverGateOpened;
             FireVrGameplayInteractionRay.Unregister(this);
 
             if (_runtimeRayLineMaterial != null)
@@ -159,14 +184,22 @@ namespace Woi.UI.Announcements
             if (debugDrawRay)
                 Debug.DrawRay(origin, dir * maxDistance, Color.cyan, 0f, false);
 
+            if (target == null)
+                _rayMissedSinceEnable = true;
+
+            if (_pointed != null && _pointed != target && _pointed != _current)
+                _pointed.NotifyRayNotPointingAt();
+
+            _pointed = target;
+
             if (target != _current)
             {
                 if (_current != null)
                     _current.NotifyRayHoverEnd();
 
-                _current = target;
-
-                if (_current != null && !_current.NotifyRayHoverBegin(in chosenHit))
+                if (target != null && _rayMissedSinceEnable && target.NotifyRayHoverBegin(in chosenHit))
+                    _current = target;
+                else
                     _current = null;
             }
 
@@ -297,6 +330,11 @@ namespace Woi.UI.Announcements
         void OnDisable()
         {
             FireVrGameplayInteractionRay.Unregister(this);
+
+            if (_pointed != null && _pointed != _current)
+                _pointed.NotifyRayNotPointingAt();
+
+            _pointed = null;
 
             if (_lineRenderer != null)
                 _lineRenderer.enabled = false;

@@ -194,12 +194,12 @@ namespace Woi.OfficeFire
 
         private void Update()
         {
-            if (Keyboard.current == null || carafeEquipment == null)
+            if (carafeEquipment == null)
             {
                 return;
             }
 
-            if (!Keyboard.current[useKey].wasPressedThisFrame)
+            if (!OfficeFireUseKeyInput.WasUseKeyPressedThisFrame(useKey))
             {
                 return;
             }

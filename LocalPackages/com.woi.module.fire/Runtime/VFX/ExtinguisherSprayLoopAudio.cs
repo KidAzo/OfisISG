@@ -149,6 +149,9 @@ namespace Woi.Game.VFX
             }
         }
 
+        /// <summary>Result screen / session end: tüm sıkma seslerini keser (end one-shot çalmaz).</summary>
+        public void ForceStopGameplayAudio() => CleanupAllSprayAudio(playEnd: false);
+
         private void OnStartSoundFinishedNaturally()
         {
             if (!_spraySessionActive)

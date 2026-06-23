@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Woi.Events.Data;
 using WOI.Modules.SDK;
 
 namespace Woi.UI.Popups.Localization
@@ -68,28 +67,14 @@ namespace Woi.UI.Popups.Localization
             if (dontDestroyOnLoad)
                 DontDestroyOnLoad(gameObject);
 
-            _currentLanguage = ResolveStartupLanguage();
+            _currentLanguage = string.IsNullOrEmpty(defaultLanguageCode)
+                ? Turkish
+                : defaultLanguageCode.Trim().ToLowerInvariant();
         }
 
         private void Start()
         {
             TryRegisterWithServiceLocator();
-
-            if (SessionLanguageState.HasUserChoice)
-                SetLanguage(SessionLanguageState.LanguageCode);
-        }
-
-        private string ResolveStartupLanguage()
-        {
-            if (SessionLanguageState.HasUserChoice)
-                return SessionLanguageState.LanguageCode;
-
-            if (GameSessionData.IsSet && !string.IsNullOrEmpty(GameSessionData.LanguageCode))
-                return GameSessionData.LanguageCode.Trim().ToLowerInvariant();
-
-            return string.IsNullOrEmpty(defaultLanguageCode)
-                ? Turkish
-                : defaultLanguageCode.Trim().ToLowerInvariant();
         }
 
         private void OnDestroy()
