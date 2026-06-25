@@ -367864,6 +367864,7 @@ MonoBehaviour:
   - PCSelectableInteractor
   - PlayerLeanController
   disablePlayerInputWhileVisible: 1
+  pcControlsHud: {fileID: 0}
 --- !u!1001 &1721691511
 PrefabInstance:
   m_ObjectHideFlags: 0
