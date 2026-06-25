@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Woi.Equipment;
 
 namespace Woi.OfficeFire
 {
@@ -192,6 +193,9 @@ namespace Woi.OfficeFire
                 if (skipHierarchyRoot != null && hit.collider.transform.IsChildOf(skipHierarchyRoot))
                     continue;
 
+                if (IsEquippedExtinguisherCollider(hit.collider))
+                    continue;
+
                 // Ignore hits that are purely behind the original camera (so we don't hover walls behind us)
                 if (hit.distance < pullBackDistance * 0.5f && Vector3.Dot(hit.point - ray.origin, ray.direction) < 0)
                 {
@@ -225,6 +229,15 @@ namespace Woi.OfficeFire
         private static bool IsVrMode()
         {
             return FirePlatformRuntime.IsSourceInitialized && FirePlatformRuntime.IsVR;
+        }
+
+        private static bool IsEquippedExtinguisherCollider(Collider collider)
+        {
+            if (collider == null)
+                return false;
+
+            ExtinguisherPickupItem pickup = collider.GetComponentInParent<ExtinguisherPickupItem>();
+            return pickup != null && pickup.IsEquipped;
         }
 
         private static IHoverable[] CollectHoverablesFromCollider(Collider collider)

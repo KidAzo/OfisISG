@@ -43,7 +43,7 @@ namespace Woi.OfficeFire
 
         private void LateUpdate()
         {
-            ExtinguisherPickupItem pickup = GetComponent<ExtinguisherPickupItem>();
+            ExtinguisherPickupItem pickup = GetComponentInParent<ExtinguisherPickupItem>();
             if (pickup == null || !pickup.IsEquipped || outline == null)
             {
                 return;
@@ -63,7 +63,7 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            ExtinguisherPickupItem pickup = GetComponent<ExtinguisherPickupItem>();
+            ExtinguisherPickupItem pickup = GetComponentInParent<ExtinguisherPickupItem>();
             if (pickup != null && pickup.IsEquipped)
             {
                 if (_isHovered)

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Woi.Equipment;
 using Woi.Game;
 
 namespace Woi.OfficeFire
@@ -92,6 +93,17 @@ namespace Woi.OfficeFire
 
         private void LateUpdate()
         {
+            if (IsHeldByPlayer())
+            {
+                if (_lastHoverOutlineState)
+                {
+                    _lastHoverOutlineState = false;
+                    ApplyHoveredState(false);
+                }
+
+                return;
+            }
+
             if (_hoverOutline != null)
             {
                 bool hovered = _hoverOutline.IsHovered;
@@ -197,5 +209,17 @@ namespace Woi.OfficeFire
         {
             _controller?.SetInstruction(instructionText, instructionTextTurkish);
         }
+
+        static bool IsHeldByPlayer(MonoBehaviour host)
+        {
+            if (host == null)
+                return false;
+
+            ExtinguisherPickupItem pickup = host.GetComponent<ExtinguisherPickupItem>()
+                ?? host.GetComponentInParent<ExtinguisherPickupItem>();
+            return pickup != null && pickup.IsEquipped;
+        }
+
+        bool IsHeldByPlayer() => IsHeldByPlayer(this);
     }
 }

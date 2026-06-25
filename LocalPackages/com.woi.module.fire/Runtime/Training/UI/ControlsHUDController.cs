@@ -13,6 +13,7 @@ namespace Woi.Game.Training.UI
         private Label _equipLbl;
         private Label _pinLbl;
         private Label _dropLbl;
+        private Label _leanLbl;
 
         private void Awake()
         {
@@ -26,6 +27,7 @@ namespace Woi.Game.Training.UI
                 _equipLbl = root.Q<Label>("equip-lbl");
                 _pinLbl = root.Q<Label>("pin-lbl");
                 _dropLbl = root.Q<Label>("drop-lbl");
+                _leanLbl = root.Q<Label>("lean-lbl");
             }
         }
 
@@ -51,6 +53,7 @@ namespace Woi.Game.Training.UI
             if (_equipLbl != null) _equipLbl.text = isTurkish ? "Kuşan (E)" : "Equip (E)";
             if (_pinLbl != null) _pinLbl.text = isTurkish ? "Pimi Çek (R)" : "Pin Pulling (R)";
             if (_dropLbl != null) _dropLbl.text = isTurkish ? "Bırak (G)" : "Drop (G)";
+            if (_leanLbl != null) _leanLbl.text = isTurkish ? "Eğilme (CTRL)" : "Crouch (CTRL)";
         }
     }
 }

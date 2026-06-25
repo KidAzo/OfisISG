@@ -89,7 +89,17 @@ namespace Woi.Equipment
         /// IL2CPP builds'de private setter reflection ile strip edilebileceği için
         /// bu method kullanılmalıdır.
         /// </summary>
-        public void SetEquippedVr(bool value) => IsEquipped = value;
+        public void SetEquippedVr(bool value)
+        {
+            if (IsEquipped == value)
+                return;
+
+            IsEquipped = value;
+            if (value)
+                DismissInteractionHoverFeedback();
+            else
+                RestoreInteractionHoverFeedback();
+        }
 
         public ExtinguisherHomePoint HomePoint => _homePoint;
         public ExtinguisherUsageState UsageState => _usageState;
@@ -147,6 +157,7 @@ namespace Woi.Equipment
                 return false;
             }
 
+            DismissInteractionHoverFeedback();
             IsEquipped = true;
 
             // Parent under the equip anchor — the item now moves with the player hierarchy.
@@ -250,6 +261,7 @@ namespace Woi.Equipment
 
             // Re-enable colliders so the world object can be picked up again.
             SetCollidersEnabled(true);
+            RestoreInteractionHoverFeedback();
         }
 
         public void ReturnUnusedToHome()
@@ -282,6 +294,8 @@ namespace Woi.Equipment
             transform.SetPositionAndRotation(position, rotation);
             transform.localScale = localScale;
             SetCollidersEnabled(enableColliders);
+            if (enableColliders)
+                RestoreInteractionHoverFeedback();
         }
 
         // ── Private helpers ───────────────────────────────────────────────────────
@@ -297,7 +311,7 @@ namespace Woi.Equipment
 
         void EnsureHoverOutline()
         {
-            if (GetComponent<HoverOutline>() != null)
+            if (GetComponent<HoverOutline>() != null || HasOfficeFireHoverOutline())
                 return;
 
             Outline outline = GetComponent<Outline>();
@@ -310,6 +324,67 @@ namespace Woi.Equipment
 
             outline.enabled = false;
             gameObject.AddComponent<HoverOutline>();
+        }
+
+        bool HasOfficeFireHoverOutline()
+        {
+            MonoBehaviour[] behaviours = GetComponents<MonoBehaviour>();
+            for (int i = 0; i < behaviours.Length; i++)
+            {
+                MonoBehaviour behaviour = behaviours[i];
+                if (behaviour == null)
+                    continue;
+
+                string typeName = behaviour.GetType().Name;
+                if (typeName == "HoverableOutline" || typeName == "SelectableInstructionPrompt")
+                    return true;
+            }
+
+            return false;
+        }
+
+        void DismissInteractionHoverFeedback()
+        {
+            GetComponent<HoverOutline>()?.ResetHover();
+
+            MonoBehaviour[] behaviours = GetComponentsInChildren<MonoBehaviour>(true);
+            for (int i = 0; i < behaviours.Length; i++)
+            {
+                MonoBehaviour behaviour = behaviours[i];
+                if (behaviour == null)
+                    continue;
+
+                string typeName = behaviour.GetType().Name;
+                switch (typeName)
+                {
+                    case "HoverableOutline":
+                        behaviour.SendMessage("Hover", false, SendMessageOptions.DontRequireReceiver);
+                        break;
+                    case "SelectableInstructionPrompt":
+                        behaviour.SendMessage("SetWallPromptActive", false, SendMessageOptions.DontRequireReceiver);
+                        break;
+                    case "ExtinguisherHoverController":
+                        behaviour.SendMessage("ResetHover", SendMessageOptions.DontRequireReceiver);
+                        break;
+                }
+            }
+
+            Outline outline = GetComponent<Outline>();
+            if (outline != null)
+                outline.enabled = false;
+        }
+
+        void RestoreInteractionHoverFeedback()
+        {
+            MonoBehaviour[] behaviours = GetComponentsInChildren<MonoBehaviour>(true);
+            for (int i = 0; i < behaviours.Length; i++)
+            {
+                MonoBehaviour behaviour = behaviours[i];
+                if (behaviour == null || behaviour.GetType().Name != "SelectableInstructionPrompt")
+                    continue;
+
+                behaviour.SendMessage("SetWallPromptActive", true, SendMessageOptions.DontRequireReceiver);
+            }
         }
 
 #if UNITY_EDITOR

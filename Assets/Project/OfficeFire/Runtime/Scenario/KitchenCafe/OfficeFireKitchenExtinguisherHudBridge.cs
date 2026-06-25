@@ -25,6 +25,7 @@ namespace Woi.OfficeFire
         private void Awake()
         {
             ResolveHudReference();
+            EnsureHudGameObjectActive();
             SetHudVisible(false);
         }
 
@@ -86,31 +87,35 @@ namespace Woi.OfficeFire
 
         private void ResolveHudReference()
         {
-            if (extinguisherHud != null)
-            {
-                return;
-            }
+            extinguisherHud = OfficeFireExtinguisherHudReference.Resolve(extinguisherHud);
+        }
 
-            GameObject found = GameObject.Find(DefaultHudObjectName);
-            if (found != null)
+        private void EnsureHudGameObjectActive()
+        {
+            ResolveHudReference();
+            if (extinguisherHud != null && !extinguisherHud.activeSelf)
             {
-                extinguisherHud = found;
+                extinguisherHud.SetActive(true);
             }
         }
 
         private void SetHudVisible(bool visible)
         {
+            ResolveHudReference();
             if (extinguisherHud == null)
             {
                 return;
             }
 
-            if (extinguisherHud.activeSelf == visible)
+            if (!extinguisherHud.activeSelf)
             {
-                return;
+                extinguisherHud.SetActive(true);
             }
 
-            extinguisherHud.SetActive(visible);
+            extinguisherHud.SendMessage(
+                "SetPresentationVisible",
+                visible,
+                SendMessageOptions.DontRequireReceiver);
         }
     }
 }

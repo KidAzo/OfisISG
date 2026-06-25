@@ -76,6 +76,11 @@ namespace Woi.UI.Announcements
                     _current.NotifyRayHoverEnd();
                     _current = null;
                 }
+
+                if (enforceCleanupWhenRayMissesHover)
+                    ExtinguisherHoverController.ApplyRayMissCleanup(hideVisiblePopupWhenRayMissesHover);
+
+                return;
             }
 
             if (!TryResolveHoverTarget(rayCamera, out ExtinguisherHoverController target, out RaycastHit hit))
@@ -112,6 +117,14 @@ namespace Woi.UI.Announcements
 
             if (!Physics.Raycast(ray, out hit, maxDistance, layerMask, QueryTriggerInteraction.Collide))
                 return false;
+
+            Woi.Equipment.ExtinguisherPickupItem equippedPickup =
+                hit.collider.GetComponentInParent<Woi.Equipment.ExtinguisherPickupItem>();
+            if (equippedPickup != null && equippedPickup.IsEquipped)
+            {
+                hit = default;
+                return false;
+            }
 
             ctrl = hit.collider.GetComponentInParent<ExtinguisherHoverController>();
             if (ctrl == null || ctrl.PointerMode != HoverPointerMode.CameraCenterRay)

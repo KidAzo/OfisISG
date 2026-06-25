@@ -48,6 +48,7 @@
 .key-tab { width: 48px; }
 .key-caps { width: 56px; }
 .key-shift { width: 72px; }
+.key-ctrl { width: 80px; }
 
 /* Colors - Sky */
 .key-sky {
@@ -75,6 +76,12 @@
     background-color: #78350f;
     border-color: #fbbf24;
     color: #fbbf24;
+}
+
+.key-violet {
+    background-color: #4c1d95;
+    border-color: #a78bfa;
+    color: #a78bfa;
 }
 
 /* Keyboard Row */
@@ -132,3 +139,4 @@
 .bg-emerald { background-color: #34d399; }
 .bg-rose { background-color: #fb7185; }
 .bg-amber { background-color: #fbbf24; }
+.bg-violet { background-color: #a78bfa; }

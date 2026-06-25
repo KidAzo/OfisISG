@@ -47,6 +47,11 @@
                     <engine:Label text="B" class="key-base key-default" />
                 </engine:VisualElement>
 
+                <!-- Row 4 -->
+                <engine:VisualElement class="keyboard-row" style="margin-bottom: 0;">
+                    <engine:Label text="CTRL" class="key-base key-special key-ctrl key-violet" />
+                </engine:VisualElement>
+
             </engine:VisualElement>
 
             <!-- 2. Orta Kısım (Divider) -->
@@ -74,6 +79,11 @@
                 <engine:VisualElement class="legend-row" style="margin-bottom: 0;">
                     <engine:VisualElement class="legend-icon bg-amber" />
                     <engine:Label text="Drop (G)" class="legend-text" />
+                </engine:VisualElement>
+
+                <engine:VisualElement class="legend-row" style="margin-bottom: 0;">
+                    <engine:VisualElement class="legend-icon bg-violet" />
+                    <engine:Label text="Crouch (CTRL)" class="legend-text" />
                 </engine:VisualElement>
                 
             </engine:VisualElement>

@@ -73,6 +73,7 @@ public class ExtinguisherHUDController : MonoBehaviour
 
     private bool _uiBound;
     private Coroutine _deferredBindRoutine;
+    private bool _presentationVisible;
 
     // ── Unity lifecycle ───────────────────────────────────────────────────────
 
@@ -94,7 +95,40 @@ public class ExtinguisherHUDController : MonoBehaviour
             _sessionEndedEvent.OnRaised += HandleSessionEnded;
 
         TryBindUi();
+        ApplyPresentationVisible();
         RefreshHUD();
+    }
+
+    /// <summary>
+    /// Office Fire scenario bridges call this via SendMessage so the GameObject can stay active
+    /// (SOAP listeners) while the panel is hidden until equip.
+    /// </summary>
+    public void SetPresentationVisible(bool visible)
+    {
+        _presentationVisible = visible;
+        ApplyPresentationVisible();
+    }
+
+    /// <summary>
+    /// Clears a prior session-end hide so the UIDocument root can render again when the HUD is shown.
+    /// </summary>
+    public void EnsureRootVisible()
+    {
+        SetPresentationVisible(true);
+    }
+
+    private void ApplyPresentationVisible()
+    {
+        if (uiDocument == null)
+        {
+            uiDocument = GetComponent<UIDocument>();
+        }
+
+        if (uiDocument != null && uiDocument.rootVisualElement != null)
+        {
+            uiDocument.rootVisualElement.style.display =
+                _presentationVisible ? DisplayStyle.Flex : DisplayStyle.None;
+        }
     }
 
     private void LateUpdate()
@@ -190,11 +224,8 @@ public class ExtinguisherHUDController : MonoBehaviour
 
     private void HandleSessionEnded()
     {
-        if (uiDocument != null && uiDocument.rootVisualElement != null)
-        {
-            uiDocument.rootVisualElement.style.display = DisplayStyle.None;
-            Debug.Log("[ExtinguisherHUDController] Session Ended event received. HUD is now invisible.");
-        }
+        SetPresentationVisible(false);
+        Debug.Log("[ExtinguisherHUDController] Session Ended event received. HUD is now invisible.");
     }
 
     // ── HUD update ────────────────────────────────────────────────────────────

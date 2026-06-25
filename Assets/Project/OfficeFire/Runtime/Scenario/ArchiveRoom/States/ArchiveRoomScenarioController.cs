@@ -130,7 +130,6 @@ namespace Woi.OfficeFire
         private void Awake()
         {
             EnsureFireExtinguishBridge();
-            EnsureExtinguisherHudBridge();
             DisableLegacyAlarmActions();
 
             _stateMachine = new ScenarioStateMachine<ArchiveRoomState>();
@@ -153,16 +152,6 @@ namespace Woi.OfficeFire
             }
 
             gameObject.AddComponent<OfficeFireArchiveFireExtinguishBridge>();
-        }
-
-        private void EnsureExtinguisherHudBridge()
-        {
-            if (GetComponent<OfficeFireArchiveExtinguisherHudBridge>() != null)
-            {
-                return;
-            }
-
-            gameObject.AddComponent<OfficeFireArchiveExtinguisherHudBridge>();
         }
 
         private static void DisableLegacyAlarmActions()

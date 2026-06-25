@@ -38,6 +38,11 @@
                 <ui:Label text="B" class="key-base" />
             </ui:VisualElement>
 
+            <!-- Satır 4 -->
+            <ui:VisualElement class="key-row">
+                <ui:Label text="CTRL" class="special-key key-ctrl key-violet" />
+            </ui:VisualElement>
+
         </ui:VisualElement>
 
         <!-- Ortadaki İnce Çizgi -->
@@ -65,6 +70,11 @@
             <ui:VisualElement class="legend-row">
                 <ui:VisualElement class="legend-dot-base dot-amber" />
                 <ui:Label name="drop-lbl" text="Drop (G)" class="legend-text" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="legend-row">
+                <ui:VisualElement class="legend-dot-base dot-violet" />
+                <ui:Label name="lean-lbl" text="Crouch (CTRL)" class="legend-text" />
             </ui:VisualElement>
 
         </ui:VisualElement>

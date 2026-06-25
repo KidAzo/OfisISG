@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Woi.OfficeFire
 {
+    [DefaultExecutionOrder(-200)]
     public class OfficeFireScenarioBootstrapper : MonoBehaviour
     {
         [Header("Selection (Inspector for now; later LoginUI will call StartScenario)")]
@@ -18,6 +19,11 @@ namespace Woi.OfficeFire
         [Header("Player")]
         [SerializeField]
         private OfficeFirePlayerInitializer playerInitializer;
+
+        private void Awake()
+        {
+            OfficeFireExtinguisherHudBridge.EnsureOnBootstrapper();
+        }
 
         private void Start()
         {
@@ -110,6 +116,12 @@ namespace Woi.OfficeFire
             active.StartScenario();
             OfficeFireInputSync.RequestDelayedSync(this, $"StartScenario({scenarioId})");
             OfficeFireGameplayCameraSetup.RequestEnsureReady(this, $"StartScenario({scenarioId})");
+
+            OfficeFireExtinguisherHudBridge bridge = GetComponent<OfficeFireExtinguisherHudBridge>();
+            if (bridge != null)
+            {
+                bridge.RefreshBinding();
+            }
         }
 
         private static void ApplyRootActive(OfficeFireScenarioController controller, bool active)

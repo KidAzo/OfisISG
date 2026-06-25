@@ -16,6 +16,7 @@ namespace Woi.OfficeFire
         private Label _equipLbl;
         private Label _pinLbl;
         private Label _dropLbl;
+        private Label _leanLbl;
 
         private void Awake()
         {
@@ -86,6 +87,11 @@ namespace Woi.OfficeFire
             {
                 _dropLbl.text = turkish ? "Bırak (G)" : "Drop (G)";
             }
+
+            if (_leanLbl != null)
+            {
+                _leanLbl.text = turkish ? "Eğilme (CTRL)" : "Crouch (CTRL)";
+            }
         }
 
         public static void SetVisibleForPc(bool visible)
@@ -116,6 +122,7 @@ namespace Woi.OfficeFire
             _equipLbl = root.Q<Label>("equip-lbl");
             _pinLbl = root.Q<Label>("pin-lbl");
             _dropLbl = root.Q<Label>("drop-lbl");
+            _leanLbl = root.Q<Label>("lean-lbl");
         }
 
         private static bool IsPcPlatform()
