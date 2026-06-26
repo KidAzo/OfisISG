@@ -83,6 +83,11 @@ namespace Woi.OfficeFire
         public bool IsExtinguishingFire { get; private set; }
 
         /// <summary>
+        /// Shared.Global VR API — true when the player probe is inside a fire zone (grip release placement).
+        /// </summary>
+        public bool IsPlayerNearAssignedFireSource() => CheckInsideFireZone(out _);
+
+        /// <summary>
         /// Returns true when the distance probe overlaps the given zone (same check used for G to place blanket).
         /// </summary>
         public bool IsPlayerInsideZone(FireTargetZone zone)

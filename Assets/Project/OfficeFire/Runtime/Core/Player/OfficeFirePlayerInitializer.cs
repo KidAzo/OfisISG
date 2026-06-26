@@ -188,6 +188,8 @@ namespace Woi.OfficeFire
                     "[OfficeFirePlayerInitializer] CharacterController re-enabled after teleport.",
                     movementRoot);
             }
+
+            OfficeFirePlayerTriggerRefresh.ScheduleAfterPlayerTeleport(this);
         }
     }
 }

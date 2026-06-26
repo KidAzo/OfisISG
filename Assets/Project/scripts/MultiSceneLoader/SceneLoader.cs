@@ -123,7 +123,7 @@ namespace Woi.Settings
 
 		public async Task LoadSceneGroup(int index, SceneLoadPresentation presentation)
 		{
-			bool useLoadingCanvas = presentation == SceneLoadPresentation.Default;
+			bool useLoadingCanvas = ShouldShowLoadingCanvas(presentation);
 
 			RefreshLoadingScreenSettings();
 			if (useLoadingCanvas && HasLoadingProgressUi)
@@ -351,6 +351,17 @@ namespace Woi.Settings
 			}
 
 			return null;
+		}
+
+		static bool ShouldShowLoadingCanvas(SceneLoadPresentation presentation)
+		{
+			if (presentation != SceneLoadPresentation.Default)
+				return false;
+
+			if (FirePlatformRuntime.IsSourceInitialized && FirePlatformRuntime.IsVR)
+				return false;
+
+			return true;
 		}
 
 		private void EnableLoadingCanvas(bool enable = true)

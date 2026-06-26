@@ -82,6 +82,7 @@ namespace Woi.OfficeFire.Editor
             int promptWired = WireFireZoneUsePrompts(controller);
             WireScenarioBridge(controller);
             WireServerBlanketCorrectAction();
+            OfficeFireVrBlanketSetup.WireVrFireBlanketInScene(scene);
 
             EditorSceneManager.MarkSceneDirty(scene);
             Undo.CollapseUndoOperations(undoGroup);

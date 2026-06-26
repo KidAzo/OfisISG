@@ -72,6 +72,8 @@ namespace Woi.OfficeFire.Editor
 
             int playerCount = WirePlayerCarafeEquipment(carafe, carafeVfx);
 
+            OfficeFireVrCarafeSetup.WireVrCarafeInScene(scene);
+
             EditorSceneManager.MarkSceneDirty(scene);
             Undo.CollapseUndoOperations(undoGroup);
 

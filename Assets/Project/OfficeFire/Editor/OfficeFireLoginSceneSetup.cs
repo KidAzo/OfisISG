@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 using Woi.OfficeFire;
-using Woi.Settings;
 
 namespace Woi.OfficeFire.Editor
 {
@@ -13,9 +12,11 @@ namespace Woi.OfficeFire.Editor
     {
         private const string LoginUxmlPath = "Assets/Project/OfficeFire/UI/OfficeFireLoginScreen.uxml";
         private const string PanelSettingsPath = "Assets/UI Toolkit/PanelSettings.asset";
-        private const string SceneLoaderPrefabPath = "Assets/Project/Reflex/Resources_moved/SceneLoader.prefab";
+        private const string WorldPanelSettingsPath =
+            "Assets/Project/OfficeFire/UI/InteractHoverWorldPanelSettings.asset";
         private const string GaussImagePath = "Assets/Project/Sprites/gaussImage.jpg";
         private const string HostObjectName = "OfficeFireLoginUI";
+        private const string LegacyRigObjectName = "OfficeFireLoginRig";
         private const string LoginScenePath = "Assets/Project/Scenes/FireModule/OfficeFireModule_Login.unity";
 
         [MenuItem("Office Fire/Setup Login Scene")]
@@ -30,39 +31,20 @@ namespace Woi.OfficeFire.Editor
             if (EditorSceneManager.GetActiveScene().path != LoginScenePath)
                 EditorSceneManager.OpenScene(LoginScenePath);
 
-            EnsureSceneLoader();
+            RemoveLegacyLoginRigObject();
             EnsureEventSystem();
             CreateOrUpdateLoginUi();
+            EnsureLoginWorldUiPresenter();
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
-            Debug.Log("[OfficeFireLoginSceneSetup] OfficeFireModule_Login scene is ready.");
+            Debug.Log("[OfficeFireLoginSceneSetup] OfficeFireModule_Login: 3D login UI wired (SceneLoader not added — use bootstrap DDOL instance).");
         }
 
-        private static void EnsureSceneLoader()
+        private static void RemoveLegacyLoginRigObject()
         {
-            SceneLoader existing = Object.FindFirstObjectByType<SceneLoader>();
-            if (existing != null)
-            {
-                EnsureSceneLoaderBinder(existing.gameObject);
-                return;
-            }
-
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(SceneLoaderPrefabPath);
-            if (prefab == null)
-            {
-                Debug.LogError($"[OfficeFireLoginSceneSetup] SceneLoader prefab not found at {SceneLoaderPrefabPath}");
-                return;
-            }
-
-            GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
-            Undo.RegisterCreatedObjectUndo(instance, "Add SceneLoader");
-            EnsureSceneLoaderBinder(instance);
-        }
-
-        private static void EnsureSceneLoaderBinder(GameObject sceneLoaderObject)
-        {
-            if (sceneLoaderObject.GetComponent<OfficeFireSceneLoaderServiceBinder>() == null)
-                Undo.AddComponent<OfficeFireSceneLoaderServiceBinder>(sceneLoaderObject);
+            GameObject legacy = GameObject.Find(LegacyRigObjectName);
+            if (legacy != null)
+                Undo.DestroyObjectImmediate(legacy);
         }
 
         private static void EnsureEventSystem()
@@ -159,6 +141,60 @@ namespace Woi.OfficeFire.Editor
             serializedController.ApplyModifiedPropertiesWithoutUndo();
 
             EditorUtility.SetDirty(host);
+        }
+
+        private static void EnsureLoginWorldUiPresenter()
+        {
+            OfficeFireLoginScreenController controller =
+                Object.FindFirstObjectByType<OfficeFireLoginScreenController>(FindObjectsInactive.Include);
+
+            if (controller == null)
+            {
+                Debug.LogWarning("[OfficeFireLoginSceneSetup] No OfficeFireLoginScreenController — skip VR world UI wiring.");
+                return;
+            }
+
+            GameObject host = controller.gameObject;
+            OfficeFireLoginWorldUiPresenter presenter = host.GetComponent<OfficeFireLoginWorldUiPresenter>();
+            if (presenter == null)
+                presenter = Undo.AddComponent<OfficeFireLoginWorldUiPresenter>(host);
+
+            PanelSettings worldPanel = AssetDatabase.LoadAssetAtPath<PanelSettings>(WorldPanelSettingsPath);
+            PanelSettings screenPanel = AssetDatabase.LoadAssetAtPath<PanelSettings>(PanelSettingsPath);
+
+            SerializedObject presenterSo = new SerializedObject(presenter);
+            presenterSo.FindProperty("uiDocument").objectReferenceValue = host.GetComponent<UIDocument>();
+            presenterSo.FindProperty("worldPanelSettingsSource").objectReferenceValue = worldPanel;
+            presenterSo.FindProperty("screenPanelSettingsSource").objectReferenceValue = screenPanel;
+
+            GameObject xrOrigin = FindXrOriginRoot();
+            if (xrOrigin != null)
+                presenterSo.FindProperty("xrRigRoot").objectReferenceValue = xrOrigin.transform;
+
+            presenterSo.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(host);
+        }
+
+        private static GameObject FindXrOriginRoot()
+        {
+            System.Type originType = System.Type.GetType("Unity.XR.CoreUtils.XROrigin, Unity.XR.CoreUtils");
+            if (originType == null)
+                return null;
+
+            Object[] found = Resources.FindObjectsOfTypeAll(originType);
+            for (int i = 0; i < found.Length; i++)
+            {
+                if (found[i] is not Component origin || origin == null)
+                    continue;
+
+                GameObject go = origin.gameObject;
+                if (!go.scene.IsValid())
+                    continue;
+
+                return go;
+            }
+
+            return null;
         }
     }
 }

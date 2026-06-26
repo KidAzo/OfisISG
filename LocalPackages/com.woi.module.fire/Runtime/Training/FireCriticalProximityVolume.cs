@@ -39,6 +39,17 @@ namespace Woi.Training
                 c.isTrigger = true;
         }
 
+        void OnEnable()
+        {
+            StartCoroutine(RefreshAfterEnable());
+        }
+
+        System.Collections.IEnumerator RefreshAfterEnable()
+        {
+            yield return new WaitForFixedUpdate();
+            RefreshPlayerOverlap();
+        }
+
         void LateUpdate() =>
             SyncRegistryWithFireState();
 
@@ -66,6 +77,59 @@ namespace Woi.Training
         {
             _physicalOverlapCount = 0;
             ReleaseRegistryIfHeld();
+        }
+
+        /// <summary>
+        /// Teleport sonrası: CharacterController trigger atlama — manuel overlap sayımı.
+        /// </summary>
+        public void RefreshPlayerOverlap()
+        {
+            Collider volume = GetComponent<Collider>();
+            if (volume == null || !volume.enabled)
+                return;
+
+            System.Collections.Generic.HashSet<int> seenPlayerRoots = new System.Collections.Generic.HashSet<int>();
+            Collider[] overlaps = Physics.OverlapBox(
+                volume.bounds.center,
+                volume.bounds.extents,
+                Quaternion.identity,
+                ~0,
+                QueryTriggerInteraction.Collide);
+
+            if (overlaps != null)
+            {
+                for (int i = 0; i < overlaps.Length; i++)
+                {
+                    Collider overlap = overlaps[i];
+                    if (overlap == null || !IsConsideredPlayer(overlap))
+                        continue;
+
+                    seenPlayerRoots.Add(overlap.transform.root.GetInstanceID());
+                }
+            }
+
+            CharacterController[] controllers = Object.FindObjectsByType<CharacterController>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < controllers.Length; i++)
+            {
+                CharacterController controller = controllers[i];
+                if (controller == null || !controller.enabled || !controller.gameObject.activeInHierarchy)
+                    continue;
+
+                Vector3 worldCenter = controller.transform.TransformPoint(controller.center);
+                float diameter = controller.radius * 2f;
+                float height = Mathf.Max(controller.height, diameter);
+                Bounds playerBounds = new Bounds(worldCenter, new Vector3(diameter, height, diameter));
+                if (!volume.bounds.Intersects(playerBounds))
+                    continue;
+
+                seenPlayerRoots.Add(controller.transform.root.GetInstanceID());
+            }
+
+            _physicalOverlapCount = seenPlayerRoots.Count;
+            SyncRegistryWithFireState();
         }
 
         void SyncRegistryWithFireState()

@@ -51,12 +51,12 @@ namespace Woi.OfficeFire
         {
             if (blanketEquipment == null)
             {
-                blanketEquipment = FindFirstObjectByType<PlayerFireBlanketEquipment>(FindObjectsInactive.Include);
+                blanketEquipment = FindPreferredBlanketEquipment();
             }
 
             if (blanketUseController == null)
             {
-                blanketUseController = FindFirstObjectByType<FireBlanketUseController>(FindObjectsInactive.Include);
+                blanketUseController = FindPreferredBlanketUseController();
             }
 
             if (blanketEquipment != null)
@@ -149,6 +149,40 @@ namespace Woi.OfficeFire
             }
 
             Debug.LogWarning($"[ServerBlanketScenarioBridge] {message}", this);
+        }
+
+        private static PlayerFireBlanketEquipment FindPreferredBlanketEquipment()
+        {
+            PlayerFireBlanketEquipment[] all = FindObjectsByType<PlayerFireBlanketEquipment>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < all.Length; i++)
+            {
+                if (all[i] != null && all[i].gameObject.activeInHierarchy)
+                {
+                    return all[i];
+                }
+            }
+
+            return all.Length > 0 ? all[0] : null;
+        }
+
+        private static FireBlanketUseController FindPreferredBlanketUseController()
+        {
+            FireBlanketUseController[] all = FindObjectsByType<FireBlanketUseController>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < all.Length; i++)
+            {
+                if (all[i] != null && all[i].gameObject.activeInHierarchy)
+                {
+                    return all[i];
+                }
+            }
+
+            return all.Length > 0 ? all[0] : null;
         }
     }
 }

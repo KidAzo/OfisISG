@@ -4,10 +4,8 @@ using UnityEngine;
 namespace Woi.Game.VFX
 {
     /// <summary>
-    /// Presentation-layer component that lives on the extinguisher GameObject (or a child).
-    /// Subscribes to SO event channels and drives a ParticleSystem from the nozzle transform.
-    /// Spray start clears and plays; spray stop uses stop-emission so particles finish smoothly.
-    /// Contains zero gameplay logic.
+    /// Subscribes to SO spray events and drives a ParticleSystem.
+    /// Does not move any transform — VFX root (e.g. NewFireEx) stays at prefab hierarchy.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class ExtinguisherSprayVFXPresenter : MonoBehaviour
@@ -15,40 +13,9 @@ namespace Woi.Game.VFX
         [Header("VFX")]
         [SerializeField] private ParticleSystem _sprayParticleSystem;
 
-        [Tooltip("VR modunda Nozzle_low altına taşınacak olan tüm VFX'lerin ana objesi (Örn: NewFireEx).")]
-        [SerializeField] private Transform _vfxRoot;
-
-        [Header("Nozzle")]
-        [Tooltip("The nozzle/spawn point transform. The particle system position and rotation are matched here on play.")]
-        [SerializeField] private Transform _nozzleTransform;
-
         [Header("SO Event Channels")]
         [SerializeField] private ScriptableEventNoParam _onSprayStartedChannel;
         [SerializeField] private ScriptableEventNoParam _onSprayStoppedChannel;
-
-        // Orijinal durumu saklamak için
-        private Transform _originalNozzle;
-        private Transform _originalParticleParent;
-        private Transform _activeVfxRoot;
-
-        private void Awake()
-        {
-            _originalNozzle = _nozzleTransform;
-            
-            // Eğer inspector'da bir root atanmadıysa ve ParticleSystem varsa, 
-            // ParticleSystem'in parent'ını (NewFireEx) root olarak kabul ederiz.
-            if (_vfxRoot != null)
-                _activeVfxRoot = _vfxRoot;
-            else if (_sprayParticleSystem != null)
-                _activeVfxRoot = _sprayParticleSystem.transform.parent;
-
-            if (_activeVfxRoot != null)
-            {
-                _originalParticleParent = _activeVfxRoot.parent;
-            }
-        }
-
-        // ── Unity lifecycle ────────────────────────────────────────────────────
 
         private void OnEnable()
         {
@@ -66,14 +33,10 @@ namespace Woi.Game.VFX
             ForceStop();
         }
 
-        // ── Handlers ──────────────────────────────────────────────────────────
-
         private void HandleSprayStarted()
         {
             if (_sprayParticleSystem == null) return;
 
-            AlignToNozzle();
-            // Her basışta sıfırdan: önceki emisyon / yarım kalmış parçacık kalmamalı.
             _sprayParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             _sprayParticleSystem.Play(true);
         }
@@ -83,42 +46,6 @@ namespace Woi.Game.VFX
             if (_sprayParticleSystem == null) return;
 
             _sprayParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        }
-
-        // ── VR Support ────────────────────────────────────────────────────────
-
-        public void SetVRNozzle(Transform vrNozzle)
-        {
-            if (vrNozzle == null) return;
-            
-            _nozzleTransform = vrNozzle;
-            if (_activeVfxRoot != null)
-            {
-                _activeVfxRoot.SetParent(vrNozzle, false);
-                _activeVfxRoot.localPosition = Vector3.zero;
-                _activeVfxRoot.localRotation = Quaternion.identity;
-            }
-        }
-
-        public void RestoreOriginalNozzle()
-        {
-            _nozzleTransform = _originalNozzle;
-            if (_activeVfxRoot != null && _originalParticleParent != null)
-            {
-                _activeVfxRoot.SetParent(_originalParticleParent, false);
-                AlignToNozzle();
-            }
-        }
-
-        // ── Helpers ───────────────────────────────────────────────────────────
-
-        private void AlignToNozzle()
-        {
-            if (_nozzleTransform == null || _activeVfxRoot == null) return;
-
-            _activeVfxRoot.SetPositionAndRotation(
-                _nozzleTransform.position,
-                _nozzleTransform.rotation);
         }
 
         private void ForceStop()

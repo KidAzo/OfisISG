@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reflection;
 using Woi.Game;
 using Woi.InputSystem;
 using FireExtinguisher.Core;
@@ -25,6 +26,12 @@ namespace Woi.Equipment
         private ExtinguisherPickupItem _trackedExtinguisher;
         private MonoBehaviour _hoseDriverMono;
         private Coroutine _snapCoroutine;
+
+        Transform _newFireExAnchor;
+        Transform _newFireExOriginalParent;
+        Vector3 _newFireExOriginalLocalPosition;
+        Quaternion _newFireExOriginalLocalRotation;
+        ExtinguisherPickupItem _newFireExAnchorItem;
 
         /// <summary>
         /// Pim çekildi (veya zaten çekili tüp yeniden kuşanıldı) ama henüz nozzle yaklaşma mesafesine girilmedi.
@@ -55,7 +62,7 @@ namespace Woi.Equipment
         [Tooltip("Pim çekilince otomatik snap yok; boş el (_nozzleSnapHandAnchor veya bu PinPuller) tüp köküne bu kadar yaklaşınca snap + spline yenilenir. " +
                  "(Nozzle_low spline altında kapalı olduğu için mesafe her zaman ExtinguisherPickupItem köküne göre; snap yine hortum nozzle transform’una parent eder.)")]
         [SerializeField, Min(0.02f)]
-        float _nozzleSnapProximityRadius = 0.18f;
+        float _nozzleSnapProximityRadius = 0.45f;
 
         [Tooltip("Açıkken hortum/nozzle yalnızca grip basılıyken elde snap olur (yalnızca mesafeye girmek yetmez). Kapalı: eski davranış.")]
         [SerializeField]
@@ -203,11 +210,43 @@ namespace Woi.Equipment
                 _snapCoroutine = null;
             }
 
+            ArmNozzleSnapProximity(item);
+        }
+
+        /// <summary>
+        /// Pim çekildikten sonra tüpü tutmayan tüm ellere nozzle yakınlık snap'i hazırlar.
+        /// </summary>
+        public static void ArmNozzleSnapProximityForFreeHands(ExtinguisherPickupItem item)
+        {
+            if (item == null)
+                return;
+
+            VRExtinguisherPinPuller[] pullers = UnityEngine.Object.FindObjectsByType<VRExtinguisherPinPuller>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < pullers.Length; i++)
+            {
+                VRExtinguisherPinPuller puller = pullers[i];
+                if (puller == null)
+                    continue;
+
+                if (puller.myGrabber != null && puller.myGrabber.IsHoldingExtinguisher)
+                    continue;
+
+                puller.ArmNozzleSnapProximity(item);
+            }
+        }
+
+        void ArmNozzleSnapProximity(ExtinguisherPickupItem item)
+        {
             _pendingNozzleSnapItem = item;
+            CacheNewFireExAnchor(item);
         }
 
         private void Update()
         {
+            RestoreNewFireExAnchorIfMoved();
             TryProcessPendingNozzleProximitySnap();
 
             // Eğer elimize bir nozzle yapıştırdıysak, tüp yere bırakıldığı an nozzle'ı eski yerine geri koyalım.
@@ -259,21 +298,23 @@ namespace Woi.Equipment
                 return;
             }
 
-            if (!TryGetHoseNozzleRoot(item, out _))
-                return;
-
             Transform snapRef = ResolveNozzleSnapParent();
             if (snapRef == null)
                 return;
 
-            // Nozzle_low genelde spline görselinin altında kapalı — yakınlık / cast eşiği tüp köküne göre (hortum ucu snap’te yine kullanılır).
-            Vector3 proximityWorld = item.transform.position;
-
-            if (Vector3.Distance(snapRef.position, proximityWorld) > _nozzleSnapProximityRadius)
+            if (!IsWithinNozzleSnapProximity(snapRef, item))
                 return;
 
             if (!IsNozzleSnapGripActuated())
                 return;
+
+            if (!TryGetHoseNozzleRoot(item, out _))
+            {
+                Debug.LogWarning(
+                    "[VRExtinguisherPinPuller] Nozzle snap mesafesinde ama ViewmodelHoseSplineDriver/nozzleRoot bulunamadı.",
+                    item);
+                return;
+            }
 
             if (_snapCoroutine != null)
             {
@@ -284,24 +325,64 @@ namespace Woi.Equipment
             _snapCoroutine = StartCoroutine(SnapNozzleCoroutine(item));
         }
 
+        bool IsWithinNozzleSnapProximity(Transform snapRef, ExtinguisherPickupItem item)
+        {
+            if (snapRef == null || item == null)
+                return false;
+
+            float minDistance = Vector3.Distance(snapRef.position, item.transform.position);
+
+            if (TryGetHoseNozzleRoot(item, out Transform nozzleRoot) && nozzleRoot != null)
+            {
+                minDistance = Mathf.Min(minDistance, Vector3.Distance(snapRef.position, nozzleRoot.position));
+            }
+
+            if (!string.IsNullOrEmpty(pinTag))
+            {
+                foreach (Transform child in item.GetComponentsInChildren<Transform>(true))
+                {
+                    if (child != null && child.CompareTag(pinTag))
+                    {
+                        minDistance = Mathf.Min(minDistance, Vector3.Distance(snapRef.position, child.position));
+                    }
+                }
+            }
+
+            return minDistance <= _nozzleSnapProximityRadius;
+        }
+
         static bool TryGetHoseNozzleRoot(ExtinguisherPickupItem item, out Transform nozzleRoot)
         {
             nozzleRoot = null;
             if (item == null)
                 return false;
 
-            foreach (var mono in item.GetComponentsInChildren<MonoBehaviour>(true))
+            foreach (MonoBehaviour mono in item.GetComponentsInChildren<MonoBehaviour>(true))
             {
                 if (mono == null || mono.GetType().Name != "ViewmodelHoseSplineDriver")
                     continue;
 
-                var prop = mono.GetType().GetProperty("NozzleRootTransform");
-                if (prop == null)
-                    continue;
+                System.Type driverType = mono.GetType();
 
-                nozzleRoot = prop.GetValue(mono) as Transform;
-                if (nozzleRoot != null)
-                    return true;
+                PropertyInfo property = driverType.GetProperty(
+                    "NozzleRootTransform",
+                    BindingFlags.Instance | BindingFlags.Public);
+                if (property != null)
+                {
+                    nozzleRoot = property.GetValue(mono) as Transform;
+                    if (nozzleRoot != null)
+                        return true;
+                }
+
+                FieldInfo field = driverType.GetField(
+                    "nozzleRoot",
+                    BindingFlags.Instance | BindingFlags.NonPublic);
+                if (field != null)
+                {
+                    nozzleRoot = field.GetValue(mono) as Transform;
+                    if (nozzleRoot != null)
+                        return true;
+                }
             }
 
             return false;
@@ -315,25 +396,22 @@ namespace Woi.Equipment
             if (!_requireGripHoldForNozzleSnap)
                 return true;
 
-            InputActionReference gripRef = _nozzleSnapGripHold;
-            if (gripRef == null && myGrabber != null)
-                gripRef = myGrabber.grabInput;
+            if (_nozzleSnapGripHold != null && _nozzleSnapGripHold.action != null)
+                return _nozzleSnapGripHold.action.IsPressed();
 
-            if (gripRef == null || gripRef.action == null)
+            if (myGrabber != null)
+                return myGrabber.IsGrabActuated();
+
+            if (!s_loggedMissingNozzleSnapGripAction)
             {
-                if (!s_loggedMissingNozzleSnapGripAction)
-                {
-                    s_loggedMissingNozzleSnapGripAction = true;
-                    Debug.LogWarning(
-                        "[VRExtinguisherPinPuller] Hortum snap için grip gerekli ama InputAction atanmadı — " +
-                        nameof(_nozzleSnapGripHold) + " veya " + nameof(myGrabber) + ".grabInput doldurun.",
-                        this);
-                }
-
-                return false;
+                s_loggedMissingNozzleSnapGripAction = true;
+                Debug.LogWarning(
+                    "[VRExtinguisherPinPuller] Hortum snap için grip gerekli ama InputAction atanmadı — " +
+                    nameof(_nozzleSnapGripHold) + " veya " + nameof(myGrabber) + ".grabInput doldurun.",
+                    this);
             }
 
-            return gripRef.action.IsPressed();
+            return false;
         }
 
         private void OnPullStarted(InputAction.CallbackContext ctx)
@@ -424,16 +502,17 @@ namespace Woi.Equipment
                     _snapCoroutine = null;
                 }
 
-                // Nozzle snap: tüpü tutmayan el nozzle'a yaklaşınca (TryProcessPendingNozzleProximitySnap).
-                _pendingNozzleSnapItem = item;
+                // Nozzle snap: tüpü tutmayan el(ler) nozzle'a yaklaşınca (TryProcessPendingNozzleProximitySnap).
+                ArmNozzleSnapProximityForFreeHands(item);
             }
         }
 
         private System.Collections.IEnumerator SnapNozzleCoroutine(ExtinguisherPickupItem item)
         {
-            yield return new WaitForEndOfFrame();
+            bool gripWasHeld = IsNozzleSnapGripActuated();
+            yield return null;
 
-            if (!IsNozzleSnapGripActuated())
+            if (!gripWasHeld && !IsNozzleSnapGripActuated())
             {
                 _snapCoroutine = null;
                 yield break;
@@ -499,33 +578,6 @@ namespace Woi.Equipment
             _snappedNozzle.localPosition = nozzleLocalPositionOffset;
             _snappedNozzle.localRotation = Quaternion.Euler(nozzleLocalEulerRotationOffset);
 
-            Transform[] allTransforms = item.GetComponentsInChildren<Transform>(true);
-            foreach (var t in allTransforms)
-            {
-                if (t.name == "NewFireEx")
-                {
-                    t.SetParent(vrSprayOrigin, false);
-                    t.localPosition = Vector3.zero;
-                    t.localRotation = Quaternion.Euler(0f, 0f, -90f);
-                    break;
-                }
-            }
-
-            var allVfxMonos = Resources.FindObjectsOfTypeAll<MonoBehaviour>();
-            foreach (var mono in allVfxMonos)
-            {
-                if (mono != null && mono.GetType().Name == "ExtinguisherSprayVFXPresenter" && mono.gameObject.scene.isLoaded)
-                {
-                    var setMethod = mono.GetType().GetMethod("SetVRNozzle");
-                    if (setMethod != null)
-                        setMethod.Invoke(mono, new object[] { vrSprayOrigin });
-
-                    var field = mono.GetType().GetField("_nozzleTransform", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    if (field != null)
-                        field.SetValue(mono, vrSprayOrigin);
-                }
-            }
-
             ctrl.SetVRNozzle(vrSprayOrigin);
 
             if (ServiceLocator.TryGet<Woi.UI.VRNozzleHUDManager>(out var hudManager) && hudManager != null)
@@ -581,32 +633,68 @@ namespace Woi.Equipment
                     hudManager.SetNozzle(null);
                 }
 
-                // VFX'i orijinal PC state'ine geri döndür
                 if (_trackedExtinguisher != null)
                 {
                     var ctrl = _trackedExtinguisher.Controller;
                     if (ctrl != null)
                         ctrl.RestoreOriginalNozzle();
-
-                    var allVfxMonos = Resources.FindObjectsOfTypeAll<MonoBehaviour>();
-                    foreach (var mono in allVfxMonos)
-                    {
-                        if (mono != null && mono.GetType().Name == "ExtinguisherSprayVFXPresenter" && mono.gameObject.scene.isLoaded)
-                        {
-                            var restoreMethod = mono.GetType().GetMethod("RestoreOriginalNozzle");
-                            if (restoreMethod != null)
-                            {
-                                restoreMethod.Invoke(mono, null);
-                            }
-                        }
-                    }
                 }
 
                 _snappedNozzle = null;
                 _originalNozzleParent = null;
                 _trackedExtinguisher = null;
                 _hoseDriverMono = null;
+                ClearNewFireExAnchor();
             }
+        }
+
+        void CacheNewFireExAnchor(ExtinguisherPickupItem item)
+        {
+            if (item == null)
+                return;
+
+            if (_newFireExAnchorItem == item && _newFireExAnchor != null)
+                return;
+
+            _newFireExAnchor = null;
+            _newFireExOriginalParent = null;
+            _newFireExAnchorItem = item;
+
+            foreach (Transform t in item.GetComponentsInChildren<Transform>(true))
+            {
+                if (t == null || t.name != "NewFireEx")
+                    continue;
+
+                _newFireExAnchor = t;
+                _newFireExOriginalParent = t.parent;
+                _newFireExOriginalLocalPosition = t.localPosition;
+                _newFireExOriginalLocalRotation = t.localRotation;
+                return;
+            }
+        }
+
+        void ClearNewFireExAnchor()
+        {
+            _newFireExAnchor = null;
+            _newFireExOriginalParent = null;
+            _newFireExAnchorItem = null;
+        }
+
+        void RestoreNewFireExAnchorIfMoved()
+        {
+            if (_newFireExAnchor == null || _newFireExOriginalParent == null)
+                return;
+
+            if (_newFireExAnchor.parent == _newFireExOriginalParent
+                && _newFireExAnchor.localPosition == _newFireExOriginalLocalPosition
+                && _newFireExAnchor.localRotation == _newFireExOriginalLocalRotation)
+            {
+                return;
+            }
+
+            _newFireExAnchor.SetParent(_newFireExOriginalParent, false);
+            _newFireExAnchor.localPosition = _newFireExOriginalLocalPosition;
+            _newFireExAnchor.localRotation = _newFireExOriginalLocalRotation;
         }
     }
 }

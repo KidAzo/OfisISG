@@ -261,8 +261,7 @@ Transform:
   m_LocalPosition: {x: -0.195, y: 0.781, z: 0.295}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4864340495369105771}
+  m_Children: []
   m_Father: {fileID: 5539288982896973891}
   m_LocalEulerAnglesHint: {x: -119.528, y: 0, z: 0}
 --- !u!1 &4176962175384225366
@@ -385,7 +384,8 @@ Transform:
   m_LocalPosition: {x: -0.195, y: 0.781, z: 0.295}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4864340495369105771}
   m_Father: {fileID: 5539288982896973891}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6627444513634116816
@@ -754,6 +754,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Woi.UI.Announcements::Woi.UI.Announcements.ExtinguisherHoverController
   pointerMode: 1
   content: {fileID: 0}
+  _inlineTurkish:
+    title: 
+    message: 
+    sound: {fileID: 0}
+  _inlineEnglish:
+    title: 
+    message: 
+    sound: {fileID: 0}
   popupType: 0
   popupAnchor: 0
   vrPopupAnchorOverride: {fileID: 9058496695299746425}
@@ -1314,7 +1322,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7855494113249177916}
-  m_Mesh: {fileID: 4300000, guid: cc2e37fdd2c935f4a9998604594b396b, type: 2}
+  m_Mesh: {fileID: 0}
 --- !u!23 &4069127207313124587
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1377,6 +1385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Splines::UnityEngine.Splines.SplineExtrude
   m_Container: {fileID: 4537343803385400981}
+  m_TargetMesh: {fileID: 0}
   m_RebuildOnSplineChange: 1
   m_RebuildFrequency: 120
   m_UpdateColliders: 0
@@ -1385,6 +1394,16 @@ MonoBehaviour:
   m_Capped: 0
   m_Radius: 0.21
   m_Range: {x: 0, y: 1}
+  m_FlipNormals: 0
+  m_Shape:
+    rid: 7943319002704773226
+  references:
+    version: 2
+    RefIds:
+    - rid: 7943319002704773226
+      type: {class: Circle, ns: UnityEngine.Splines.ExtrusionShapes, asm: Unity.Splines}
+      data:
+        m_Sides: 8
 --- !u!114 &2320795445776340972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1684,7 +1703,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 5247712341591162400}
+    m_TransformParent: {fileID: 4280782790181693758}
     m_Modifications:
     - target: {fileID: 2189873579412920452, guid: c7147d2ff737eb6498f1f620b986a949, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1800,11 +1819,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7954525842169860600, guid: c7147d2ff737eb6498f1f620b986a949, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.08999999
+      value: 0.089999996
       objectReference: {fileID: 0}
     - target: {fileID: 7954525842169860600, guid: c7147d2ff737eb6498f1f620b986a949, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.09000001
+      value: 0.090000026
       objectReference: {fileID: 0}
     - target: {fileID: 7954525842169860600, guid: c7147d2ff737eb6498f1f620b986a949, type: 3}
       propertyPath: m_LocalScale.z
@@ -1824,11 +1843,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7954525842169860600, guid: c7147d2ff737eb6498f1f620b986a949, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.5
+      value: 0.49999994
       objectReference: {fileID: 0}
     - target: {fileID: 7954525842169860600, guid: c7147d2ff737eb6498f1f620b986a949, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.5
+      value: 0.49999994
       objectReference: {fileID: 0}
     - target: {fileID: 7954525842169860600, guid: c7147d2ff737eb6498f1f620b986a949, type: 3}
       propertyPath: m_LocalRotation.y
@@ -1836,7 +1855,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7954525842169860600, guid: c7147d2ff737eb6498f1f620b986a949, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.5
+      value: -0.50000006
       objectReference: {fileID: 0}
     - target: {fileID: 7954525842169860600, guid: c7147d2ff737eb6498f1f620b986a949, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

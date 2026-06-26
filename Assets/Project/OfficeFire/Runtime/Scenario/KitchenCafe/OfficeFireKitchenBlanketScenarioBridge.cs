@@ -45,7 +45,7 @@ namespace Woi.OfficeFire
         {
             if (blanketUseController == null)
             {
-                blanketUseController = FindFirstObjectByType<FireBlanketUseController>(FindObjectsInactive.Include);
+                blanketUseController = FindPreferredBlanketUseController();
             }
 
             if (blanketUseController == null)
@@ -97,6 +97,23 @@ namespace Woi.OfficeFire
             }
 
             Debug.LogWarning($"[KitchenBlanketScenarioBridge] {message}", this);
+        }
+
+        private static FireBlanketUseController FindPreferredBlanketUseController()
+        {
+            FireBlanketUseController[] all = FindObjectsByType<FireBlanketUseController>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < all.Length; i++)
+            {
+                if (all[i] != null && all[i].gameObject.activeInHierarchy)
+                {
+                    return all[i];
+                }
+            }
+
+            return all.Length > 0 ? all[0] : null;
         }
     }
 }

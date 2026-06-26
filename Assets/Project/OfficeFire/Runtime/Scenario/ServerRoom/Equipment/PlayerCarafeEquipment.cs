@@ -137,6 +137,40 @@ namespace Woi.OfficeFire
             OnCarafeChanged?.Invoke(null);
         }
 
+        /// <summary>
+        /// VR <see cref="VRHandCarafeGrabber"/> grip — tracks item without PC equip anchor parenting.
+        /// </summary>
+        public void NotifyVrEquipped(CarafePickupItem item)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            if (CurrentItem == item)
+            {
+                OnCarafeChanged?.Invoke(item);
+                return;
+            }
+
+            CurrentItem = item;
+            OnCarafeChanged?.Invoke(item);
+        }
+
+        /// <summary>
+        /// VR grip release — clears tracked item (pour / drop handled separately).
+        /// </summary>
+        public void NotifyVrUnequipped(CarafePickupItem item)
+        {
+            if (item == null || CurrentItem != item)
+            {
+                return;
+            }
+
+            CurrentItem = null;
+            OnCarafeChanged?.Invoke(null);
+        }
+
         private void BindInput()
         {
             if (inputContext == null)

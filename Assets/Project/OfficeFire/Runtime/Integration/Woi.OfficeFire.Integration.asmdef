@@ -14,7 +14,10 @@
         "GUID:6e3e8d4120e44a4498280af0a503d94d",
         "GUID:e984484bb6786cb4f9cc8f0f23933645",
         "GUID:300ddb0b3e3cbe443b39a39c22fe8d86",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Woi.Fire.UI.Result",
+        "Unity.XR.Interaction.Toolkit",
+        "Unity.XR.CoreUtils"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -51,6 +51,9 @@ namespace Woi.OfficeFire
 
         private static void ActivatePcPlayerRootIfNeeded()
         {
+            if (FirePlatformRuntime.IsVR)
+                return;
+
             GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
             GameObject selected = null;
 

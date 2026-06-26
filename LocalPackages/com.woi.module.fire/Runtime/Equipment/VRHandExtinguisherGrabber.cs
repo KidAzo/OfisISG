@@ -109,6 +109,8 @@ namespace Woi.Equipment
         private Vector3 _prevHolderWorldPos;
         private bool _heldGoalPrevValid;
 
+        private InputAction _runtimeGrabAction;
+
         public bool IsHoldingExtinguisher => heldExtinguisher != null;
 
         // Statik değişken: Sahne genelinde herhangi bir elin tüp tutup tutmadığını takip eder.
@@ -128,20 +130,23 @@ namespace Woi.Equipment
 
         private void OnEnable()
         {
-            if (grabInput != null && grabInput.action != null)
-            {
-                grabInput.action.Enable();
-                grabInput.action.started += OnGrabStarted;
-                grabInput.action.canceled += OnGrabCanceled;
-            }
+            EnsureGrabAction();
+            InputAction action = ResolveGrabAction();
+            if (action == null)
+                return;
+
+            action.Enable();
+            action.started += OnGrabStarted;
+            action.canceled += OnGrabCanceled;
         }
 
         private void OnDisable()
         {
-            if (grabInput != null && grabInput.action != null)
+            InputAction action = ResolveGrabAction();
+            if (action != null)
             {
-                grabInput.action.started -= OnGrabStarted;
-                grabInput.action.canceled -= OnGrabCanceled;
+                action.started -= OnGrabStarted;
+                action.canceled -= OnGrabCanceled;
             }
 
             if (heldExtinguisher != null)
@@ -152,15 +157,19 @@ namespace Woi.Equipment
             nearbyExtinguisher = null;
         }
 
+        private void OnDestroy()
+        {
+            DisposeRuntimeGrabAction();
+        }
+
         private void Update()
         {
-            if (grabInput != null && grabInput.action != null)
+            InputAction action = ResolveGrabAction();
+            if (action != null)
             {
                 bool wasHeld = isGrabButtonHeld;
-                isGrabButtonHeld = grabInput.action.IsPressed();
+                isGrabButtonHeld = action.IsPressed();
 
-                // Eğer "allowGrabIfButtonAlreadyHeld" açıksa ve butona zaten basılı tutarak 
-                // tüpe yaklaştıysak tüpü otomatik kapmak için kontrol ediyoruz.
                 if (allowGrabIfButtonAlreadyHeld && isGrabButtonHeld && !wasHeld)
                 {
                     // just pressed this frame, standard grab handles it via OnGrabStarted
@@ -172,6 +181,72 @@ namespace Woi.Equipment
             }
 
             UpdateNearbyExtinguisher();
+        }
+
+        void EnsureGrabAction()
+        {
+            if (_runtimeGrabAction != null || (grabInput != null && grabInput.action != null))
+                return;
+
+            string hand = handType == VRHandType.Left ? "LeftHand" : "RightHand";
+            _runtimeGrabAction = new InputAction(
+                $"VrExtinguisherGrab{hand}",
+                InputActionType.Button,
+                $"<XRController>{{{hand}}}/{{GripButton}}");
+        }
+
+        InputAction ResolveGrabAction()
+        {
+            if (grabInput != null && grabInput.action != null)
+                return grabInput.action;
+
+            EnsureGrabAction();
+            return _runtimeGrabAction;
+        }
+
+        public bool IsGrabActuated()
+        {
+            InputAction action = ResolveGrabAction();
+            return action != null && action.IsPressed();
+        }
+
+        /// <summary>
+        /// Runtime/editor wiring: set hand + holder before grip binds (fixes AddComponent default Left hand).
+        /// </summary>
+        public void ApplyHandConfiguration(
+            VRHandType hand,
+            Transform holder,
+            InputActionReference grabActionReference = null,
+            PlayerExtinguisherEquipment trainingEquipmentNotify = null)
+        {
+            bool wasEnabled = enabled;
+            if (wasEnabled)
+                enabled = false;
+
+            handType = hand;
+            if (holder != null)
+                holderTransform = holder;
+            if (grabActionReference != null)
+                grabInput = grabActionReference;
+            if (trainingEquipmentNotify != null)
+                _trainingEquipmentNotify = trainingEquipmentNotify;
+
+            DisposeRuntimeGrabAction();
+
+            if (wasEnabled)
+                enabled = true;
+        }
+
+        void DisposeRuntimeGrabAction()
+        {
+            if (_runtimeGrabAction == null)
+                return;
+
+            _runtimeGrabAction.started -= OnGrabStarted;
+            _runtimeGrabAction.canceled -= OnGrabCanceled;
+            _runtimeGrabAction.Disable();
+            _runtimeGrabAction.Dispose();
+            _runtimeGrabAction = null;
         }
 
         private void LateUpdate()
@@ -338,24 +413,7 @@ namespace Woi.Equipment
             if (pullers == null || pullers.Length == 0)
                 return;
 
-            // Nozzle sağ elde olmalı: önce sağ eldeki PinPuller (anchor genelde orada), yoksa tüpü tutmayan el.
-            VRExtinguisherPinPuller rightHandPuller = null;
-            VRExtinguisherPinPuller otherThanThisGrabber = null;
-            for (int i = 0; i < pullers.Length; i++)
-            {
-                VRExtinguisherPinPuller p = pullers[i];
-                if (p == null)
-                    continue;
-
-                VRHandExtinguisherGrabber g = p.myGrabber;
-                if (g != null && g.handType == VRHandType.Right)
-                    rightHandPuller = p;
-                if (g != null && !ReferenceEquals(g, this))
-                    otherThanThisGrabber ??= p;
-            }
-
-            VRExtinguisherPinPuller chosen = rightHandPuller ?? otherThanThisGrabber ?? pullers[0];
-            chosen.ScheduleSnapNozzleIfPinAlreadyPulled(item);
+            VRExtinguisherPinPuller.ArmNozzleSnapProximityForFreeHands(item);
         }
 
         void ComputeHeldGoalTransform(out Vector3 worldPos, out Quaternion worldRot)

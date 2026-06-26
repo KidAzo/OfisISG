@@ -136,6 +136,40 @@ namespace Woi.OfficeFire
             OnBlanketChanged?.Invoke(null);
         }
 
+        /// <summary>
+        /// VR <see cref="VRHandFireBlanketGrabber"/> grip — tracks item without PC equip anchor parenting.
+        /// </summary>
+        public void NotifyVrEquipped(FireBlanketPickupItem item)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            if (CurrentItem == item)
+            {
+                OnBlanketChanged?.Invoke(item);
+                return;
+            }
+
+            CurrentItem = item;
+            OnBlanketChanged?.Invoke(item);
+        }
+
+        /// <summary>
+        /// VR grip release — clears tracked item (drop / fire placement handled separately).
+        /// </summary>
+        public void NotifyVrUnequipped(FireBlanketPickupItem item)
+        {
+            if (item == null || CurrentItem != item)
+            {
+                return;
+            }
+
+            CurrentItem = null;
+            OnBlanketChanged?.Invoke(null);
+        }
+
         private void BindInput()
         {
             if (inputContext == null)

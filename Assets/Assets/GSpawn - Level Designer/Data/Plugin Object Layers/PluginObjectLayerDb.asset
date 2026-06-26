@@ -76,7 +76,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 7749650207480833316}
   - {fileID: 2519628099694133392}
   - {fileID: -963466639231427344}
   - {fileID: 0}
@@ -143,3 +143,22 @@ MonoBehaviour:
   scrollOffset: {x: 0, y: 0}
   vertScrollHighValue: 0
   vertScrollLowValue: 0
+--- !u!114 &7749650207480833316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f79425504febc2843801a7aa28fd9495, type: 3}
+  m_Name: Layer_6
+  m_EditorClassIdentifier: Assembly-CSharp::GSPAWN.PluginObjectLayer
+  _guid:
+    _guidString: 87af06ff-2801-4c48-bc24-08c2d65c3120
+  _layer: 6
+  _isErasable: 1
+  _isTerrainMesh: 0
+  _isSphericalMesh: 0
+  _uiSelected: 0

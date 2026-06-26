@@ -368,6 +368,7 @@ namespace Woi.OfficeFire
             }
 
             EnsureGameplayCamera(root);
+            OfficeFirePlayerTriggerRefresh.ScheduleAfterPlayerTeleport(this);
         }
 
         private Transform ResolvePlayerRoot()

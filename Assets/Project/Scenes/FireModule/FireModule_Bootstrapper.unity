@@ -182,8 +182,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec60770db11828c4988781e917a96910, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Woi.Settings::Woi.Settings.OfficeFireBootstrapper
+  AutoUnparentOnAwake: 1
   loginSceneGroupName: OfficeFireModule_Login
-  portingSettings: {fileID: 0}
+  portingSettings: {fileID: 11400000, guid: d6a0c74088c2fa747a9332d4158c4dfa, type: 2}
 --- !u!1 &1363170164
 GameObject:
   m_ObjectHideFlags: 1

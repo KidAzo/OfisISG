@@ -36,6 +36,12 @@ namespace Woi.OfficeFire
         public bool IsEquipped { get; private set; }
         public bool IsConsumed { get; private set; }
 
+        /// <summary>Used by <see cref="VRHandFireBlanketGrabber"/> (VR grip, no PC equip anchor).</summary>
+        internal void SetEquippedState(bool equipped)
+        {
+            IsEquipped = equipped;
+        }
+
         private void Awake()
         {
             _colliders = GetComponentsInChildren<Collider>(includeInactive: true);

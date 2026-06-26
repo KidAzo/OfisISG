@@ -90,6 +90,13 @@ namespace Woi.Settings
             if (fallbackCamera == null)
                 return;
 
+            if (FirePlatformRuntime.IsSourceInitialized && FirePlatformRuntime.IsVR)
+            {
+                if (fallbackCamera.gameObject.activeSelf)
+                    fallbackCamera.gameObject.SetActive(false);
+                return;
+            }
+
             if (HasAnotherEnabledCamera(fallbackCamera))
             {
                 if (fallbackCamera.gameObject.activeSelf)

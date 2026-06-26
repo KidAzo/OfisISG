@@ -279,3 +279,25 @@
     color: rgba(168, 148, 120, 0.55);
     -unity-font-style: italic;
 }
+
+/* VR world-space: card only — transparent panel, no full-screen plate / side leaderboard */
+.login-root.login-root--vr-world .login-background,
+.login-root.login-root--vr-world .leaderboard-panel {
+    display: none;
+}
+
+.login-root.login-root--vr-world .login-screen {
+    position: relative;
+    left: auto;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.login-root.login-root--vr-world .login-card {
+    width: 520px;
+    max-width: 100%;
+}

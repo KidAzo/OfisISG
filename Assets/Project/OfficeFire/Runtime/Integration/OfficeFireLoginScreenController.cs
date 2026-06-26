@@ -15,6 +15,8 @@ namespace Woi.OfficeFire
     public sealed class OfficeFireLoginScreenController : MonoBehaviour
     {
         private const string TargetSceneGroup = "FireModule_Office";
+        private const string XrTestUserName = "VR Test Kullanıcı";
+        private const string XrTestUserId = "vr-test-001";
 
         [SerializeField] private UIDocument uiDocument;
         [SerializeField] private Texture2D gaussBackgroundImage;
@@ -47,7 +49,8 @@ namespace Woi.OfficeFire
 
         private void OnEnable()
         {
-            ApplyMenuCursor();
+            if (!FirePlatformRuntime.IsVR)
+                ApplyMenuCursor();
 
             if (bindRoutine != null)
                 StopCoroutine(bindRoutine);
@@ -96,7 +99,10 @@ namespace Woi.OfficeFire
             }
 
             RefreshLeaderboard();
-            ApplyMenuCursor();
+            if (!FirePlatformRuntime.IsVR)
+                ApplyMenuCursor();
+
+            GetComponent<OfficeFireLoginWorldUiPresenter>()?.NotifyContentReady();
             bindRoutine = null;
         }
 
@@ -139,14 +145,35 @@ namespace Woi.OfficeFire
             leaderboardRows = root.Q<VisualElement>("leaderboard-rows");
 
             ApplyGaussBackground();
+            ApplyXrTestProfileDefaults();
             ClearError();
             return startButton != null;
+        }
+
+        private void ApplyXrTestProfileDefaults()
+        {
+            if (!FirePlatformRuntime.IsVR)
+                return;
+
+            if (userNameField != null)
+                userNameField.SetValueWithoutNotify(XrTestUserName);
+
+            if (userIdField != null)
+                userIdField.SetValueWithoutNotify(XrTestUserId);
         }
 
         private void ApplyGaussBackground()
         {
             if (loginBackground == null)
                 return;
+
+            if (FirePlatformRuntime.IsVR)
+            {
+                loginBackground.style.display = DisplayStyle.None;
+                return;
+            }
+
+            loginBackground.style.display = DisplayStyle.Flex;
 
             ResolveGaussBackground();
 
@@ -324,6 +351,7 @@ namespace Woi.OfficeFire
             }
 
             OfficeFireGameplayCameraSetup.RequestEnsureReady(this, "Login→FireModule_Office");
+            OfficeFireVrExtinguisherRigBootstrap.EnsureWired();
             isLoading = false;
             if (startButton != null)
                 startButton.SetEnabled(true);

@@ -96,6 +96,11 @@ namespace Woi.OfficeFire
 
         public bool IsGrowingFire { get; private set; }
 
+        /// <summary>
+        /// VR API — true when the player probe is inside a fire zone (grip release pour).
+        /// </summary>
+        public bool IsPlayerNearAssignedFireSource() => CheckInsideFireZone(out _);
+
         public bool IsPlayerInsideZone(FireTargetZone zone)
         {
             if (zone == null)

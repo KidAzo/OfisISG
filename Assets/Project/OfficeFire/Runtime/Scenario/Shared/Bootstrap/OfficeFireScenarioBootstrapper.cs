@@ -23,6 +23,7 @@ namespace Woi.OfficeFire
         private void Awake()
         {
             OfficeFireExtinguisherHudBridge.EnsureOnBootstrapper();
+            OfficeFireVrExtinguisherRigBootstrap.EnsureWired();
         }
 
         private void Start()
