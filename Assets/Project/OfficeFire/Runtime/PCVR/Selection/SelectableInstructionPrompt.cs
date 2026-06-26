@@ -11,7 +11,7 @@ namespace Woi.OfficeFire
     [AddComponentMenu("Woi/Office Fire/Selectable Instruction Prompt")]
     public sealed class SelectableInstructionPrompt : MonoBehaviour, IHoverable
     {
-        [Header("Instruction")]
+        [Header("Instruction (PC)")]
         [SerializeField]
         [TextArea(1, 3)]
         private string instructionText = "Press E to interact";
@@ -19,6 +19,15 @@ namespace Woi.OfficeFire
         [SerializeField]
         [TextArea(1, 3)]
         private string instructionTextTurkish = "Etkileşim için E'ye basın";
+
+        [Header("Instruction (VR)")]
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string instructionTextVr = OfficeFireInstructionPromptText.DefaultVrInteractEnglish;
+
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string instructionTextTurkishVr = OfficeFireInstructionPromptText.DefaultVrInteractTurkish;
 
         [SerializeField]
         private bool preferTurkish = true;
@@ -168,7 +177,7 @@ namespace Woi.OfficeFire
             _controller?.SetHovered(isHovered);
         }
 
-        public void SetInstruction(string english, string turkish = null)
+        public void SetInstruction(string english, string turkish = null, string englishVr = null, string turkishVr = null)
         {
             instructionText = english ?? string.Empty;
             if (turkish != null)
@@ -176,8 +185,22 @@ namespace Woi.OfficeFire
                 instructionTextTurkish = turkish;
             }
 
+            if (englishVr != null)
+            {
+                instructionTextVr = englishVr;
+            }
+
+            if (turkishVr != null)
+            {
+                instructionTextTurkishVr = turkishVr;
+            }
+
             EnsureController();
-            _controller?.SetInstruction(instructionText, instructionTextTurkish);
+            _controller?.SetInstruction(
+                instructionText,
+                instructionTextTurkish,
+                instructionTextVr,
+                instructionTextTurkishVr);
         }
 
         private void EnsureController()
@@ -207,7 +230,11 @@ namespace Woi.OfficeFire
 
         private void SyncInstruction()
         {
-            _controller?.SetInstruction(instructionText, instructionTextTurkish);
+            _controller?.SetInstruction(
+                instructionText,
+                instructionTextTurkish,
+                instructionTextVr,
+                instructionTextTurkishVr);
         }
 
         static bool IsHeldByPlayer(MonoBehaviour host)

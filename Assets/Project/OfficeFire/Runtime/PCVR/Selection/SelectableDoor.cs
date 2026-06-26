@@ -16,7 +16,7 @@ namespace Woi.OfficeFire
         [SerializeField]
         private bool toggleOnSelect = true;
 
-        [Header("Instruction Prompt")]
+        [Header("Instruction Prompt (PC)")]
         [SerializeField]
         [TextArea(1, 3)]
         private string instructionText;
@@ -24,6 +24,15 @@ namespace Woi.OfficeFire
         [SerializeField]
         [TextArea(1, 3)]
         private string instructionTextTurkish;
+
+        [Header("Instruction Prompt (VR)")]
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string instructionTextVr = OfficeFireInstructionPromptText.DefaultVrInteractEnglish;
+
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string instructionTextTurkishVr = OfficeFireInstructionPromptText.DefaultVrInteractTurkish;
 
         [Header("Instruction Placement")]
         [Tooltip("Local offset from door pivot (or this transform when pivot is empty).")]
@@ -286,7 +295,11 @@ namespace Woi.OfficeFire
 
         private void EnsureInstructionPrompt()
         {
-            if (string.IsNullOrWhiteSpace(instructionText) && string.IsNullOrWhiteSpace(instructionTextTurkish))
+            if (!OfficeFireInstructionPromptText.HasAnyText(
+                    instructionText,
+                    instructionTextTurkish,
+                    instructionTextVr,
+                    instructionTextTurkishVr))
             {
                 return;
             }
@@ -306,7 +319,11 @@ namespace Woi.OfficeFire
                     hoverOutlineWidth: 5f);
             }
 
-            _instructionPrompt.SetInstruction(instructionText, instructionTextTurkish);
+            _instructionPrompt.SetInstruction(
+                instructionText,
+                instructionTextTurkish,
+                instructionTextVr,
+                instructionTextTurkishVr);
         }
     }
 }

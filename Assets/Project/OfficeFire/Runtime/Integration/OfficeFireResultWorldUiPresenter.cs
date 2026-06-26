@@ -44,9 +44,13 @@ namespace Woi.OfficeFire
         [SerializeField]
         private bool followHeadEachFrame = false;
 
+        [SerializeField]
+        private float billboardYawOffsetDegrees = 180f;
+
         private PanelSettings _runtimePanelSettings;
         private bool _configuredForVr;
         private bool _geometryCallbackRegistered;
+        private Coroutine _deferredSnapRoutine;
         private static MethodInfo _uidocumentLateUpdate;
 
         private void Awake()
@@ -66,6 +70,7 @@ namespace Woi.OfficeFire
         private void OnDisable()
         {
             UnregisterGeometryCallback();
+            CancelDeferredSnap();
         }
 
         private void LateUpdate()
@@ -83,15 +88,32 @@ namespace Woi.OfficeFire
 
             ApplyVrRootLayout();
             RegisterGeometryCallback();
+            RepositionInFrontOfPlayer();
             ScheduleColliderRefresh();
+        }
+
+        /// <summary>Places the panel once in front of the XR camera (used when followHeadEachFrame is off).</summary>
+        public void RepositionInFrontOfPlayer()
+        {
+            if (!_configuredForVr)
+                return;
+
+            SnapInFrontOfEye();
+            ScheduleDeferredSnap();
         }
 
         public void ApplyForCurrentMode()
         {
             if (FirePlatformRuntime.IsVR)
+            {
                 ConfigureForVr();
+                if (_configuredForVr)
+                    RepositionInFrontOfPlayer();
+            }
             else
+            {
                 ConfigureForPc();
+            }
         }
 
         private void ConfigureForVr()
@@ -131,7 +153,7 @@ namespace Woi.OfficeFire
             _configuredForVr = true;
             ApplyVrRootLayout();
             RegisterGeometryCallback();
-            SnapInFrontOfEye();
+            RepositionInFrontOfPlayer();
             ScheduleColliderRefresh();
         }
 
@@ -178,11 +200,70 @@ namespace Woi.OfficeFire
             if (head == null)
                 return;
 
-            transform.position = head.TransformPoint(localOffsetFromEye);
-            transform.localRotation = Quaternion.identity;
+            if (transform.parent != null)
+                transform.SetParent(null, true);
+
+            Vector3 worldPos = head.TransformPoint(localOffsetFromEye);
+            Quaternion worldRot = ComputeBillboardRotation(head, worldPos);
+            transform.SetPositionAndRotation(worldPos, worldRot);
             transform.localScale = Vector3.one * worldObjectScale;
 
             SyncUidocumentWorldTransform();
+        }
+
+        private Quaternion ComputeBillboardRotation(Transform eye, Vector3 panelWorldPosition)
+        {
+            Vector3 toCamera = eye.position - panelWorldPosition;
+            toCamera.y = 0f;
+
+            if (toCamera.sqrMagnitude < 1e-6f)
+            {
+                toCamera = new Vector3(-eye.forward.x, 0f, -eye.forward.z);
+            }
+
+            if (toCamera.sqrMagnitude < 1e-6f)
+            {
+                return Quaternion.identity;
+            }
+
+            Quaternion face = Quaternion.LookRotation(toCamera.normalized, Vector3.up);
+            if (Mathf.Abs(billboardYawOffsetDegrees) > 1e-3f)
+            {
+                face *= Quaternion.Euler(0f, billboardYawOffsetDegrees, 0f);
+            }
+
+            return face;
+        }
+
+        private void ScheduleDeferredSnap()
+        {
+            if (!isActiveAndEnabled)
+                return;
+
+            CancelDeferredSnap();
+            _deferredSnapRoutine = StartCoroutine(DeferredSnapRoutine());
+        }
+
+        private void CancelDeferredSnap()
+        {
+            if (_deferredSnapRoutine == null)
+                return;
+
+            StopCoroutine(_deferredSnapRoutine);
+            _deferredSnapRoutine = null;
+        }
+
+        private System.Collections.IEnumerator DeferredSnapRoutine()
+        {
+            yield return null;
+            yield return new WaitForEndOfFrame();
+
+            if (!_configuredForVr)
+                yield break;
+
+            SnapInFrontOfEye();
+            ScheduleColliderRefresh();
+            _deferredSnapRoutine = null;
         }
 
         private Transform ResolveHeadTransform()

@@ -21,6 +21,8 @@ namespace Woi.OfficeFire
         private bool _isHovered;
         private string _instructionText = string.Empty;
         private string _instructionTextTurkish = string.Empty;
+        private string _instructionTextVr = string.Empty;
+        private string _instructionTextTurkishVr = string.Empty;
 
         public InstructionPromptController(
             MonoBehaviour host,
@@ -54,8 +56,15 @@ namespace Woi.OfficeFire
 
         public void SetInstruction(string english, string turkish)
         {
-            _instructionText = english ?? string.Empty;
-            _instructionTextTurkish = turkish ?? string.Empty;
+            SetInstruction(english, turkish, null, null);
+        }
+
+        public void SetInstruction(string englishPc, string turkishPc, string englishVr, string turkishVr)
+        {
+            _instructionText = englishPc ?? string.Empty;
+            _instructionTextTurkish = turkishPc ?? string.Empty;
+            _instructionTextVr = englishVr ?? string.Empty;
+            _instructionTextTurkishVr = turkishVr ?? string.Empty;
             RefreshPopup();
         }
 
@@ -157,21 +166,12 @@ namespace Woi.OfficeFire
             return _popupHost;
         }
 
-        private string ResolveInstructionText()
-        {
-            bool useTurkish = OfficeFireSessionLanguage.UseTurkish();
-            if (useTurkish && !string.IsNullOrWhiteSpace(_instructionTextTurkish))
-            {
-                return _instructionTextTurkish;
-            }
-
-            if (!string.IsNullOrWhiteSpace(_instructionText))
-            {
-                return _instructionText;
-            }
-
-            return _instructionTextTurkish;
-        }
+        private string ResolveInstructionText() =>
+            OfficeFireInstructionPromptText.Resolve(
+                _instructionText,
+                _instructionTextTurkish,
+                _instructionTextVr,
+                _instructionTextTurkishVr);
 
         private bool IsSelectableActive()
         {

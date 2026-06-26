@@ -26,7 +26,7 @@ namespace Woi.OfficeFire
         [SerializeField]
         private ScriptableEventNoParam alarmPressed;
 
-        [Header("Instruction Prompt")]
+        [Header("Instruction Prompt (PC)")]
         [SerializeField]
         [TextArea(1, 3)]
         private string instructionText = "Press E to activate the alarm";
@@ -34,6 +34,15 @@ namespace Woi.OfficeFire
         [SerializeField]
         [TextArea(1, 3)]
         private string instructionTextTurkish = "Alarmı çalıştırmak için E'ye basın";
+
+        [Header("Instruction Prompt (VR)")]
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string instructionTextVr = "Pull trigger to activate the alarm";
+
+        [SerializeField]
+        [TextArea(1, 3)]
+        private string instructionTextTurkishVr = "Alarmı çalıştırmak için tetiğe basın";
 
         [Header("Instruction Placement")]
         [SerializeField]
@@ -263,7 +272,13 @@ namespace Woi.OfficeFire
                 string.IsNullOrWhiteSpace(instructionText) ? "Press E to activate the alarm" : instructionText,
                 string.IsNullOrWhiteSpace(instructionTextTurkish)
                     ? "Alarmı çalıştırmak için E'ye basın"
-                    : instructionTextTurkish);
+                    : instructionTextTurkish,
+                string.IsNullOrWhiteSpace(instructionTextVr)
+                    ? "Pull trigger to activate the alarm"
+                    : instructionTextVr,
+                string.IsNullOrWhiteSpace(instructionTextTurkishVr)
+                    ? "Alarmı çalıştırmak için tetiğe basın"
+                    : instructionTextTurkishVr);
         }
 
         private void EnsureOutline()

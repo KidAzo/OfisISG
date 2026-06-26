@@ -214,6 +214,7 @@ namespace Woi.OfficeFire
             OfficeFireResultScreenModel model = OfficeFireResultScreenMapper.FromReport(report, turkish);
             ApplyModel(model);
             ExportSessionResultsIfNeeded(report, turkish);
+            GetComponent<OfficeFireResultWorldUiPresenter>()?.RepositionInFrontOfPlayer();
         }
 
         private void ResetPresentationState()
