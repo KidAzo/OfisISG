@@ -258,3 +258,20 @@
 .text-amber {
     color: var(--color-amber);
 }
+
+/* VR world-space (OfficeFireResultWorldUiPresenter — login ile aynı ölçek) */
+.result-root.result-root--vr-world .result-backdrop {
+    display: none;
+}
+
+.result-root.result-root--vr-world {
+    flex-grow: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.result-root.result-root--vr-world .main-widget.result-panel {
+    width: 920px;
+    max-width: 100%;
+    max-height: 100%;
+}

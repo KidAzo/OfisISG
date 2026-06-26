@@ -129,10 +129,18 @@ namespace Woi.OfficeFire
                 uiDocument = GetComponent<UIDocument>();
             }
 
+            EnsureVrWorldUiPresenter();
+
             if (_lastReport == null && !_isReturningToLogin)
             {
                 gameObject.SetActive(false);
             }
+        }
+
+        void EnsureVrWorldUiPresenter()
+        {
+            if (GetComponent<OfficeFireResultWorldUiPresenter>() == null)
+                gameObject.AddComponent<OfficeFireResultWorldUiPresenter>();
         }
 
         private void OnEnable()
@@ -270,6 +278,10 @@ namespace Woi.OfficeFire
             {
                 _root.style.display = DisplayStyle.Flex;
             }
+
+            OfficeFireResultWorldUiPresenter worldUi = GetComponent<OfficeFireResultWorldUiPresenter>();
+            worldUi?.ApplyForCurrentMode();
+            worldUi?.NotifyContentReady();
         }
 
         private void ApplyModel(OfficeFireResultScreenModel model)
@@ -497,6 +509,8 @@ namespace Woi.OfficeFire
             {
                 Debug.LogWarning("[OfficeFireResultScreenController] Required UXML elements were not found.", this);
             }
+
+            GetComponent<OfficeFireResultWorldUiPresenter>()?.NotifyContentReady();
         }
 
         private void HandleContinueClicked()
@@ -567,6 +581,12 @@ namespace Woi.OfficeFire
         {
             if (!disablePlayerInputWhileVisible || _playerInputCaptured)
             {
+                return;
+            }
+
+            if (FirePlatformRuntime.IsVR)
+            {
+                _playerInputCaptured = true;
                 return;
             }
 

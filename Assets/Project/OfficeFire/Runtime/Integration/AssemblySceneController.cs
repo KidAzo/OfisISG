@@ -177,6 +177,7 @@ namespace Woi.OfficeFire
 
         private IEnumerator Run()
         {
+            EnsureGameplayCamera(ResolvePlayerRoot());
             yield return null;
 
             ApplyAssemblySignMaterials();
@@ -378,6 +379,12 @@ namespace Woi.OfficeFire
                 return xrOriginRoot;
             }
 
+            Transform resolvedXr = ResolveXrOriginTransform();
+            if (resolvedXr != null)
+            {
+                return resolvedXr;
+            }
+
             if (playerRoot != null)
             {
                 return playerRoot;
@@ -387,22 +394,47 @@ namespace Woi.OfficeFire
             return taggedPlayer != null ? taggedPlayer.transform : null;
         }
 
-        private static void EnsureGameplayCamera(Transform playerRoot)
+        private static Transform ResolveXrOriginTransform()
         {
-            Camera playerCamera = null;
-            if (playerRoot != null)
+            System.Type originType = System.Type.GetType("Unity.XR.CoreUtils.XROrigin, Unity.XR.CoreUtils");
+            if (originType == null)
             {
-                playerCamera = playerRoot.GetComponentInChildren<Camera>(true);
+                return null;
             }
 
-            if (playerCamera == null)
+            Object[] found = Resources.FindObjectsOfTypeAll(originType);
+            for (int i = 0; i < found.Length; i++)
+            {
+                if (found[i] is not Component origin || origin == null)
+                {
+                    continue;
+                }
+
+                GameObject go = origin.gameObject;
+                if (!go.scene.IsValid())
+                {
+                    continue;
+                }
+
+                return go.transform;
+            }
+
+            return null;
+        }
+
+        private static void EnsureGameplayCamera(Transform playerRoot)
+        {
+            Transform resolvedRoot = playerRoot ?? ResolveXrOriginTransform();
+            if (resolvedRoot == null)
             {
                 GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
                 if (taggedPlayer != null)
                 {
-                    playerCamera = taggedPlayer.GetComponentInChildren<Camera>(true);
+                    resolvedRoot = taggedPlayer.transform;
                 }
             }
+
+            Camera playerCamera = ResolvePlayerCamera(resolvedRoot);
 
             Camera[] cameras = Object.FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             for (int i = 0; i < cameras.Length; i++)
@@ -413,13 +445,12 @@ namespace Woi.OfficeFire
                     continue;
                 }
 
-                if (camera.gameObject.name == FadeOverlayName)
+                if (ShouldSkipCameraManagement(camera))
                 {
                     continue;
                 }
 
-                bool isPlayerCamera = playerCamera != null && camera == playerCamera;
-                if (isPlayerCamera)
+                if (IsPlayerGameplayCamera(camera, playerCamera, resolvedRoot))
                 {
                     if (!camera.gameObject.activeInHierarchy)
                     {
@@ -441,8 +472,78 @@ namespace Woi.OfficeFire
             {
                 Debug.LogWarning(
                     "[AssemblySceneController] No player camera found after scene load. " +
-                    "Assign Player Root or ensure a Player-tagged object has an enabled Camera.");
+                    "Assign Player Root / XR Origin or ensure a Player-tagged object has an enabled Camera.");
             }
+        }
+
+        static Camera ResolvePlayerCamera(Transform resolvedRoot)
+        {
+            if (resolvedRoot != null)
+            {
+                Camera fromRoot = resolvedRoot.GetComponentInChildren<Camera>(true);
+                if (fromRoot != null)
+                {
+                    return fromRoot;
+                }
+            }
+
+            Transform xrRoot = ResolveXrOriginTransform();
+            if (xrRoot != null)
+            {
+                Camera fromXr = xrRoot.GetComponentInChildren<Camera>(true);
+                if (fromXr != null)
+                {
+                    return fromXr;
+                }
+            }
+
+            GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
+            if (taggedPlayer != null)
+            {
+                return taggedPlayer.GetComponentInChildren<Camera>(true);
+            }
+
+            return null;
+        }
+
+        static bool IsPlayerGameplayCamera(Camera camera, Camera playerCamera, Transform resolvedRoot)
+        {
+            if (camera == null)
+            {
+                return false;
+            }
+
+            if (playerCamera != null && camera == playerCamera)
+            {
+                return true;
+            }
+
+            if (resolvedRoot != null && camera.transform.IsChildOf(resolvedRoot))
+            {
+                return true;
+            }
+
+            Transform xrRoot = ResolveXrOriginTransform();
+            return xrRoot != null && camera.transform.IsChildOf(xrRoot);
+        }
+
+        static bool ShouldSkipCameraManagement(Camera camera)
+        {
+            if (camera == null)
+            {
+                return true;
+            }
+
+            string objectName = camera.gameObject.name;
+            if (objectName == FadeOverlayName
+                || objectName == "TransitionCamera"
+                || objectName == "LoadingCameraPc")
+            {
+                return true;
+            }
+
+            Transform parent = camera.transform.parent;
+            return parent != null && parent.name == FadeOverlayName;
         }
 
         private sealed class AssemblySceneTransitionRunner : MonoBehaviour
