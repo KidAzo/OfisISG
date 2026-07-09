@@ -102,6 +102,12 @@ namespace Woi.OfficeFire
             if (!FirePlatformRuntime.IsVR)
                 ApplyMenuCursor();
 
+            if (FirePlatformRuntime.IsVR)
+            {
+                OfficeFireVrExtinguisherRigBootstrap.EnsureWired();
+                OfficeFireInputSync.RequestDelayedSync(this, "OfficeFireModule_Login");
+            }
+
             GetComponent<OfficeFireLoginWorldUiPresenter>()?.NotifyContentReady();
             bindRoutine = null;
         }
@@ -352,6 +358,7 @@ namespace Woi.OfficeFire
 
             OfficeFireGameplayCameraSetup.RequestEnsureReady(this, "Login→FireModule_Office");
             OfficeFireVrExtinguisherRigBootstrap.EnsureWired();
+            OfficeFireInputSync.RequestDelayedSync(this, "Login→FireModule_Office");
             isLoading = false;
             if (startButton != null)
                 startButton.SetEnabled(true);

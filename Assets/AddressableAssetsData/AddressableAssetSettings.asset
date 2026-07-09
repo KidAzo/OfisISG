@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: ad751a2840d427c4ebd13689770bb709
   m_currentHash:
     serializedVersion: 2
-    Hash: 107e51973c6a58893656f312a8d68597
+    Hash: 563d436a57390262ee19a7ab14d6f791
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
@@ -53,9 +53,9 @@ MonoBehaviour:
   m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 5d67478c1a9372c4cbae12342ff8c2cb
+    m_Id: 7335b38454684d04881e0bbace29ca95
   m_RemoteCatalogLoadPath:
-    m_Id: 6fc6ce41607245e46a3b207d856b5feb
+    m_Id: e91db9b550a118943a54de70685e7dbb
   m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
@@ -76,7 +76,7 @@ MonoBehaviour:
       - m_Id: 5d67478c1a9372c4cbae12342ff8c2cb
         m_Value: 'ServerData/Office/[BuildTarget]'
       - m_Id: 6fc6ce41607245e46a3b207d856b5feb
-        m_Value: https://storage.googleapis.com/digitech-hub-388ab.firebasestorage.app/modules/office/fire/pc/0.3.0
+        m_Value: https://storage.googleapis.com/digitech-hub-388ab.firebasestorage.app/modules/office/fire/vr
       - m_Id: 7335b38454684d04881e0bbace29ca95
         m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
       - m_Id: bf2dc908ae9674c4199a48216ba240d0
@@ -90,7 +90,7 @@ MonoBehaviour:
       - m_Id: 5d67478c1a9372c4cbae12342ff8c2cb
         m_Value: 'ServerData/Office/[BuildTarget]'
       - m_Id: 6fc6ce41607245e46a3b207d856b5feb
-        m_Value: https://storage.googleapis.com/digitech-hub-388ab.firebasestorage.app/modules/office/fire/pc/0.3.0
+        m_Value: https://storage.googleapis.com/digitech-hub-388ab.firebasestorage.app/modules/office/fire/vr
       - m_Id: 7335b38454684d04881e0bbace29ca95
         m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
       - m_Id: bf2dc908ae9674c4199a48216ba240d0

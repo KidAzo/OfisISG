@@ -38,6 +38,10 @@ namespace Woi.OfficeFire
 
         public string ContinueButtonText { get; set; } = string.Empty;
 
+        public string QuitButtonText { get; set; } = string.Empty;
+
+        public string HubReturnButtonText { get; set; } = string.Empty;
+
         public List<string> CompletedObjectives { get; } = new List<string>();
 
         public List<string> MissingObjectives { get; } = new List<string>();

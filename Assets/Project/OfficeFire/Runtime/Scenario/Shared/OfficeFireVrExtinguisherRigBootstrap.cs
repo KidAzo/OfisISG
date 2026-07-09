@@ -1,4 +1,5 @@
 using UnityEngine;
+using Woi.Equipment;
 
 namespace Woi.OfficeFire
 {
@@ -23,10 +24,11 @@ namespace Woi.OfficeFire
             OfficeFireVrExtinguisherRigWiring.EnsureJumpSuppressed();
             OfficeFireVrExtinguisherRigWiring.EnsurePlayerTriggerCompatibility();
 
-            if (_wired)
-                return;
+            bool wiredNow = OfficeFireVrExtinguisherRigWiring.EnsureWired(logResult: !_wired);
+            if (wiredNow)
+                _wired = true;
 
-            _wired = OfficeFireVrExtinguisherRigWiring.EnsureWired();
+            VRExtinguisherPinPuller.RefreshAllPullInputBindings();
         }
     }
 }

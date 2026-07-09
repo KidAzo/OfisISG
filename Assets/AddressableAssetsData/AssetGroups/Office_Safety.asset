@@ -51,6 +51,162 @@ MonoBehaviour:
     m_SerializedLabels:
     - module-office-fire-full
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 977000a2d11bf584eba504c7fa0b29c6
+    m_Address: Office/NPC/ChracterMaleUpdt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 548bda0babad39c448c706436494eae5
+    m_Address: Office/NPC/AllAnims
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e1a87ace18fb6f342ab09e8fc460d7fb
+    m_Address: Office/NPC/ChracterMaleUpdtMesh
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 08ed2e8d7eac41e4c84aa75bd93433da
+    m_Address: Office/NPC/Anims/Walking
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cb5594ff93d873145acac435a4c091fa
+    m_Address: Office/NPC/Anims/Breathing Idle
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dbbe9f87d4b887448beb74a129e3f787
+    m_Address: Office/NPC/Anims/WalkingHoldStair - Modified
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed6660df27661584e8e69056c3e02235
+    m_Address: Office/NPC/Anims/Running
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 02699605e1a37b04ab4ff64c2586a776
+    m_Address: Office/NPC/Anims/stunned
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4f492b03a63f03c4da42f1222c26281a
+    m_Address: Office/NPC/Anims/sitting
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 00ea493d27256844b82f5b7bafc1ee0f
+    m_Address: Office/NPC/Anims/GetPills
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ec5db427ccdced4ca27d728d4b5178d
+    m_Address: Office/NPC/Anims/Damaged-L
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9a28598122ef7b9499cce0e8c0854230
+    m_Address: Office/NPC/Anims/holdingStairs-Rightnew
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bccb6485db3d5664e848836893a6dcad
+    m_Address: Office/NPC/Anims/Damaged-R
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ebb78b795c098e44a8f64cd07d935752
+    m_Address: Office/NPC/Anims/TextingAndWalking_Cup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e1963de316dfda4b84d35725846a06b
+    m_Address: Office/NPC/Anims/Rummaging
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 408673d1d5cba3844bc8c8f80a8e2450
+    m_Address: Office/NPC/Anims/OfficeChair
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5863896b0d884104cb00384cebcbc106
+    m_Address: Office/NPC/Anims/yanlisKaldirma
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b3c852e356da35a43be2d58beb647f17
+    m_Address: Office/NPC/Anims/CayciTrue - Modified
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c2721259d1e17524a9006edf138569c5
+    m_Address: Office/NPC/Anims/EkranaYakindan
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b6be3389e2e48e04690bf9d8c9fcbc93
+    m_Address: Office/NPC/Anims/Ergonomik Olmayan Oturus
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d8776ec70a3b6f949aae1c43669d0af3
+    m_Address: Office/NPC/Anims/CayciFalse - Modified
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd18ac192a9bf2d46952d5d8fad66e3c
+    m_Address: Office/NPC/Anims/Ergonomikkaldırma
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d6db4320ed32c0046abc1f69aed3b5f7
+    m_Address: Office/NPC/Anims/normalSit
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a47dcf0d08c78b4ca89a9f40a5188eb
+    m_Address: Office/NPC/Anims/AtipFalse
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 730cddf5173e4414cb107dab3b92fd16
+    m_Address: Office/NPC/Anims/KagitParcaliyici
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 658c9a2c11ca8d040ae55b7e459ba972
+    m_Address: Office/NPC/Anims/AtipTrue
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-fire-full
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 3c60501d4ea17ec4796be47a8a3f237c, type: 2}
   m_SchemaSet:

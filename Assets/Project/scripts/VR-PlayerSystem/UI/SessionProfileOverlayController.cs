@@ -302,6 +302,12 @@ namespace Woi.DataHandler
 
         private void ApplyPickingMode(PickingMode mode)
         {
+            // The UIDocument stays alive/enabled after hiding (visibility-only pattern), so the panel's true
+            // root element must also drop out of picking. Otherwise this persistent full-screen panel keeps
+            // swallowing pointer events and blocks other UI (e.g. the login screen after returning from gameplay).
+            if (uiDocument != null && uiDocument.rootVisualElement != null)
+                uiDocument.rootVisualElement.pickingMode = mode;
+
             if (overlayRoot == null)
                 return;
 

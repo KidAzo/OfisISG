@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 using Unity.XR.CoreUtils;
 using WOI.Modules.SDK;
 using Woi.Player;
+using Woi.Game.Training;
 using Woi.Game.Training.UI;
 using Woi.UI.Popups.Localization;
 using Woi.Training;
@@ -417,17 +418,56 @@ namespace Woi.UI.Result
         {
             LevelController lc = _levelController;
             if (lc == null)
-                lc = FindFirstObjectByType<LevelController>();
+                lc = FindFirstObjectByType<LevelController>(FindObjectsInactive.Include);
 
-            if (lc == null)
+            if (lc != null)
+            {
+                lc.RequestEndSessionFromExitPanel();
+
+                // LevelController.HandleGameplayFinished yalnızca aktif oturum varken EndSession çağırır.
+                // Hub/Addressables kurulumunda referans kopması veya zamanlama nedeniyle çalışmazsa,
+                // doğrudan recorder üzerinden bitirmeyi dene (sonuç ekranı binder ile yine açılır).
+                if (!IsAnyTrainingSessionActive())
+                    return;
+            }
+            else
             {
                 Debug.LogWarning(
-                    $"[{nameof(ExitPanelController)}] EVET: {nameof(LevelController)} bulunamadı — oturum sonlandırılamadı. Inspector’dan atayın.",
+                    $"[{nameof(ExitPanelController)}] EVET: {nameof(LevelController)} bulunamadı — oturum doğrudan {nameof(ExtinguisherSessionRecorder)} üzerinden sonlandırılmaya çalışılıyor. Inspector’dan {nameof(_levelController)} atayın.",
                     this);
-                return;
             }
 
-            lc.RequestEndSessionFromExitPanel();
+            if (TryEndTrainingSessionDirectly())
+                return;
+
+            if (lc == null)
+                Debug.LogWarning(
+                    $"[{nameof(ExitPanelController)}] EVET: Sonlandırılacak aktif eğitim oturumu bulunamadı. " +
+                    $"Sahnede {nameof(LevelController)} / {nameof(ExtinguisherSessionRecorder)} ve sonuç ekranı referanslarını kontrol edin.",
+                    this);
+        }
+
+        static bool IsAnyTrainingSessionActive()
+        {
+            ExtinguisherSessionRecorder recorder =
+                FindFirstObjectByType<ExtinguisherSessionRecorder>(FindObjectsInactive.Include);
+            return recorder != null && recorder.IsSessionActive;
+        }
+
+        /// <summary>
+        /// LevelController erişilemediğinde (ya da oturumu bitiremediğinde) son çare: aktif oturumu doğrudan
+        /// <see cref="ExtinguisherSessionRecorder"/> üzerinden bitirir; bu, <see cref="TrainingResultScreenSessionBinder"/>
+        /// aracılığıyla sonuç ekranını açan <c>OnSessionEnded</c> olayını tetikler.
+        /// </summary>
+        static bool TryEndTrainingSessionDirectly()
+        {
+            ExtinguisherSessionRecorder recorder =
+                FindFirstObjectByType<ExtinguisherSessionRecorder>(FindObjectsInactive.Include);
+            if (recorder == null || !recorder.IsSessionActive)
+                return false;
+
+            recorder.EndSession();
+            return true;
         }
 
         static bool TryResolveXrOrigin(out XROrigin xrOrigin)

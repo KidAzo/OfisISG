@@ -15,6 +15,7 @@
         "PrimeTween.Runtime",
         "FireExtinguisher.VR",
         "Unity.InputSystem",
+        "Woi.Fire.VFXPresenter",
         "Woi.Fire.EstinguisherHUD",
         "QuickOutline"
     ],

@@ -296,7 +296,7 @@ namespace Woi.Player
         private PlayerController _playerController;
         private CharacterController ch;
 
-        public Camera playerCamera => _playerController.playerCamera;
+        public Camera playerCamera => _playerController != null ? _playerController.playerCamera : null;
 
 
         public event Action OnPlayerRegistered;

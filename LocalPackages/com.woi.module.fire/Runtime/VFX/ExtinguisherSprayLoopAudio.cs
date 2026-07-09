@@ -211,6 +211,9 @@ namespace Woi.Game.VFX
 
         private void CleanupAllSprayAudio(bool playEnd)
         {
+            _spraySessionActive = false;
+            _loopPlaying = false;
+
             UnhookStartVoice();
             if (_startFallbackRoutine != null)
             {
@@ -218,20 +221,42 @@ namespace Woi.Game.VFX
                 _startFallbackRoutine = null;
             }
 
-            if (_audioSystem != null)
+            StopSpraySoundDefinitionsEverywhere(playEnd);
+        }
+
+        private void StopSpraySoundDefinitionsEverywhere(bool playEnd)
+        {
+            AudioSystem[] systems = UnityEngine.Object.FindObjectsByType<AudioSystem>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < systems.Length; i++)
             {
+                AudioSystem sys = systems[i];
+                if (sys == null)
+                    continue;
+
                 if (_sprayLoopSound != null)
-                    _audioSystem.StopAllInstances(_sprayLoopSound);
+                {
+                    sys.StopAllInstances(_sprayLoopSound);
+                    sys.ClearQueue(_sprayLoopSound);
+                }
 
                 if (_sprayStartSound != null)
-                    _audioSystem.StopAllInstances(_sprayStartSound);
+                {
+                    sys.StopAllInstances(_sprayStartSound);
+                    sys.ClearQueue(_sprayStartSound);
+                }
+
+                if (_sprayEndSound != null)
+                {
+                    sys.StopAllInstances(_sprayEndSound);
+                    sys.ClearQueue(_sprayEndSound);
+                }
             }
 
-            if (playEnd && _audioSystem != null && _sprayEndSound != null)
+            if (playEnd && _sprayEndSound != null && ResolveAudioSystem())
                 _audioSystem.PlayFollow(_sprayEndSound, ResolveFollow(), BuildContext());
-
-            _spraySessionActive = false;
-            _loopPlaying = false;
         }
 
         private void StopLoopOnly()

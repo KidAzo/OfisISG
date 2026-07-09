@@ -63,7 +63,28 @@ namespace FireExtinguisher.PC
         private Vector3 _cachedSprayDirection;
         private bool    _isValid;
 
-        private Camera ViewCamera => _camera != null ? _camera : _playerService != null ? _playerService.playerCamera : null;
+        private bool _disabledForVr;
+
+        private Camera ViewCamera
+        {
+            get
+            {
+                if (_camera != null)
+                    return _camera;
+
+                if (_playerService == null)
+                    return null;
+
+                try
+                {
+                    return _playerService.playerCamera;
+                }
+                catch (System.NullReferenceException)
+                {
+                    return null;
+                }
+            }
+        }
 
         // ── IAimProvider — spray pair ─────────────────────────────────────────────
 
@@ -122,7 +143,25 @@ namespace FireExtinguisher.PC
 
         private void Awake()
         {
-            _playerService = ServiceLocator.Get<IPlayerService>();
+            ServiceLocator.TryGet(out _playerService);
+
+            if (ShouldDisableForVr())
+            {
+                _disabledForVr = true;
+                enabled = false;
+            }
+        }
+
+        static bool ShouldDisableForVr()
+        {
+            if (FirePlatformRuntime.IsSourceInitialized)
+                return FirePlatformRuntime.IsVR;
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return UnityEngine.XR.XRSettings.isDeviceActive;
+#else
+            return false;
+#endif
         }
 
         private void Start()
@@ -149,6 +188,9 @@ namespace FireExtinguisher.PC
 
         private void Update()
         {
+            if (_disabledForVr)
+                return;
+
             UpdateAim();
         }
 

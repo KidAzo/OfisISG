@@ -29,6 +29,7 @@ namespace Woi.OfficeFire
                 EmptyMissingText = turkish ? "Eksik görev yok." : "No missing objectives.",
                 EmptyMistakesText = turkish ? "Hata kaydedilmedi." : "No mistakes recorded.",
                 ContinueButtonText = turkish ? "Devam" : "Continue",
+                QuitButtonText = turkish ? "Oyundan Çık" : "Quit Game",
             };
 
             if (report == null)

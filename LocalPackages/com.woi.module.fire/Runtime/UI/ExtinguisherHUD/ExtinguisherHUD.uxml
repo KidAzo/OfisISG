@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Packages/com.woi.module.fire/Runtime/UI/ExtinguisherHUD.uss?fileID=7433441132597879392&amp;guid=a040e193d6d87e24db12764b455e0c45&amp;type=3#ExtinguisherHUD"/>
+    <Style src="project://database/Packages/com.woi.module.fire/Runtime/UI/ExtinguisherHUD/ExtinguisherHUD.uss?fileID=7433441132597879392&amp;guid=a040e193d6d87e24db12764b455e0c45&amp;type=3#ExtinguisherHUD"/>
     <ui:VisualElement name="hud-container" class="hud-container">
         <ui:VisualElement name="slots-container" class="slots-container">
             <ui:VisualElement class="slot-badge"/>

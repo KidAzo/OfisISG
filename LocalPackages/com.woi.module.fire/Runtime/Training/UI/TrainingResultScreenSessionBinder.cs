@@ -41,6 +41,9 @@ namespace Woi.Game.Training.UI
         private void OnEnable()
         {
             if (_recorder == null)
+                _recorder = FindFirstObjectByType<ExtinguisherSessionRecorder>(FindObjectsInactive.Include);
+
+            if (_recorder == null)
             {
                 Debug.LogWarning($"[{nameof(TrainingResultScreenSessionBinder)}] Recorder not assigned on {gameObject.name}.", this);
                 return;
@@ -172,15 +175,16 @@ namespace Woi.Game.Training.UI
             const int maxFrames = 120;
             for (int i = 0; i < maxFrames; i++)
             {
-                UIDocument doc = controller.GetComponent<UIDocument>();
-                if (doc != null && doc.rootVisualElement != null)
+                controller.EnsureDocumentReady();
+                if (controller.IsDocumentRootReady)
                     yield break;
 
                 yield return null;
             }
 
             Debug.LogWarning(
-                $"[{nameof(TrainingResultScreenSessionBinder)}] {nameof(UIDocument)} rootVisualElement did not appear in {maxFrames} frames on '{controller.gameObject.name}'.",
+                $"[{nameof(TrainingResultScreenSessionBinder)}] {nameof(UIDocument)} rootVisualElement did not appear in {maxFrames} frames on '{controller.gameObject.name}'. " +
+                "Present() will retry internally; verify ResultHUD PanelSettings / UXML are included in the Addressables build.",
                 controller);
         }
 

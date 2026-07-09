@@ -83,6 +83,11 @@ namespace Woi.Game.Training
             if (_audioSystem == null || sound == null)
                 return;
 
+            // fireTrain scenes wire the same SOAP events to localized AudioTriggers (EN/TR) and keep legacy TR
+            // SoundDefinition references here. Skip pair members so only the localized trigger plays.
+            if (LocalizedSoundDefinition.ContainsSound(sound))
+                return;
+
             var ctx = _ignoreCooldowns ? PlayContext.DebugNoCooldown() : PlayContext.Default;
             _audioSystem.EnqueueSequential(sound, ctx);
         }

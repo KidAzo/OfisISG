@@ -26,7 +26,10 @@ namespace Woi.Editor.Addressables
         const string OfficeProfileName = "Office";
         const string RemoteBuildPath = "ServerData/Office/[BuildTarget]";
         const string ModuleVersion = "0.3.0";
-        const string RemoteLoadPath = "https://storage.googleapis.com/digitech-hub-388ab.firebasestorage.app/modules/office/fire/pc/" + ModuleVersion;
+        const string VrRemoteLoadPath =
+            "https://storage.googleapis.com/digitech-hub-388ab.firebasestorage.app/modules/office/fire/vr";
+        const string PcRemoteLoadPath =
+            "https://storage.googleapis.com/digitech-hub-388ab.firebasestorage.app/modules/office/fire/pc/" + ModuleVersion;
 
         static readonly (string guid, string address)[] RequiredSceneEntries =
         {
@@ -36,6 +39,14 @@ namespace Woi.Editor.Addressables
             ("86ac583fd775cc949aa267c369d36dd2", "FireStairsOfis"),
             ("6e53403b119b63d4ab5ab1a8b6817a14", "FireStairsOfis 1"),
             ("bff5ae25ecb1c5545b27ca6f890bf48c", "OutDoor"),
+        };
+
+        /// <summary>Evacuation NPC locomotion — explicit bundle entries so Android/VR builds keep avatar + clips.</summary>
+        static readonly (string guid, string address)[] RequiredNpcContentEntries =
+        {
+            ("977000a2d11bf584eba504c7fa0b29c6", "Office/NPC/ChracterMaleUpdt"),
+            ("548bda0babad39c448c706436494eae5", "Office/NPC/AllAnims"),
+            ("e1a87ace18fb6f342ab09e8fc460d7fb", "Office/NPC/ChracterMaleUpdtMesh"),
         };
 
         [MenuItem("Woi/Addressables/Configure Office Safety Module", priority = 20)]
@@ -52,6 +63,7 @@ namespace Woi.Editor.Addressables
             EnsureOfficeProfile(settings);
             AddressableAssetGroup group = EnsureOfficeGroup(settings);
             int registered = RegisterSceneEntries(settings, group);
+            int contentRegistered = RegisterContentEntries(settings, group);
             AssetDatabase.SaveAssets();
 
             EditorUtility.DisplayDialog(
@@ -59,8 +71,10 @@ namespace Woi.Editor.Addressables
                 $"Office Safety module configured.\n\n" +
                 $"Group: {OfficeGroupName}\n" +
                 $"Scenes registered: {registered}/{RequiredSceneEntries.Length}\n" +
+                $"NPC/content assets: {contentRegistered} (includes AllAnims clip dependencies)\n" +
                 $"Download label: {DownloadLabel}\n" +
-                $"Remote load path: {RemoteLoadPath}",
+                $"Remote load path (Quest): {VrRemoteLoadPath}\n" +
+                $"Remote load path (PC): {PcRemoteLoadPath}",
                 "OK");
         }
 
@@ -122,8 +136,35 @@ namespace Woi.Editor.Addressables
             }
 
             profile.SetValue(profileId, AddressableAssetSettings.kRemoteBuildPath, RemoteBuildPath);
-            profile.SetValue(profileId, AddressableAssetSettings.kRemoteLoadPath, RemoteLoadPath);
+            profile.SetValue(profileId, AddressableAssetSettings.kRemoteLoadPath, VrRemoteLoadPath);
             settings.activeProfileId = profileId;
+        }
+
+        static string GetQuestBuildOutputDir()
+        {
+            return Path.Combine(Directory.GetCurrentDirectory(), "ServerData", "Office", "Android");
+        }
+
+        static bool TryGetQuestBuildOutputDir(out string buildDir, out string error)
+        {
+            buildDir = GetQuestBuildOutputDir();
+            if (!Directory.Exists(buildDir))
+            {
+                error = $"Build folder not found:\n{buildDir}\n\nSwitch platform to Android, select Office profile, then Addressables → New Build.";
+                return false;
+            }
+
+            string[] bundles = Directory.GetFiles(buildDir, "*.bundle");
+            if (bundles.Length == 0)
+            {
+                error =
+                    $"No .bundle files in:\n{buildDir}\n\nOnly catalog was built or output was deleted. " +
+                    "Run Addressables → Clean Build → New Build (Android + Office profile).";
+                return false;
+            }
+
+            error = null;
+            return true;
         }
 
         static AddressableAssetGroup EnsureOfficeGroup(AddressableAssetSettings settings)
@@ -180,10 +221,79 @@ namespace Woi.Editor.Addressables
             return registered;
         }
 
+        static int RegisterContentEntries(AddressableAssetSettings settings, AddressableAssetGroup group)
+        {
+            int registered = 0;
+            int depsRegistered = 0;
+            var problems = new List<string>();
+
+            foreach ((string guid, string address) in RequiredNpcContentEntries)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                if (string.IsNullOrEmpty(path))
+                {
+                    problems.Add($"{address}: GUID {guid} not found.");
+                    continue;
+                }
+
+                AddressableAssetEntry entry = settings.CreateOrMoveEntry(guid, group, readOnly: false, postEvent: false);
+                entry.address = address;
+                entry.SetLabel(DownloadLabel, true, true);
+                registered++;
+
+                if (path.EndsWith(".controller", System.StringComparison.OrdinalIgnoreCase))
+                    depsRegistered += RegisterAnimatorControllerDependencies(settings, group, path);
+            }
+
+            if (problems.Count > 0)
+                Debug.LogWarning("[OfficeAddressablesSetup] Missing NPC content:\n" + string.Join("\n", problems));
+
+            if (depsRegistered > 0)
+                Debug.Log($"[OfficeAddressablesSetup] Registered {depsRegistered} AllAnims dependency asset(s) into {OfficeGroupName}.");
+
+            EditorUtility.SetDirty(settings);
+            return registered + depsRegistered;
+        }
+
+        static int RegisterAnimatorControllerDependencies(
+            AddressableAssetSettings settings,
+            AddressableAssetGroup group,
+            string controllerPath)
+        {
+            string[] deps = AssetDatabase.GetDependencies(controllerPath, true);
+            int registered = 0;
+
+            foreach (string depPath in deps)
+            {
+                if (string.IsNullOrEmpty(depPath) || depPath == controllerPath)
+                    continue;
+                if (depPath.EndsWith(".cs", System.StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string depGuid = AssetDatabase.AssetPathToGUID(depPath);
+                if (string.IsNullOrEmpty(depGuid))
+                    continue;
+
+                AddressableAssetEntry entry = settings.CreateOrMoveEntry(depGuid, group, readOnly: false, postEvent: false);
+                if (string.IsNullOrEmpty(entry.address))
+                    entry.address = $"Office/NPC/Anims/{Path.GetFileNameWithoutExtension(depPath)}";
+
+                entry.SetLabel(DownloadLabel, true, true);
+                registered++;
+            }
+
+            return registered;
+        }
+
         [MenuItem("Woi/Addressables/Validate Office Remote Build (CRC)", priority = 21)]
         public static void ValidateOfficeRemoteBuildCrc()
         {
-            string buildDir = Path.Combine(Directory.GetCurrentDirectory(), "ServerData", "Office", "StandaloneWindows64");
+            if (!TryGetQuestBuildOutputDir(out string buildDir, out string problem))
+            {
+                EditorUtility.DisplayDialog("Addressables", problem, "OK");
+                return;
+            }
+
             string catalogPath = Path.Combine(buildDir, $"catalog_{ModuleVersion}.json");
 
             if (!File.Exists(catalogPath))
@@ -255,9 +365,11 @@ namespace Woi.Editor.Addressables
             UnityAddressables.Release(catalogHandle);
 
             string summary = failedCount == 0
-                ? $"All {checkedCount} remote bundle(s) match catalog CRC.\n\nUpload every file in:\n{buildDir}\nto:\n{RemoteLoadPath}/"
+                ? $"All {checkedCount} remote bundle(s) match catalog CRC.\n\n" +
+                  $"Upload EVERY file in:\n{buildDir}\n\nto Firebase/GCS folder:\n{VrRemoteLoadPath}/\n\n" +
+                  "Overwrite existing files. Hub vrCatalogUrl must point to catalog in that same folder."
                 : $"{failedCount} bundle(s) failed CRC check.\n\n" + string.Join("\n", failures) +
-                  "\n\nFix: Addressables → New Build → Default Build Script, then re-upload ALL files in ServerData.";
+                  "\n\nFix: Addressables → Clean Build → New Build, then re-upload ALL files in ServerData/Office/Android.";
 
             EditorUtility.DisplayDialog(
                 failedCount == 0 ? "CRC validation passed" : "CRC validation failed",
@@ -268,14 +380,14 @@ namespace Woi.Editor.Addressables
         [MenuItem("Woi/Addressables/Log Office Firebase Upload File List", priority = 22)]
         public static void LogOfficeFirebaseUploadFileList()
         {
-            string buildDir = Path.Combine(Directory.GetCurrentDirectory(), "ServerData", "Office", "StandaloneWindows64");
-            if (!Directory.Exists(buildDir))
+            if (!TryGetQuestBuildOutputDir(out string buildDir, out string problem))
             {
-                Debug.LogError($"[OfficeAddressablesSetup] Build folder not found: {buildDir}");
+                Debug.LogError($"[OfficeAddressablesSetup] {problem}");
+                EditorUtility.DisplayDialog("Addressables", problem, "OK");
                 return;
             }
 
-            Debug.Log($"[OfficeAddressablesSetup] Upload ALL of these to {RemoteLoadPath}/ (binary, no compression):");
+            Debug.Log($"[OfficeAddressablesSetup] Upload ALL of these to {VrRemoteLoadPath}/ (binary, overwrite existing):");
             foreach (string file in Directory.GetFiles(buildDir).OrderBy(path => path))
             {
                 var info = new FileInfo(file);
@@ -283,8 +395,12 @@ namespace Woi.Editor.Addressables
             }
 
             Debug.Log(
-                "[OfficeAddressablesSetup] Never upload catalog without bundles (or vice versa) from different builds. " +
-                "CRC Mismatch in Hub means Firebase has a catalog/bundle pair from mixed builds.");
+                "[OfficeAddressablesSetup] CRC Mismatch on Quest = catalog on GCS does not match bundle bytes. " +
+                "Usually only catalog OR only some bundles were re-uploaded. Upload the full Android folder atomically.");
+            EditorUtility.DisplayDialog(
+                "Addressables",
+                $"Found {Directory.GetFiles(buildDir, "*.bundle").Length} bundle(s) + catalog in:\n{buildDir}\n\nSee Console for file list.\nUpload target:\n{VrRemoteLoadPath}/",
+                "OK");
         }
 
         static IEnumerable<IResourceLocation> EnumerateLocations(UnityEngine.AddressableAssets.ResourceLocators.IResourceLocator locator)

@@ -1,0 +1,128 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="TrainingResultScreen.uss" />
+
+    <!--
+        Root wrapper: absolute-fill so the inner flex column has a real height.
+        ScrollView grows to fill the space; the footer button is pinned below it.
+    -->
+    <ui:VisualElement style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+                             flex-direction: column;">
+
+        <!-- ═══ SCROLLABLE CONTENT ═══ -->
+        <ui:ScrollView class="main-container" style="flex-grow: 1; flex-shrink: 1; min-height: 0;">
+            <ui:VisualElement class="results-content-align">
+
+                <!-- HEADER SECTION -->
+                <ui:VisualElement class="header-card">
+                    <ui:VisualElement class="header-main-column">
+                        <ui:Label text="" name="scenario-title" class="title-text" />
+                        <ui:VisualElement name="evaluation-badge" class="badge-neutral header-eval-badge">
+                            <ui:Label text="!" class="header-badge-icon" />
+                            <ui:Label text="Not evaluated" name="evaluation-status" class="badge-text" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="header-stats">
+                            <ui:VisualElement class="stat-box">
+                                <ui:VisualElement class="stat-box-inner">
+                                    <ui:VisualElement class="stat-icon stat-icon--clock" />
+                                    <ui:VisualElement class="stat-box-copy">
+                                        <ui:Label name="stat-label-duration" text="DURATION" class="stat-label" />
+                                        <ui:VisualElement class="stat-value-container">
+                                            <ui:Label text="—" name="duration-value" class="stat-value" />
+                                            <ui:Label name="duration-unit" class="stat-unit" />
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement class="stat-box">
+                                <ui:VisualElement class="stat-box-inner">
+                                    <ui:VisualElement class="stat-icon stat-icon--response" />
+                                    <ui:VisualElement class="stat-box-copy">
+                                        <ui:Label name="stat-label-first-response" text="FIRST RESPONSE" class="stat-label" />
+                                        <ui:Label text="—" name="first-response-value" class="stat-value stat-value--inline" />
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="score-box">
+                        <ui:Label name="score-label-total" text="TOTAL SCORE" class="score-label" />
+                        <ui:Label text="10" name="total-score" class="score-value" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <!-- FIRE ANALYSIS SECTION -->
+                <ui:VisualElement class="section-container">
+                    <ui:VisualElement class="section-header">
+                        <ui:VisualElement style="width: 20px; height: 20px; background-color: #94a3b8; margin-right: 8px; border-radius: 4px;" />
+                        <ui:Label name="section-title-fire" text="FIRE ANALYSIS" class="section-title" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="fire-analysis-grid" class="grid-container"/>
+                </ui:VisualElement>
+
+                <!-- OVERALL EVALUATION SECTION -->
+                <ui:VisualElement class="section-container">
+                    <ui:VisualElement class="section-header">
+                        <ui:VisualElement style="width: 20px; height: 20px; background-color: #94a3b8; margin-right: 8px; border-radius: 4px;" />
+                        <ui:Label name="section-title-eval" text="OVERALL EVALUATION" class="section-title" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="evaluation-list" class="list-container"/>
+                </ui:VisualElement>
+
+                <!-- CRITICAL POINTS -->
+                <ui:VisualElement class="section-container">
+                    <ui:VisualElement class="section-header">
+                        <ui:VisualElement class="critical-header-icon" />
+                        <ui:Label name="section-title-critical" text="CRITICAL POINTS" class="section-title-amber" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="critical-list" class="critical-container"/>
+                </ui:VisualElement>
+
+                <!-- ADVANCED DETAILS (TABLE) -->
+                <ui:VisualElement class="section-container">
+                    <ui:VisualElement class="section-header">
+                        <ui:VisualElement style="width: 20px; height: 20px; background-color: #94a3b8; margin-right: 8px; border-radius: 4px;" />
+                        <ui:Label name="section-title-advanced" text="ADVANCED DETAILS" class="section-title" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="table-container">
+                        <ui:VisualElement class="table-header-row">
+                            <ui:Label name="th-metric" text="METRIC" class="col-metric th-text" />
+                            <ui:Label name="th-recorded" text="RECORDED VALUE" class="col-value th-text" />
+                            <ui:Label name="th-target" text="TARGET / LIMIT" class="col-target th-text" />
+                            <ui:Label name="th-status" text="STATUS" class="col-status th-text" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="advanced-details-list" class="list-container"/>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+            </ui:VisualElement>
+        </ui:ScrollView>
+
+        <!-- ═══ FIXED FOOTER — outside ScrollView, always at the bottom ═══ -->
+        <ui:VisualElement name="results-footer"
+            picking-mode="Position"
+            style="flex-shrink: 0; flex-direction: row; justify-content: center;
+                   padding: 14px 32px;
+                   background-color: rgb(15,23,42);
+                   border-top-width: 1px; border-top-color: rgba(51,65,85,0.6);">
+            <ui:VisualElement style="width: 100%; max-width: 1120px; flex-direction: row; align-items: center; justify-content: space-between;">
+                <ui:VisualElement style="flex-grow: 1; flex-direction: row; justify-content: center; align-items: center;">
+                    <ui:Button name="btn-back-to-login-inner"
+                        text="Back to Login"
+                        picking-mode="Position"
+                        style="padding: 10px 28px; font-size: 14px; border-radius: 8px;
+                               background-color: rgb(30,41,59); color: rgb(148,163,184);
+                               border-width: 1px; border-color: rgba(148,163,184,0.35);
+                               -unity-font-style: bold; margin-right: 12px;" />
+                    <ui:Button name="btn-quit-application"
+                        text="Quit Game"
+                        picking-mode="Position"
+                        style="padding: 10px 28px; font-size: 14px; border-radius: 8px;
+                               background-color: rgb(30,41,59); color: rgb(248,113,113);
+                               border-width: 1px; border-color: rgba(248,113,113,0.45);
+                               -unity-font-style: bold;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

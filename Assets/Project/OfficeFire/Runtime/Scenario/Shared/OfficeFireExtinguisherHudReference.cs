@@ -6,6 +6,7 @@ namespace Woi.OfficeFire
     public static class OfficeFireExtinguisherHudReference
     {
         public const string HudObjectName = "EstinguisherHUD";
+        public const string HudObjectLegacyName = "Estinguisher-HUD";
         public const string UiRootObjectName = "05_UI";
 
         public static GameObject Resolve(GameObject cached)
@@ -23,6 +24,12 @@ namespace Woi.OfficeFire
                 {
                     return hudTransform.gameObject;
                 }
+
+                hudTransform = uiRoot.transform.Find(HudObjectLegacyName);
+                if (hudTransform != null)
+                {
+                    return hudTransform.gameObject;
+                }
             }
 
             GameObject found = GameObject.Find(HudObjectName);
@@ -31,7 +38,13 @@ namespace Woi.OfficeFire
                 return found;
             }
 
-            return FindInLoadedScenes(HudObjectName);
+            found = GameObject.Find(HudObjectLegacyName);
+            if (found != null)
+            {
+                return found;
+            }
+
+            return FindInLoadedScenes(HudObjectName) ?? FindInLoadedScenes(HudObjectLegacyName);
         }
 
         private static GameObject FindInLoadedScenes(string objectName)

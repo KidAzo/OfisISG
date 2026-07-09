@@ -37,7 +37,7 @@ public static class FirePlatformRuntime
         Initialize(portingVariable);
     }
 
-    /// <summary>Current <see cref="AppMode"/> from the porting asset, or <see cref="AppMode.PC"/> if uninitialized.</summary>
+    /// <summary>Current <see cref="AppMode"/> from the porting asset, or XR device fallback if uninitialized.</summary>
     public static AppMode CurrentMode
     {
         get
@@ -45,15 +45,32 @@ public static class FirePlatformRuntime
             if (_porting != null)
                 return _porting.CurrentValue;
 
+            if (IsXrDeviceActiveFallback())
+                return AppMode.XR;
+
             WarnPortingMissingOnce();
             return AppMode.PC;
         }
     }
 
-    public static bool IsPC => CurrentMode == AppMode.PC;
+    public static bool IsPC => !IsVR && CurrentMode == AppMode.PC;
 
-    /// <summary>True when porting is set to XR (VR target).</summary>
-    public static bool IsVR => CurrentMode == AppMode.XR;
+    /// <summary>
+    /// True on VR targets. Quest/Android uses an active XR device even when the porting asset still says PC
+    /// (Hub Addressables can register a PC ScriptableObject instance before module wiring runs).
+    /// </summary>
+    public static bool IsVR =>
+        IsXrDeviceActiveFallback()
+        || (_porting != null && _porting.CurrentValue == AppMode.XR);
+
+    public static bool IsXrDeviceActiveFallback()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        return UnityEngine.XR.XRSettings.isDeviceActive;
+#else
+        return false;
+#endif
+    }
 
     static void WarnPortingMissingOnce()
     {

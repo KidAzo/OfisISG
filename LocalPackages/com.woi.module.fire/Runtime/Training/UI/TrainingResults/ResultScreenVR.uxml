@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="TrainingResultScreen.uss" />
+    <Style src="ResultScreenVR.uss" />
+
+    <!-- TrainingResultScreenController: fire-analysis-grid, evaluation-list, critical-list, advanced-details-list + aynı isimli header alanları -->
+    <ui:VisualElement name="result-screen-vr-root" class="result-screen-vr-root">
+        <ui:VisualElement name="result-screen-vr-panel" class="result-screen-vr-panel">
+
+            <ui:ScrollView name="result-screen-vr-scroll" class="result-screen-vr-scroll"
+                style="flex-grow: 1; flex-shrink: 1; min-height: 0;">
+                <ui:VisualElement name="result-screen-vr-scroll-inner" class="result-screen-vr-scroll-inner">
+
+                    <ui:VisualElement class="vr-header-card">
+                        <ui:VisualElement class="vr-header-main">
+                            <ui:Label name="scenario-title" text="" class="vr-title" />
+                            <ui:VisualElement name="evaluation-badge" class="vr-success-pill badge-neutral">
+                                <ui:VisualElement class="vr-success-pill-icon">
+                                    <ui:Label text="!" class="vr-success-pill-bang header-badge-icon" />
+                                </ui:VisualElement>
+                                <ui:Label name="evaluation-status" text="" class="vr-success-pill-text badge-text" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="vr-stat-row">
+                                <ui:VisualElement class="vr-stat-tile">
+                                    <ui:VisualElement class="vr-stat-tile-inner">
+                                        <ui:VisualElement class="vr-icon-element vr-icon-element--circle">
+                                            <ui:VisualElement class="vr-icon-clock-dot" />
+                                        </ui:VisualElement>
+                                        <ui:VisualElement class="vr-stat-copy">
+                                            <ui:Label name="stat-label-duration" text="" class="vr-stat-label" />
+                                            <ui:VisualElement class="vr-stat-value-row">
+                                                <ui:Label name="duration-value" text="—" class="vr-stat-value" />
+                                                <ui:Label name="duration-unit" text="" class="vr-stat-unit" />
+                                            </ui:VisualElement>
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                                <ui:VisualElement class="vr-stat-tile">
+                                    <ui:VisualElement class="vr-stat-tile-inner">
+                                        <ui:VisualElement class="vr-icon-element vr-icon-element--rounded">
+                                            <ui:VisualElement class="vr-icon-zap-bar" />
+                                        </ui:VisualElement>
+                                        <ui:VisualElement class="vr-stat-copy">
+                                            <ui:Label name="stat-label-first-response" text="" class="vr-stat-label" />
+                                            <ui:VisualElement class="vr-stat-value-row">
+                                                <ui:Label name="first-response-value" text="—" class="vr-stat-value" />
+                                                <ui:Label name="first-response-unit" text="" class="vr-stat-unit" />
+                                            </ui:VisualElement>
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="vr-score-box">
+                            <ui:Label name="score-label-total" text="" class="vr-score-label" />
+                            <ui:Label name="total-score" text="0" class="vr-score-value" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="vr-section vr-section--spaced">
+                        <ui:VisualElement class="vr-section-header">
+                            <ui:VisualElement class="vr-section-marker" />
+                            <ui:Label name="section-title-fire" text="" class="vr-section-title" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="fire-analysis-grid" class="grid-container" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="vr-section vr-section--spaced">
+                        <ui:VisualElement class="vr-section-header">
+                            <ui:VisualElement class="vr-section-marker" />
+                            <ui:Label name="section-title-eval" text="" class="vr-section-title" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="evaluation-list" class="list-container" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="vr-critical-block">
+                        <ui:VisualElement class="vr-critical-header">
+                            <ui:VisualElement class="vr-icon-element vr-icon-element--alert">
+                                <ui:VisualElement class="vr-icon-element__inner" />
+                            </ui:VisualElement>
+                            <ui:Label name="section-title-critical" text="" class="vr-critical-title section-title-amber" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="critical-list" class="critical-container" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="vr-section vr-section--tight-bottom">
+                        <ui:VisualElement class="vr-section-header">
+                            <ui:VisualElement class="vr-section-marker" />
+                            <ui:Label name="section-title-advanced" text="" class="vr-section-title" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="table-container">
+                            <ui:VisualElement class="table-header-row">
+                                <ui:Label name="th-metric" text="" class="col-metric th-text" />
+                                <ui:Label name="th-recorded" text="" class="col-value th-text" />
+                                <ui:Label name="th-target" text="" class="col-target th-text" />
+                                <ui:Label name="th-status" text="" class="col-status th-text" />
+                            </ui:VisualElement>
+                            <ui:VisualElement name="advanced-details-list" class="list-container" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                </ui:VisualElement>
+            </ui:ScrollView>
+
+            <ui:VisualElement name="results-footer" class="result-screen-vr-footer" picking-mode="Position"
+                style="flex-direction: row; justify-content: center; align-items: center;">
+                <ui:Button name="btn-return-menu" text="" class="result-screen-vr-footer-btn" picking-mode="Position"
+                    style="margin-right: 12px;" />
+                <ui:Button name="btn-quit-application" text="Quit Game" class="result-screen-vr-footer-btn" picking-mode="Position" />
+            </ui:VisualElement>
+
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

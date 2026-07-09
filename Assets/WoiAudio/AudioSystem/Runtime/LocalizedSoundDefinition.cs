@@ -20,6 +20,28 @@ namespace WoiUtils.AudioSystem
         public SoundDefinition ResolveForCurrentLanguage() =>
             LocalizedLanguageAssetResolver.Pick(english, turkish);
 
+        /// <summary>
+        /// True when <paramref name="sound"/> is assigned on any loaded <see cref="LocalizedSoundDefinition"/> (EN or TR slot).
+        /// </summary>
+        public static bool ContainsSound(SoundDefinition sound)
+        {
+            if (sound == null)
+                return false;
+
+            LocalizedSoundDefinition[] defs = Resources.FindObjectsOfTypeAll<LocalizedSoundDefinition>();
+            for (int i = 0; i < defs.Length; i++)
+            {
+                LocalizedSoundDefinition def = defs[i];
+                if (def == null)
+                    continue;
+
+                if (ReferenceEquals(def.english, sound) || ReferenceEquals(def.turkish, sound))
+                    return true;
+            }
+
+            return false;
+        }
+
 #if UNITY_EDITOR
         private void OnValidate()
         {

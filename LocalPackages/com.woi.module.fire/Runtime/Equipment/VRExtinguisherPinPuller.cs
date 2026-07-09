@@ -73,62 +73,102 @@ namespace Woi.Equipment
         InputActionReference _nozzleSnapGripHold;
 
         [Header("Input")]
-        [Tooltip("PC'deki R tuşuna denk gelen VR pimi çekme butonu (Primary: sağ A / sol X). " +
-                 "Addressable build'lerde asset referansı çözümlenemezse _isLeftHand üzerinden ServiceLocator'dan fallback alınır.")]
+        [Tooltip("PC'deki R tuşuna denk gelen VR pimi çekme butonu (sol X / sağ A). " +
+                 "Addressable build'lerde asset referansı çözümlenemezse runtime PrimaryButton fallback kullanılır.")]
         public InputActionReference pullInput;
 
         [Tooltip("Bu bileşen sol elde mi? (Addressable build fallback için: sol=LeftControllerPinPulling, sağ=RightControllerPinPulling)")]
         [SerializeField] private bool _isLeftHand = false;
 
         private InputAction _resolvedAction;
+        private InputAction _runtimePullAction;
         private Coroutine _inputResolveCoroutine;
         static bool s_loggedMissingPullInput;
 
         private void OnEnable()
         {
-            _resolvedAction = ResolveInputAction();
-
-            if (_resolvedAction != null)
-            {
-                SubscribePullAction();
-                return;
-            }
-
-            if (!s_loggedMissingPullInput)
-            {
-                s_loggedMissingPullInput = true;
-                Debug.LogWarning(
-                    "[VRExtinguisherPinPuller] pullInput şu an çözümlenemedi — InputManager hazır olunca yeniden denenecek. " +
-                    "Sorun devam ederse: XR Origin prefab'ında pullInput referansı ve _isLeftHand ayarını doğrulayın.",
-                    this);
-            }
-
-            _inputResolveCoroutine = StartCoroutine(RetryResolveInputAction());
+            BindPullAction();
         }
 
         /// <summary>
-        /// Addressable build'lerde <see cref="InputActionReference"/> null dönebilir çünkü
-        /// .inputactions asset'i ayrı bir bundle'a paketlenir ve InputActionReference
-        /// bu bundle'dan yüklenen instance'ı InputSystem registry'sinde bulamaz. Bu
-        /// durumda ServiceLocator üzerinden <see cref="InputManager"/> runtime instance'ından
-        /// (new PlayerInputActions()) doğrudan action alınır — referans sorunu yoktur.
+        /// <see cref="VRHandExtinguisherGrabber"/> ile aynı sıra: asset referansı, yoksa doğrudan
+        /// <c>&lt;XRController&gt;/{PrimaryButton}</c> (sol X / sağ A). Trigger spray için ayrı kalır.
         /// </summary>
-        private InputAction ResolveInputAction()
+        InputAction ResolvePullAction()
         {
-            // Önce asset referansını dene (editor + non-addressable build)
             if (pullInput != null && pullInput.action != null)
                 return pullInput.action;
 
-            // Addressable build fallback: ServiceLocator'daki InputManager runtime instance'ından al
-            if (ServiceLocator.TryGet<IInputProvider>(out var provider) && provider?.InputActions != null)
+            EnsureRuntimePullAction();
+            return _runtimePullAction;
+        }
+
+        void EnsureRuntimePullAction()
+        {
+            if (_runtimePullAction != null)
+                return;
+
+            string hand = _isLeftHand ? "LeftHand" : "RightHand";
+            _runtimePullAction = new InputAction(
+                $"VrExtinguisherPinPull_{hand}",
+                InputActionType.Button,
+                $"<XRController>{{{hand}}}/{{PrimaryButton}}");
+        }
+
+        void BindPullAction()
+        {
+            UnbindPullAction();
+            _resolvedAction = ResolvePullAction();
+            if (_resolvedAction == null)
             {
-                var gameplay = provider.InputActions.Gameplay;
-                return _isLeftHand
-                    ? gameplay.LeftControllerPinPulling
-                    : gameplay.RightControllerPinPulling;
+                if (!s_loggedMissingPullInput)
+                {
+                    s_loggedMissingPullInput = true;
+                    Debug.LogWarning(
+                        "[VRExtinguisherPinPuller] Pin-pull InputAction çözümlenemedi — InputManager hazır olunca yeniden denenecek.",
+                        this);
+                }
+
+                if (_inputResolveCoroutine == null && isActiveAndEnabled)
+                    _inputResolveCoroutine = StartCoroutine(RetryResolveInputAction());
+                return;
             }
 
-            return null;
+            _resolvedAction.Enable();
+            _resolvedAction.performed += OnPullStarted;
+            Debug.Log(
+                $"[PinPuller] BindPullAction OK. El={(_isLeftHand ? "Sol" : "Sag")} " +
+                $"Action='{_resolvedAction.name}' runtimeXri={ReferenceEquals(_resolvedAction, _runtimePullAction)} " +
+                $"Enabled={_resolvedAction.enabled}",
+                this);
+        }
+
+        void UnbindPullAction()
+        {
+            if (_resolvedAction != null)
+            {
+                _resolvedAction.performed -= OnPullStarted;
+                if (ReferenceEquals(_resolvedAction, _runtimePullAction))
+                    _resolvedAction.Disable();
+            }
+
+            _resolvedAction = null;
+        }
+
+        void DisposeRuntimePullAction()
+        {
+            if (_runtimePullAction == null)
+                return;
+
+            _runtimePullAction.performed -= OnPullStarted;
+            _runtimePullAction.Disable();
+            _runtimePullAction.Dispose();
+            _runtimePullAction = null;
+        }
+
+        private void OnDestroy()
+        {
+            DisposeRuntimePullAction();
         }
 
         private IEnumerator RetryResolveInputAction()
@@ -141,10 +181,9 @@ namespace Woi.Equipment
                 yield return null;
                 retries++;
 
-                _resolvedAction = ResolveInputAction();
+                RefreshPullInputBinding();
                 if (_resolvedAction != null)
                 {
-                    SubscribePullAction();
                     _inputResolveCoroutine = null;
                     yield break;
                 }
@@ -162,11 +201,35 @@ namespace Woi.Equipment
             _inputResolveCoroutine = null;
         }
 
-        private void SubscribePullAction()
+        /// <summary>
+        /// Re-resolves pin-pull InputAction after InputManager / scenario sync (Hub Addressables load order).
+        /// </summary>
+        public void RefreshPullInputBinding()
         {
-            _resolvedAction.Enable();
-            _resolvedAction.performed += OnPullStarted;
-            Debug.Log($"[PinPuller] SubscribePullAction OK. El={(_isLeftHand?"Sol":"Sag")} Action='{_resolvedAction.name}' Enabled={_resolvedAction.enabled}");
+            bool wasEnabled = enabled;
+            if (wasEnabled)
+                enabled = false;
+
+            DisposeRuntimePullAction();
+
+            if (wasEnabled)
+                enabled = true;
+            else
+                BindPullAction();
+        }
+
+        /// <summary>Rebinds every active pin puller after InputManager / XR rig wiring (Hub Addressables load order).</summary>
+        public static void RefreshAllPullInputBindings()
+        {
+            VRExtinguisherPinPuller[] pullers = UnityEngine.Object.FindObjectsByType<VRExtinguisherPinPuller>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < pullers.Length; i++)
+            {
+                if (pullers[i] != null)
+                    pullers[i].RefreshPullInputBinding();
+            }
         }
 
         private void OnDisable()
@@ -177,11 +240,7 @@ namespace Woi.Equipment
                 _inputResolveCoroutine = null;
             }
 
-            if (_resolvedAction != null)
-            {
-                _resolvedAction.performed -= OnPullStarted;
-                _resolvedAction = null;
-            }
+            UnbindPullAction();
 
             if (_snapCoroutine != null)
             {
@@ -442,9 +501,9 @@ namespace Woi.Equipment
                     continue;
                 }
 
-                if (!item.IsEquipped)
+                if (!IsEligibleForPinPull(item))
                 {
-                    Debug.Log($"[PinPuller] ATLANDI '{item.name}': IsEquipped=FALSE (IL2CPP reflection sorunu mu?)");
+                    Debug.Log($"[PinPuller] ATLANDI '{item.name}': VR tutuş/kuşanma yok (IsEquipped={item.IsEquipped})");
                     continue;
                 }
 
@@ -478,6 +537,27 @@ namespace Woi.Equipment
             {
                 Debug.Log("[PinPuller] Hedef bulunamadı — pim çekilmedi.");
             }
+        }
+
+        static bool IsEligibleForPinPull(ExtinguisherPickupItem item)
+        {
+            if (item == null)
+                return false;
+
+            if (item.IsEquipped)
+                return true;
+
+            VRHandExtinguisherGrabber[] grabbers = UnityEngine.Object.FindObjectsByType<VRHandExtinguisherGrabber>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < grabbers.Length; i++)
+            {
+                if (grabbers[i] != null && grabbers[i].HeldExtinguisher == item)
+                    return true;
+            }
+
+            return false;
         }
 
         private void PullPinOnItem(ExtinguisherPickupItem item)

@@ -1,4 +1,5 @@
 using System;
+using Woi.Events.Data;
 using WOI.Modules.SDK;
 
 namespace Woi.UI.Popups.Localization
@@ -26,6 +27,10 @@ namespace Woi.UI.Popups.Localization
 
         private static string ResolveLanguageCode()
         {
+            // Login/session choice is authoritative across Hub bootstrap, Addressables content, and fire login.
+            if (SessionLanguageState.HasUserChoice && !string.IsNullOrEmpty(SessionLanguageState.LanguageCode))
+                return SessionLanguageState.LanguageCode.Trim().ToLowerInvariant();
+
             if (ServiceLocator.TryGet<ILocalizationService>(out var loc) && loc != null && !string.IsNullOrEmpty(loc.CurrentLanguage))
                 return loc.CurrentLanguage.Trim().ToLowerInvariant();
 

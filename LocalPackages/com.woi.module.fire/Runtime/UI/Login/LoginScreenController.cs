@@ -671,10 +671,15 @@ namespace Woi.UI.Navigation
 
         private void SyncDropdownFromLocalizationService()
         {
-            if (_languageDropdown == null || !TryGetLocalization(out var loc))
+            if (_languageDropdown == null)
                 return;
 
-            string code = GetLocalizationCurrentLanguage(loc)?.Trim().ToLowerInvariant();
+            string code = null;
+            if (SessionLanguageState.HasUserChoice && !string.IsNullOrWhiteSpace(SessionLanguageState.LanguageCode))
+                code = SessionLanguageState.LanguageCode.Trim().ToLowerInvariant();
+            else if (TryGetLocalization(out var loc))
+                code = GetLocalizationCurrentLanguage(loc)?.Trim().ToLowerInvariant();
+
             if (string.IsNullOrEmpty(code)) code = LangTurkish;
             string label = code == LangEnglish ? "English" : "Türkçe";
 
@@ -691,6 +696,7 @@ namespace Woi.UI.Navigation
         private void ApplyLanguageFromDropdown(string dropdownLabel)
         {
             string code = LanguageCodeFromDropdownLabel(dropdownLabel);
+            SessionLanguageState.RecordUserChoice(code);
 
             if (TryGetLocalization(out var loc))
                 InvokeLocalizationSetLanguage(loc, code);

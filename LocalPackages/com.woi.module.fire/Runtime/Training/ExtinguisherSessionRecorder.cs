@@ -5,6 +5,7 @@ using FireExtinguisher.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Woi.Equipment;
+using Woi.Events.Data;
 using Woi.Game.Training.FireSelection;
 using WoiUtils.AudioSystem;
 
@@ -292,6 +293,7 @@ namespace Woi.Game.Training
             _fireBlanketUsed               = false;
             _timeline.Clear();
             _timeline.Add(new TrainingTimelineEvent(0f, TrainingTimelineEventKind.SessionStarted));
+            TrainingSessionLifecycleState.NotifySessionStarted();
             _firstSprayTime             = -1f;
             _currentSprayStartTime      = -1f;
             _accumulatedSprayDuration   = 0f;

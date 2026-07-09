@@ -47,13 +47,13 @@ namespace Woi.InputSystem
             private bool pinPullingEnabled = true;
 
             public bool IsFireHolding =>
-                inputActions != null && inputActions.Gameplay.Fire.IsPressed();
+                fireEnabled && inputActions != null && inputActions.Gameplay.Fire.IsPressed();
 
             public bool IsFireStartedThisFrame =>
-                inputActions != null && inputActions.Gameplay.Fire.WasPressedThisFrame();
+                fireEnabled && inputActions != null && inputActions.Gameplay.Fire.WasPressedThisFrame();
 
             public bool IsFireStoppedThisFrame =>
-                inputActions != null && inputActions.Gameplay.Fire.WasReleasedThisFrame();
+                fireEnabled && inputActions != null && inputActions.Gameplay.Fire.WasReleasedThisFrame();
             
             public override void OnEnter()
             {
@@ -208,13 +208,10 @@ namespace Woi.InputSystem
 
             private void OnGameplayFinished(InputAction.CallbackContext ctx)
             {
-                if (portingVariable != null && portingVariable.CurrentValue == AppMode.XR)
-                {
-                    SoapScriptableEventUtility.RaiseNoParam(preOnGameplayFinishedInput);
-                    return;
-                }
-
-                SoapScriptableEventUtility.RaiseNoParam(onGameplayFinishedInput);
+                // PC + XR: önce çıkış onay paneli. Oturum sonu yalnızca ExitPanel EVET → LevelController.RequestEndSessionFromExitPanel.
+                // PC'de Tab hem ExitPanelController (_openPanelAction / GameplayFinished.started) hem de bu callback'i tetikler;
+                // onGameplayFinishedInput burada raise edilirse oturum EVET'ten önce biter ve result ekranı panelin arkasında kalır.
+                SoapScriptableEventUtility.RaiseNoParam(preOnGameplayFinishedInput);
             }
             
             // Runtime input control methods

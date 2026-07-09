@@ -21,18 +21,12 @@ namespace FireExtinguisher.Porting
         [SerializeField] private PCAimProvider _pcAimProvider;
         [SerializeField] private VRAimProvider _vrAimProvider;
 
-        private IAimProvider ActiveProvider
-        {
-            get
-            {
-                if (_appMode != null && _appMode.CurrentValue == AppMode.XR)
-                {
-                    return _vrAimProvider;
-                }
-                
-                return _pcAimProvider;
-            }
-        }
+        bool UseVrProvider =>
+            _appMode != null && _appMode.CurrentValue == AppMode.XR
+            || (_appMode == null && FirePlatformRuntime.IsSourceInitialized && FirePlatformRuntime.IsVR)
+            || (_appMode == null && !FirePlatformRuntime.IsSourceInitialized && IsXrDeviceActiveFallback());
+
+        IAimProvider ActiveProvider => UseVrProvider ? _vrAimProvider : _pcAimProvider;
 
         public Vector3 SprayOrigin => ActiveProvider != null ? ActiveProvider.SprayOrigin : Vector3.zero;
         public Vector3 SprayDirection => ActiveProvider != null ? ActiveProvider.SprayDirection : Vector3.forward;
@@ -44,13 +38,40 @@ namespace FireExtinguisher.Porting
         private void Awake()
         {
             if (_appMode == null)
-                Debug.LogWarning("[AutoAimProvider] AppMode porting variable is not assigned! Defaulting to PC.", this);
-                
+                Debug.LogWarning("[AutoAimProvider] AppMode porting variable is not assigned! Using FirePlatformRuntime / XR device fallback.", this);
+
             if (_pcAimProvider == null)
                 _pcAimProvider = GetComponent<PCAimProvider>();
-                
+
             if (_vrAimProvider == null)
                 _vrAimProvider = GetComponent<VRAimProvider>();
+
+            ApplyProviderEnabledState();
+        }
+
+        private void OnEnable()
+        {
+            ApplyProviderEnabledState();
+        }
+
+        void ApplyProviderEnabledState()
+        {
+            bool useVr = UseVrProvider;
+
+            if (_pcAimProvider != null)
+                _pcAimProvider.enabled = !useVr;
+
+            if (_vrAimProvider != null)
+                _vrAimProvider.enabled = useVr;
+        }
+
+        static bool IsXrDeviceActiveFallback()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return UnityEngine.XR.XRSettings.isDeviceActive;
+#else
+            return false;
+#endif
         }
     }
 }

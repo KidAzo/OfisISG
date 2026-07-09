@@ -120,6 +120,18 @@ namespace WOI.Module.Fire.DI
 
 
 
+            // Destroy any surviving module bootstrap (a DontDestroyOnLoad PersistentSingleton). We match on the SDK
+            // IModuleBootstrap contract instead of the concrete type so this assembly need not reference the Bootstrap
+            // assembly. Destroying it fires its OnDestroy, which reopens the one-shot initialize gate — without this a
+            // re-launched module keeps the stale singleton (gate still latched) and never loads its gameplay scene →
+            // black screen on Return-to-Hub → re-launch.
+            DestroyModuleBootstraps();
+
+            DestroyNamedDontDestroyObject("OfficeFireAssemblyFadeOverlay");
+            DestroyNamedDontDestroyObject("OfficeFireAssembly-FadeOverlay");
+
+
+
             ServiceLocator.Unregister<IInputProvider>();
 
             ServiceLocator.Unregister<InputManager>();
@@ -159,6 +171,66 @@ namespace WOI.Module.Fire.DI
             if (component.gameObject != null)
 
                 Destroy(component.gameObject);
+
+        }
+
+
+
+        static void DestroyModuleBootstraps()
+
+        {
+
+            var behaviours = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(
+
+                FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+
+
+            foreach (var behaviour in behaviours)
+
+            {
+
+                if (behaviour != null && behaviour is WOI.Modules.SDK.Contracts.IModuleBootstrap)
+
+                    Destroy(behaviour.gameObject);
+
+            }
+
+        }
+
+
+
+        static void DestroyNamedDontDestroyObject(string objectName)
+
+        {
+
+            if (string.IsNullOrEmpty(objectName))
+
+                return;
+
+
+
+            var all = UnityEngine.Object.FindObjectsByType<Transform>(
+
+                FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+
+
+            for (int i = 0; i < all.Length; i++)
+
+            {
+
+                Transform t = all[i];
+
+                if (t == null || t.name != objectName)
+
+                    continue;
+
+
+
+                Destroy(t.gameObject);
+
+            }
 
         }
 

@@ -7,6 +7,8 @@
         "GUID:300ddb0b3e3cbe443b39a39c22fe8d86",
         "Woi.Player",
         "Woi.SceneGroup",
+        "Woi.Fire.Events",
+        "Woi.Porting",
         "GUID:e482584a5795fa4409047161cc21985d"
     ],
     "includePlatforms": [],

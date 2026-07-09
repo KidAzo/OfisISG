@@ -4,7 +4,9 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Woi.Equipment;
+using Woi.InputSystem;
 using Woi.UI.Announcements;
+using WOI.Modules.SDK;
 
 namespace Woi.OfficeFire
 {
@@ -143,7 +145,13 @@ namespace Woi.OfficeFire
                 pinPuller.enabled = false;
 
             pinPuller.myGrabber = grabber;
+#if UNITY_EDITOR
             pinPuller.pullInput = pullAction;
+#else
+            // Quest/Hub: InputActionReference.Create pin action often fails to receive XR trigger;
+            // leave null so VRExtinguisherPinPuller uses direct PrimaryButton runtime binding (sol X / sağ A).
+            pinPuller.pullInput = null;
+#endif
             pinPuller.pullRadius = 0.15f;
             pinPuller.detectionLayerMask = DetectionLayerMask;
             pinPuller.pinTag = "Pin";
@@ -168,6 +176,8 @@ namespace Woi.OfficeFire
 
             if (wasEnabled)
                 pinPuller.enabled = true;
+
+            pinPuller.RefreshPullInputBinding();
         }
 
         public static void EnsureJumpSuppressed()
@@ -380,7 +390,30 @@ namespace Woi.OfficeFire
                 }
             }
 #endif
+            if (ServiceLocator.TryGet<Woi.InputSystem.IInputProvider>(out var provider)
+                && provider?.InputActions != null)
+            {
+                InputAction action = ResolveNamedGameplayAction(provider.InputActions, actionName);
+                if (action != null)
+                    return InputActionReference.Create(action);
+            }
+
             return null;
+        }
+
+        static InputAction ResolveNamedGameplayAction(PlayerInputActions actions, string actionName)
+        {
+            if (actions == null || string.IsNullOrEmpty(actionName))
+                return null;
+
+            return actionName switch
+            {
+                "LeftControllerGrab" => actions.Gameplay.LeftControllerGrab,
+                "RightControllerGrab" => actions.Gameplay.RightControllerGrab,
+                "LeftControllerPinPulling" => actions.Gameplay.LeftControllerPinPulling,
+                "RightControllerPinPulling" => actions.Gameplay.RightControllerPinPulling,
+                _ => null,
+            };
         }
 
         static PlayerExtinguisherEquipment FindPrimaryPcExtinguisherEquipment()

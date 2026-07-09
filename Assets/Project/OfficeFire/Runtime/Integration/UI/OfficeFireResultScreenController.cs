@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Woi.Settings;
 using WOI.Modules.SDK;
+using WOI.Modules.SDK.Contracts;
 using Woi.InputSystem;
 
 namespace Woi.OfficeFire
@@ -106,6 +107,9 @@ namespace Woi.OfficeFire
         private ScrollView _missingList;
         private ScrollView _mistakesList;
         private Button _continueButton;
+        private Button _quitButton;
+
+        private bool _hubReturnMode;
 
         private OfficeFireScenarioReport _lastReport;
         private bool _uiBound;
@@ -306,6 +310,10 @@ namespace Woi.OfficeFire
             _mistakesSectionTitle.text = model.MistakesSectionTitle;
             _continueButton.text = model.ContinueButtonText;
 
+            _hubReturnMode = TryGetHubExitHandler(out _);
+            if (_quitButton != null)
+                _quitButton.text = _hubReturnMode ? model.HubReturnButtonText : model.QuitButtonText;
+
             _statusBadge.RemoveFromClassList("status-badge--pass");
             _statusBadge.RemoveFromClassList("status-badge--fail");
             _statusBadge.AddToClassList(model.Passed ? "status-badge--pass" : "status-badge--fail");
@@ -452,6 +460,11 @@ namespace Woi.OfficeFire
                 _continueButton.clicked -= HandleContinueClicked;
             }
 
+            if (_quitButton != null)
+            {
+                _quitButton.clicked -= HandleQuitApplicationClicked;
+            }
+
             _uiBound = false;
             _root = null;
             _statusBadge = null;
@@ -471,6 +484,7 @@ namespace Woi.OfficeFire
             _missingList = null;
             _mistakesList = null;
             _continueButton = null;
+            _quitButton = null;
         }
 
         private void BindUi(VisualElement root)
@@ -495,11 +509,18 @@ namespace Woi.OfficeFire
             _missingList = _root.Q<ScrollView>("missing-objectives-list");
             _mistakesList = _root.Q<ScrollView>("mistakes-list");
             _continueButton = _root.Q<Button>("btn-result-continue");
+            _quitButton = _root.Q<Button>("btn-quit-application");
 
             if (_continueButton != null)
             {
                 _continueButton.clicked -= HandleContinueClicked;
                 _continueButton.clicked += HandleContinueClicked;
+            }
+
+            if (_quitButton != null)
+            {
+                _quitButton.clicked -= HandleQuitApplicationClicked;
+                _quitButton.clicked += HandleQuitApplicationClicked;
             }
 
             _uiBound = _titleLabel != null
@@ -517,6 +538,38 @@ namespace Woi.OfficeFire
         private void HandleContinueClicked()
         {
             BeginReturnToLogin();
+        }
+
+        private void HandleQuitApplicationClicked()
+        {
+            // Launched from the Hub (addressable build content): return to the Hub shell instead of
+            // quitting the whole player. Standalone ("shared Global") builds fall through to Application.Quit.
+            if (TryGetHubExitHandler(out IModuleExitHandler exitHandler))
+            {
+                // Mark returning so OnDisable does not restore the gameplay (locked/hidden) cursor via
+                // ReleasePlayerInput while the Hub library scene is loading.
+                _isReturningToLogin = true;
+                ApplyMenuCursorForLogin();
+                Debug.Log("[OfficeFireResultScreenController] Return to Hub requested.", this);
+                exitHandler.RequestModuleExit();
+                return;
+            }
+
+            Debug.Log("[OfficeFireResultScreenController] Quit application requested.", this);
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
+
+        /// <summary>
+        /// True when the module was launched from the Hub, i.e. an <see cref="IModuleExitHandler"/> is
+        /// registered on the SDK <see cref="ServiceLocator"/>. Standalone builds have no handler registered.
+        /// </summary>
+        private static bool TryGetHubExitHandler(out IModuleExitHandler handler)
+        {
+            return ServiceLocator.TryGet(out handler) && handler != null;
         }
 
         private void BeginReturnToLogin()

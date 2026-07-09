@@ -1,0 +1,46 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement class="fire-card">
+        <ui:VisualElement class="fire-card-inner">
+            <ui:Label name="fire-name" class="card-title"/>
+            <ui:VisualElement class="card-row">
+                <ui:Label name="hdr-fire-class" text="Fire class" class="row-label"/>
+                <ui:Label name="fire-class" class="row-value"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="card-row">
+                <ui:Label name="hdr-required-ext" text="Required extinguisher" class="row-label"/>
+                <ui:Label name="fire-required" class="row-value"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="card-row">
+                <ui:Label name="hdr-used-ext" text="Used extinguisher" class="row-label"/>
+                <ui:Label name="fire-used" class="row-value"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="status-grid">
+                <ui:VisualElement class="status-box">
+                    <ui:Label name="hdr-status-correct" text="CORRECT CHOICE" class="status-label"/>
+                    <ui:Label name="correct-val" class="status-value"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="status-box">
+                    <ui:Label name="hdr-status-extinguished" text="EXTINGUISHED" class="status-label"/>
+                    <ui:Label name="extinguished-val" class="status-value"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="status-box">
+                    <ui:Label name="hdr-status-depleted" text="DEPLETED EARLY" class="status-label"/>
+                    <ui:Label name="depleted-val" class="status-value"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="fire-time-row" class="card-row" style="display: none;">
+                <ui:Label name="hdr-time-ext" text="Time to extinguish" class="row-label"/>
+                <ui:Label name="fire-time" class="row-value"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="fire-notes-panel" class="fire-notes-container" style="display: none;">
+                <ui:VisualElement class="fire-notes-icon-wrap">
+                    <ui:Label text="i" class="fire-notes-icon"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="fire-notes-content">
+                    <ui:Label name="hdr-notes-title" text="NOTES FOR THIS FIRE" class="fire-notes-title"/>
+                    <ui:Label name="fire-mistakes" class="fire-notes-text"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

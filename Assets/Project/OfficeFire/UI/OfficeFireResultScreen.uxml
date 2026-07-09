@@ -41,7 +41,10 @@
             <ui:Label name="mistakes-section-title" class="section-title text-red" text="Mistakes" />
             <ui:ScrollView name="mistakes-list" class="result-scroll" />
 
-            <ui:Button name="btn-result-continue" class="result-continue-button" text="Continue" />
+            <ui:VisualElement name="result-actions-footer" class="result-actions-footer">
+                <ui:Button name="btn-result-continue" class="result-action-button result-continue-button" text="Continue" />
+                <ui:Button name="btn-quit-application" class="result-action-button result-quit-button" text="Quit Game" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

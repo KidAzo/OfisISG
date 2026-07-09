@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Woi.Events.Data;
 using WOI.Modules.SDK;
 
 namespace Woi.UI.Popups.Localization
@@ -67,9 +68,28 @@ namespace Woi.UI.Popups.Localization
             if (dontDestroyOnLoad)
                 DontDestroyOnLoad(gameObject);
 
-            _currentLanguage = string.IsNullOrEmpty(defaultLanguageCode)
+            // SessionLanguageState is the authoritative login/session choice (shared across fire, waste, office).
+            // Seed from it so a freshly-awoken service (e.g. inside Addressables content loaded by the Hub) does not
+            // fall back to its Turkish default while the player picked English at login.
+            _currentLanguage = ResolveStartupLanguage();
+
+            SessionLanguageState.LanguageChanged += HandleSessionLanguageChanged;
+        }
+
+        private string ResolveStartupLanguage()
+        {
+            if (SessionLanguageState.HasUserChoice && !string.IsNullOrWhiteSpace(SessionLanguageState.LanguageCode))
+                return SessionLanguageState.LanguageCode.Trim().ToLowerInvariant();
+
+            return string.IsNullOrEmpty(defaultLanguageCode)
                 ? Turkish
                 : defaultLanguageCode.Trim().ToLowerInvariant();
+        }
+
+        private void HandleSessionLanguageChanged()
+        {
+            if (SessionLanguageState.HasUserChoice && !string.IsNullOrWhiteSpace(SessionLanguageState.LanguageCode))
+                SetLanguage(SessionLanguageState.LanguageCode);
         }
 
         private void Start()
@@ -79,6 +99,8 @@ namespace Woi.UI.Popups.Localization
 
         private void OnDestroy()
         {
+            SessionLanguageState.LanguageChanged -= HandleSessionLanguageChanged;
+
             TryUnregisterWithServiceLocator();
 
             if (Instance == this)

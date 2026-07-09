@@ -450,11 +450,7 @@ namespace Woi.UI.Announcements
 
         static bool PreferTurkishInline()
         {
-            string code = null;
-            if (ServiceLocator.TryGet<ILocalizationService>(out var iloc) && iloc != null)
-                code = iloc.CurrentLanguage;
-            else if (LocalizationService.Instance != null)
-                code = LocalizationService.Instance.CurrentLanguage;
+            string code = LocalizedLanguageAssetResolver.GetCurrentLanguageCode();
 
             if (string.IsNullOrWhiteSpace(code))
                 return true;

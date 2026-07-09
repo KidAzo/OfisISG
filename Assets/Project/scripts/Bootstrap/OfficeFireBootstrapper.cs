@@ -46,6 +46,13 @@ namespace Woi.Settings
             ServiceLocator.Cleared -= OnServiceLocatorCleared;
         }
 
+        private void OnDestroy()
+        {
+            // PersistentSingleton (DontDestroyOnLoad). Hub Return-to-Hub → Teardown destroys this object;
+            // without reopening the gate, the next launch's Initialize no-ops → black screen.
+            Interlocked.Exchange(ref _initializeGate, 0);
+        }
+
         protected override void Awake()
         {
             FirePlatformRuntime.TryInitialize(portingSettings);
@@ -128,6 +135,7 @@ namespace Woi.Settings
         private static bool IsBootstrapEntryKey(string entryKey)
         {
             return entryKey.Equals("Office_Boot", System.StringComparison.OrdinalIgnoreCase)
+                   || entryKey.Equals("Office Boot", System.StringComparison.OrdinalIgnoreCase)
                    || entryKey.IndexOf("Bootstrap", System.StringComparison.OrdinalIgnoreCase) >= 0;
         }
 

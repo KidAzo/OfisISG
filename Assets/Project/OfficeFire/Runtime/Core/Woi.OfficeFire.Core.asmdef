@@ -2,7 +2,8 @@
     "name": "Woi.OfficeFire.Core",
     "rootNamespace": "Woi.OfficeFire",
     "references": [
-        "GUID:a115a4c865666ac47b70044f91d4aea0"
+        "GUID:a115a4c865666ac47b70044f91d4aea0",
+        "GUID:6e3e8d4120e44a4498280af0a503d94d"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

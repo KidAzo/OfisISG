@@ -309,6 +309,33 @@ namespace Woi.OfficeFire.Editor
                 }
             }
 
+            const string AllAnimsPath = "Assets/Project/Characters/AnimationControllers/AllAnims.controller";
+            const string CharacterFbxPath = "Assets/Project/Ch/ChracterMaleUpdt.fbx";
+            RuntimeAnimatorController locomotionController =
+                AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(AllAnimsPath);
+            Avatar humanoidAvatar = null;
+            Object[] fbxAssets = AssetDatabase.LoadAllAssetsAtPath(CharacterFbxPath);
+            for (int i = 0; i < fbxAssets.Length; i++)
+            {
+                if (fbxAssets[i] is Avatar avatar)
+                {
+                    humanoidAvatar = avatar;
+                    break;
+                }
+            }
+
+            SerializedProperty overrideProp = so.FindProperty("locomotionControllerOverride");
+            if (overrideProp != null && locomotionController != null)
+            {
+                overrideProp.objectReferenceValue = locomotionController;
+            }
+
+            SerializedProperty avatarProp = so.FindProperty("humanoidAvatarOverride");
+            if (avatarProp != null && humanoidAvatar != null)
+            {
+                avatarProp.objectReferenceValue = humanoidAvatar;
+            }
+
             SerializedProperty endBehaviourProp = so.FindProperty("endBehaviour");
             if (endBehaviourProp != null)
             {

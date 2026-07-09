@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using FireExtinguisher.Core;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR;
+using Woi.Events.Data;
 using Woi.InputSystem;
 
 namespace FireExtinguisher.PC
@@ -20,6 +22,9 @@ namespace FireExtinguisher.PC
         private bool _prevSprayHeld;
         private bool _currentSprayHeld;
 
+        static InputAction _leftTriggerAction;
+        static InputAction _rightTriggerAction;
+
         public XRNode? OverrideVrHandNode { get; set; }
 
         private void OnEnable()
@@ -30,6 +35,11 @@ namespace FireExtinguisher.PC
         private void Start()
         {
             TryBindLiveInputContext();
+        }
+
+        private void OnDisable()
+        {
+            OverrideVrHandNode = null;
         }
 
         public bool IsUsingDifferentGameplayInputContext(GameplayInputContext liveContext) =>
@@ -80,7 +90,10 @@ namespace FireExtinguisher.PC
             }
             else
             {
-                _currentSprayHeld = ResolveFireInputReader()?.IsFireHolding ?? false;
+                if (TrainingGameplayBlockState.IsBlocked)
+                    _currentSprayHeld = false;
+                else
+                    _currentSprayHeld = ResolveFireInputReader()?.IsFireHolding ?? false;
             }
 
             _lastFrameCount = Time.frameCount;
@@ -88,15 +101,59 @@ namespace FireExtinguisher.PC
 
         private static bool GetVrTrigger(XRNode node)
         {
-            var devices = new List<InputDevice>();
+            if (TryGetVrTriggerFromInputSystem(node, out bool pressed))
+                return pressed;
+
+            return GetVrTriggerFromLegacyDevices(node);
+        }
+
+        static bool TryGetVrTriggerFromInputSystem(XRNode node, out bool pressed)
+        {
+            pressed = false;
+            InputAction action = GetOrCreateVrTriggerAction(node);
+            if (action == null)
+                return false;
+
+            if (!action.enabled)
+                action.Enable();
+
+            float axis = action.ReadValue<float>();
+            if (axis > 0.45f)
+            {
+                pressed = true;
+                return true;
+            }
+
+            pressed = action.IsPressed();
+            return true;
+        }
+
+        static InputAction GetOrCreateVrTriggerAction(XRNode node)
+        {
+            ref InputAction action = ref (node == XRNode.LeftHand ? ref _leftTriggerAction : ref _rightTriggerAction);
+            if (action != null)
+                return action;
+
+            string hand = node == XRNode.LeftHand ? "LeftHand" : "RightHand";
+            action = new InputAction(
+                $"VrExtinguisherSprayTrigger_{hand}",
+                InputActionType.Value,
+                $"<XRController>{{{hand}}}/{{trigger}}");
+            action.Enable();
+            return action;
+        }
+
+        private static bool GetVrTriggerFromLegacyDevices(XRNode node)
+        {
+            var devices = new List<UnityEngine.XR.InputDevice>();
             InputDevices.GetDevicesAtXRNode(node, devices);
             if (devices.Count == 0)
                 return false;
 
-            InputDevice device = devices[0];
-            if (device.TryGetFeatureValue(CommonUsages.trigger, out float triggerVal))
-                return triggerVal > 0.5f;
-            if (device.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggerBool))
+            UnityEngine.XR.InputDevice device = devices[0];
+            if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.trigger, out float triggerVal))
+                return triggerVal > 0.45f;
+            if (device.TryGetFeatureValue(UnityEngine.XR.CommonUsages.triggerButton, out bool triggerBool))
                 return triggerBool;
 
             return false;

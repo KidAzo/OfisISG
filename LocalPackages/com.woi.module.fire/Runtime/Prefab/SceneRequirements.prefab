@@ -239,7 +239,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3761971717763428319
 Transform:
   m_ObjectHideFlags: 0
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 5528670933972187828}
   - component: {fileID: 8793162784234804023}
   m_Layer: 5
-  m_Name: Estinguisher-HUD
+  m_Name: EstinguisherHUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -461,10 +461,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a546838fc795bd5408e9a9f3170e63ec, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExtinguisherHUDController
+  m_EditorClassIdentifier: Woi.Fire.EstinguisherHUD::ExtinguisherHUDController
   uiDocument: {fileID: 5528670933972187828}
   _capacityEvent: {fileID: 11400000, guid: 18a442aa79a72dd489aa411b5d00a071, type: 2}
   _extinguisherChangedEvent: {fileID: 11400000, guid: fd4ea8d7b21d0ed4b9ebf18b3ec87b54, type: 2}
+  _sessionEndedEvent: {fileID: 11400000, guid: 609421292b19b2a49b13eb3752b33ff0, type: 2}
   currentCapacity: 100
   remainingTime: 15
   isSpraying: 0
@@ -974,7 +975,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11bdc1fa99000114dbe7876a779a4a71, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Woi.Game.Training.UI.TrainingResultScreenSessionBinder
+  m_EditorClassIdentifier: Woi.Fire.Training::Woi.Game.Training.UI.TrainingResultScreenSessionBinder
   _recorder: {fileID: 3769065006107189349}
   _resultsScreenRoot: {fileID: 1234094045997558454}
   _controller: {fileID: 8563726407820530127}
@@ -991,7 +992,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02aad3d5b6600ef4084a2b555f758918, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Woi.Game.Training.UI.TrainingResultScreenController
+  m_EditorClassIdentifier: Woi.Fire.Training::Woi.Game.Training.UI.TrainingResultScreenController
   _document: {fileID: 7414991184662716162}
   _fireCardTemplate: {fileID: 9197481963319205126, guid: a63aefacaf2e746449066c64b0fd0762, type: 3}
   _evalRowTemplate: {fileID: 9197481963319205126, guid: de24b4d405aaa94488837cdee265be51, type: 3}

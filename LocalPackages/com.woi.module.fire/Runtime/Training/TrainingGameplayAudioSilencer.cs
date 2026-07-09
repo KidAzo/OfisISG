@@ -1,3 +1,4 @@
+using FireExtinguisher.Core;
 using UnityEngine;
 using Woi.Game.VFX;
 using WoiUtils.AudioSystem;
@@ -11,8 +12,9 @@ namespace Woi.Game.Training
     {
         public static void StopAllSceneGameplayAudio()
         {
-            StopAllAudioSystems();
             StopLoopDriverComponents();
+            StopAllExtinguisherDischarge();
+            StopAllAudioSystems();
             StopUnityAudioSources();
         }
 
@@ -50,6 +52,19 @@ namespace Woi.Game.Training
             {
                 if (sprayLoops[i] != null)
                     sprayLoops[i].ForceStopGameplayAudio();
+            }
+        }
+
+        static void StopAllExtinguisherDischarge()
+        {
+            ExtinguisherController[] controllers = Object.FindObjectsByType<ExtinguisherController>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+
+            for (int i = 0; i < controllers.Length; i++)
+            {
+                if (controllers[i] != null)
+                    controllers[i].StopDischargeIfActive();
             }
         }
 

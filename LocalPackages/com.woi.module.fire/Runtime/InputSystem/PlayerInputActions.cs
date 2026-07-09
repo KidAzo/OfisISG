@@ -363,6 +363,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f89"",
+                    ""path"": ""<XRController>{RightHand}/{TriggerButton}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""927206a9-3808-4e13-af88-9ca5e4f3b7ce"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",

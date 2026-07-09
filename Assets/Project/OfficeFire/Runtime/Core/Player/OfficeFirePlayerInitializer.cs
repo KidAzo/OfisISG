@@ -105,7 +105,7 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            Teleport(movementRoot, spawn, customPlayerRoot == null && xrOriginRoot != null);
+            Teleport(movementRoot, spawn, movementRoot == xrOriginRoot);
 
             Debug.Log(
                 $"[OfficeFirePlayerInitializer] Player initialized for scenario '{scenarioId}' at '{spawn.name}'.",
@@ -114,12 +114,22 @@ namespace Woi.OfficeFire
 
         private Transform ResolveMovementRoot()
         {
-            if (xrOriginRoot != null)
+            // VR teleports the XR Origin rig; PC teleports the PC player root. Scenes wire BOTH roots so the
+            // same scene supports PC and VR, so we must pick by platform instead of always preferring the XR
+            // Origin — otherwise on PC the unused XR Origin gets moved and the actual PC player stays put.
+            if (FirePlatformRuntime.IsVR && xrOriginRoot != null)
             {
                 return xrOriginRoot;
             }
 
-            return ResolvePlayerRoot();
+            Transform pcRoot = ResolvePlayerRoot();
+            if (pcRoot != null)
+            {
+                return pcRoot;
+            }
+
+            // PC root missing (not yet spawned / unassigned): fall back to the XR Origin if one exists.
+            return xrOriginRoot;
         }
 
         private Transform ResolvePlayerRoot()

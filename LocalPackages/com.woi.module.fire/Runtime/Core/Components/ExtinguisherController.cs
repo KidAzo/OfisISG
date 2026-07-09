@@ -386,6 +386,13 @@ namespace FireExtinguisher.Core
             OnSprayStopped?.Invoke();
         }
 
+        /// <summary>Ends active spray immediately (training results / session end).</summary>
+        public void StopDischargeIfActive()
+        {
+            if (_isDischarging)
+                StopDischarge();
+        }
+
         private void TickDischarge(float deltaTime)
         {
             // ── 1. Drain capacity ────────────────────────────────────────────────

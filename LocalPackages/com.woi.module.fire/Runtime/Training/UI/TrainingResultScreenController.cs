@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -33,6 +34,16 @@ namespace Woi.Game.Training.UI
                  "Wire LevelController.ReturnToLogin() here.")]
         [SerializeField] private UnityEvent _onBackToLogin;
 
+        [Header("UI Toolkit — runtime fallback")]
+        [Tooltip("Optional PC overlay PanelSettings. When the serialized UIDocument reference is missing PanelSettings (common in Hub Addressables builds), this or a runtime clone is applied.")]
+        [SerializeField] private PanelSettings _pcOverlayPanelSettings;
+
+        [SerializeField] private int _pcSortingOrder = 400;
+
+        private PanelSettings _runtimePanelSettings;
+        private TrainingResultScreenModel _pendingModel;
+        private Coroutine _presentWhenReadyRoutine;
+
         private VisualElement _root;
         private bool _useModernLayout;
         private bool _vrLayout;
@@ -48,24 +59,39 @@ namespace Woi.Game.Training.UI
 
         private void OnEnable()
         {
-            if (_document == null)
-                _document = GetComponent<UIDocument>();
-
-            if (_document != null)
+            UIDocument doc = ResolveDocument();
+            if (doc != null)
             {
                 // UI Toolkit VR etkileşimleri için zorunlu bileşenler
-                if (_document.gameObject.GetComponent<UnityEngine.UIElements.PanelEventHandler>() == null)
-                    _document.gameObject.AddComponent<UnityEngine.UIElements.PanelEventHandler>();
-                
-                if (_document.gameObject.GetComponent<UnityEngine.UIElements.PanelRaycaster>() == null)
-                    _document.gameObject.AddComponent<UnityEngine.UIElements.PanelRaycaster>();
+                if (doc.gameObject.GetComponent<UnityEngine.UIElements.PanelEventHandler>() == null)
+                    doc.gameObject.AddComponent<UnityEngine.UIElements.PanelEventHandler>();
+
+                if (doc.gameObject.GetComponent<UnityEngine.UIElements.PanelRaycaster>() == null)
+                    doc.gameObject.AddComponent<UnityEngine.UIElements.PanelRaycaster>();
+
+                EnsureDocumentReady();
+
+                if (doc.rootVisualElement != null)
+                {
+                    CacheRoots(doc.rootVisualElement);
+                    ApplyPortingVisibility();
+                }
             }
 
-            if (_document != null && _document.rootVisualElement != null)
+            if (_pendingModel != null && _presentWhenReadyRoutine == null && isActiveAndEnabled)
+                _presentWhenReadyRoutine = StartCoroutine(PresentWhenRootReady());
+        }
+
+        private void OnDestroy()
+        {
+            if (_presentWhenReadyRoutine != null)
             {
-                CacheRoots(_document.rootVisualElement);
-                ApplyPortingVisibility();
+                StopCoroutine(_presentWhenReadyRoutine);
+                _presentWhenReadyRoutine = null;
             }
+
+            if (_runtimePanelSettings != null)
+                Destroy(_runtimePanelSettings);
         }
 
         private void LateUpdate()
@@ -154,16 +180,150 @@ namespace Woi.Game.Training.UI
                 return;
             }
 
-            if (_document == null)
-                _document = GetComponent<UIDocument>();
+            EnsureDocumentReady();
 
-            if (_document == null || _document.rootVisualElement == null)
+            UIDocument doc = ResolveDocument();
+            if (doc == null)
+            {
+                Debug.LogError(
+                    $"[{nameof(TrainingResultScreenController)}] UIDocument missing on '{name}'. " +
+                    "Assign _document (e.g. ResultHUD) or add a UIDocument to this hierarchy.",
+                    this);
+                _pendingModel = model;
+                return;
+            }
+
+            if (doc.rootVisualElement == null)
+            {
+                _pendingModel = model;
+                if (_presentWhenReadyRoutine == null && isActiveAndEnabled)
+                    _presentWhenReadyRoutine = StartCoroutine(PresentWhenRootReady());
+                return;
+            }
+
+            _pendingModel = null;
+            PresentInternal(model);
+        }
+
+        /// <summary>True when the bound <see cref="UIDocument"/> has a built visual tree.</summary>
+        public bool IsDocumentRootReady
+        {
+            get
+            {
+                EnsureDocumentReady();
+                UIDocument doc = ResolveDocument();
+                return doc != null && doc.rootVisualElement != null;
+            }
+        }
+
+        /// <summary>
+        /// Ensures the result HUD <see cref="UIDocument"/> is active and has usable <see cref="PanelSettings"/>.
+        /// Hub Addressables builds often ship without a valid PanelSettings reference on ResultHUD.
+        /// </summary>
+        public void EnsureDocumentReady()
+        {
+            UIDocument doc = ResolveDocument();
+            if (doc == null)
+                return;
+
+            if (!doc.gameObject.activeSelf)
+                doc.gameObject.SetActive(true);
+
+            if (!doc.enabled)
+                doc.enabled = true;
+
+            if (doc.panelSettings == null)
+                doc.panelSettings = ResolvePanelSettings(doc);
+
+            if (doc.panelSettings != null && FirePlatformRuntime.IsPC)
+            {
+                doc.panelSettings.renderMode = PanelRenderMode.ScreenSpaceOverlay;
+                doc.sortingOrder = _pcSortingOrder;
+            }
+        }
+
+        UIDocument ResolveDocument()
+        {
+            if (_document != null)
+                return _document;
+
+            _document = GetComponent<UIDocument>();
+            if (_document != null)
+                return _document;
+
+            _document = GetComponentInChildren<UIDocument>(true);
+            return _document;
+        }
+
+        PanelSettings ResolvePanelSettings(UIDocument doc)
+        {
+            if (_pcOverlayPanelSettings != null)
+                return _pcOverlayPanelSettings;
+
+            if (doc != null && doc.panelSettings != null)
+                return doc.panelSettings;
+
+            PanelSettings[] found = Resources.FindObjectsOfTypeAll<PanelSettings>();
+            for (int i = 0; i < found.Length; i++)
+            {
+                if (found[i] != null)
+                    return found[i];
+            }
+
+            if (_runtimePanelSettings == null)
+            {
+                _runtimePanelSettings = ScriptableObject.CreateInstance<PanelSettings>();
+                _runtimePanelSettings.name = $"{nameof(TrainingResultScreenController)}_RuntimePanelSettings";
+                _runtimePanelSettings.renderMode = PanelRenderMode.ScreenSpaceOverlay;
+                _runtimePanelSettings.scaleMode = PanelScaleMode.ScaleWithScreenSize;
+                _runtimePanelSettings.referenceResolution = new Vector2Int(1920, 1080);
+                _runtimePanelSettings.sortingOrder = _pcSortingOrder;
+            }
+
+            return _runtimePanelSettings;
+        }
+
+        IEnumerator PresentWhenRootReady()
+        {
+            const int maxFrames = 120;
+            TrainingResultScreenModel model = _pendingModel;
+
+            for (int i = 0; i < maxFrames; i++)
+            {
+                EnsureDocumentReady();
+
+                UIDocument doc = ResolveDocument();
+                if (doc != null && doc.rootVisualElement != null)
+                {
+                    _presentWhenReadyRoutine = null;
+                    _pendingModel = null;
+                    PresentInternal(model);
+                    yield break;
+                }
+
+                yield return null;
+            }
+
+            _presentWhenReadyRoutine = null;
+            Debug.LogError(
+                $"[{nameof(TrainingResultScreenController)}] UIDocument root still missing after {maxFrames} frames on '{name}'. " +
+                "Check ResultHUD UIDocument sourceAsset / PanelSettings in the Addressables group.",
+                this);
+        }
+
+        void PresentInternal(TrainingResultScreenModel model)
+        {
+            if (model == null)
+                return;
+
+            UIDocument doc = ResolveDocument();
+            if (doc == null || doc.rootVisualElement == null)
             {
                 Debug.LogError($"[{nameof(TrainingResultScreenController)}] UIDocument or root missing.", this);
                 return;
             }
 
-            _root = _document.rootVisualElement;
+            _root = doc.rootVisualElement;
             CacheRoots(_root);
 
             if (_useModernLayout)
@@ -181,6 +341,9 @@ namespace Woi.Game.Training.UI
             _lastPresentLanguageCode = TrainingResultUiLanguage.ResolveCode();
 
             ApplyPortingVisibility();
+
+            if (!string.IsNullOrEmpty(_cachedTraineeName))
+                SetTraineeName(_cachedTraineeName);
         }
 
         /// <summary>
@@ -193,7 +356,7 @@ namespace Woi.Game.Training.UI
             _cachedTraineeName = name ?? string.Empty;
 
             if (_document == null)
-                _document = GetComponent<UIDocument>();
+                _document = ResolveDocument();
 
             VisualElement root = _document != null ? _document.rootVisualElement : _root;
             if (root == null) return;

@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement class="eval-item">
+        <ui:VisualElement name="eval-icon-box" class="eval-icon-box error-bg">
+            <ui:Label name="eval-icon-text" class="eval-icon-text text-error"/>
+        </ui:VisualElement>
+        <ui:VisualElement>
+            <ui:Label name="eval-title" class="eval-title"/>
+            <ui:Label name="eval-desc" class="eval-desc"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

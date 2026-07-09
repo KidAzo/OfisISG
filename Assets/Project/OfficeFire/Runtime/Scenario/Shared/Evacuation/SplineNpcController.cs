@@ -48,6 +48,14 @@ namespace Woi.OfficeFire
         [SerializeField]
         private Animator animator;
 
+        [Tooltip("Assigned on NPC prefabs/scene instances when Addressables strips Animator.m_Controller on Android.")]
+        [SerializeField]
+        private RuntimeAnimatorController locomotionControllerOverride;
+
+        [Tooltip("Humanoid avatar fallback when Addressables/Android fails to deserialize Avatar (class ID 90).")]
+        [SerializeField]
+        private Avatar humanoidAvatarOverride;
+
         [SerializeField]
         private string idleStateName = "Breathing Idle";
 
@@ -115,6 +123,11 @@ namespace Woi.OfficeFire
             {
                 animator = GetComponentInChildren<Animator>();
             }
+
+            EnsureAnimatorControllerAssigned();
+            EnsureHumanoidAvatarAssigned();
+            EnsureSkinnedMeshesUpdateWhenOffscreen();
+
             if (animator != null && animator.transform != transform)
             {
                 _animatorInitialLocalRotation = animator.transform.localRotation;
@@ -194,7 +207,12 @@ namespace Woi.OfficeFire
                 gameObject.SetActive(true);
             }
 
+            EnsureAnimatorControllerAssigned();
+            EnsureHumanoidAvatarAssigned();
             PlayAnimation(locomotionMode);
+
+            if (animator != null)
+                StartCoroutine(PlayAnimationAfterAnimatorReady(locomotionMode));
 
             if (MovesAlongPath)
             {
@@ -410,6 +428,61 @@ namespace Woi.OfficeFire
             return forward;
         }
 
+        void EnsureAnimatorControllerAssigned()
+        {
+            if (animator == null)
+                return;
+
+            if (animator.runtimeAnimatorController == null && locomotionControllerOverride != null)
+            {
+                animator.runtimeAnimatorController = locomotionControllerOverride;
+                Debug.Log(
+                    $"[SplineNpcController] Applied locomotionControllerOverride on '{name}' " +
+                    $"({locomotionControllerOverride.name}).",
+                    this);
+            }
+        }
+
+        void EnsureHumanoidAvatarAssigned()
+        {
+            if (animator == null)
+                return;
+
+            if (animator.avatar != null && animator.avatar.isValid)
+                return;
+
+            if (humanoidAvatarOverride != null)
+            {
+                animator.avatar = humanoidAvatarOverride;
+                Debug.Log($"[SplineNpcController] Applied humanoidAvatarOverride on '{name}'.", this);
+                return;
+            }
+
+            if (animator.avatar == null)
+            {
+                Debug.LogWarning(
+                    $"[SplineNpcController] Animator on '{name}' has no Avatar — humanoid clips stay in T-pose. " +
+                    "Assign humanoidAvatarOverride or rebuild Hub with AnimationModule preserved (link.xml).",
+                    this);
+            }
+        }
+
+        void EnsureSkinnedMeshesUpdateWhenOffscreen()
+        {
+            SkinnedMeshRenderer[] renderers = GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null)
+                    renderers[i].updateWhenOffscreen = true;
+            }
+        }
+
+        IEnumerator PlayAnimationAfterAnimatorReady(NpcLocomotionMode mode)
+        {
+            yield return null;
+            PlayAnimation(mode);
+        }
+
         private void PlayAnimation(NpcLocomotionMode mode)
         {
             if (animator == null)
@@ -417,29 +490,62 @@ namespace Woi.OfficeFire
                 return;
             }
 
+            if (animator.runtimeAnimatorController == null)
+            {
+                Debug.LogWarning(
+                    $"[SplineNpcController] Animator on '{name}' has no RuntimeAnimatorController — NPC stays in T-pose. " +
+                    "Assign locomotionControllerOverride on SplineNpcController or rebuild Addressables with NPC .anim clips.",
+                    this);
+                return;
+            }
+
             int stateHash;
             float speed;
+            string stateLabel;
 
             switch (mode)
             {
                 case NpcLocomotionMode.Run:
                     stateHash = _runStateHash;
                     speed = runAnimatorSpeed;
+                    stateLabel = runStateName;
                     break;
                 case NpcLocomotionMode.Walk:
                     stateHash = _walkStateHash;
                     speed = walkAnimatorSpeed;
+                    stateLabel = walkStateName;
                     break;
                 default:
                     stateHash = _idleStateHash;
                     speed = 1f;
+                    stateLabel = idleStateName;
                     break;
             }
 
+            if (!animator.HasState(0, stateHash))
+            {
+                Debug.LogWarning(
+                    $"[SplineNpcController] Animator state '{stateLabel}' not found on layer 0 for '{name}'. " +
+                    $"Controller='{animator.runtimeAnimatorController.name}'.",
+                    this);
+                return;
+            }
+
             animator.enabled = true;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             animator.speed = speed;
             animator.applyRootMotion = false;
+            animator.Rebind();
             animator.Play(stateHash, 0, 0f);
+            animator.Update(0f);
+
+            if (animator.GetCurrentAnimatorClipInfoCount(0) == 0)
+            {
+                Debug.LogWarning(
+                    $"[SplineNpcController] State '{stateLabel}' started on '{name}' but no AnimationClip is bound " +
+                    $"(controller={animator.runtimeAnimatorController.name}). Rebuild Addressables with NPC .anim dependencies.",
+                    this);
+            }
         }
 
         private void CacheAnimationHashes()

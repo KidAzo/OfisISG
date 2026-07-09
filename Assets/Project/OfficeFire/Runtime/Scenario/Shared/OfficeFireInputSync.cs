@@ -5,11 +5,11 @@ using Woi.InputSystem;
 namespace Woi.OfficeFire
 {
     /// <summary>
-    /// Re-syncs PC gameplay Soap events after office scenario roots activate.
+    /// Re-syncs gameplay input after office scenario roots activate (PC Soap events + VR pin-pull / grab).
     /// Hub + Addressables can load duplicate ScriptableObject instances; listeners that enable
     /// after <see cref="InputManager"/> sceneLoaded sync may miss the live Interact (E) chain.
     /// </summary>
-    internal static class OfficeFireInputSync
+    public static class OfficeFireInputSync
     {
         static readonly int[] RetryFrameDelays = { 0, 1, 2, 5, 15 };
 
@@ -30,6 +30,15 @@ namespace Woi.OfficeFire
             if (inputManager == null)
             {
                 Debug.LogWarning($"[OfficeFireInputSync] InputManager not found — skip sync ({reason}).");
+                return;
+            }
+
+            if (FirePlatformRuntime.IsVR)
+            {
+                inputManager.EnsureVrGameplayInputEnabled();
+                inputManager.SyncPcPlayerSoapEvents();
+                OfficeFireVrExtinguisherRigBootstrap.EnsureWired();
+                Debug.Log($"[OfficeFireInputSync] VR input synced ({reason}).");
                 return;
             }
 

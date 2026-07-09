@@ -385,7 +385,7 @@ public class InputManager : MonoBehaviour, IInputProvider
     /// </summary>
     public void EnsureVrGameplayInputEnabled()
     {
-        if (portingVariable != null && portingVariable.CurrentValue != AppMode.XR)
+        if (!FirePlatformRuntime.IsVR)
             return;
 
         if (inputActions == null)

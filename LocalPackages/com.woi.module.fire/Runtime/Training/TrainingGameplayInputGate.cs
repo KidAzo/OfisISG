@@ -1,4 +1,5 @@
 using UnityEngine;
+using Woi.Events.Data;
 using Woi.InputSystem;
 using Woi.Player;
 using WOI.Modules.SDK;
@@ -10,9 +11,7 @@ namespace Woi.Game.Training
     /// </summary>
     public static class TrainingGameplayInputGate
     {
-        static bool _blocked;
-
-        public static bool IsBlocked => _blocked;
+        public static bool IsBlocked => TrainingGameplayBlockState.IsBlocked;
 
         /// <summary>Call when a gameplay/training scene starts so stale block state from a prior session cannot linger.</summary>
         public static void ResetForSceneEntry()
@@ -22,7 +21,7 @@ namespace Woi.Game.Training
 
         public static void SetBlocked(bool blocked)
         {
-            _blocked = blocked;
+            TrainingGameplayBlockState.SetBlocked(blocked);
 
             GameplayInputContext ctx = ResolveGameplayInputContext();
             PlayerController player = ResolvePlayerController();
@@ -31,6 +30,7 @@ namespace Woi.Game.Training
             {
                 ctx?.DisableAllInputs();
                 player?.SuppressLocomotionInput();
+                TrainingGameplayAudioSilencer.StopAllSceneGameplayAudio();
                 return;
             }
 
@@ -39,7 +39,19 @@ namespace Woi.Game.Training
 
         static GameplayInputContext ResolveGameplayInputContext()
         {
+            InputManager inputManager = Object.FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            GameplayInputContext live = inputManager?.GetPcGameplayContext();
+            if (live != null)
+                return live;
+
             GameplayInputContext[] contexts = Resources.FindObjectsOfTypeAll<GameplayInputContext>();
+            for (int i = 0; i < contexts.Length; i++)
+            {
+                GameplayInputContext ctx = contexts[i];
+                if (ctx != null && ctx.HasInitializedInputActions)
+                    return ctx;
+            }
+
             for (int i = 0; i < contexts.Length; i++)
             {
                 if (contexts[i] != null)

@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using FireExtinguisher.Core;
+using Woi.Events.Data;
 using WOI.Modules.SDK;
 using Woi.Game.Training;
 using Woi.UI.Popups.Localization;
@@ -40,6 +41,9 @@ namespace Woi.Game.Training.UI
 
             if (LocalizationService.Instance != null && !string.IsNullOrEmpty(LocalizationService.Instance.CurrentLanguage))
                 return LocalizationService.Instance.CurrentLanguage.Trim().ToLowerInvariant();
+
+            if (SessionLanguageState.HasUserChoice && !string.IsNullOrEmpty(SessionLanguageState.LanguageCode))
+                return SessionLanguageState.LanguageCode.Trim().ToLowerInvariant();
 
             return LocalizationService.Turkish;
         }

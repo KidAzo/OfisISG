@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,7 +12,7 @@ namespace Woi.OfficeFire
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(UIDocument))]
-    [DefaultExecutionOrder(-50)]
+    [DefaultExecutionOrder(100)]
     public sealed class OfficeFireLoginWorldUiPresenter : MonoBehaviour
     {
         private const string WorldPanelSettingsPath =
@@ -41,9 +42,15 @@ namespace Woi.OfficeFire
         [SerializeField]
         private bool followHeadEachFrame = true;
 
+        [SerializeField]
+        private float billboardYawOffsetDegrees = 180f;
+
+        private static readonly int[] ColdStartSnapFrameDelays = { 0, 1, 2, 5, 15, 30, 60, 90, 120 };
+
         private PanelSettings _runtimePanelSettings;
         private bool _configuredForVr;
         private bool _geometryCallbackRegistered;
+        private Coroutine _coldStartVrRoutine;
         private static MethodInfo _uidocumentLateUpdate;
 
         private void Awake()
@@ -58,30 +65,41 @@ namespace Woi.OfficeFire
         private void OnEnable()
         {
             ApplyForCurrentMode();
+            BeginColdStartVrSetup();
         }
 
         private void OnDisable()
         {
+            CancelColdStartVrSetup();
             UnregisterGeometryCallback();
         }
 
         private void LateUpdate()
         {
-            if (!_configuredForVr || !followHeadEachFrame)
+            if (!_configuredForVr || !ShouldFollowHeadInVr())
                 return;
 
             SnapInFrontOfEye();
         }
 
+        private bool ShouldFollowHeadInVr()
+        {
+            // Login VR always tracks the active headset — scene may still serialize followHeadEachFrame off.
+            return followHeadEachFrame || FirePlatformRuntime.IsVR;
+        }
+
         /// <summary>Call after UXML binds so VR layout/collider refresh runs.</summary>
         public void NotifyContentReady()
         {
+            if (FirePlatformRuntime.IsVR && !_configuredForVr)
+                ApplyForCurrentMode();
+
             if (!_configuredForVr || uiDocument == null)
                 return;
 
             ApplyVrRootLayout();
             RegisterGeometryCallback();
-            ScheduleColliderRefresh();
+            RepositionInFrontOfPlayer();
         }
 
         public void ApplyForCurrentMode()
@@ -128,8 +146,7 @@ namespace Woi.OfficeFire
             _configuredForVr = true;
             ApplyVrRootLayout();
             RegisterGeometryCallback();
-            SnapInFrontOfEye();
-            ScheduleColliderRefresh();
+            RepositionInFrontOfPlayer();
         }
 
         private void ConfigureForPc()
@@ -169,54 +186,216 @@ namespace Woi.OfficeFire
             root.style.justifyContent = Justify.Center;
         }
 
-        private void SnapInFrontOfEye()
+        /// <summary>Places the panel once in front of the XR camera (used when followHeadEachFrame is off).</summary>
+        public void RepositionInFrontOfPlayer()
         {
-            Transform head = ResolveHeadTransform();
-            if (head == null)
+            if (!_configuredForVr)
                 return;
 
+            SnapInFrontOfEye();
+        }
+
+        private void BeginColdStartVrSetup()
+        {
+            if (!isActiveAndEnabled)
+                return;
+
+            CancelColdStartVrSetup();
+            _coldStartVrRoutine = StartCoroutine(ColdStartVrSetupRoutine());
+        }
+
+        private void CancelColdStartVrSetup()
+        {
+            if (_coldStartVrRoutine == null)
+                return;
+
+            StopCoroutine(_coldStartVrRoutine);
+            _coldStartVrRoutine = null;
+        }
+
+        private IEnumerator ColdStartVrSetupRoutine()
+        {
+            int previousDelay = 0;
+            for (int i = 0; i < ColdStartSnapFrameDelays.Length; i++)
+            {
+                int extraFrames = ColdStartSnapFrameDelays[i] - previousDelay;
+                for (int f = 0; f < extraFrames; f++)
+                    yield return null;
+
+                previousDelay = ColdStartSnapFrameDelays[i];
+
+                if (!isActiveAndEnabled)
+                    yield break;
+
+                if (FirePlatformRuntime.IsVR)
+                {
+                    ResolveXrRigRoot();
+                    if (!_configuredForVr)
+                        ConfigureForVr();
+                }
+
+                if (!_configuredForVr)
+                    continue;
+
+                RepositionInFrontOfPlayer();
+            }
+
+            if (_configuredForVr)
+                RepositionInFrontOfPlayer();
+
+            _coldStartVrRoutine = null;
+        }
+
+        private void SnapInFrontOfEye()
+        {
+            if (!TryResolveHeadTransform(out Transform head))
+                return;
+
+            if (transform.parent != null)
+                transform.SetParent(null, true);
+
             Vector3 worldPos = head.TransformPoint(localOffsetFromEye);
-            transform.position = worldPos;
-            transform.localRotation = Quaternion.identity;
+            Quaternion worldRot = ComputeBillboardRotation(head, worldPos);
+            transform.SetPositionAndRotation(worldPos, worldRot);
 
             SyncUidocumentWorldTransform();
         }
 
+        private Quaternion ComputeBillboardRotation(Transform eye, Vector3 panelWorldPosition)
+        {
+            Vector3 toCamera = eye.position - panelWorldPosition;
+            toCamera.y = 0f;
+
+            if (toCamera.sqrMagnitude < 1e-6f)
+                toCamera = new Vector3(-eye.forward.x, 0f, -eye.forward.z);
+
+            if (toCamera.sqrMagnitude < 1e-6f)
+                return Quaternion.identity;
+
+            Quaternion face = Quaternion.LookRotation(toCamera.normalized, Vector3.up);
+            if (Mathf.Abs(billboardYawOffsetDegrees) > 1e-3f)
+                face *= Quaternion.Euler(0f, billboardYawOffsetDegrees, 0f);
+
+            return face;
+        }
+
+        private bool TryResolveHeadTransform(out Transform head)
+        {
+            head = ResolveHeadTransform();
+            return head != null;
+        }
+
         private Transform ResolveHeadTransform()
         {
+            if (xrRigRoot == null || !IsUsableRigRoot(xrRigRoot))
+                ResolveXrRigRoot(forceRefresh: true);
+
             if (xrRigRoot != null)
             {
                 Camera rigCamera = xrRigRoot.GetComponentInChildren<Camera>(true);
-                if (rigCamera != null)
+                if (rigCamera != null && rigCamera.isActiveAndEnabled)
                     return rigCamera.transform;
             }
 
             Camera main = Camera.main;
-            return main != null ? main.transform : null;
+            if (main != null && main.isActiveAndEnabled)
+                return main.transform;
+
+            Camera[] cameras = FindObjectsByType<Camera>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                Camera candidate = cameras[i];
+                if (candidate == null || !candidate.isActiveAndEnabled)
+                    continue;
+
+                if (!candidate.gameObject.scene.IsValid() || !candidate.gameObject.scene.isLoaded)
+                    continue;
+
+                if (candidate.CompareTag("MainCamera"))
+                    return candidate.transform;
+            }
+
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                Camera candidate = cameras[i];
+                if (candidate != null && candidate.isActiveAndEnabled
+                    && candidate.gameObject.scene.IsValid()
+                    && candidate.gameObject.scene.isLoaded)
+                {
+                    return candidate.transform;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool IsUsableRigRoot(Transform rigRoot)
+        {
+            if (rigRoot == null || !rigRoot.gameObject.activeInHierarchy)
+                return false;
+
+            if (!rigRoot.gameObject.scene.IsValid() || !rigRoot.gameObject.scene.isLoaded)
+                return false;
+
+            Camera camera = rigRoot.GetComponentInChildren<Camera>(true);
+            return camera != null && camera.isActiveAndEnabled;
         }
 
         private void ResolveXrRigRoot()
         {
-            if (xrRigRoot != null)
+            ResolveXrRigRoot(forceRefresh: false);
+        }
+
+        private void ResolveXrRigRoot(bool forceRefresh)
+        {
+            if (!forceRefresh && IsUsableRigRoot(xrRigRoot))
                 return;
+
+            xrRigRoot = null;
 
             System.Type originType = System.Type.GetType("Unity.XR.CoreUtils.XROrigin, Unity.XR.CoreUtils");
             if (originType == null)
                 return;
 
             Object[] found = Resources.FindObjectsOfTypeAll(originType);
+            Transform bestRoot = null;
+            int bestScore = int.MinValue;
+
             for (int i = 0; i < found.Length; i++)
             {
                 if (found[i] is not Component origin || origin == null)
                     continue;
 
-                GameObject go = origin.gameObject;
-                if (!go.scene.IsValid() || !go.scene.isLoaded)
+                Transform candidate = origin.transform;
+                if (!IsUsableRigRoot(candidate))
                     continue;
 
-                xrRigRoot = go.transform;
-                return;
+                int score = 0;
+                if (candidate.gameObject.activeInHierarchy)
+                    score += 40;
+
+                Camera camera = candidate.GetComponentInChildren<Camera>(true);
+                if (camera != null && camera.isActiveAndEnabled)
+                    score += 40;
+
+                if (camera != null && camera.CompareTag("MainCamera"))
+                    score += 25;
+
+                string rigName = candidate.name;
+                if (rigName.IndexOf("XR Origin", System.StringComparison.OrdinalIgnoreCase) >= 0
+                    || rigName.IndexOf("XR Rig", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    score += 15;
+                }
+
+                if (score <= bestScore)
+                    continue;
+
+                bestScore = score;
+                bestRoot = candidate;
             }
+
+            xrRigRoot = bestRoot;
         }
 
         private void ResolvePanelSettingsAssets()

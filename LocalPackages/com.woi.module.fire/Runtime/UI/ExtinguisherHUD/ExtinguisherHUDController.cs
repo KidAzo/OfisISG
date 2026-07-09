@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using WOI.Modules.SDK;
 using Woi.Events;
+using Woi.Events.Data;
 using Woi.UI.Popups.Localization;
 
 public class ExtinguisherHUDController : MonoBehaviour
@@ -94,6 +95,8 @@ public class ExtinguisherHUDController : MonoBehaviour
         if (_sessionEndedEvent != null)
             _sessionEndedEvent.OnRaised += HandleSessionEnded;
 
+        TrainingSessionLifecycleState.SessionStarted += HandleTrainingSessionStarted;
+
         TryBindUi();
         ApplyPresentationVisible();
         RefreshHUD();
@@ -168,6 +171,8 @@ public class ExtinguisherHUDController : MonoBehaviour
 
         if (_sessionEndedEvent != null)
             _sessionEndedEvent.OnRaised -= HandleSessionEnded;
+
+        TrainingSessionLifecycleState.SessionStarted -= HandleTrainingSessionStarted;
     }
 
     private void Update()
@@ -207,7 +212,14 @@ public class ExtinguisherHUDController : MonoBehaviour
         isSpraying              = false;
         pinPulled               = e.pinPulled;
 
+        SetPresentationVisible(_isEquipped);
         RefreshHUD();
+    }
+
+    private void HandleTrainingSessionStarted()
+    {
+        if (_isEquipped)
+            EnsureRootVisible();
     }
 
     private void HandleCapacityChanged(int rawCapacity)

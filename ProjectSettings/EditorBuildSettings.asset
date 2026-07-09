@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Project/Scenes/FireModule/FireModule_Bootstrapper.unity
     guid: 6f42e3fa241219d4994017267ad51a18
   - enabled: 0
