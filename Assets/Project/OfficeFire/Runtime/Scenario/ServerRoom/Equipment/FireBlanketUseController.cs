@@ -5,7 +5,6 @@ using FireExtinguisher.Core;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using Woi.OfficeFire;
 
 namespace Woi.OfficeFire
 {
@@ -17,6 +16,10 @@ namespace Woi.OfficeFire
     [AddComponentMenu("Woi/Office Fire/Fire Blanket Use Controller")]
     public sealed class FireBlanketUseController : MonoBehaviour
     {
+        private const int OverlapBufferSize = 32;
+        private const int RaycastBufferSize = 32;
+        private const float FireSourceCacheRefreshSeconds = 1f;
+
         [Header("References")]
         [SerializeField]
         private PlayerFireBlanketEquipment blanketEquipment;
@@ -76,16 +79,21 @@ namespace Woi.OfficeFire
         /// <summary>Fired when gradual fire suppression completes (not on placement).</summary>
         public event Action BlanketFireExtinguished;
 
-        public bool IsInsideFireZone => CheckInsideFireZone(out _);
+        public bool IsInsideFireZone => TryGetTargetFireZone(out _);
 
-        public bool TryGetTargetFireZone(out FireTargetZone zone) => CheckInsideFireZone(out zone);
+        public bool TryGetTargetFireZone(out FireTargetZone zone)
+        {
+            EnsureFireZoneCacheForFrame();
+            zone = _cachedMatchedZone;
+            return _cachedInsideFireZone;
+        }
 
         public bool IsExtinguishingFire { get; private set; }
 
         /// <summary>
         /// Shared.Global VR API — true when the player probe is inside a fire zone (grip release placement).
         /// </summary>
-        public bool IsPlayerNearAssignedFireSource() => CheckInsideFireZone(out _);
+        public bool IsPlayerNearAssignedFireSource() => TryGetTargetFireZone(out _);
 
         /// <summary>
         /// Returns true when the distance probe overlaps the given zone (same check used for G to place blanket).
@@ -97,12 +105,23 @@ namespace Woi.OfficeFire
                 return false;
             }
 
-            return CheckInsideFireZone(out FireTargetZone matchedZone) && matchedZone == zone;
+            return TryGetTargetFireZone(out FireTargetZone matchedZone) && matchedZone == zone;
         }
 
         private Coroutine _extinguishRoutine;
         private FireBlanketUseScreenPrompt _useScreenPrompt;
         private bool _usePromptVisible;
+
+        private readonly Collider[] _overlapBuffer = new Collider[OverlapBufferSize];
+        private readonly RaycastHit[] _raycastBuffer = new RaycastHit[RaycastBufferSize];
+        private FireSource[] _cachedFireSources = Array.Empty<FireSource>();
+        private float _fireSourcesCacheTime = -999f;
+        private Transform _cachedPlayerTransform;
+        private bool _playerTransformResolved;
+
+        private int _fireZoneCacheFrame = -1;
+        private bool _cachedInsideFireZone;
+        private FireTargetZone _cachedMatchedZone;
 
         private void Awake()
         {
@@ -117,6 +136,14 @@ namespace Woi.OfficeFire
             }
 
             EnsureUseScreenPrompt();
+            RefreshFireSourcesCache(force: true);
+            ResolvePlayerTransform();
+        }
+
+        private void OnEnable()
+        {
+            InvalidateFireZoneCache();
+            RefreshFireSourcesCache(force: true);
         }
 
         private void OnDisable()
@@ -130,6 +157,7 @@ namespace Woi.OfficeFire
             IsExtinguishingFire = false;
             _useScreenPrompt?.Hide();
             _usePromptVisible = false;
+            InvalidateFireZoneCache();
         }
 
         private void LateUpdate()
@@ -141,7 +169,7 @@ namespace Woi.OfficeFire
         {
             EnsureUseScreenPrompt();
 
-            bool show = ShouldShowUseInstructionPrompt(out _);
+            bool show = ShouldShowUseInstructionPrompt();
             if (show == _usePromptVisible)
             {
                 return;
@@ -162,10 +190,8 @@ namespace Woi.OfficeFire
             _useScreenPrompt.SetText(useInstructionText, useInstructionTextTurkish, preferTurkishInstruction);
         }
 
-        private bool ShouldShowUseInstructionPrompt(out FireTargetZone zone)
+        private bool ShouldShowUseInstructionPrompt()
         {
-            zone = null;
-
             if (blanketEquipment == null || blanketEquipment.CurrentItem == null)
             {
                 return false;
@@ -203,7 +229,7 @@ namespace Woi.OfficeFire
                 return false;
             }
 
-            if (CheckInsideFireZone(out FireTargetZone zone))
+            if (TryGetTargetFireZone(out FireTargetZone zone))
             {
                 return TryConsumeBlanketOnFire(item, zone);
             }
@@ -247,9 +273,12 @@ namespace Woi.OfficeFire
             while (source != null && !source.IsExtinguished)
             {
                 bool anyActive = false;
+                IReadOnlyList<FireTargetZone> zones = source.Zones;
+                int zoneCount = zones.Count;
 
-                foreach (FireTargetZone targetZone in source.Zones)
+                for (int i = 0; i < zoneCount; i++)
                 {
+                    FireTargetZone targetZone = zones[i];
                     if (targetZone == null || targetZone.IsExtinguished)
                     {
                         continue;
@@ -299,7 +328,17 @@ namespace Woi.OfficeFire
                 return fireSource;
             }
 
-            return FindFirstObjectByType<FireSource>();
+            RefreshFireSourcesCache(force: false);
+            for (int i = 0; i < _cachedFireSources.Length; i++)
+            {
+                FireSource source = _cachedFireSources[i];
+                if (source != null)
+                {
+                    return source;
+                }
+            }
+
+            return null;
         }
 
         private bool TryDropBlanketToAnchor(FireBlanketPickupItem item)
@@ -308,6 +347,25 @@ namespace Woi.OfficeFire
             blanketEquipment.NotifyDropped(item);
             Log("Blanket returned to drop anchor.");
             return true;
+        }
+
+        private void EnsureFireZoneCacheForFrame()
+        {
+            int frame = Time.frameCount;
+            if (_fireZoneCacheFrame == frame)
+            {
+                return;
+            }
+
+            _fireZoneCacheFrame = frame;
+            _cachedInsideFireZone = CheckInsideFireZone(out _cachedMatchedZone);
+        }
+
+        private void InvalidateFireZoneCache()
+        {
+            _fireZoneCacheFrame = -1;
+            _cachedInsideFireZone = false;
+            _cachedMatchedZone = null;
         }
 
         private bool CheckInsideFireZone(out FireTargetZone matchedZone)
@@ -345,21 +403,16 @@ namespace Woi.OfficeFire
                 return false;
             }
 
-            Vector3 point = reference.position;
-            Collider[] overlaps = Physics.OverlapSphere(
-                point,
+            int hitCount = Physics.OverlapSphereNonAlloc(
+                reference.position,
                 fireZoneProbeRadius,
+                _overlapBuffer,
                 fireZoneLayerMask,
                 QueryTriggerInteraction.Collide);
 
-            if (overlaps == null || overlaps.Length == 0)
+            for (int i = 0; i < hitCount; i++)
             {
-                return false;
-            }
-
-            for (int i = 0; i < overlaps.Length; i++)
-            {
-                Collider collider = overlaps[i];
+                Collider collider = _overlapBuffer[i];
                 if (collider == null)
                 {
                     continue;
@@ -388,13 +441,14 @@ namespace Woi.OfficeFire
             }
 
             Vector3 point = reference.position;
-            FireSource[] sources = FindObjectsByType<FireSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            RefreshFireSourcesCache(force: false);
+
             FireSource closestSource = null;
             float closestDistance = fireZoneProbeRadius;
 
-            for (int i = 0; i < sources.Length; i++)
+            for (int i = 0; i < _cachedFireSources.Length; i++)
             {
-                FireSource source = sources[i];
+                FireSource source = _cachedFireSources[i];
                 if (source == null || source.IsExtinguished)
                 {
                     continue;
@@ -431,14 +485,15 @@ namespace Woi.OfficeFire
                 return false;
             }
 
-            FireSource[] sources = FindObjectsByType<FireSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            RefreshFireSourcesCache(force: false);
+
             float aimRadius = fireZoneProbeRadius * 1.5f;
             FireSource bestSource = null;
             float bestDistance = aimRadius;
 
-            for (int i = 0; i < sources.Length; i++)
+            for (int i = 0; i < _cachedFireSources.Length; i++)
             {
-                FireSource source = sources[i];
+                FireSource source = _cachedFireSources[i];
                 if (source == null || source.IsExtinguished)
                 {
                     continue;
@@ -471,7 +526,8 @@ namespace Woi.OfficeFire
             }
 
             IReadOnlyList<FireTargetZone> zones = source.Zones;
-            for (int i = 0; i < zones.Count; i++)
+            int zoneCount = zones.Count;
+            for (int i = 0; i < zoneCount; i++)
             {
                 FireTargetZone zone = zones[i];
                 if (zone == null || zone.IsExtinguished)
@@ -494,22 +550,25 @@ namespace Woi.OfficeFire
                 return false;
             }
 
-            RaycastHit[] hits = Physics.RaycastAll(
+            int hitCount = Physics.RaycastNonAlloc(
                 ray,
+                _raycastBuffer,
                 fireZoneRaycastDistance,
                 fireZoneLayerMask,
                 QueryTriggerInteraction.Collide);
 
-            if (hits == null || hits.Length == 0)
+            if (hitCount <= 0)
             {
                 return false;
             }
 
-            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+            float bestDistance = float.MaxValue;
+            FireTargetZone bestZone = null;
 
-            for (int i = 0; i < hits.Length; i++)
+            for (int i = 0; i < hitCount; i++)
             {
-                Collider collider = hits[i].collider;
+                RaycastHit hit = _raycastBuffer[i];
+                Collider collider = hit.collider;
                 if (collider == null)
                 {
                     continue;
@@ -521,11 +580,22 @@ namespace Woi.OfficeFire
                     continue;
                 }
 
-                matchedZone = zone;
-                return true;
+                if (hit.distance >= bestDistance)
+                {
+                    continue;
+                }
+
+                bestDistance = hit.distance;
+                bestZone = zone;
             }
 
-            return false;
+            if (bestZone == null)
+            {
+                return false;
+            }
+
+            matchedZone = bestZone;
+            return true;
         }
 
         private static FireTargetZone ResolveFireTargetZone(Collider collider)
@@ -568,8 +638,54 @@ namespace Woi.OfficeFire
                 return blanketEquipment.transform;
             }
 
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            return player != null ? player.transform : transform;
+            return ResolvePlayerTransform();
+        }
+
+        private Transform ResolvePlayerTransform()
+        {
+            if (_playerTransformResolved && _cachedPlayerTransform != null)
+            {
+                return _cachedPlayerTransform;
+            }
+
+            if (!_playerTransformResolved)
+            {
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                _cachedPlayerTransform = player != null ? player.transform : transform;
+                _playerTransformResolved = true;
+            }
+
+            return _cachedPlayerTransform != null ? _cachedPlayerTransform : transform;
+        }
+
+        private void RefreshFireSourcesCache(bool force)
+        {
+            float now = Time.unscaledTime;
+            if (!force
+                && _cachedFireSources != null
+                && _cachedFireSources.Length > 0
+                && now - _fireSourcesCacheTime < FireSourceCacheRefreshSeconds
+                && !HasDestroyedFireSource())
+            {
+                return;
+            }
+
+            _cachedFireSources = FindObjectsByType<FireSource>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)
+                ?? Array.Empty<FireSource>();
+            _fireSourcesCacheTime = now;
+        }
+
+        private bool HasDestroyedFireSource()
+        {
+            for (int i = 0; i < _cachedFireSources.Length; i++)
+            {
+                if (_cachedFireSources[i] == null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void Log(string message)

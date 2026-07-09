@@ -123,8 +123,9 @@ namespace Woi.OfficeFire
                 return false;
             }
 
-            return blanketUseController.IsInsideFireZone
-                && (fireZone == null || blanketUseController.TryGetTargetFireZone(out FireTargetZone matchedZone) && matchedZone == fireZone);
+            // Single zone query (IsInsideFireZone + TryGetTargetFireZone previously ran CheckInsideFireZone twice).
+            return blanketUseController.TryGetTargetFireZone(out FireTargetZone matchedZone)
+                && (fireZone == null || matchedZone == fireZone);
         }
 
         private void ResolveRuntimeReferences()

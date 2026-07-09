@@ -11,59 +11,101 @@ namespace Woi.OfficeFire
     /// </summary>
     internal static class OfficeFireUseKeyInput
     {
+        private static InputManager _cachedInputManager;
+        private static InputAction _cachedDropAction;
+        private static bool _dropEnabledConfigured;
+        private static bool _sceneLookupAttempted;
+
         public static bool WasUseKeyPressedThisFrame(Key fallbackKey = Key.G)
         {
-            if (TryReadDropFromInputManager(out bool pressed) && pressed)
+            if (TryReadDropFromInputManager(out bool pressed))
             {
-                return true;
+                return pressed;
             }
 
-            return Keyboard.current != null && Keyboard.current[fallbackKey].wasPressedThisFrame;
+            Keyboard keyboard = Keyboard.current;
+            return keyboard != null && keyboard[fallbackKey].wasPressedThisFrame;
         }
 
         private static bool TryReadDropFromInputManager(out bool pressed)
         {
             pressed = false;
-            InputManager inputManager = ResolveInputManager();
-            if (inputManager == null)
+
+            InputAction dropAction = ResolveDropAction();
+            if (dropAction == null)
             {
                 return false;
             }
 
-            inputManager.EnsurePcGameplayInputEnabled();
-            GameplayInputContext gameplayContext = inputManager.GetPcGameplayContext();
-            gameplayContext?.SetDropEnabled(true);
+            pressed = dropAction.WasPressedThisFrame();
+            return true;
+        }
+
+        private static InputAction ResolveDropAction()
+        {
+            if (_cachedDropAction != null)
+            {
+                return _cachedDropAction;
+            }
+
+            InputManager inputManager = ResolveInputManager();
+            if (inputManager == null)
+            {
+                return null;
+            }
+
+            if (!_dropEnabledConfigured)
+            {
+                inputManager.EnsurePcGameplayInputEnabled();
+                GameplayInputContext gameplayContext = inputManager.GetPcGameplayContext();
+                gameplayContext?.SetDropEnabled(true);
+                _dropEnabledConfigured = true;
+            }
 
             PlayerInputActions actions = inputManager.InputActions;
             if (actions == null)
             {
-                return false;
+                return null;
             }
 
-            var gameplay = actions.Gameplay;
+            PlayerInputActions.GameplayActions gameplay = actions.Gameplay;
             if (!gameplay.enabled)
             {
                 gameplay.Enable();
             }
 
-            pressed = gameplay.Drop.WasPressedThisFrame();
-            return true;
+            _cachedDropAction = gameplay.Drop;
+            return _cachedDropAction;
         }
 
         private static InputManager ResolveInputManager()
         {
+            if (_cachedInputManager != null)
+            {
+                return _cachedInputManager;
+            }
+
             if (ServiceLocator.TryGet<IInputProvider>(out IInputProvider provider)
                 && provider is InputManager serviceManager)
             {
-                return serviceManager;
+                _cachedInputManager = serviceManager;
+                return _cachedInputManager;
             }
 
             if (ServiceLocator.TryGet(out InputManager registeredManager) && registeredManager != null)
             {
-                return registeredManager;
+                _cachedInputManager = registeredManager;
+                return _cachedInputManager;
             }
 
-            return UnityEngine.Object.FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            // Expensive scene scan — at most once for the process lifetime.
+            if (!_sceneLookupAttempted)
+            {
+                _sceneLookupAttempted = true;
+                _cachedInputManager = UnityEngine.Object.FindFirstObjectByType<InputManager>(FindObjectsInactive.Include);
+            }
+
+            return _cachedInputManager;
         }
     }
 }
