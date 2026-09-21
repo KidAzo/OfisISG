@@ -20,10 +20,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Project/Scenes/Bootstrapper.unity
     guid: 54952784f78523648a1b64e94ca3a3e4
-  - enabled: 0
+  - enabled: 1
     path: Assets/Project/Scenes/Office.unity
     guid: ccc99b344bc2e7b4fb2a33754a89014a
-  - enabled: 0
+  - enabled: 1
     path: Assets/OfficeStartScene/LoginScreen.unity
     guid: 18149f31848f1a74db4823a16a2364dd
   - enabled: 0

@@ -70,6 +70,15 @@ namespace Woi.Events.Data
         }
 
         /// <summary>
+        /// Kalıcı skor listesini siler. Login TOP SCORES paneli bir sonraki yenilemede boş slot gösterir.
+        /// </summary>
+        public static void Clear()
+        {
+            PlayerPrefs.DeleteKey(PrefsKey);
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>
         /// Tam <see cref="MaxEntries"/> satır; boş slotlarda <see cref="EmptySlotDisplay"/>.
         /// </summary>
         public static IReadOnlyList<string> GetDisplayLines(int maxLines = MaxEntries)

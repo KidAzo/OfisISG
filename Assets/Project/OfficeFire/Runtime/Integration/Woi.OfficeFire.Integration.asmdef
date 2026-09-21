@@ -17,7 +17,15 @@
         "Unity.InputSystem",
         "Woi.Fire.UI.Result",
         "Unity.XR.Interaction.Toolkit",
-        "Unity.XR.CoreUtils"
+        "Unity.XR.CoreUtils",
+        "Woi.Fire.VrBridge",
+        "Woi.VrBridge.Client.Runtime",
+        "Woi.VrBridge.Client.Protocol",
+        "Woi.VrBridge.Client.UI",
+        "UniTask",
+        "UnityEngine.UI",
+        "Woi.OfficeFire.Bootstrap",
+        "Woi.Utils"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

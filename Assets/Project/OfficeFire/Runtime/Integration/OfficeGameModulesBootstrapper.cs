@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
 using Woi.Settings;
 using WOI.Modules.SDK;
@@ -16,15 +17,17 @@ namespace Woi.OfficeFire
     /// When <see cref="loadAfterFireInstallerReady"/> is enabled, auto-load subscribes to the static
     /// <see cref="FireServiceInstaller.OnServicesReady"/> event (fired from the Fire module after managers are registered,
     /// including <see cref="SceneLoader"/>). This is not a ServiceLocator API — it is defined on <see cref="FireServiceInstaller"/>.
-    /// Does not call Unity <c>SceneManager</c> directly.
+    /// Fire and Waste loads go through the registered scene loader. HazardHunt uses
+    /// <c>SceneManager</c> because the SceneLoader group named LoginScreen is empty.
     /// </summary>
     [Preserve]
     public sealed class OfficeGameModulesBootstrapper : MonoBehaviour, IModuleBootstrap
     {
         public const string WasteLoginSceneGroup = "WasteLogin";
         public const string WasteCollectorSceneGroup = "WasteCollector";
+        public const string HazardHuntLoginSceneName = "LoginScreen";
         [Header("Scene")]
-        [Tooltip("FireTraining loads FireModule_Office. WasteCollector: PC → WasteLogin, VR → FireModule_Office directly.")]
+        [Tooltip("FireTraining → OfficeFireModule_Login. HazardHunt → LoginScreen (legacy Hazard login). WasteCollector: PC → WasteLogin, VR → FireModule_Office directly.")]
         [SerializeField]
         private OfficeGameModule gameModule = OfficeGameModule.FireTraining;
 
@@ -69,12 +72,14 @@ namespace Woi.OfficeFire
             }
 
             ServiceLocator.Register(this);
+            OfficeFireBootstrapper.SetSuppressStandaloneFireLogin(gameModule == OfficeGameModule.HazardHunt);
         }
 
         private void OnDestroy()
         {
             ServiceLocator.Unregister<IModuleBootstrap>();
             ServiceLocator.Unregister<OfficeGameModulesBootstrapper>();
+            OfficeFireBootstrapper.SetSuppressStandaloneFireLogin(false);
         }
 
         private void OnEnable()
@@ -82,7 +87,7 @@ namespace Woi.OfficeFire
             ServiceLocator.Unregister<IModuleBootstrap>();
             ServiceLocator.Register<IModuleBootstrap>(this);
 
-            if (!loadOnStart || !loadAfterFireInstallerReady)
+            if (!loadOnStart || !loadAfterFireInstallerReady || gameModule == OfficeGameModule.HazardHunt)
             {
                 return;
             }
@@ -98,7 +103,7 @@ namespace Woi.OfficeFire
         {
             ServiceLocator.Unregister<IModuleBootstrap>();
 
-            if (loadOnStart && loadAfterFireInstallerReady)
+            if (loadOnStart && loadAfterFireInstallerReady && gameModule != OfficeGameModule.HazardHunt)
             {
                 FireServiceInstaller.OnServicesReady -= OnFireServicesReady;
             }
@@ -121,7 +126,7 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            if (!loadAfterFireInstallerReady)
+            if (!loadAfterFireInstallerReady || gameModule == OfficeGameModule.HazardHunt)
             {
                 TryIssueStartupLoad("Start()");
             }
@@ -159,7 +164,7 @@ namespace Woi.OfficeFire
         /// </summary>
         public void LoadDesiredScene()
         {
-            LoadScene(ResolveSceneGroupName(gameModule));
+            LoadScene(gameModule);
         }
 
         /// <summary>
@@ -167,6 +172,12 @@ namespace Woi.OfficeFire
         /// </summary>
         public void LoadScene(OfficeGameModule module)
         {
+            if (module == OfficeGameModule.HazardHunt)
+            {
+                LoadHazardHuntLoginScene();
+                return;
+            }
+
             LoadScene(ResolveSceneGroupName(module));
         }
 
@@ -175,9 +186,26 @@ namespace Woi.OfficeFire
             return module switch
             {
                 OfficeGameModule.FireTraining => "OfficeFireModule_Login",
+                OfficeGameModule.HazardHunt => HazardHuntLoginSceneName,
                 OfficeGameModule.WasteCollector => ResolveWasteCollectorEntryScene(),
                 _ => "OfficeFireModule_Login",
             };
+        }
+
+        /// <summary>
+        /// SceneLoader group "LoginScreen" is empty. Load the enabled Build Settings scene directly
+        /// so the restored Hazard login → Office flow can own navigation.
+        /// </summary>
+        private void LoadHazardHuntLoginScene()
+        {
+            if (preventDuplicateLoad && isLoading)
+            {
+                Debug.LogWarning(
+                    $"[OfficeGameModulesBootstrapper] LoadScene('{HazardHuntLoginSceneName}') ignored: a load is already in progress.");
+                return;
+            }
+
+            StartCoroutine(LoadBuiltInSceneRoutine(HazardHuntLoginSceneName));
         }
 
         private static string ResolveWasteCollectorEntryScene()
@@ -304,11 +332,55 @@ namespace Woi.OfficeFire
                 this);
             isLoading = false;
         }
+
+        private IEnumerator LoadBuiltInSceneRoutine(string sceneName)
+        {
+            isLoading = true;
+
+            if (loadDelay > 0f)
+            {
+                yield return new WaitForSecondsRealtime(loadDelay);
+            }
+
+            if (!Application.CanStreamedLevelBeLoaded(sceneName))
+            {
+                Debug.LogError(
+                    $"[OfficeGameModulesBootstrapper] Built-in scene '{sceneName}' is not in enabled Editor Build Settings.",
+                    this);
+                isLoading = false;
+                yield break;
+            }
+
+            Debug.Log(
+                $"[OfficeGameModulesBootstrapper] Loading built-in scene '{sceneName}' via SceneManager (SceneLoader group is empty).",
+                this);
+
+            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneName);
+            if (loadOperation == null)
+            {
+                Debug.LogError(
+                    $"[OfficeGameModulesBootstrapper] SceneManager.LoadSceneAsync('{sceneName}') returned null.",
+                    this);
+                isLoading = false;
+                yield break;
+            }
+
+            while (!loadOperation.isDone)
+            {
+                yield return null;
+            }
+
+            Debug.Log(
+                $"[OfficeGameModulesBootstrapper] Built-in scene '{sceneName}' loaded. Hazard login owns further navigation.",
+                this);
+            isLoading = false;
+        }
     }
 
     public enum OfficeGameModule
     {
-        FireTraining,
-        WasteCollector,
+        FireTraining = 0,
+        HazardHunt = 2,
+        WasteCollector = 1,
     }
 }

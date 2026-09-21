@@ -26,11 +26,23 @@ namespace Woi.Settings
         private ScriptableEnumPortingVariable portingSettings;
 
         private static int _initializeGate;
+        private static bool _suppressStandaloneFireLogin;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics()
         {
             _initializeGate = 0;
+            _suppressStandaloneFireLogin = false;
+        }
+
+        /// <summary>
+        /// When true, standalone Play from the office bootstrap scene must not load Fire login.
+        /// Used when another module (currently Hazard Hunt) owns first-scene navigation.
+        /// Hub <see cref="Initialize"/> with a real launch context is unchanged.
+        /// </summary>
+        public static void SetSuppressStandaloneFireLogin(bool suppress)
+        {
+            _suppressStandaloneFireLogin = suppress;
         }
 
         private void OnEnable()
@@ -71,6 +83,14 @@ namespace Woi.Settings
 
         private async UniTaskVoid RunBootstrapWhenServicesReadyIfHubDidNot()
         {
+            if (_suppressStandaloneFireLogin)
+            {
+                Debug.Log(
+                    "[OfficeFireBootstrapper] Skipping standalone Fire login; selected module owns navigation.",
+                    this);
+                return;
+            }
+
             if (!await WaitForLiveSceneLoaderAsync(10f, destroyCancellationToken))
                 return;
 

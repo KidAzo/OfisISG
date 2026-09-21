@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccae3291acb9a8e47b27bd9027375dcf, type: 3}
+  m_Name: Unidentified chemical present in the work area
+  m_EditorClassIdentifier: 
+  hazardName: 'Unidentified chemical present in the work area '
+  description: Unidentified chemicals pose serious health and safety risks because
+    their contents and hazards are unknown. Any unlabelled chemical may lead to misuse,
+    inhalation, skin contact, or dangerous reactions; therefore, all chemicals must
+    be properly labelled and stored safely.
+  score: 0
+  type: 0
+  soundDefinition: {fileID: 11400000, guid: 95410c7e60db9014789e1e6d6abe1e0a, type: 2}
+  language: 1
+  hazardID: 13
