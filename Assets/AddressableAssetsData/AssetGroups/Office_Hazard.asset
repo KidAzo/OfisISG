@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Office_Hazard
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Office_Hazard
+  m_GUID: f1a2b3c4d5e6478091a2b3c4d5e6f708
+  m_SerializeEntries:
+  - m_GUID: c4d5e6f748091a2b3c4d5e6f708192a3
+    m_Address: Hazard_Boot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-hazard-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ccc99b344bc2e7b4fb2a33754a89014a
+    m_Address: HazardHunt_Office
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-hazard-full
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3c60501d4ea17ec4796be47a8a3f237c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: a2b3c4d5e6f748091a2b3c4d5e6f7081, type: 2}
+    - {fileID: 11400000, guid: b3c4d5e6f748091a2b3c4d5e6f708192, type: 2}

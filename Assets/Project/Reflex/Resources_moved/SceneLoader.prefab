@@ -222,11 +222,17 @@ MonoBehaviour:
     - SceneName: OfficeFireModule_Login
       AddressableKey: OfficeFireModule_Login
       SceneType: 0
+  - GroupName: HazardHunt_Office
+    Scenes:
+    - SceneName: Office
+      AddressableKey: HazardHunt_Office
+      SceneType: 0
   _runCatalogHealthBeforeSelectedGroups: 1
   _catalogHealthGroupNames:
   - FireModule_Office
   - WasteLogin
   - WasteCollector
+  - HazardHunt_Office
   _catalogHealthRequiredKeys:
   - Managers/SceneLoader
   - Managers/InputManager
