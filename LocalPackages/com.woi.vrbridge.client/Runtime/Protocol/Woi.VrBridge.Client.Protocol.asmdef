@@ -1,0 +1,16 @@
+{
+    "name": "Woi.VrBridge.Client.Protocol",
+    "rootNamespace": "Woi.VrBridge.Client.Protocol",
+    "references": [
+        "Newtonsoft.Json"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

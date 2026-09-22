@@ -1,0 +1,169 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f0ce49fbc1e6594982f24d5ad48acf7, type: 3}
+  m_Name: ENG-Sound Definition
+  m_EditorClassIdentifier: 
+  selectionMode: 0
+  clips:
+  - clip: {fileID: 8300000, guid: b2c4790a5dc99d6428f3d6edce1ae3c2, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 1438b6345a9f12142bcc6ee7799ec84c, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 3ca4d879f85004542ad5d4a8e01cf60e, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 25fd185e0774883438517e381ebd3383, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 30ddfa83a9d0d55468395c4643deec0a, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 17d8889cfdb6455409ff55043a6c64cd, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: b330d86b495cb8647b1f9b4f424a2f1c, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: f4baa6ea9016ec048aa7ec022c8ac893, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 0845f40787fd2ce4baf8125d613b9f5f, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 370624fc9ca67f340b8d5d3e878179e2, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 1bf5951efc4d5f845a7f78b27f5308ab, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 1d2952360c3a4874280bc696a5be1bf3, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 39ed9e50784ae8c4fa790fecb3112042, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 63b2a5873a64d4a42bdb8fe4110b9401, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 186ba3cfa68f0674bb8b016d3e9f06fd, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 721a523583237b746828e81359780fde, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 8707cc021ce19ca40a64799073addb88, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 3063ec187b173af41a5034be8f4e0ab8, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: a0a82b55caca39d4cb70455d18e3e6b3, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 4241cbc943fa3d940814013fe607eb10, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 764e4bb970c63744c99b9c5fba025eda, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 2d320558957dc2142a39197662888c1e, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 9560a73ad0d7cce41943a4b5237c8411, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 927ef94484629e0409b546887aeefc75, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: b3a7986fe428061438f63860524c677e, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: b311ae5982cb497429484fbb15f59bdf, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 8e36eab9ae2c2194bbba9af0d54a7608, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: ed96c75e028483b468e9ac8b4b02ef62, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 673b1457674d1864b834ed2ffe99d376, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 10a6c2d70abc38442881a7996cd2d46b, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 6574ad71613ecdd488cf0812966e78dc, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 144354a5ea9d1ab43b8583aaaa9bccdb, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 4272d52902040fa45875d1fa22d9785b, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 085897ab7c023874289a17ac50951de0, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 9aa5771651ccfb3449fc7660bbf8a9a6, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 224ba5c0bc0bd924e972038370227f88, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 76b450934fdf32b4da1a750925e34ba5, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 098862d098e46674fb9d2ddf0173e46f, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: dcc41ad2b0bf88b42a063c4f1b073e81, type: 3}
+    weight: 0
+    delay: 0
+  - clip: {fileID: 8300000, guid: 7b647995d1f60d340b48393b12c06079, type: 3}
+    weight: 0
+    delay: 0
+  noImmediateRepeat: 1
+  category: 0
+  useCustomCategory: 0
+  customCategoryKey: 
+  mixerGroup: {fileID: 0}
+  scheduleMode: 0
+  queueScope: 0
+  instanceMode: 1
+  reTriggerMode: 0
+  cooldown: 0
+  delayMode: 0
+  delay: 0
+  delayRange: {x: 0, y: 0}
+  loop: 0
+  priority: 128
+  volume: 1
+  pitch: 1
+  spatialBlend: 0
+  minDistance: 1
+  maxDistance: 500
+  rolloffMode: 0
+  mute: 0
+  bypassEffects: 0
+  bypassListenerEffects: 0
+  bypassReverbZones: 0
+  panStereo: 0
+  reverbZoneMix: 1
+  dopplerLevel: 1
+  spread: 0
+  ignoreListenerVolume: 0
+  ignoreListenerPause: 0
+  protectedFromSteal: 0
+  suppressDuplicatesWhileQueued: 1

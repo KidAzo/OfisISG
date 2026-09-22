@@ -20,7 +20,10 @@
         "GUID:2db6770f911c9354bb2dfcd03cf6e408",
         "Unity.Addressables",
         "Unity.Addressables.Editor",
-        "Unity.ResourceManager"
+        "Unity.ResourceManager",
+        "Woi.VrBridge.Client.Runtime",
+        "Woi.VrBridge.Client.Protocol",
+        "Woi.Fire.VrBridge"
     ],
     "includePlatforms": [
         "Editor"

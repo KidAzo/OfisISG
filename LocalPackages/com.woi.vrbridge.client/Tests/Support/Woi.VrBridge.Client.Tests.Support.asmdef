@@ -1,0 +1,23 @@
+{
+    "name": "Woi.VrBridge.Client.Tests.Support",
+    "rootNamespace": "Woi.VrBridge.Client.Tests.Support",
+    "references": [
+        "Woi.VrBridge.Client.Runtime",
+        "Woi.VrBridge.Client.Protocol",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false,
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}

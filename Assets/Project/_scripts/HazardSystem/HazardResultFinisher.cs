@@ -32,18 +32,6 @@ namespace Woi.HazardSystem
                 onHazardResultFinished.OnRaised -= OnHazardResultFinished;
         }
 
-        void Update()
-        {
-            if (usedThisGame)
-                return;
-
-            if (UnityEngine.InputSystem.Keyboard.current != null &&
-                UnityEngine.InputSystem.Keyboard.current.f12Key.wasPressedThisFrame)
-            {
-                OnHazardResultFinished();
-            }
-        }
-
         void OnHazardResultFinished()
         {
             if (usedThisGame)

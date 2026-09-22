@@ -1,0 +1,8 @@
+<linker>
+  <assembly fullname="Newtonsoft.Json" preserve="all" />
+  <assembly fullname="Woi.VrBridge.Client.Protocol" preserve="all" />
+  <assembly fullname="System.Net.WebSockets" preserve="all" />
+  <assembly fullname="System.Net.WebSockets.Client" preserve="all" />
+  <type fullname="Woi.VrBridge.Client.Protocol.Messages.*" preserve="all" />
+  <type fullname="Woi.VrBridge.Client.Storage.AndroidKeystoreCredentialStore" preserve="all" />
+</linker>

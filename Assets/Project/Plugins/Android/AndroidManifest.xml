@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
     
     <uses-permission android:name="android.permission.INTERNET" />
-    
-    <application 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
         android:usesCleartextTraffic="true"
         tools:targetApi="28">
+        <!-- Protocol V2 device gateway uses ws:// on LAN during development/Quest LAN pairing. -->
     </application>
 </manifest>

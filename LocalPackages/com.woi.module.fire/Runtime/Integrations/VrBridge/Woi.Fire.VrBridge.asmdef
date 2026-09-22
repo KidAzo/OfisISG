@@ -1,0 +1,26 @@
+{
+    "name": "Woi.Fire.VrBridge",
+    "rootNamespace": "Woi.Game.Training.VrBridge",
+    "references": [
+        "Woi.Fire.Training",
+        "Woi.VrBridge.Client.Runtime",
+        "Woi.VrBridge.Client.Protocol",
+        "UniTask",
+        "Newtonsoft.Json"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.woi.vrbridge.client",
+            "expression": "",
+            "define": "WOI_VRBRIDGE_CLIENT"
+        }
+    ],
+    "noEngineReferences": false
+}

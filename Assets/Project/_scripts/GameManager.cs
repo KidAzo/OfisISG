@@ -16,6 +16,16 @@ public class GameManager : MonoBehaviour, IGameManager
 
     void Awake()
     {
+        var existing = FindObjectsByType<GameManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < existing.Length; i++)
+        {
+            if (existing[i] != null && existing[i] != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+        }
+
         DontDestroyOnLoad(gameObject);
     }
 

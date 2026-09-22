@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Woi.Events;
@@ -67,10 +68,13 @@ public class HazardSystemUIController : MonoBehaviour
 	public TextMeshProUGUI totalExtraText;
 
 	string activeSceneName;
+	const string LoginSceneName = "LoginScreen";
+	bool _returningToLogin;
 
 	void OnEnable()
 	{
 		//EventBus.Subscribe<OnSceneGroupLoaded>(GetActiveSceneName);
+		WireReturnButtons();
 	}
 
 	void OnDisable()
@@ -80,7 +84,87 @@ public class HazardSystemUIController : MonoBehaviour
 
 	void GetActiveSceneName(OnSceneGroupLoaded evt)
 	{
-		activeSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+		activeSceneName = SceneManager.GetActiveScene().name;
+	}
+
+	void WireReturnButtons()
+	{
+		bool found = false;
+		var transforms = GetComponentsInChildren<Transform>(true);
+		for (int i = 0; i < transforms.Length; i++)
+		{
+			if (!IsExistingReturnVisual(transforms[i]))
+				continue;
+
+			BindReturnButton(transforms[i].gameObject);
+			found = true;
+		}
+
+		if (!found)
+			CreateReturnButton();
+	}
+
+	static bool IsExistingReturnVisual(Transform t)
+	{
+		if (t == null)
+			return false;
+		if (t.name == "Quit")
+			return true;
+
+		var image = t.GetComponent<Image>();
+		var rt = t as RectTransform;
+		if (image == null || rt == null)
+			return false;
+		if (rt.anchorMin.x < 0.95f || rt.anchorMin.y < 0.95f)
+			return false;
+		if (Mathf.Abs(rt.sizeDelta.x - 64f) > 8f || Mathf.Abs(rt.sizeDelta.y - 64f) > 8f)
+			return false;
+
+		var color = image.color;
+		return color.r > 0.85f && color.g < 0.5f && color.b < 0.65f && color.a > 0.5f;
+	}
+
+	void BindReturnButton(GameObject go)
+	{
+		var button = go.GetComponent<Button>();
+		if (button == null)
+			button = go.AddComponent<Button>();
+
+		button.interactable = true;
+		button.onClick.RemoveListener(ReturnToLoginScreen);
+		button.onClick.AddListener(ReturnToLoginScreen);
+	}
+
+	void CreateReturnButton()
+	{
+		var canvas = GetComponentInChildren<Canvas>(true);
+		if (canvas == null)
+			return;
+
+		var go = new GameObject("Quit", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
+		go.transform.SetParent(canvas.transform, false);
+
+		var rt = go.GetComponent<RectTransform>();
+		rt.anchorMin = new Vector2(1f, 1f);
+		rt.anchorMax = new Vector2(1f, 1f);
+		rt.pivot = new Vector2(0.5f, 0.5f);
+		rt.anchoredPosition = new Vector2(-72f, -50f);
+		rt.sizeDelta = new Vector2(64f, 64f);
+
+		var image = go.GetComponent<Image>();
+		image.color = new Color(1f, 0.39215684f, 0.55838746f, 1f);
+		image.raycastTarget = true;
+
+		BindReturnButton(go);
+	}
+
+	public void ReturnToLoginScreen()
+	{
+		if (_returningToLogin)
+			return;
+
+		_returningToLogin = true;
+		SceneManager.LoadSceneAsync(LoginSceneName, LoadSceneMode.Single);
 	}
 
 	[Button]

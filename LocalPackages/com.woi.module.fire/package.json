@@ -5,6 +5,7 @@
   "unity": "2022.3",
   "description": "Fire module service installation (Addressables + ServiceLocator).",
   "dependencies": {
-    "com.woi.modules.sdk": "1.0.0"
+    "com.woi.modules.sdk": "1.0.0",
+    "com.woi.vrbridge.client": "0.1.0"
   }
 }

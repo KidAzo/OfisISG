@@ -151,6 +151,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.postprocessing": {
       "version": "3.5.1",
       "depth": 0,
@@ -395,7 +402,8 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.woi.modules.sdk": "1.0.0"
+        "com.woi.modules.sdk": "1.0.0",
+        "com.woi.vrbridge.client": "0.1.0"
       }
     },
     "com.woi.modules.sdk": {
@@ -403,6 +411,15 @@
       "depth": 0,
       "source": "local",
       "dependencies": {}
+    },
+    "com.woi.vrbridge.client": {
+      "version": "file:../LocalPackages/com.woi.vrbridge.client",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1",
+        "com.unity.test-framework": "1.6.0"
+      }
     },
     "dev.ameye.linework": {
       "version": "file:dev.ameye.linework",

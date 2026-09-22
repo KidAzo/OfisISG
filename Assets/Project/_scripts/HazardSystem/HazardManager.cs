@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Woi.Events;
 using WoiUtils;
+using WoiUtils.AudioSystem;
 
 namespace Woi.HazardSystem
 {
@@ -87,6 +88,31 @@ namespace Woi.HazardSystem
 			Debug.Log($"Hazard Fixed: {evt.hazardTitle}, Score: {evt.score}");	
 			AddScore(evt.score);
 			UpdateProgress();
+			PlayFixedSound(evt);
+		}
+
+		void PlayFixedSound(OnHazardFixed evt)
+		{
+			if (evt.soundDefinition == null)
+				return;
+
+			if (!AudioSystem.TryGetFromServiceLocator(out var audio) || audio == null)
+				audio = FindFirstObjectByType<AudioSystem>();
+			if (audio == null)
+				return;
+
+			var ctx = PlayContext.Default;
+			ctx.ignoreCooldowns = true;
+			ctx.forceImmediatePlay = true;
+
+			if (evt.hazardID > 0)
+			{
+				var indexed = ctx.SetClipIndex(evt.hazardID - 1);
+				if (audio.Play(evt.soundDefinition, indexed) != null)
+					return;
+			}
+
+			audio.Play(evt.soundDefinition, ctx);
 		}
 
 		private void AddScore(int add)

@@ -17,15 +17,19 @@ namespace Woi.DataHandler
 {
     public class SessionManager : PersistentSingleton<SessionManager>
     {
-        [Header("━━━━━━━ NETWORK AYARLARI ━━━━━━━")]
+        [Header("Legacy Compatibility (disabled for Protocol V2)")]
+        [Tooltip("LEGACY ONLY: UDP 7777 + HTTP 8080 Name|ID path. Keep disabled when using WOI VR Bridge Protocol V2.")]
+        [SerializeField] private bool useLegacyUdpSessionNetworking = false;
+
+        [Header("━━━━━━━ NETWORK AYARLARI (Legacy) ━━━━━━━")]
         [SerializeField] private int udpListenPort = 7777;
         [SerializeField] private string pcServerUrl = "http://192.168.1.50:8080";
 
-        [Header("━━━━━━━ DEBUG AYARLARI ━━━━━━━")]
+        [Header("━━━━━━━ DEBUG AYARLARI (Legacy) ━━━━━━━")]
         [SerializeField] private bool showDebugLogs = true;
         [Tooltip("When true, starts a local test session if no UDP session arrives (Editor and builds).")]
         [FormerlySerializedAs("autoStartTestSessionInEditor")]
-        [SerializeField] private bool autoStartTestSession = true;
+        [SerializeField] private bool autoStartTestSession = false;
         [FormerlySerializedAs("editorTestSessionDelaySeconds")]
         [SerializeField, Min(0f)] private float testSessionDelaySeconds = 3f;
         [SerializeField] private ScriptableEventNoParam onSessionStarted;
@@ -56,6 +60,21 @@ namespace Woi.DataHandler
 
         void Start()
         {
+            // DEPRECATED compatibility path: Name|ID over UDP 7777 / HTTP 8080.
+            // Protocol V2 (WOI VR Bridge) owns production networking. Never enable both.
+            if (!useLegacyUdpSessionNetworking)
+            {
+                Debug.Log(
+                    "[SessionManager] networkMode=ProtocolV2 legacyNetworkingEnabled=false " +
+                    "discoveryPort=17778 gatewayPath=/ws/device " +
+                    "(legacy UDP 7777 / HTTP 8080 Name|ID disabled)");
+                return;
+            }
+
+            Debug.LogWarning(
+                "[SessionManager] DEPRECATED legacyNetworkingEnabled=true — UDP 7777 / HTTP 8080 Name|ID active. " +
+                "Do not combine with Protocol V2.");
+
             StartListening();
 
             if (autoStartTestSession)

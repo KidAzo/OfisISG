@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -234,15 +235,32 @@ namespace Woi.UI
             if (loadingStatus != null)
                 loadingStatus.text = T[selectedLang]["Loading"];
             if (loadingOverlay != null)
+            {
                 loadingOverlay.AddToClassList("visible");
+                loadingOverlay.style.display = DisplayStyle.Flex;
+                loadingOverlay.pickingMode = PickingMode.Position;
+            }
             SetLoadProgress(0f);
 
-            Debug.Log($"LOGIN | Name={nameField.value} | ID={userIdField.value} | Lang={selectedLang}");
+            string playerName = nameField.value;
+            int playerId = int.TryParse(userIdField.value, out int id) ? id : 0;
+            int language = selectedLang == "TR" ? 0 : 1;
+            Debug.Log($"LOGIN | Name={playerName} | ID={userIdField.value} | Lang={selectedLang}");
 
-            EventBus.Raise(new HazardHuntLogged(
-                nameField.value,
-                int.TryParse(userIdField.value, out int id) ? id : 0,
-                selectedLang == "TR" ? 0 : 1));
+            StartCoroutine(RaiseLoggedAfterOverlayFrame(playerName, playerId, language));
+        }
+
+        IEnumerator RaiseLoggedAfterOverlayFrame(string playerName, int playerId, int language)
+        {
+            // UI Toolkit resolves style after Update. Wait until that pass has painted
+            // before HazardHuntLogged starts Office loading.
+            yield return null;
+            yield return new WaitForEndOfFrame();
+
+            if (!starting)
+                yield break;
+
+            EventBus.Raise(new HazardHuntLogged(playerName, playerId, language));
         }
 
         public void SetLoadProgress(float progress)
@@ -258,7 +276,11 @@ namespace Woi.UI
         {
             starting = false;
             if (loadingOverlay != null)
+            {
                 loadingOverlay.RemoveFromClassList("visible");
+                loadingOverlay.style.display = StyleKeyword.Null;
+                loadingOverlay.pickingMode = PickingMode.Ignore;
+            }
             startBtn.EnableInClassList("loading", false);
             RefreshUIState();
             ApplyLocalization();

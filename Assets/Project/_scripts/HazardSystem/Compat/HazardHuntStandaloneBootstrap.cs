@@ -19,6 +19,8 @@ namespace Woi.HazardSystem.Compat
         void Start()
         {
             ApplyPlatformUiRoots();
+            ExitPanelController.EnsurePcHost(pcUiRoot);
+            HazardInfoPopupPresenter.EnsureInstalled();
             EnsureDetector();
             EnsureResultUi();
             StartCoroutine(SyncPcInputWhenReady());

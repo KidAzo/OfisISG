@@ -29,6 +29,8 @@
     "com.unity.xr.openxr": "1.16.1",
     "com.woi.module.fire": "file:../LocalPackages/com.woi.module.fire",
     "com.woi.modules.sdk": "file:../LocalPackages/com.woi.modules.sdk",
+    "com.woi.vrbridge.client": "file:../LocalPackages/com.woi.vrbridge.client",
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.adaptiveperformance": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
@@ -63,5 +65,8 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "testables": [
+    "com.woi.vrbridge.client"
+  ]
 }

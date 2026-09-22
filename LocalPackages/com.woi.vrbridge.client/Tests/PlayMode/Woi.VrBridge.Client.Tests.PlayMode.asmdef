@@ -1,0 +1,28 @@
+{
+    "name": "Woi.VrBridge.Client.Tests.PlayMode",
+    "rootNamespace": "Woi.VrBridge.Client.Tests.PlayMode",
+    "references": [
+        "Woi.VrBridge.Client.Runtime",
+        "Woi.VrBridge.Client.Protocol",
+        "Woi.VrBridge.Client.UI",
+        "Woi.VrBridge.Client.Tests.Support",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false,
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}

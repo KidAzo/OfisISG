@@ -1,0 +1,121 @@
+#if UNITY_ANDROID && !UNITY_EDITOR
+using System;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using Woi.VrBridge.Client.Abstractions;
+
+namespace Woi.VrBridge.Client.Storage
+{
+    public sealed class AndroidKeystoreCredentialStore : IDeviceCredentialStore
+    {
+        const string JavaClassName = "com.woi.vrbridge.security.WoiCredentialStore";
+        const string Alias = "woi_vrbridge_device_token";
+
+        bool _hasTokenChecked;
+        bool _hasToken;
+
+        public bool HasToken
+        {
+            get
+            {
+                if (!_hasTokenChecked)
+                {
+                    _hasToken = CallBool("has", Alias);
+                    _hasTokenChecked = true;
+                }
+
+                return _hasToken;
+            }
+        }
+
+        public async UniTask<string> ReadTokenAsync(System.Threading.CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            await UniTask.SwitchToMainThread();
+            var token = CallString("read", Alias);
+            _hasToken = !string.IsNullOrEmpty(token);
+            _hasTokenChecked = true;
+            return token;
+        }
+
+        public async UniTask WriteTokenAsync(string token, System.Threading.CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                throw new ArgumentException("Token cannot be empty.", nameof(token));
+            }
+
+            await UniTask.SwitchToMainThread();
+            CallVoid("store", Alias, token);
+            _hasToken = true;
+            _hasTokenChecked = true;
+        }
+
+        public async UniTask DeleteTokenAsync(System.Threading.CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            await UniTask.SwitchToMainThread();
+            CallVoid("delete", Alias);
+            _hasToken = false;
+            _hasTokenChecked = true;
+        }
+
+        static AndroidJavaObject GetStore()
+        {
+            using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            return new AndroidJavaClass(JavaClassName).CallStatic<AndroidJavaObject>("getInstance", activity);
+        }
+
+        static string CallString(string method, string alias)
+        {
+            try
+            {
+                using var store = GetStore();
+                return store.Call<string>(method, alias);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[VRBridge] Android keystore read failed: {ex.Message}");
+                return null;
+            }
+        }
+
+        static bool CallBool(string method, string alias)
+        {
+            try
+            {
+                using var store = GetStore();
+                return store.Call<bool>(method, alias);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[VRBridge] Android keystore probe failed: {ex.Message}");
+                return false;
+            }
+        }
+
+        static void CallVoid(string method, string alias, string value = null)
+        {
+            try
+            {
+                using var store = GetStore();
+                if (value == null)
+                {
+                    store.Call(method, alias);
+                }
+                else
+                {
+                    store.Call(method, alias, value);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[VRBridge] Android keystore operation failed: {ex.Message}");
+                throw;
+            }
+        }
+    }
+}
+#endif
