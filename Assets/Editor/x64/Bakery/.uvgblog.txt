@@ -7029,3 +7029,15 @@ Running rgba2tga "C:\Users\azoci\AppData\Local\Temp\frender/Office_LMA3_final_Di
 Initializing D3D...
 Done
 Done
+abort_threads: Failed aborting id: 0000000000017ED4, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000014A30, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000004B20, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000017ED4, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000014A30, mono_thread_manage will ignore it
+
+abort_threads: Failed aborting id: 0000000000004B20, mono_thread_manage will ignore it
+
