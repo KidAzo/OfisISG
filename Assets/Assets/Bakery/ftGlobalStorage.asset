@@ -18,7 +18,18 @@ MonoBehaviour:
   - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOld_Small_02.fbx
   - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOctagon_Base_01.fbx
   - Assets/AssetSection/PolygonCity/Models/SM_Bld_OfficeOld_Large_02.fbx
-  modifiedAssetPaddingHash: 8e5fd2b1e1db5432d93980335cbe8b9ad7c2a693
+  - Assets/AssetSection/BKAsset/Mesh/First/WallAndFloor.fbx
+  - Assets/AssetSection/BKAsset/Mesh/Topp.fbx
+  - Assets/AssetSection/BKAsset/Mesh/First/carpet.fbx
+  - Assets/AssetSection/BKAsset/Mesh/First/DoorandGlass.fbx
+  - Assets/AssetSection/BKAsset/Mesh/Second/SecondBat.fbx
+  - Assets/AssetSection/BKAsset/Mesh/First/Furniture.fbx
+  - Assets/AssetSection/BKAsset/Mesh/StairLow.fbx
+  - Assets/AssetSection/BKAsset/Mesh/Second/liftButton.fbx
+  - Assets/AssetSection/BKAsset/Textures/NewGround/StartBat.fbx
+  - Assets/AssetSection/BKAsset/Mesh/First/Cafeteria.fbx
+  - Assets/AssetSection/BKAsset/Mesh/NewAddLobby/LobiSecond.fbx
+  modifiedAssetPaddingHash: 8e5fd2b1e1db5432d93980335cbe8b9ad7c2a693cc4a90b1f839803342effc9a8cdaa64b5ceddf242e27477e035feb64ecc1249180c5d890b05c02fe6d67e2a8
   modifiedMeshList: []
   modifiedMeshPaddingList: 
   modifiedAssets:
@@ -44,6 +55,77 @@ MonoBehaviour:
   - meshName:
     - SM_Bld_OfficeOld_Large_02
     padding: 13000000
+    unwrapper: 00000000
+  - meshName:
+    - GroundWS
+    - DoorW
+    - 2MCW
+    - GroundW
+    - 4MCW
+    - 4MWW
+    - Door
+    - Colonec
+    - 2MWW
+    - 4MCCW
+    - 1x2WW
+    - 4MWCW
+    - 2MCCW
+    - 2MWCW
+    - 1x4WW
+    padding: 480000002c00000028000000330000001d0000001d0000002c0000001800000035000000140000003f000000140000001c0000001c0000002d000000
+    unwrapper: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  - meshName:
+    - TopDB
+    padding: 19000000
+    unwrapper: 00000000
+  - meshName:
+    - GroundCaS
+    - GroundC
+    padding: 4800000024000000
+    unwrapper: 0000000000000000
+  - meshName:
+    - BigGlass
+    - Glass
+    - CornerGlass
+    - ColorDoor
+    padding: 220000002c0000001e00000049000000
+    unwrapper: 00000000000000000000000000000000
+  - meshName:
+    - GlassR
+    - PlasticR
+    - ACIL CIKIS.001
+    - PaperR
+    - MetalR
+    - ACIL CIKIS
+    padding: 5c0000005c000000500000005c0000005c0000003e000000
+    unwrapper: 000000000000000000000000000000000000000000000000
+  - meshName:
+    - MiniTableBig
+    - office_table_N
+    padding: 9800000037000000
+    unwrapper: 0000000000000000
+  - meshName:
+    - Merdiven.002
+    - Cube
+    padding: 13000000fe000000
+    unwrapper: 0000000000000000
+  - meshName:
+    - LiftButton
+    padding: 00010000
+    unwrapper: 00000000
+  - meshName:
+    - Plane.001
+    padding: 0e000000
+    unwrapper: 00000000
+  - meshName:
+    - Plane
+    - CafeteriaTop
+    - CafeteriaBottom
+    padding: 1a0000000b00000015000000
+    unwrapper: 000000000000000000000000
+  - meshName:
+    - LobiNew
+    padding: 1f000000
     unwrapper: 00000000
   assetList:
   - Assets/AssetSection/FireTool/FireBlanket.fbx
@@ -76,7 +158,8 @@ MonoBehaviour:
   - Assets/Project/Hand (2).fbx
   - Assets/Project/CO2.fbx
   - Assets/Project/CO2 1.fbx
-  uvOverlapAssetList: 000000000101000000000000010100000000000000000000000000000000000000000000010100000000000001010000000000000000000000000000000000000000000000000000000000000101000000000000010100000000000001010000000000000000000000000000000000000000000000000000
+  - Assets/AssetSection/BKAsset/Mesh/Third/electronicWasteBin.fbx
+  uvOverlapAssetList: 00000000010100000000000001010000000000000000000000000000000000000000000001010000000000000101000000000000000000000000000000000000000000000000000000000000010100000000000001010000000000000101000000000000000000000000000000000000000000000000000000000000
   xatlasWarningShown: 0
   foundCompatibleSetup: 1
   gpuName_2: NVIDIA GeForce RTX 3060 Ti
@@ -178,5 +261,5 @@ MonoBehaviour:
   renderSettingsRTPVExposure: 1
   renderSettingsRemoveDuplicateLightmaps: 0
   tagOverrides: []
-  modifiedMeshPaddingArray: 13000000
+  modifiedMeshPaddingArray: 1f000000
   modifiedMeshUnwrapperArray: 00000000
