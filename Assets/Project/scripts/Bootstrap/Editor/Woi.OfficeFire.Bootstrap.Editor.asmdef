@@ -1,0 +1,20 @@
+{
+    "name": "Woi.OfficeFire.Bootstrap.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Woi.OfficeFire.Bootstrap",
+        "Woi.Porting",
+        "Unity.XR.Management"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

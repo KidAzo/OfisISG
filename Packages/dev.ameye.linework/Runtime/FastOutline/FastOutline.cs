@@ -280,7 +280,10 @@ namespace Linework.FastOutline
                         case MaterialType.Basic:
                             drawingSettings.overrideMaterial = outline.gpuInstancing ? outline.materialInstanced : outline.material;
                             drawingSettings.overrideMaterialPassIndex = (int) outline.extrusionMethod;
-                            drawingSettings.enableInstancing = outline.gpuInstancing;
+                            // Keep URP's default instancing enabled. XR single-pass instanced/multiview
+                            // needs the instanced draw path even when Linework's optional object GPU
+                            // instancing material is not selected.
+                            drawingSettings.enableInstancing = true;
                             break;
                         case MaterialType.Custom when outline.customMaterial != null:
                             drawingSettings.overrideMaterial = outline.customMaterial;
@@ -476,6 +479,7 @@ namespace Linework.FastOutline
         [SerializeField] private ShaderResources shaders;
         private Material maskMaterial, outlineMaterial, outlineInstancedMaterial, clearMaterial;
         private FastOutlinePass fastOutlinePass;
+        private bool xrRuntimeDiagnosticLogged;
 
         /// <summary>
         /// Called
@@ -517,9 +521,34 @@ namespace Linework.FastOutline
                 Debug.LogWarning("Not all required materials could be created. Fast Outline will not render.");
                 return;
             }
-            
+
             var render = fastOutlinePass.Setup(ref settings, ref maskMaterial, ref outlineMaterial, ref outlineInstancedMaterial, ref clearMaterial);
             if (render) renderer.EnqueuePass(fastOutlinePass);
+            LogXrRuntimeDiagnosticOnce(renderer, ref renderingData, render);
+        }
+
+        private void LogXrRuntimeDiagnosticOnce(ScriptableRenderer renderer, ref RenderingData renderingData, bool passEnqueued)
+        {
+            if (xrRuntimeDiagnosticLogged || !renderingData.cameraData.xr.enabled)
+                return;
+
+            xrRuntimeDiagnosticLogged = true;
+            var camera = renderingData.cameraData.camera;
+            var outline = settings.Outlines.Find(candidate => candidate != null && candidate.IsActive());
+            string quality = QualitySettings.names[QualitySettings.GetQualityLevel()];
+            string pipeline = GraphicsSettings.currentRenderPipeline != null
+                ? GraphicsSettings.currentRenderPipeline.name
+                : "none";
+            string layerMask = outline != null ? outline.layerMask.value.ToString() : "none";
+            string extrusion = outline != null ? ((int)outline.extrusionMethod).ToString() : "none";
+            bool active = isActive && outline != null;
+
+            Debug.Log(
+                $"[HazardOutlineRuntime] quality={quality} pipeline={pipeline} renderer={renderer.GetType().Name} " +
+                $"camera={(camera != null ? camera.name : "none")} cameraRendererIndex=-1/default " +
+                $"xrSinglePass={renderingData.cameraData.xr.singlePassEnabled} fastOutlineActive={active} " +
+                $"passEnqueued={passEnqueued} outlineLayerMask={layerMask} extrusionMethod={extrusion} " +
+                $"maskShaderSupported={maskMaterial.shader.isSupported} outlineShaderSupported={outlineMaterial.shader.isSupported}");
         }
         
         #pragma warning disable 618, 672

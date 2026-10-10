@@ -334,6 +334,13 @@ namespace WOI.Module.Fire.DI
 
             RegisterOrReplace<IPlayerService>(playerService);
 
+            Debug.Log(
+                "[StandalonePC]\n" +
+                "stage=service-register\n" +
+                "service=IPlayerService\n" +
+                "implementation=" + playerService.GetType().FullName + "\n" +
+                "scene=" + gameObject.scene.name);
+
 
 
             Debug.Log("[FireServiceInstaller] InstallBindings END");

@@ -17,6 +17,8 @@ namespace Woi.OfficeFire
         private readonly float _hoverOutlineWidth;
 
         private OfficeFireInteractPopupHost _popupHost;
+        private bool _hostMissing;
+        private static bool _loggedMissingHost;
         private float _defaultOutlineWidth;
         private bool _isHovered;
         private string _instructionText = string.Empty;
@@ -155,12 +157,20 @@ namespace Woi.OfficeFire
                 return _popupHost;
             }
 
+            if (_hostMissing)
+                return null;
+
             _popupHost = null;
             if (!OfficeFireInteractPopupHost.TryGetInstance(out _popupHost))
             {
-                Debug.LogWarning(
-                    "[InstructionPromptController] OfficeFireInteractPopupHost not found in scene. Add InteractHoverPopupHost under UI.",
-                    _host);
+                _hostMissing = true;
+                if (!_loggedMissingHost)
+                {
+                    _loggedMissingHost = true;
+                    Debug.LogWarning(
+                        "[InstructionPromptController] OfficeFireInteractPopupHost not found in scene. Add InteractHoverPopupHost under UI.",
+                        _host);
+                }
             }
 
             return _popupHost;

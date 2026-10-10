@@ -1,0 +1,33 @@
+{
+    "name": "Woi.Office.Hazard",
+    "rootNamespace": "",
+    "references": [
+        "Woi.OfficeFire.Bootstrap",
+        "Woi.OfficeFire.Scenario",
+        "WOI.Modules.SDK",
+        "Woi.SceneGroup",
+        "Woi.Events",
+        "Woi.Porting",
+        "Woi.InputSystem",
+        "Woi.Player",
+        "Woi.Utils",
+        "WoiUtils.AudioSystem.Runtime",
+        "Obvious.Soap",
+        "PrimeTween.Runtime",
+        "UniTask",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "UnityEngine.UIElementsModule",
+        "Unity.InputSystem",
+        "Unity.XR.Interaction.Toolkit"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

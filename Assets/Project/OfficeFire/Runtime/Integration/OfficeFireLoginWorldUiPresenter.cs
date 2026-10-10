@@ -82,16 +82,32 @@ namespace Woi.OfficeFire
             SnapInFrontOfEye();
         }
 
+        /// <summary>
+        /// Hazard LoginScreen and WasteLogin use the shared standalone selector unless Hub already overrode it.
+        /// Other login scenes keep <see cref="FirePlatformRuntime.IsVR"/>.
+        /// </summary>
+        private bool PresentationIsVr()
+        {
+            string sceneName = gameObject.scene.name;
+            if (sceneName == "LoginScreen" || sceneName == "WasteLogin")
+            {
+                StandalonePlatform.ApplyIfNoHubOverride();
+                return StandalonePlatform.IsVrActive;
+            }
+
+            return FirePlatformRuntime.IsVR;
+        }
+
         private bool ShouldFollowHeadInVr()
         {
             // Login VR always tracks the active headset — scene may still serialize followHeadEachFrame off.
-            return followHeadEachFrame || FirePlatformRuntime.IsVR;
+            return followHeadEachFrame || PresentationIsVr();
         }
 
         /// <summary>Call after UXML binds so VR layout/collider refresh runs.</summary>
         public void NotifyContentReady()
         {
-            if (FirePlatformRuntime.IsVR && !_configuredForVr)
+            if (PresentationIsVr() && !_configuredForVr)
                 ApplyForCurrentMode();
 
             if (!_configuredForVr || uiDocument == null)
@@ -104,7 +120,7 @@ namespace Woi.OfficeFire
 
         public void ApplyForCurrentMode()
         {
-            if (FirePlatformRuntime.IsVR)
+            if (PresentationIsVr())
                 ConfigureForVr();
             else
                 ConfigureForPc();
@@ -227,7 +243,7 @@ namespace Woi.OfficeFire
                 if (!isActiveAndEnabled)
                     yield break;
 
-                if (FirePlatformRuntime.IsVR)
+                if (PresentationIsVr())
                 {
                     ResolveXrRigRoot();
                     if (!_configuredForVr)
@@ -237,6 +253,8 @@ namespace Woi.OfficeFire
                 if (!_configuredForVr)
                     continue;
 
+                ApplyVrRootLayout();
+                RegisterGeometryCallback();
                 RepositionInFrontOfPlayer();
             }
 

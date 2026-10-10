@@ -34,6 +34,7 @@
 
             <ui:VisualElement class="result-button-group">
                 <ui:Button name="RestartButton" text="TEKRAR BAŞLA" class="restart-button" />
+                <ui:Button name="ReturnToHubButton" text="HUB'A DÖN" class="quit-button" style="display: none;" />
                 <ui:Button name="QuitButton" text="OYUNU KAPAT" class="quit-button" />
             </ui:VisualElement>
         </ui:VisualElement>

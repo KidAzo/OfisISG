@@ -210,7 +210,12 @@ MonoBehaviour:
   - GroupName: WasteLogin
     Scenes:
     - SceneName: WasteLogin
-      AddressableKey: 
+      AddressableKey: WasteLogin
+      SceneType: 0
+  - GroupName: Waste_Office
+    Scenes:
+    - SceneName: Waste_Office
+      AddressableKey: Waste_Office
       SceneType: 0
   - GroupName: WasteCollector
     Scenes:
@@ -227,12 +232,19 @@ MonoBehaviour:
     - SceneName: Office
       AddressableKey: HazardHunt_Office
       SceneType: 0
+  - GroupName: HazardHunt_Login
+    Scenes:
+    - SceneName: LoginScreen
+      AddressableKey: HazardHunt_Login
+      SceneType: 0
   _runCatalogHealthBeforeSelectedGroups: 1
   _catalogHealthGroupNames:
   - FireModule_Office
   - WasteLogin
+  - Waste_Office
   - WasteCollector
   - HazardHunt_Office
+  - HazardHunt_Login
   _catalogHealthRequiredKeys:
   - Managers/SceneLoader
   - Managers/InputManager

@@ -1,0 +1,21 @@
+{
+    "name": "Woi.Office.Session",
+    "rootNamespace": "",
+    "references": [
+        "Woi.Utils",
+        "Woi.Events",
+        "Woi.Fire.Events",
+        "FireExtinguisher.Core",
+        "Obvious.Soap",
+        "UnityEngine.UnityWebRequestModule"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

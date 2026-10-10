@@ -283,6 +283,8 @@ GameObject:
   m_Component:
   - component: {fileID: 924146848}
   - component: {fileID: 924146847}
+  - component: {fileID: 924146849}
+  - component: {fileID: 924146850}
   m_Layer: 5
   m_Name: Login
   m_TagString: Untagged
@@ -319,11 +321,77 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.108, y: 0.108, z: 0.108}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &924146849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924146846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9df992e04e6d74a40945590f88060f76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Woi.OfficeFire.Integration::Woi.OfficeFire.OfficeFireLoginWorldUiPresenter
+  uiDocument: {fileID: 924146847}
+  worldPanelSettingsSource: {fileID: 11400000, guid: e7f3a1b9c4d24680af1234567890abcd, type: 2}
+  screenPanelSettingsSource: {fileID: 11400000, guid: 002e64af296974349ad4b0e52787b7d1, type: 2}
+  xrRigRoot: {fileID: 88001002}
+  localOffsetFromEye: {x: 0, y: -0.08, z: 1.35}
+  fixedWorldPanelPixels: {x: 1180, y: 860}
+  followHeadEachFrame: 1
+  billboardYawOffsetDegrees: 180
+--- !u!114 &924146850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924146846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c8e1a7b2d9f4e6a9c0b3d5f7a1e8c24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Woi.OfficeFire.Integration::Woi.OfficeFire.HubLoginXrRig
+  xrOriginRoot: {fileID: 88001003}
+  pcCameraRoot: {fileID: 993490448}
+  screenSpaceCanvasRoot: {fileID: 1090521660}
+--- !u!1001 &88001001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1717954561962503725, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+      propertyPath: m_Name
+      value: XR Origin (XR Rig)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1717954561962503725, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+--- !u!1 &88001003 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1717954561962503725, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 88001001}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &88001002 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1717954561962503726, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 88001001}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &974173711
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,6 +1261,7 @@ SceneRoots:
   - {fileID: 1179252725}
   - {fileID: 1130203948}
   - {fileID: 924146848}
+  - {fileID: 88001001}
   - {fileID: 1709048921}
   - {fileID: 507491349}
   - {fileID: 1090521664}

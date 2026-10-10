@@ -54,6 +54,7 @@ namespace Woi.VrBridge.Client.UI
             ["authorized.status.expired"] = ("Authorization expired. Ask the Operator Console to re-authorize.", "Yetkilendirmenin süresi doldu. Operatör Konsolu'ndan yeniden yetkilendirme isteyin."),
             ["authorized.status.failed"] = ("Could not start training. Ask the Operator Console to re-authorize.", "Eğitim başlatılamadı. Operatör Konsolu'ndan yeniden yetkilendirme isteyin."),
             ["authorized.module.fire-training"] = ("Fire Training", "Yangın Eğitimi"),
+            ["authorized.module.office-waste"] = ("Waste Collection", "Atık Toplama"),
             ["authorized.module.default"] = ("Training Module", "Eğitim Modülü")
         };
 

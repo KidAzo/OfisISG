@@ -1,0 +1,22 @@
+{
+    "name": "Woi.Office.Waste.VrBridge",
+    "rootNamespace": "Woi.WasteCollectionMode.VrBridge",
+    "references": [
+        "Woi.Office.Waste",
+        "Woi.OfficeFire.Integration",
+        "Woi.VrBridge.Client.Runtime",
+        "Woi.VrBridge.Client.Protocol",
+        "WOI.Modules.SDK",
+        "Woi.SceneGroup",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

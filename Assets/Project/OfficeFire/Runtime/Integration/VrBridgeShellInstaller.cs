@@ -39,6 +39,7 @@ namespace Woi.OfficeFire.VrBridge
         VrBridgeLifecycleHost _lifecycle;
         BridgeModuleLauncherHost _launcherHost;
         OfficeFireBridgeModuleLauncher _moduleLauncher;
+        BridgeModuleLauncherRouter _moduleRouter;
         FireBridgeSessionAdapter _fireAdapter;
         VrBridgePairingPanel _pairingPanel;
         VrBridgeDiagnosticsPanel _diagnosticsPanel;
@@ -47,6 +48,7 @@ namespace Woi.OfficeFire.VrBridge
         public static VrBridgeShellInstaller Instance => _instance;
         public VrBridgeClient Client => _client;
         public BridgeClientConfig Config => _config;
+        public BridgeModuleLauncherRouter ModuleRouter => _moduleRouter;
 
         void Awake()
         {
@@ -126,8 +128,13 @@ namespace Woi.OfficeFire.VrBridge
                 return;
             }
 
-            _fireAdapter?.TryResolveRecorder();
-            _fireAdapter?.Bind(_client, context);
+            // The Fire adapter publishes results for any bound context, so it must never see another module's session.
+            if (_moduleLauncher != null && _moduleLauncher.CanLaunch(context.ModuleId))
+            {
+                _fireAdapter?.TryResolveRecorder();
+                _fireAdapter?.Bind(_client, context);
+            }
+
             Debug.Log($"[VRBridge] Authorization ready sessionId={context.SessionId} moduleId={context.ModuleId} — waiting for player to press Start Training.");
         }
 
@@ -187,9 +194,13 @@ namespace Woi.OfficeFire.VrBridge
             SetPrivateField(_fireAdapter, "_bridgeClient", _client);
             SetPrivateField(_fireAdapter, "_moduleId", _moduleId);
 
-            _launcherHost.Launcher = _moduleLauncher;
-            _client.Initialize(_config, moduleLauncher: _moduleLauncher);
-            VrBridgeRuntime.Register(_client);
+            // One client, one launcher slot: the router keeps Office Fire first and accepts module launchers
+            // registered later through VrBridgeRuntime.ModuleRouter (e.g. office-waste).
+            _moduleRouter = new BridgeModuleLauncherRouter();
+            _moduleRouter.Register(_moduleLauncher);
+            _launcherHost.Launcher = _moduleRouter;
+            _client.Initialize(_config, moduleLauncher: _moduleRouter);
+            VrBridgeRuntime.Register(_client, _moduleRouter);
         }
 
         void EnsureUi()
@@ -197,7 +208,8 @@ namespace Woi.OfficeFire.VrBridge
             var canvasGo = transform.Find("BridgeUiCanvas");
             if (canvasGo == null)
             {
-                canvasGo = new GameObject("BridgeUiCanvas").transform;
+                // Created with a RectTransform: adding a Canvas to a plain Transform replaces (destroys) that Transform.
+                canvasGo = new GameObject("BridgeUiCanvas", typeof(RectTransform)).transform;
                 canvasGo.SetParent(transform, false);
                 var canvas = canvasGo.gameObject.AddComponent<Canvas>();
                 canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -243,13 +255,32 @@ namespace Woi.OfficeFire.VrBridge
             var startButton = CreateButton(root.transform, "StartButton", "Eğitimi Başlat", new Vector2(0, -180));
             startButton.GetComponent<RectTransform>().sizeDelta = new Vector2(220, 48);
 
-            var panel = root.AddComponent<AuthorizedTrainingPanel>();
-            SetPrivateField(panel, "_brandText", brand);
-            SetPrivateField(panel, "_moduleText", module);
-            SetPrivateField(panel, "_participantText", participant);
-            SetPrivateField(panel, "_personnelText", personnel);
-            SetPrivateField(panel, "_statusText", status);
-            SetPrivateField(panel, "_startButton", startButton);
+            var panel = AddWiredPanel<AuthorizedTrainingPanel>(root, p =>
+            {
+                SetPrivateField(p, "_brandText", brand);
+                SetPrivateField(p, "_moduleText", module);
+                SetPrivateField(p, "_participantText", participant);
+                SetPrivateField(p, "_personnelText", personnel);
+                SetPrivateField(p, "_statusText", status);
+                SetPrivateField(p, "_startButton", startButton);
+            });
+
+            root.AddComponent<VrBridgeAuthorizedPanelPresenter>().Initialize(transform);
+            return panel;
+        }
+
+        /// <summary>
+        /// The Bridge panels bind the client and their buttons in Awake, so they are added while inactive, wired,
+        /// then activated once. Every panel is left inactive; its own state handlers show it.
+        /// </summary>
+        T AddWiredPanel<T>(GameObject root, Action<T> wire) where T : Component
+        {
+            root.SetActive(false);
+            var panel = root.AddComponent<T>();
+            wire(panel);
+            SetPrivateField(panel, "_client", _client);
+            SetPrivateField(panel, "_config", _config);
+            root.SetActive(true);
             root.SetActive(false);
             return panel;
         }
@@ -281,17 +312,17 @@ namespace Woi.OfficeFire.VrBridge
             var retry = CreateButton(root.transform, "Retry", "Retry", new Vector2(0, -90));
             var repair = CreateButton(root.transform, "Repair", "Re-pair", new Vector2(120, -90));
 
-            var panel = root.AddComponent<VrBridgePairingPanel>();
-            SetPrivateField(panel, "_codeInput", input);
-            SetPrivateField(panel, "_brandText", brand);
-            SetPrivateField(panel, "_titleText", title);
-            SetPrivateField(panel, "_instructionsText", instructions);
-            SetPrivateField(panel, "_statusText", status);
-            SetPrivateField(panel, "_submitButton", submit);
-            SetPrivateField(panel, "_retryButton", retry);
-            SetPrivateField(panel, "_repairButton", repair);
-            root.SetActive(false);
-            return panel;
+            return AddWiredPanel<VrBridgePairingPanel>(root, panel =>
+            {
+                SetPrivateField(panel, "_codeInput", input);
+                SetPrivateField(panel, "_brandText", brand);
+                SetPrivateField(panel, "_titleText", title);
+                SetPrivateField(panel, "_instructionsText", instructions);
+                SetPrivateField(panel, "_statusText", status);
+                SetPrivateField(panel, "_submitButton", submit);
+                SetPrivateField(panel, "_retryButton", retry);
+                SetPrivateField(panel, "_repairButton", repair);
+            });
         }
 
         VrBridgeDiagnosticsPanel BuildDiagnosticsPanel(Transform canvas)
@@ -314,15 +345,15 @@ namespace Woi.OfficeFire.VrBridge
             var toggle = CreateButton(canvas, "DiagnosticsToggle", "Bridge Diagnostics", new Vector2(0, -Screen.height * 0.42f));
             toggle.onClick.AddListener(() => root.SetActive(!root.activeSelf));
 
-            var panel = root.AddComponent<VrBridgeDiagnosticsPanel>();
-            SetPrivateField(panel, "_summaryText", summary);
-            SetPrivateField(panel, "_retryButton", retry);
-            SetPrivateField(panel, "_repairButton", repair);
-            SetPrivateField(panel, "_copyErrorButton", copy);
-            SetPrivateField(panel, "_resetIdentityButton", reset);
-            SetPrivateField(panel, "_exportButton", export);
-            root.SetActive(false);
-            return panel;
+            return AddWiredPanel<VrBridgeDiagnosticsPanel>(root, panel =>
+            {
+                SetPrivateField(panel, "_summaryText", summary);
+                SetPrivateField(panel, "_retryButton", retry);
+                SetPrivateField(panel, "_repairButton", repair);
+                SetPrivateField(panel, "_copyErrorButton", copy);
+                SetPrivateField(panel, "_resetIdentityButton", reset);
+                SetPrivateField(panel, "_exportButton", export);
+            });
         }
 
         void ApplyEditorDevelopmentEndpoint()

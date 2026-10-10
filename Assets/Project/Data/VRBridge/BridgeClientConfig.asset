@@ -34,6 +34,7 @@ MonoBehaviour:
   SupportedModuleIds:
   - fire-training
   - default
+  - office-waste
   HandshakeTimeoutSeconds: 10
   MaxSendQueueSize: 32
   MaxMalformedMessagesBeforeClose: 8

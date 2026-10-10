@@ -14,6 +14,7 @@ namespace Woi.Player
     public class PlayerController : MonoBehaviour
     {
         private IPlayerService _playerService;
+        static bool _loggedPlayerBind;
 
         [Header("Movement Settings")]
         [SerializeField] private float _walkSpeed = 5f;
@@ -86,6 +87,22 @@ namespace Woi.Player
             }
 
             _playerService.RegisterPlayer(this);
+            LogPlayerBind(true);
+        }
+
+        void LogPlayerBind(bool serviceAvailable)
+        {
+            if (_loggedPlayerBind)
+                return;
+
+            _loggedPlayerBind = true;
+            Debug.Log(
+                "[StandalonePC]\n" +
+                "stage=player-bind\n" +
+                "serviceAvailable=" + serviceAvailable + "\n" +
+                "player=" + name + "\n" +
+                "scene=" + gameObject.scene.name,
+                this);
         }
 
         private void Start()
@@ -107,6 +124,7 @@ namespace Woi.Player
 
             if (_playerService == null)
             {
+                LogPlayerBind(false);
                 Debug.LogError(
                     "[PlayerController] IPlayerService never became available — movement/look input will not work.",
                     this);

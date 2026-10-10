@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Office_Waste
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Office_Waste
+  m_GUID: d4f71b23a0526c19e6d48f203ca15e7b
+  m_SerializeEntries:
+  - m_GUID: e4b82c1a6f9034d5a7c8e1b2093f4d6a
+    m_Address: Waste_Boot
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-waste-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0786b739b76e008488580b0b346aebce
+    m_Address: WasteLogin
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-waste-full
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f1a0c9d8e7b64523a4c3d2e1f0b9a876
+    m_Address: Waste_Office
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - module-office-waste-full
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3c60501d4ea17ec4796be47a8a3f237c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: e5082c34b1637d20f7e590314db26f8c, type: 2}
+    - {fileID: 11400000, guid: f6193d45c2748e31a8f6a1425ec3709d, type: 2}

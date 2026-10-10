@@ -5,8 +5,11 @@
         "Woi.Utils",
         "Woi.SceneGroup",
         "Woi.Porting",
+        "Woi.Events",
+        "Obvious.Soap",
         "UniTask",
         "WOI.Modules.SDK",
+        "Woi.Player",
         "Unity.Addressables",
         "Unity.ResourceManager"
     ],

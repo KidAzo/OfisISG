@@ -1,0 +1,33 @@
+{
+    "name": "Woi.Office.Waste.VrBridge.Tests.PlayMode",
+    "rootNamespace": "Woi.WasteCollectionMode.VrBridge.Tests",
+    "references": [
+        "Woi.Office.Waste.VrBridge",
+        "Woi.Office.Waste",
+        "Woi.OfficeFire.Integration",
+        "Woi.Fire.VrBridge",
+        "Woi.VrBridge.Client.Runtime",
+        "Woi.VrBridge.Client.Protocol",
+        "Woi.VrBridge.Client.UI",
+        "Unity.XR.Interaction.Toolkit",
+        "Unity.InputSystem",
+        "UnityEngine.UI",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false,
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}
