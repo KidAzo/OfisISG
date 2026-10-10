@@ -62,6 +62,24 @@ namespace Woi.Settings
 			return LoadScene(name, SceneLoadPresentation.Default);
 		}
 
+		/// <summary>
+		/// Read-only lookup of a configured scene group. Does not load or unload scenes.
+		/// </summary>
+		public SceneGroup FindSceneGroup(string groupName)
+		{
+			if (sceneGroups == null || string.IsNullOrEmpty(groupName))
+				return null;
+
+			for (int i = 0; i < sceneGroups.Length; i++)
+			{
+				SceneGroup group = sceneGroups[i];
+				if (group != null && string.Equals(group.GroupName, groupName, StringComparison.Ordinal))
+					return group;
+			}
+
+			return null;
+		}
+
 		public async Task LoadScene(string name, SceneLoadPresentation presentation)
 		{
 			int index = GetGroupIndex(name);

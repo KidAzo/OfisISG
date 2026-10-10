@@ -93,7 +93,7 @@ namespace Woi.OfficeFire
             }
 
             FireServiceInstaller.OnServicesReady += OnFireServicesReady;
-            if (IsSceneLoaderRegistered())
+            if (IsSceneLoaderRegistered() && ShouldAutoLoadWhenServicesReady())
             {
                 TryIssueStartupLoad("Scene loader already on ServiceLocator (installer finished before subscription)");
             }
@@ -115,6 +115,7 @@ namespace Woi.OfficeFire
                 $"[OfficeGameModulesBootstrapper] IModuleBootstrap.Initialize moduleId={context?.ModuleId} " +
                 $"entryKey={context?.TargetModule?.EntrySceneKey}");
 
+            OfficeFireBootstrapper.MarkHubLaunchRequested();
             TryIssueStartupLoad("IModuleBootstrap.Initialize");
             return Task.CompletedTask;
         }
@@ -134,7 +135,22 @@ namespace Woi.OfficeFire
 
         private void OnFireServicesReady()
         {
+            if (!ShouldAutoLoadWhenServicesReady())
+                return;
+
             TryIssueStartupLoad("FireServiceInstaller.OnServicesReady");
+        }
+
+        /// <summary>
+        /// Direct Play of Fire training is loaded in Single mode by <see cref="OfficeFireBootstrapper"/>.
+        /// Hub <see cref="Initialize"/> still uses the scene-group loader.
+        /// </summary>
+        private bool ShouldAutoLoadWhenServicesReady()
+        {
+            if (gameModule != OfficeGameModule.FireTraining)
+                return true;
+
+            return OfficeFireBootstrapper.HubLaunchRequested;
         }
 
         private void TryIssueStartupLoad(string reason)

@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
+using UnityEngine.ResourceManagement.ResourceProviders;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Woi.Events.Data;
 using Woi.Settings;
@@ -321,6 +326,12 @@ namespace Woi.OfficeFire
                 yield break;
             }
 
+            if (!OfficeFireBootstrapper.HubLaunchRequested)
+            {
+                yield return LoadStandaloneGameplay();
+                yield break;
+            }
+
             Task loadTask;
             try
             {
@@ -362,6 +373,357 @@ namespace Woi.OfficeFire
             isLoading = false;
             if (startButton != null)
                 startButton.SetEnabled(true);
+        }
+
+        struct StandaloneSceneEntry
+        {
+            public string SceneName;
+            public string AddressableKey;
+            public bool IsActive;
+        }
+
+        static List<StandaloneSceneEntry> _standaloneEntries;
+        const string StandaloneLoginSceneName = "OfficeFireModule_Login";
+
+        /// <summary>
+        /// Standalone Play leaves OfficeFireModule_Login at scene index 0, which the group loader cannot unload.
+        /// The active scene of the FireModule_Office group replaces login. The group's other scenes then load additively.
+        /// Hub keeps <see cref="ISceneLoaderService.LoadScene"/>.
+        /// </summary>
+        IEnumerator LoadStandaloneGameplay()
+        {
+            if (!TryCopyFireGameplayGroup(out List<StandaloneSceneEntry> entries))
+            {
+                Debug.LogError(
+                    "[FireStandalone] SceneLoader has no FireModule_Office group. Login will be replaced, but the additive set cannot be read.");
+                entries = new List<StandaloneSceneEntry>
+                {
+                    new StandaloneSceneEntry
+                    {
+                        SceneName = TargetSceneGroup,
+                        AddressableKey = TargetSceneGroup,
+                        IsActive = true
+                    }
+                };
+            }
+
+            _standaloneEntries = entries;
+            OfficeFireStandaloneSceneGate.BeginWaitingForAdditiveScenes();
+
+            StandaloneSceneEntry activeEntry = FindActiveEntry(entries);
+            string loadKey = string.IsNullOrEmpty(activeEntry.AddressableKey)
+                ? activeEntry.SceneName
+                : activeEntry.AddressableKey;
+            BeginSingleBaseLoad(loadKey, activeEntry.SceneName);
+            yield break;
+        }
+
+        static bool TryCopyFireGameplayGroup(out List<StandaloneSceneEntry> entries)
+        {
+            entries = new List<StandaloneSceneEntry>();
+            if (!ServiceLocator.TryGet(out SceneLoader loader) || loader == null)
+                return false;
+
+            SceneGroup group = loader.FindSceneGroup(TargetSceneGroup);
+            if (group == null || group.Scenes == null || group.Scenes.Count == 0)
+                return false;
+
+            for (int i = 0; i < group.Scenes.Count; i++)
+            {
+                SceneData scene = group.Scenes[i];
+                if (scene == null)
+                    continue;
+                if (string.IsNullOrEmpty(scene.SceneName) && string.IsNullOrEmpty(scene.AddressableKey))
+                    continue;
+
+                entries.Add(new StandaloneSceneEntry
+                {
+                    SceneName = scene.SceneName,
+                    AddressableKey = scene.AddressableKey,
+                    IsActive = scene.SceneType == SceneType.ActiveScene
+                });
+            }
+
+            return entries.Count > 0;
+        }
+
+        static StandaloneSceneEntry FindActiveEntry(List<StandaloneSceneEntry> entries)
+        {
+            for (int i = 0; i < entries.Count; i++)
+            {
+                if (entries[i].IsActive)
+                    return entries[i];
+            }
+
+            return entries[0];
+        }
+
+        static void BeginSingleBaseLoad(string addressableKey, string sceneName)
+        {
+            string key = string.IsNullOrEmpty(addressableKey) ? sceneName : addressableKey;
+            bool addressableKeyFound = false;
+            string addressableError = null;
+            AsyncOperationHandle<IList<IResourceLocation>> locations = default;
+            bool locationsHandleOpen = false;
+            try
+            {
+                locations = Addressables.LoadResourceLocationsAsync(key);
+                locationsHandleOpen = true;
+            }
+            catch (System.Exception exception)
+            {
+                addressableError = exception.Message;
+            }
+
+            if (!locationsHandleOpen)
+            {
+                LoadBaseThroughSceneManager(sceneName, addressableError);
+                return;
+            }
+
+            locations.Completed += locationResult =>
+            {
+                addressableKeyFound =
+                    locationResult.Status == AsyncOperationStatus.Succeeded
+                    && locationResult.Result != null
+                    && locationResult.Result.Count > 0;
+                if (!addressableKeyFound)
+                {
+                    addressableError = locationResult.OperationException != null
+                        ? locationResult.OperationException.Message
+                        : "Addressables has no location for " + key;
+                }
+
+                if (locationResult.IsValid())
+                    Addressables.Release(locationResult);
+
+                if (!addressableKeyFound)
+                {
+                    LoadBaseThroughSceneManager(string.IsNullOrEmpty(sceneName) ? key : sceneName, addressableError);
+                    return;
+                }
+
+                AsyncOperationHandle<SceneInstance> handle;
+                try
+                {
+                    handle = Addressables.LoadSceneAsync(key, LoadSceneMode.Single);
+                }
+                catch (System.Exception exception)
+                {
+                    LoadBaseThroughSceneManager(string.IsNullOrEmpty(sceneName) ? key : sceneName, exception.Message);
+                    return;
+                }
+
+                handle.Completed += completed =>
+                {
+                    if (completed.Status == AsyncOperationStatus.Succeeded)
+                    {
+                        ContinueAdditiveGroupLoad();
+                        return;
+                    }
+
+                    if (completed.IsValid())
+                        Addressables.Release(completed);
+
+                    LoadBaseThroughSceneManager(
+                        string.IsNullOrEmpty(sceneName) ? key : sceneName,
+                        completed.OperationException != null
+                            ? completed.OperationException.Message
+                            : "Addressables load failed");
+                };
+            };
+        }
+
+        static void LoadBaseThroughSceneManager(string sceneName, string addressableError)
+        {
+            AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+            if (operation == null)
+            {
+                FailStandaloneBeforeGameplay(
+                    (addressableError ?? "no location") + "; SceneManager could not load " + sceneName);
+                return;
+            }
+
+            operation.completed += _ =>
+            {
+                if (SceneManager.GetSceneByName(sceneName).isLoaded)
+                {
+                    ContinueAdditiveGroupLoad();
+                    return;
+                }
+
+                FailStandaloneBeforeGameplay(addressableError ?? "SceneManager load failed");
+            };
+        }
+
+        static void FailStandaloneBeforeGameplay(string error)
+        {
+            OfficeFireStandaloneSceneGate.CancelWaiting();
+            Debug.LogError("[FireStandalone] Base gameplay scene failed: " + error);
+            OfficeFireLoginScreenController screen =
+                UnityEngine.Object.FindFirstObjectByType<OfficeFireLoginScreenController>();
+            if (screen != null)
+                screen.RestoreAfterFailedStandaloneLoad(error);
+
+            LogFullGameplayLoad(false);
+        }
+
+        void RestoreAfterFailedStandaloneLoad(string error)
+        {
+            ShowError(error);
+            isLoading = false;
+            if (startButton != null)
+                startButton.SetEnabled(true);
+        }
+
+        static void ContinueAdditiveGroupLoad()
+        {
+            OfficeFireBootstrapper host = OfficeFireBootstrapper.TryGetInstance();
+            if (host == null)
+            {
+                Debug.LogError("[FireStandalone] DontDestroyOnLoad bootstrapper is missing. Additive Fire scenes were not loaded.");
+                LogFullGameplayLoad(false);
+                return;
+            }
+
+            host.StartCoroutine(LoadAdditiveGroupScenes());
+        }
+
+        static IEnumerator LoadAdditiveGroupScenes()
+        {
+            List<StandaloneSceneEntry> entries = _standaloneEntries;
+            if (entries != null)
+            {
+                for (int i = 0; i < entries.Count; i++)
+                {
+                    StandaloneSceneEntry entry = entries[i];
+                    if (entry.IsActive)
+                        continue;
+
+                    string sceneName = string.IsNullOrEmpty(entry.SceneName) ? entry.AddressableKey : entry.SceneName;
+                    if (!string.IsNullOrEmpty(sceneName) && SceneManager.GetSceneByName(sceneName).isLoaded)
+                        continue;
+
+                    yield return LoadAdditiveEntry(entry);
+                }
+            }
+
+            string activeName = ResolveActiveSceneName(entries);
+            Scene active = SceneManager.GetSceneByName(activeName);
+            if (active.IsValid() && active.isLoaded)
+                SceneManager.SetActiveScene(active);
+
+            bool ready = AreRequiredScenesLoaded(entries);
+            LogFullGameplayLoad(ready);
+            if (!ready)
+                yield break;
+
+            OfficeFireBootstrapper host = OfficeFireBootstrapper.TryGetInstance();
+            OfficeFireGameplayCameraSetup.RequestEnsureReady(host, "Login→FireModule_Office");
+            OfficeFireVrExtinguisherRigBootstrap.EnsureWired();
+            OfficeFireInputSync.RequestDelayedSync(host, "Login→FireModule_Office");
+            OfficeFireStandaloneSceneGate.MarkAdditiveScenesReady();
+        }
+
+        static IEnumerator LoadAdditiveEntry(StandaloneSceneEntry entry)
+        {
+            string sceneName = string.IsNullOrEmpty(entry.SceneName) ? entry.AddressableKey : entry.SceneName;
+            if (!string.IsNullOrEmpty(entry.AddressableKey))
+            {
+                AsyncOperationHandle<SceneInstance> handle = default;
+                bool started = false;
+                try
+                {
+                    handle = Addressables.LoadSceneAsync(entry.AddressableKey, LoadSceneMode.Additive);
+                    started = true;
+                }
+                catch (System.Exception exception)
+                {
+                    Debug.LogError("[FireStandalone] Additive Addressables load failed for " + entry.AddressableKey + ": " + exception.Message);
+                }
+
+                if (started)
+                {
+                    while (!handle.IsDone)
+                        yield return null;
+
+                    if (handle.Status == AsyncOperationStatus.Succeeded)
+                        yield break;
+
+                    Debug.LogError(
+                        "[FireStandalone] Additive Addressables load failed for " + entry.AddressableKey + ": " +
+                        (handle.OperationException != null ? handle.OperationException.Message : "unknown"));
+                    if (handle.IsValid())
+                        Addressables.Release(handle);
+                }
+            }
+
+            yield return LoadAdditiveThroughSceneManager(sceneName);
+        }
+
+        static IEnumerator LoadAdditiveThroughSceneManager(string sceneName)
+        {
+            if (string.IsNullOrEmpty(sceneName))
+                yield break;
+
+            AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            if (operation == null)
+            {
+                Debug.LogError("[FireStandalone] SceneManager could not additive-load " + sceneName);
+                yield break;
+            }
+
+            while (!operation.isDone)
+                yield return null;
+        }
+
+        static string ResolveActiveSceneName(List<StandaloneSceneEntry> entries)
+        {
+            if (entries == null || entries.Count == 0)
+                return TargetSceneGroup;
+
+            StandaloneSceneEntry active = FindActiveEntry(entries);
+            if (!string.IsNullOrEmpty(active.SceneName))
+                return active.SceneName;
+            if (!string.IsNullOrEmpty(active.AddressableKey))
+                return active.AddressableKey;
+            return TargetSceneGroup;
+        }
+
+        static bool AreRequiredScenesLoaded(List<StandaloneSceneEntry> entries)
+        {
+            if (SceneManager.GetSceneByName(StandaloneLoginSceneName).isLoaded)
+                return false;
+            if (entries == null || entries.Count == 0)
+                return false;
+
+            for (int i = 0; i < entries.Count; i++)
+            {
+                string sceneName = string.IsNullOrEmpty(entries[i].SceneName)
+                    ? entries[i].AddressableKey
+                    : entries[i].SceneName;
+                if (string.IsNullOrEmpty(sceneName) || !SceneManager.GetSceneByName(sceneName).isLoaded)
+                    return false;
+            }
+
+            return true;
+        }
+
+        static void LogFullGameplayLoad(bool requiredScenesReady)
+        {
+            bool loginLoaded = SceneManager.GetSceneByName(StandaloneLoginSceneName).isLoaded;
+            var names = new List<string>(SceneManager.sceneCount);
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+                names.Add(SceneManager.GetSceneAt(i).name);
+
+            Debug.Log(
+                "[FireStandalone]\n" +
+                "stage=full-gameplay-load-complete\n" +
+                "loginLoaded=" + (loginLoaded ? "true" : "false") + "\n" +
+                "activeScene=" + SceneManager.GetActiveScene().name + "\n" +
+                "loadedScenes=" + string.Join(",", names) + "\n" +
+                "scenario=" + OfficeFireLoginSession.SelectedScenarioId + "\n" +
+                "requiredScenesReady=" + (requiredScenesReady ? "true" : "false"));
         }
 
         private static bool TryResolveSceneLoader(out ISceneLoaderService loader)

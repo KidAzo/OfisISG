@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,6 +32,28 @@ namespace Woi.OfficeFire
             if (!autoStartOnPlay)
                 return;
 
+            if (OfficeFireStandaloneSceneGate.IsWaitingForAdditiveScenes)
+            {
+                StartCoroutine(StartWhenAdditiveScenesReady());
+                return;
+            }
+
+            ApplyLoginSelectionAndStart();
+        }
+
+        IEnumerator StartWhenAdditiveScenesReady()
+        {
+            while (OfficeFireStandaloneSceneGate.IsWaitingForAdditiveScenes)
+                yield return null;
+
+            if (!autoStartOnPlay)
+                yield break;
+
+            ApplyLoginSelectionAndStart();
+        }
+
+        void ApplyLoginSelectionAndStart()
+        {
             OfficeFireScenarioId scenarioToStart = startScenario;
 
             if (OfficeFireLoginSession.IsSet)

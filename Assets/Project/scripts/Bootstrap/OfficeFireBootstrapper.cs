@@ -1,8 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
+using UnityEngine.ResourceManagement.ResourceProviders;
+using UnityEngine.SceneManagement;
 using UnityEngine.Scripting;
+using Woi.InputSystem;
+using Woi.Player;
 using Woi.Settings;
 using WoiUtils;
 using WOI.Modules.SDK;
@@ -28,11 +37,23 @@ namespace Woi.Settings
         private static int _initializeGate;
         private static bool _suppressStandaloneFireLogin;
 
+        /// <summary>
+        /// True after a Hub <see cref="Initialize"/> in this Play session.
+        /// Cleared at Play Mode start so a previous session cannot block standalone.
+        /// </summary>
+        public static bool HubLaunchRequested { get; private set; }
+
+        public static void MarkHubLaunchRequested()
+        {
+            HubLaunchRequested = true;
+        }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics()
         {
             _initializeGate = 0;
             _suppressStandaloneFireLogin = false;
+            HubLaunchRequested = false;
         }
 
         /// <summary>
@@ -63,11 +84,15 @@ namespace Woi.Settings
             // PersistentSingleton (DontDestroyOnLoad). Hub Return-to-Hub → Teardown destroys this object;
             // without reopening the gate, the next launch's Initialize no-ops → black screen.
             Interlocked.Exchange(ref _initializeGate, 0);
+            HubLaunchRequested = false;
         }
 
         protected override void Awake()
         {
+            LogBoot("stage=awake");
             FirePlatformRuntime.TryInitialize(portingSettings);
+            if (!HubLaunchRequested && !StandalonePlatform.HasHubOverride)
+                StandalonePlatform.ApplyIfNoHubOverride();
             base.Awake();
         }
 
@@ -78,34 +103,217 @@ namespace Woi.Settings
 
         private void Start()
         {
-            RunBootstrapWhenServicesReadyIfHubDidNot().Forget();
+            StartCoroutine(StandaloneEntryAfterServices());
         }
 
-        private async UniTaskVoid RunBootstrapWhenServicesReadyIfHubDidNot()
+        /// <summary>
+        /// Direct Play has no Hub <see cref="Initialize"/>. Wait for FireServiceInstaller, then load
+        /// OfficeFireModule_Login in Single mode. Hub Initialize keeps the scene-group loader.
+        /// </summary>
+        private IEnumerator StandaloneEntryAfterServices()
         {
             if (_suppressStandaloneFireLogin)
             {
-                Debug.Log(
-                    "[OfficeFireBootstrapper] Skipping standalone Fire login; selected module owns navigation.",
-                    this);
+                LogBoot(WaitingForServicesBody());
+                yield break;
+            }
+
+            float deadline = Time.realtimeSinceStartup + 10f;
+            while (Time.realtimeSinceStartup < deadline)
+            {
+                if (HubLaunchRequested)
+                {
+                    LogBoot(WaitingForServicesBody());
+                    yield break;
+                }
+
+                if (ServicesReady())
+                    break;
+
+                yield return null;
+            }
+
+            LogBoot(WaitingForServicesBody());
+
+            if (HubLaunchRequested || _suppressStandaloneFireLogin)
+                yield break;
+
+            if (!ServicesReady())
+            {
+                LogBoot(
+                    "stage=standalone-entry-load-complete\n" +
+                    "success=false\n" +
+                    "error=" + MissingServicesError());
+                yield break;
+            }
+
+            LogBoot("stage=services-ready");
+            yield return null;
+
+            if (HubLaunchRequested)
+                yield break;
+
+            if (Interlocked.CompareExchange(ref _initializeGate, 1, 0) != 0)
+                yield break;
+
+            if (!StandalonePlatform.HasHubOverride)
+                StandalonePlatform.ApplyIfNoHubOverride();
+
+            string key = string.IsNullOrWhiteSpace(loginSceneGroupName)
+                ? "OfficeFireModule_Login"
+                : loginSceneGroupName.Trim();
+            LogBoot(
+                "stage=standalone-entry-load-begin\n" +
+                "key=" + key);
+
+            bool addressableKeyFound = false;
+            string addressableError = null;
+            AsyncOperationHandle<IList<IResourceLocation>> locations = default;
+            bool locationsHandleOpen = false;
+            try
+            {
+                locations = Addressables.LoadResourceLocationsAsync(key);
+                locationsHandleOpen = true;
+            }
+            catch (System.Exception exception)
+            {
+                addressableError = exception.Message;
+            }
+
+            if (locationsHandleOpen)
+            {
+                while (!locations.IsDone)
+                    yield return null;
+
+                addressableKeyFound =
+                    locations.Status == AsyncOperationStatus.Succeeded
+                    && locations.Result != null
+                    && locations.Result.Count > 0;
+                if (!addressableKeyFound)
+                {
+                    addressableError = locations.OperationException != null
+                        ? locations.OperationException.Message
+                        : "Addressables has no location for " + key;
+                }
+
+                if (locations.IsValid())
+                    Addressables.Release(locations);
+            }
+
+            if (addressableKeyFound)
+            {
+                AsyncOperationHandle<SceneInstance> handle;
+                try
+                {
+                    handle = Addressables.LoadSceneAsync(key, LoadSceneMode.Single);
+                }
+                catch (System.Exception exception)
+                {
+                    LoadLoginThroughSceneManager(key, exception.Message);
+                    yield break;
+                }
+
+                handle.Completed += completed =>
+                {
+                    if (completed.Status == AsyncOperationStatus.Succeeded)
+                    {
+                        LogBoot(
+                            "stage=standalone-entry-load-complete\n" +
+                            "success=true\n" +
+                            "error=none");
+                        return;
+                    }
+
+                    if (completed.IsValid())
+                        Addressables.Release(completed);
+
+                    LoadLoginThroughSceneManager(key, DescribeLoadError(completed.OperationException));
+                };
+                yield break;
+            }
+
+            LoadLoginThroughSceneManager(key, addressableError);
+        }
+
+        private static void LoadLoginThroughSceneManager(string sceneName, string addressableError)
+        {
+            AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+            if (operation == null)
+            {
+                LogBoot(
+                    "stage=standalone-entry-load-complete\n" +
+                    "success=false\n" +
+                    "error=" + (addressableError ?? "no location") +
+                    "; SceneManager could not load " + sceneName);
                 return;
             }
 
-            if (!await WaitForLiveSceneLoaderAsync(10f, destroyCancellationToken))
-                return;
-
-            await UniTask.Yield(PlayerLoopTiming.Update, destroyCancellationToken);
-
-            await Initialize(new ModuleLaunchContext
+            operation.completed += _ =>
             {
-                ModuleId = "office-safety",
-                TargetModule = null,
-                Metadata = null,
-            });
+                bool loaded = SceneManager.GetSceneByName(sceneName).isLoaded;
+                LogBoot(
+                    "stage=standalone-entry-load-complete\n" +
+                    "success=" + (loaded ? "true" : "false") + "\n" +
+                    "error=" + (loaded ? "none" : (addressableError ?? "SceneManager load failed")));
+            };
+        }
+
+        private static string WaitingForServicesBody()
+        {
+            return
+                "stage=waiting-for-services\n" +
+                "sceneLoaderAvailable=" + (SceneLoaderAvailable() ? "true" : "false") + "\n" +
+                "playerServiceAvailable=" + (PlayerServiceAvailable() ? "true" : "false") + "\n" +
+                "hubLaunch=" + (HubLaunchRequested ? "true" : "false") + "\n" +
+                "resolvedMode=" + StandalonePlatform.Describe(
+                    StandalonePlatform.HasHubOverride,
+                    StandalonePlatform.HasHubOverride && StandalonePlatform.IsVrActive);
+        }
+
+        private static bool ServicesReady()
+        {
+            return SceneLoaderAvailable() && PlayerServiceAvailable() && InputManagerAvailable();
+        }
+
+        private static string MissingServicesError()
+        {
+            if (!SceneLoaderAvailable())
+                return "ISceneLoaderService was not registered";
+            if (!PlayerServiceAvailable())
+                return "IPlayerService was not registered";
+            return "InputManager was not registered";
+        }
+
+        private static bool SceneLoaderAvailable()
+        {
+            return ServiceLocator.TryGet<ISceneLoaderService>(out ISceneLoaderService loader) && loader != null;
+        }
+
+        private static bool PlayerServiceAvailable()
+        {
+            return ServiceLocator.TryGet<IPlayerService>(out IPlayerService player) && player != null;
+        }
+
+        private static bool InputManagerAvailable()
+        {
+            return ServiceLocator.TryGet<InputManager>(out InputManager input) && input != null;
+        }
+
+        private static void LogBoot(string body)
+        {
+            Debug.Log("[FireBoot]\n" + body);
+        }
+
+        private static string DescribeLoadError(System.Exception exception)
+        {
+            if (exception == null)
+                return "Addressables load failed";
+            return string.IsNullOrWhiteSpace(exception.Message) ? exception.GetType().Name : exception.Message;
         }
 
         public async Task Initialize(ModuleLaunchContext context)
         {
+            MarkHubLaunchRequested();
             if (Interlocked.CompareExchange(ref _initializeGate, 1, 0) != 0)
                 return;
 

@@ -1,7 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Woi.Settings;
 using WOI.Modules.SDK;
@@ -590,7 +592,14 @@ namespace Woi.OfficeFire
                     yield break;
                 }
 
+                yield return UnloadFireOfficeGameplaySet();
+
+                Scene outdoorScene = SceneManager.GetSceneByName("OutDoor");
+                if (outdoorScene.IsValid() && outdoorScene.isLoaded)
+                    SceneManager.SetActiveScene(outdoorScene);
+
                 EnsureGameplayCamera(null);
+                LogOutdoorTransition();
 
                 float revealFadeSeconds = ResolveFadeFromBlackSeconds(fadeOutSeconds);
                 yield return SceneFadeOverlay.Fade(fadeOverlay, 1f, 0f, revealFadeSeconds);
@@ -601,6 +610,96 @@ namespace Woi.OfficeFire
                 TryBeginLoadedAssemblyScene();
 
                 Destroy(gameObject);
+            }
+
+            const string OfficeGameplayGroupName = "FireModule_Office";
+
+            /// <summary>
+            /// SceneGroupManager never unloads scene index 0. Standalone Single-load leaves
+            /// FireModule_Office there, so the OutDoor group load keeps it. Hub already drops
+            /// that scene when a shell scene occupies index 0; unloading the group by name is a no-op then.
+            /// </summary>
+            static IEnumerator UnloadFireOfficeGameplaySet()
+            {
+                Scene outdoor = SceneManager.GetSceneByName("OutDoor");
+                if (outdoor.IsValid() && outdoor.isLoaded)
+                    SceneManager.SetActiveScene(outdoor);
+
+                IReadOnlyList<string> sceneNames = ReadOfficeGameplaySceneNames();
+                for (int i = 0; i < sceneNames.Count; i++)
+                {
+                    string sceneName = sceneNames[i];
+                    if (string.IsNullOrEmpty(sceneName)
+                        || sceneName == "OutDoor"
+                        || sceneName == "DontDestroyOnLoad")
+                    {
+                        continue;
+                    }
+
+                    Scene scene = SceneManager.GetSceneByName(sceneName);
+                    if (!scene.IsValid() || !scene.isLoaded)
+                        continue;
+                    if (SceneManager.GetActiveScene() == scene)
+                        continue;
+
+                    AsyncOperation unload = SceneManager.UnloadSceneAsync(scene);
+                    if (unload == null)
+                        continue;
+
+                    while (!unload.isDone)
+                        yield return null;
+                }
+            }
+
+            static IReadOnlyList<string> ReadOfficeGameplaySceneNames()
+            {
+                if (ServiceLocator.TryGet(out SceneLoader loader) && loader != null)
+                {
+                    SceneGroup group = loader.FindSceneGroup(OfficeGameplayGroupName);
+                    if (group != null && group.Scenes != null && group.Scenes.Count > 0)
+                    {
+                        var names = new List<string>(group.Scenes.Count);
+                        for (int i = 0; i < group.Scenes.Count; i++)
+                        {
+                            SceneData scene = group.Scenes[i];
+                            if (scene == null || string.IsNullOrEmpty(scene.SceneName))
+                                continue;
+                            names.Add(scene.SceneName);
+                        }
+
+                        if (names.Count > 0)
+                            return names;
+                    }
+                }
+
+                return new[]
+                {
+                    "FireModule_Office",
+                    "FireStairsOfis",
+                    "FireStairsOfis 1",
+                };
+            }
+
+            static void LogOutdoorTransition()
+            {
+                var names = new List<string>(SceneManager.sceneCount);
+                for (int i = 0; i < SceneManager.sceneCount; i++)
+                    names.Add(SceneManager.GetSceneAt(i).name);
+
+                bool officeLoaded = SceneManager.GetSceneByName("FireModule_Office").isLoaded;
+                bool stairs0Loaded = SceneManager.GetSceneByName("FireStairsOfis").isLoaded;
+                bool stairs1Loaded = SceneManager.GetSceneByName("FireStairsOfis 1").isLoaded;
+                bool outdoorLoaded = SceneManager.GetSceneByName("OutDoor").isLoaded;
+
+                Debug.Log(
+                    "[FireOutdoor]\n" +
+                    "stage=transition-complete\n" +
+                    "activeScene=" + SceneManager.GetActiveScene().name + "\n" +
+                    "officeLoaded=" + (officeLoaded ? "true" : "false") + "\n" +
+                    "stairs0Loaded=" + (stairs0Loaded ? "true" : "false") + "\n" +
+                    "stairs1Loaded=" + (stairs1Loaded ? "true" : "false") + "\n" +
+                    "outdoorLoaded=" + (outdoorLoaded ? "true" : "false") + "\n" +
+                    "loadedScenes=" + string.Join(",", names));
             }
 
             private static bool TryResolveLoader(out ISceneLoaderService loader)

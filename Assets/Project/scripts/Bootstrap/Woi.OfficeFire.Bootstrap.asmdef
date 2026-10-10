@@ -10,6 +10,7 @@
         "UniTask",
         "WOI.Modules.SDK",
         "Woi.Player",
+        "Woi.InputSystem",
         "Unity.Addressables",
         "Unity.ResourceManager"
     ],

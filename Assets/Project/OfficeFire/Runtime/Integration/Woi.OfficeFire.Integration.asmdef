@@ -23,6 +23,8 @@
         "Woi.VrBridge.Client.Protocol",
         "Woi.VrBridge.Client.UI",
         "UniTask",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
         "UnityEngine.UI",
         "Woi.OfficeFire.Bootstrap",
         "Woi.Utils"
