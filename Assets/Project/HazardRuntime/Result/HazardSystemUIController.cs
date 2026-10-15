@@ -82,6 +82,9 @@ public class HazardSystemUIController : MonoBehaviour
 	{
 		//EventBus.Subscribe<OnSceneGroupLoaded>(GetActiveSceneName);
 		WireReturnButtons();
+		if (name.IndexOf("VR", System.StringComparison.OrdinalIgnoreCase) >= 0
+		    || name.IndexOf("XR", System.StringComparison.OrdinalIgnoreCase) >= 0)
+			ExitPanelController.EnsureExitUiClickPath();
 	}
 
 	void OnDisable()
@@ -142,9 +145,21 @@ public class HazardSystemUIController : MonoBehaviour
 		if (button == null)
 			button = go.AddComponent<Button>();
 
+		Image graphic = go.GetComponent<Image>();
+		if (graphic != null)
+			button.targetGraphic = graphic;
+
 		button.interactable = true;
 		button.onClick.RemoveListener(ReturnToLoginScreen);
 		button.onClick.AddListener(ReturnToLoginScreen);
+
+		// Hub disables the nested Quit button. Its saved target is missing and it covers the parent hit area.
+		for (int i = go.transform.childCount - 1; i >= 0; i--)
+		{
+			Transform child = go.transform.GetChild(i);
+			if (child.GetComponent<Button>() != null)
+				child.gameObject.SetActive(false);
+		}
 	}
 
 	RectTransform CreateReturnButton()

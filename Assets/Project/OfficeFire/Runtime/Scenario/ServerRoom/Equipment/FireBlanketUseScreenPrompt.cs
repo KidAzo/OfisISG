@@ -39,6 +39,9 @@ namespace Woi.OfficeFire
 
         public void SetVisible(bool visible)
         {
+            if (FirePlatformRuntime.IsVR)
+                visible = false;
+
             if (_isVisible == visible)
             {
                 return;

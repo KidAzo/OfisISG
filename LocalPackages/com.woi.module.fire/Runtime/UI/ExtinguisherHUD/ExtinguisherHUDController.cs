@@ -108,6 +108,9 @@ public class ExtinguisherHUDController : MonoBehaviour
     /// </summary>
     public void SetPresentationVisible(bool visible)
     {
+        if (FirePlatformRuntime.IsVR)
+            visible = false;
+
         _presentationVisible = visible;
         ApplyPresentationVisible();
     }
@@ -127,10 +130,10 @@ public class ExtinguisherHUDController : MonoBehaviour
             uiDocument = GetComponent<UIDocument>();
         }
 
+        bool show = _presentationVisible && !FirePlatformRuntime.IsVR;
         if (uiDocument != null && uiDocument.rootVisualElement != null)
         {
-            uiDocument.rootVisualElement.style.display =
-                _presentationVisible ? DisplayStyle.Flex : DisplayStyle.None;
+            uiDocument.rootVisualElement.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }
 
@@ -331,7 +334,10 @@ public class ExtinguisherHUDController : MonoBehaviour
         _deferredBindRoutine = null;
 
         if (_uiBound)
+        {
             RefreshHUD();
+            ApplyPresentationVisible();
+        }
     }
 
     private void BindFromRoot(VisualElement root)

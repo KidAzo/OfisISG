@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unity.XR.CoreUtils;
 using Woi.Settings;
 
 /// <summary>
@@ -8,7 +9,8 @@ using Woi.Settings;
 /// World-space canvases under Gameplay/UI keep a pose baked at the spawn point.
 /// Their <see cref="Canvas.worldCamera"/> is only the raycast camera, so it does not move them.
 /// Persistent HUD canvases are posed every frame from the active XR camera's yaw.
-/// Exit and result panels are posed once, when they open.
+/// Exit remains a current-head popup. The final result remains at its authored world pose,
+/// and the XR Origin is moved to the authored ResultPos viewing marker.
 /// PC canvases are left where they are.
 /// </summary>
 [DisallowMultipleComponent]
@@ -24,6 +26,7 @@ public sealed class HazardVrUiPresentation : MonoBehaviour
     const string HazardInfoContainerName = "VRPopupContainer";
     const string LeaderboardName = "LeaderBoardVRPanel";
     const string ResultName = "HazardSystemResult-VR";
+    const string ResultPoseName = "ResultPos";
     const float HudFallbackDistance = 1f;
     const float LogTimeoutSeconds = 2f;
 
@@ -53,7 +56,13 @@ public sealed class HazardVrUiPresentation : MonoBehaviour
     YawBinding _hazardInfo;
     bool _searched;
     bool _logged;
-    bool _resultWasActive;
+    Vector3 _authoredResultPosition;
+    Quaternion _authoredResultRotation;
+    bool _authoredResultPoseCaptured;
+    Transform _resultPose;
+    bool _resultPoseSearchDone;
+    bool _resultAreaPrepared;
+    bool _resultPoseErrorLogged;
     bool _exitWasActive;
     float _createdAt;
 
@@ -88,7 +97,8 @@ public sealed class HazardVrUiPresentation : MonoBehaviour
     }
 
     /// <summary>
-    /// Puts the game-complete panel in front of the current XR head, upright, yaw only.
+    /// Leaves HazardSystemResult-VR on its authored world pose and moves the live XR Origin
+    /// so the headset stands at the scene's ResultPos marker.
     /// </summary>
     public static void PlaceOpenedResult(Transform resultRoot)
     {
@@ -104,7 +114,10 @@ public sealed class HazardVrUiPresentation : MonoBehaviour
             return;
 
         _instance._resultRoot = resultRoot;
-        _instance.PoseResult(resultRoot);
+        _instance._resultCanvas = resultRoot.GetComponentInChildren<Canvas>(true);
+        _instance.RememberAuthoredResultPose();
+        _instance._resultPose = FindResultPose(resultRoot.gameObject.scene);
+        _instance.PrepareResultArea();
     }
 
     void Awake()
@@ -242,7 +255,8 @@ public sealed class HazardVrUiPresentation : MonoBehaviour
             "leaderboardCamera=" + LeaderboardCamera(_leaderboard) + "\n" +
             "finishUi=" + NameOf(_resultRoot) + "\n" +
             "finishUiCanvas=" + NameOf(_resultCanvas) + "\n" +
-            "finishUiFollowTarget=" + Describe(_xrCamera),
+            "finishUiPose=" + FullPath(_resultRoot) + "\n" +
+            "finishViewerPose=" + FullPath(_resultPose),
             this);
     }
 
@@ -265,10 +279,8 @@ public sealed class HazardVrUiPresentation : MonoBehaviour
             return;
 
         bool active = _resultRoot.gameObject.activeInHierarchy;
-        if (active && !_resultWasActive)
-            PoseResult(_resultRoot);
-
-        _resultWasActive = active;
+        if (active && !_resultAreaPrepared)
+            PrepareResultArea();
     }
 
     void PoseLikeHud(Transform panel)
@@ -287,19 +299,167 @@ public sealed class HazardVrUiPresentation : MonoBehaviour
         AssignWorldCamera(panel);
     }
 
-    void PoseResult(Transform resultRoot)
+    void RememberAuthoredResultPose()
     {
-        var binding = new YawBinding
+        if (_authoredResultPoseCaptured || _resultRoot == null)
+            return;
+
+        _authoredResultPosition = _resultRoot.position;
+        _authoredResultRotation = _resultRoot.rotation;
+        _authoredResultPoseCaptured = true;
+    }
+
+    void RestoreAuthoredResultPose()
+    {
+        if (!_authoredResultPoseCaptured || _resultRoot == null)
+            return;
+
+        _resultRoot.SetPositionAndRotation(_authoredResultPosition, _authoredResultRotation);
+    }
+
+    void PrepareResultArea()
+    {
+        if (_resultAreaPrepared || _resultRoot == null || _head == null)
+            return;
+
+        RememberAuthoredResultPose();
+        RestoreAuthoredResultPose();
+
+        if (_resultPose == null && !_resultPoseSearchDone)
         {
-            Target = resultRoot,
-            LocalOffset = new Vector3(0f, 0f, FitDistance(resultRoot)),
-            YawDelta = 0f,
-            PreserveVerticalOffset = false,
-            Captured = true
-        };
-        ApplyBinding(binding, _head);
-        _resultCanvas = resultRoot.GetComponentInChildren<Canvas>(true);
-        AssignWorldCamera(resultRoot);
+            _resultPose = FindResultPose(_resultRoot.gameObject.scene);
+            _resultPoseSearchDone = true;
+        }
+
+        XROrigin xrOrigin = ResolveXrOrigin();
+        if (_resultPose == null || xrOrigin == null || xrOrigin.Origin == null)
+        {
+            if (!_resultPoseErrorLogged)
+            {
+                _resultPoseErrorLogged = true;
+                Debug.LogError(
+                    "[HazardResultPose] Cannot enter authored result area. result=" + NameOf(_resultRoot) +
+                    " pose=" + NameOf(_resultPose) + " xrOrigin=" + NameOf(xrOrigin),
+                    this);
+            }
+            return;
+        }
+
+        GameObject xrRoot = FindActiveXrRoot();
+        Transform rig = xrRoot != null ? xrRoot.transform : xrOrigin.transform;
+        CharacterController[] controllers = rig.GetComponentsInChildren<CharacterController>(true);
+        CharacterController parentController = rig.GetComponentInParent<CharacterController>();
+        bool parentControllerWasEnabled = parentController != null
+            && parentController.enabled
+            && Array.IndexOf(controllers, parentController) < 0;
+        bool[] controllerStates = new bool[controllers.Length];
+        for (int i = 0; i < controllers.Length; i++)
+        {
+            controllerStates[i] = controllers[i] != null && controllers[i].enabled;
+            if (controllerStates[i])
+                controllers[i].enabled = false;
+        }
+        if (parentControllerWasEnabled)
+            parentController.enabled = false;
+
+        Rigidbody[] bodies = rig.GetComponentsInChildren<Rigidbody>(true);
+        Rigidbody parentBody = rig.GetComponentInParent<Rigidbody>();
+        try
+        {
+            StopRigidbodies(bodies);
+            if (parentBody != null && Array.IndexOf(bodies, parentBody) < 0)
+                StopRigidbody(parentBody);
+
+            Physics.SyncTransforms();
+
+            Vector3 forward = _resultPose.forward;
+            forward.y = 0f;
+            if (forward.sqrMagnitude < 0.0001f)
+                forward = Vector3.forward;
+
+            Vector3 cameraBefore = _head.position;
+            bool aligned = xrOrigin.MatchOriginUpCameraForward(Vector3.up, forward.normalized);
+            bool moved = MoveXrCameraTo(_resultPose.position, xrOrigin);
+            Physics.SyncTransforms();
+            RestoreAuthoredResultPose();
+            if (moved)
+                _resultAreaPrepared = true;
+            AssignWorldCamera(_resultRoot);
+
+            string message =
+                "[HazardResultPose] pose=" + FullPath(_resultPose) +
+                " targetPosition=" + _resultPose.position.ToString("F3") +
+                " targetYaw=" + _resultPose.eulerAngles.y.ToString("F1") +
+                " cameraBefore=" + cameraBefore.ToString("F3") +
+                " cameraAfter=" + (_head != null ? _head.position.ToString("F3") : "none") +
+                " aligned=" + aligned +
+                " moved=" + moved +
+                " result=" + FullPath(_resultRoot) +
+                " resultPosition=" + _resultRoot.position.ToString("F3");
+            if (aligned && moved)
+                Debug.Log(message, this);
+            else if (!_resultPoseErrorLogged)
+            {
+                _resultPoseErrorLogged = true;
+                Debug.LogError(message, this);
+            }
+        }
+        finally
+        {
+            for (int i = 0; i < controllers.Length; i++)
+            {
+                if (controllers[i] != null)
+                    controllers[i].enabled = controllerStates[i];
+            }
+            if (parentControllerWasEnabled)
+                parentController.enabled = true;
+        }
+    }
+
+    bool MoveXrCameraTo(Vector3 worldPosition, XROrigin xrOrigin)
+    {
+        if (xrOrigin.Camera != null && xrOrigin.MoveCameraToWorldLocation(worldPosition))
+            return true;
+
+        Transform originTransform = xrOrigin.Origin != null ? xrOrigin.Origin.transform : xrOrigin.transform;
+        Transform camera = xrOrigin.Camera != null ? xrOrigin.Camera.transform : _head;
+        if (originTransform == null || camera == null)
+            return false;
+
+        Vector3 cameraOffset = camera.position - originTransform.position;
+        originTransform.position = worldPosition - cameraOffset;
+        return true;
+    }
+
+    XROrigin ResolveXrOrigin()
+    {
+        if (_head != null)
+        {
+            XROrigin parentOrigin = _head.GetComponentInParent<XROrigin>(true);
+            if (parentOrigin != null)
+                return parentOrigin;
+        }
+
+        GameObject xrRoot = FindActiveXrRoot();
+        return xrRoot != null ? xrRoot.GetComponentInChildren<XROrigin>(true) : null;
+    }
+
+    static void StopRigidbodies(Rigidbody[] bodies)
+    {
+        if (bodies == null)
+            return;
+
+        for (int i = 0; i < bodies.Length; i++)
+            StopRigidbody(bodies[i]);
+    }
+
+    static void StopRigidbody(Rigidbody body)
+    {
+        if (body == null || body.isKinematic)
+            return;
+
+        body.linearVelocity = Vector3.zero;
+        body.angularVelocity = Vector3.zero;
     }
 
     void LogIfTimedOut()
@@ -361,22 +521,6 @@ public sealed class HazardVrUiPresentation : MonoBehaviour
             offset.y = 0f;
         Quaternion rotation = yaw * Quaternion.Euler(0f, binding.YawDelta, 0f);
         binding.Target.SetPositionAndRotation(head.position + (yaw * offset), rotation);
-    }
-
-    static float FitDistance(Transform resultRoot)
-    {
-        const float fallback = 2.25f;
-        Canvas canvas = resultRoot.GetComponentInChildren<Canvas>(true);
-        RectTransform rect = canvas != null ? canvas.transform as RectTransform : null;
-        if (rect == null)
-            return fallback;
-
-        float width = Mathf.Abs(rect.sizeDelta.x * rect.lossyScale.x);
-        if (width < 0.2f)
-            return fallback;
-
-        // 1920px at scale 0.002 is 3.84m wide. This keeps that board inside a headset view.
-        return Mathf.Clamp(width * 0.58f, 1.2f, 2.8f);
     }
 
     static Quaternion YawRotation(Transform head)
@@ -455,6 +599,42 @@ public sealed class HazardVrUiPresentation : MonoBehaviour
                 continue;
 
             if (!requireDirectCanvasParent || candidate.parent == canvas)
+                return candidate;
+        }
+
+        return null;
+    }
+
+    static Transform FindResultPose(Scene scene)
+    {
+        Transform underGameplay = FindExactInScene(ResultPoseName, scene);
+        if (underGameplay != null)
+            return underGameplay;
+
+        if (!scene.IsValid())
+            return null;
+
+        Transform[] transforms = FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < transforms.Length; i++)
+        {
+            Transform candidate = transforms[i];
+            if (candidate != null && candidate.name == ResultPoseName && candidate.gameObject.scene == scene)
+                return candidate;
+        }
+
+        return null;
+    }
+
+    static Transform FindExactInScene(string objectName, Scene scene)
+    {
+        Transform[] transforms = FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < transforms.Length; i++)
+        {
+            Transform candidate = transforms[i];
+            if (candidate != null
+                && candidate.name == objectName
+                && candidate.gameObject.scene == scene
+                && HasAncestor(candidate, GameplayRootName))
                 return candidate;
         }
 
@@ -565,5 +745,21 @@ public sealed class HazardVrUiPresentation : MonoBehaviour
     static string NameOf(UnityEngine.Object target)
     {
         return target != null ? target.name : "none";
+    }
+
+    static string FullPath(Transform transform)
+    {
+        if (transform == null)
+            return "none";
+
+        string path = transform.name;
+        Transform current = transform.parent;
+        while (current != null)
+        {
+            path = current.name + "/" + path;
+            current = current.parent;
+        }
+
+        return path;
     }
 }

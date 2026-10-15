@@ -22,7 +22,9 @@ namespace Woi.WasteCollectionMode
 
     /// VR: positions the shared WasteCollection UIDocument in world space in front of the HMD.
 
-    /// While modal UI is open (WasteMenu, explanation, result), the panel follows the head each frame.
+    /// When modal UI opens (WasteMenu, explanation, result) the panel is placed once in front of the head
+
+    /// and then stays fixed in world space until it closes. Head motion never moves it.
 
     /// Keeps <see cref="WasteCollectionUI"/> under its scene parent — never reparents to the camera.
 
@@ -82,7 +84,9 @@ namespace Woi.WasteCollectionMode
 
         private bool followActive;
 
-        private bool headFollowActive;
+        private bool lastTrackHead;
+
+        private bool placedThisSession;
 
         private bool pendingFollowRequest;
 
@@ -118,6 +122,10 @@ namespace Woi.WasteCollectionMode
 
 
 
+        /// <summary>
+        /// Opening places the panel once in front of the head; it then stays world-fixed until closed.
+        /// <paramref name="trackHead"/> only picks the layout settle length; the panel never follows the head.
+        /// </summary>
         public void SetFollowActive(bool active, bool trackHead = true)
 
         {
@@ -130,7 +138,7 @@ namespace Woi.WasteCollectionMode
 
             bool wasFollowing = followActive;
 
-            bool wasHeadFollow = headFollowActive;
+            bool wasTrackHead = lastTrackHead;
 
             if (active && !configuredForVr)
 
@@ -148,17 +156,27 @@ namespace Woi.WasteCollectionMode
 
             followActive = active && configuredForVr;
 
-            headFollowActive = followActive && trackHead;
+            lastTrackHead = trackHead;
 
 
 
-            if (followActive && (!wasFollowing || headFollowActive != wasHeadFollow))
+            if (followActive && !wasFollowing)
+
+            {
+
+                placedThisSession = false;
+
+                ScheduleLayoutRefresh(frames: trackHead ? 4 : 12);
+
+                TryPlaceOnce();
+
+            }
+
+            else if (followActive && trackHead != wasTrackHead)
 
             {
 
                 ScheduleLayoutRefresh(frames: trackHead ? 4 : 12);
-
-                SnapInFrontOfEye();
 
             }
 
@@ -166,7 +184,7 @@ namespace Woi.WasteCollectionMode
 
             {
 
-                headFollowActive = false;
+                placedThisSession = false;
 
             }
 
@@ -210,7 +228,7 @@ namespace Woi.WasteCollectionMode
 
             {
 
-                SnapInFrontOfEye();
+                TryPlaceOnce();
 
                 SyncUidocumentWorldTransform();
 
@@ -272,7 +290,7 @@ namespace Woi.WasteCollectionMode
 
             followActive = false;
 
-            headFollowActive = false;
+            placedThisSession = false;
 
             UnregisterGeometryCallback();
 
@@ -350,15 +368,10 @@ namespace Woi.WasteCollectionMode
 
 
 
-            if (headFollowActive)
-
-            {
-
-                SnapInFrontOfEye();
+            // Retries only until the head camera resolves; once placed the pose is never touched again.
+            if (followActive && !placedThisSession && TryPlaceOnce())
 
                 SyncUidocumentWorldTransform();
-
-            }
 
 
 
@@ -372,13 +385,7 @@ namespace Woi.WasteCollectionMode
 
                 if (followActive)
 
-                {
-
-                    SnapInFrontOfEye();
-
                     SyncUidocumentWorldTransform();
-
-                }
 
             }
 
@@ -386,7 +393,25 @@ namespace Woi.WasteCollectionMode
 
 
 
-        private void SnapInFrontOfEye()
+        private bool TryPlaceOnce()
+
+        {
+
+            if (placedThisSession)
+
+                return false;
+
+
+
+            placedThisSession = SnapInFrontOfEye();
+
+            return placedThisSession;
+
+        }
+
+
+
+        private bool SnapInFrontOfEye()
 
         {
 
@@ -412,7 +437,7 @@ namespace Woi.WasteCollectionMode
 
 
 
-                return;
+                return false;
 
             }
 
@@ -422,11 +447,37 @@ namespace Woi.WasteCollectionMode
 
             Transform eye = headCamera.transform;
 
-            Vector3 pos = eye.TransformPoint(localOffsetFromEyeRuntime);
+            Vector3 pos = ComputeHorizontalPlacement(eye, localOffsetFromEyeRuntime);
 
             Quaternion rot = ComputeBillboardRotation(eye, pos);
 
             transform.SetPositionAndRotation(pos, rot);
+
+            return true;
+
+        }
+
+
+
+        /// <summary>Offset from the eye along its yaw only, so looking down when the menu opens does not sink the panel.</summary>
+
+        private static Vector3 ComputeHorizontalPlacement(Transform eye, Vector3 offset)
+
+        {
+
+            Vector3 forward = Vector3.ProjectOnPlane(eye.forward, Vector3.up);
+
+            if (forward.sqrMagnitude < 1e-6f)
+
+                return eye.TransformPoint(offset);
+
+
+
+            forward.Normalize();
+
+            Vector3 right = Vector3.Cross(Vector3.up, forward);
+
+            return eye.position + right * offset.x + Vector3.up * offset.y + forward * offset.z;
 
         }
 
@@ -688,9 +739,7 @@ namespace Woi.WasteCollectionMode
 
 
 
-            if (!headFollowActive)
-
-                SnapInFrontOfEye();
+            TryPlaceOnce();
 
 
 

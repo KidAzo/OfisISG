@@ -9,8 +9,10 @@ using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using Woi.DataHandler;
 using Woi.Events.Data;
 using Woi.OfficeFire;
+using Woi.OfficeFire.VrBridge;
 using Woi.Settings;
 using WOI.Modules.SDK;
 
@@ -25,6 +27,13 @@ namespace Woi.WasteCollectionMode
         private const string GaussBackgroundPath =
             "Assets/Project/Sprites/gaussImage.jpg";
         private static readonly Color LoginIconTint = new(0f, 1f, 0.698f, 1f);
+
+        // Temporary standalone VR test entry: no controller interaction on the login panel.
+        private const string VrAutoStartParticipantName = "VR Tester";
+        private const string VrAutoStartParticipantId = "VR-TEST";
+        private const string VrAutoStartLanguageLabel = "English";
+        private const float VrAutoStartLoaderTimeoutSeconds = 10f;
+        private static bool vrAutoStartConsumed;
 
         [SerializeField] private UIDocument uiDocument;
         [SerializeField] private Texture2D loginIcon;
@@ -109,6 +118,66 @@ namespace Woi.WasteCollectionMode
             RefreshLeaderboard();
             ApplyMenuCursor();
             bindRoutine = null;
+
+            if (!vrAutoStartConsumed && IsStandaloneVrAutoStartLaunch())
+                StartCoroutine(VrAutoStartRoutine());
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetVrAutoStart()
+        {
+            vrAutoStartConsumed = false;
+        }
+
+        private static bool IsStandaloneVrAutoStartLaunch()
+        {
+            if (WasteHubLaunch.IsHubLaunch || StandalonePlatform.HasHubOverride)
+                return false;
+
+            if (WasteBridgeRun.IsActive || VrBridgeRuntime.IsReady)
+                return false;
+
+            return WasteCollectionPlatform.ShouldUseVrPresentation();
+        }
+
+        private IEnumerator VrAutoStartRoutine()
+        {
+            vrAutoStartConsumed = true;
+            Debug.Log("[WasteVrAutoStart] begin", this);
+
+            yield return null;
+
+            float deadline = Time.realtimeSinceStartup + VrAutoStartLoaderTimeoutSeconds;
+            while (!TryResolveSceneLoader(out _) && Time.realtimeSinceStartup < deadline)
+                yield return null;
+
+            if (isLoading || !IsStandaloneVrAutoStartLaunch())
+            {
+                Debug.Log("[WasteVrAutoStart] skipped (loading already started or launch is no longer standalone VR)", this);
+                yield break;
+            }
+
+            SessionProfileLanguagePreference.RecordUserChoice(WasteCollectionLocalization.LangEnglish);
+            if (languageDropdown != null)
+                languageDropdown.value = VrAutoStartLanguageLabel;
+            Debug.Log("[WasteVrAutoStart] language=English", this);
+
+            if (userNameField != null)
+                userNameField.value = VrAutoStartParticipantName;
+            if (userIdField != null)
+                userIdField.value = VrAutoStartParticipantId;
+            Debug.Log(
+                "[WasteVrAutoStart] participantName=" + VrAutoStartParticipantName +
+                " participantId=" + VrAutoStartParticipantId,
+                this);
+
+            Debug.Log("[WasteVrAutoStart] invoking existing start flow", this);
+            OnStartClicked();
+
+            if (isLoading)
+                Debug.Log("[WasteVrAutoStart] gameplay-load-requested", this);
+            else
+                Debug.LogWarning("[WasteVrAutoStart] start flow did not begin loading; see login error label.", this);
         }
 
         private static void ApplyMenuCursor()

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Woi.DataHandler;
 using Woi.InputSystem;
 using Woi.Player;
@@ -24,10 +25,16 @@ namespace Woi.WasteCollectionMode
             "Packages/com.woi.module.fire/Runtime/Porting/PortingVariable.asset";
 
         private const string PcPlayerObjectName = "PC-Player";
+        private const string XrSeparatorName = "-------------XR------------";
+        private const string WasteGameplaySceneName = "Waste_Office";
 
         [Header("Rig roots (auto-filled when empty)")]
         [SerializeField] private List<GameObject> pcPlayerRoots = new();
         [SerializeField] private List<GameObject> xrOriginRoots = new();
+        [SerializeField] private GameObject xrHierarchyRoot;
+
+        [Header("PC-only UI")]
+        [SerializeField] private GameObject pcOnlyCrosshairRoot;
 
         [Header("Porting")]
         [SerializeField] private ScriptableEnumPortingVariable portingVariable;
@@ -41,6 +48,9 @@ namespace Woi.WasteCollectionMode
 
         private void Awake()
         {
+            if (!IsWasteGameplayScene())
+                return;
+
             EnsurePortingInitialized();
             StandalonePlatform.ApplyIfNoHubOverride();
             AutoResolveRigRootsIfNeeded();
@@ -51,7 +61,7 @@ namespace Woi.WasteCollectionMode
 
         private void Start()
         {
-            if (!reapplyOnStart)
+            if (!IsWasteGameplayScene() || !reapplyOnStart)
                 return;
 
             EnsurePortingInitialized();
@@ -62,6 +72,9 @@ namespace Woi.WasteCollectionMode
         [ContextMenu("Apply Player Rig For Current Mode")]
         public void ApplyPlayerRigForCurrentMode()
         {
+            if (!IsWasteGameplayScene())
+                return;
+
             AutoResolveRigRootsIfNeeded();
 
             bool vrActive = UsesVrPresentation();
@@ -79,7 +92,7 @@ namespace Woi.WasteCollectionMode
                 SetRootsActive(pcPlayerRoots, pcActive);
             }
 
-            SetRootsActive(xrOriginRoots, vrActive);
+            ApplyXrHierarchy(vrActive);
             ApplyWastePlatformUi(vrActive);
 
             if (logAppliedState)
@@ -170,10 +183,67 @@ namespace Woi.WasteCollectionMode
         }
 
         /// <summary>
+        /// This controller is serialized into FireModule_Office as well as Waste_Office.
+        /// Only Waste_Office may change rigs. Fire keeps OfficeFireGameplayCameraSetup.
+        /// </summary>
+        private bool IsWasteGameplayScene()
+        {
+            Scene scene = gameObject.scene;
+            return scene.IsValid()
+                && string.Equals(scene.name, WasteGameplaySceneName, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// VR turns on the separator that parents the XR Origin. The origin alone stays
+        /// inactive in the hierarchy while that separator is saved off.
+        /// </summary>
+        private void ApplyXrHierarchy(bool vrActive)
+        {
+            GameObject separator = ResolveSerializedXrSeparator();
+            if (vrActive)
+            {
+                SetRootActive(separator, true);
+                SetRootsActive(xrOriginRoots, true);
+                return;
+            }
+
+            SetRootsActive(xrOriginRoots, false);
+            SetRootActive(separator, false);
+        }
+
+        private GameObject ResolveSerializedXrSeparator()
+        {
+            if (xrHierarchyRoot != null)
+                return xrHierarchyRoot;
+
+            if (xrOriginRoots == null)
+                return null;
+
+            for (int i = 0; i < xrOriginRoots.Count; i++)
+            {
+                GameObject origin = xrOriginRoots[i];
+                if (origin == null)
+                    continue;
+
+                Transform cursor = origin.transform;
+                while (cursor != null)
+                {
+                    if (string.Equals(cursor.name, XrSeparatorName, StringComparison.Ordinal))
+                        return cursor.gameObject;
+
+                    cursor = cursor.parent;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// PC turns off VR world-space roots and the VR helpers that live on the shared
         /// WasteCollectionUI object. The shared UIDocument stays active.
+        /// The screen-space PC crosshair is hidden only while VR is active.
         /// </summary>
-        private static void ApplyWastePlatformUi(bool vrActive)
+        private void ApplyWastePlatformUi(bool vrActive)
         {
             SetBehavioursEnabled<WasteWorldUiPresenter>(vrActive);
             SetBehavioursEnabled<WasteVrCounterHud>(vrActive);
@@ -183,6 +253,15 @@ namespace Woi.WasteCollectionMode
             SetBehavioursEnabled<WasteCollectionVrBootstrap>(vrActive);
 
             SetObjectsActive<SessionProfileWorldUiPresenter>(vrActive);
+            SetRootActive(pcOnlyCrosshairRoot, !vrActive);
+        }
+
+        private static void SetRootActive(GameObject root, bool active)
+        {
+            if (root == null || root.activeSelf == active)
+                return;
+
+            root.SetActive(active);
         }
 
         private static void SetBehavioursEnabled<T>(bool enabled) where T : Behaviour

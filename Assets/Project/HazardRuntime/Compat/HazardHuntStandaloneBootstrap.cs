@@ -69,20 +69,79 @@ namespace Woi.HazardSystem.Compat
 
         void EnsureDetector()
         {
-            if (FindFirstObjectByType<HazardDetector>(FindObjectsInactive.Include) != null)
+            bool vr = Woi.Settings.HazardHubLaunch.UseVrPresentation;
+            HazardDetector detector = FindFirstObjectByType<HazardDetector>(FindObjectsInactive.Include);
+            if (detector == null)
+            {
+                Camera cam = Camera.main;
+                if (cam == null)
+                    return;
+
+                detector = CreateDetector(cam, vr);
+            }
+
+            if (vr)
+                UseVrConfirm(detector);
+        }
+
+        static HazardDetector CreateDetector(Camera cam, bool vr)
+        {
+            GameObject host = cam.gameObject;
+            CameraCenterRayProvider ray = host.GetComponent<CameraCenterRayProvider>()
+                ?? host.AddComponent<CameraCenterRayProvider>();
+            InteractionInputBase input = vr
+                ? host.GetComponent<VrTriggerInteractionInput>() ?? host.AddComponent<VrTriggerInteractionInput>()
+                : host.GetComponent<PcInteractionInput>() ?? host.AddComponent<PcInteractionInput>();
+            HazardDetector detector = host.AddComponent<HazardDetector>();
+            AssignDetector(detector, ray, input, cam);
+            return detector;
+        }
+
+        static void UseVrConfirm(HazardDetector detector)
+        {
+            if (detector == null)
                 return;
 
-            var cam = Camera.main;
-            if (cam == null)
-                return;
+            PcInteractionInput[] pcInputs = detector.GetComponents<PcInteractionInput>();
+            for (int i = 0; i < pcInputs.Length; i++)
+            {
+                if (pcInputs[i] != null)
+                    pcInputs[i].enabled = false;
+            }
 
-            var host = cam.gameObject;
-            var ray = host.GetComponent<CameraCenterRayProvider>() ?? host.AddComponent<CameraCenterRayProvider>();
-            var input = host.GetComponent<PcInteractionInput>() ?? host.AddComponent<PcInteractionInput>();
-            var detector = host.AddComponent<HazardDetector>();
+            VrTriggerInteractionInput vrInput = detector.GetComponent<VrTriggerInteractionInput>()
+                ?? detector.gameObject.AddComponent<VrTriggerInteractionInput>();
+            CameraCenterRayProvider ray = detector.GetComponent<CameraCenterRayProvider>();
+            if (ray == null)
+            {
+                ray = detector.gameObject.AddComponent<CameraCenterRayProvider>();
+                Camera cam = Camera.main;
+                if (cam != null)
+                {
+                    const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
+                    typeof(CameraCenterRayProvider).GetField("targetCamera", flags)?.SetValue(ray, cam);
+                }
+            }
 
+            const BindingFlags fieldFlags = BindingFlags.Instance | BindingFlags.NonPublic;
+            bool wasEnabled = detector.enabled;
+            detector.enabled = false;
+            typeof(HazardDetector).GetField("inputProvider", fieldFlags)?.SetValue(detector, vrInput);
+            object currentRay = typeof(HazardDetector).GetField("rayProvider", fieldFlags)?.GetValue(detector);
+            if (currentRay == null)
+                typeof(HazardDetector).GetField("rayProvider", fieldFlags)?.SetValue(detector, ray);
+            detector.enabled = wasEnabled;
+        }
+
+        static void AssignDetector(
+            HazardDetector detector,
+            CameraCenterRayProvider ray,
+            InteractionInputBase input,
+            Camera cam)
+        {
             const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
-            typeof(CameraCenterRayProvider).GetField("targetCamera", flags)?.SetValue(ray, cam);
+            if (ray != null && cam != null)
+                typeof(CameraCenterRayProvider).GetField("targetCamera", flags)?.SetValue(ray, cam);
             typeof(HazardDetector).GetField("rayProvider", flags)?.SetValue(detector, ray);
             typeof(HazardDetector).GetField("inputProvider", flags)?.SetValue(detector, input);
             typeof(HazardDetector).GetField("maxDistance", flags)?.SetValue(detector, 40f);

@@ -12,7 +12,9 @@
         "Woi.Player",
         "Woi.InputSystem",
         "Unity.Addressables",
-        "Unity.ResourceManager"
+        "Unity.ResourceManager",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.XR.CoreUtils"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

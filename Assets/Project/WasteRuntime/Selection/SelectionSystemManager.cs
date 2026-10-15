@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 using Woi.InputSystem;
 using Woi.WasteCollectionMode;
 using WOI.Modules.SDK;
+using OfficeSelectable = Woi.OfficeFire.ISelectable;
+using WasteSelectable = Woi.SelectionSystem.ISelectable;
 
 namespace Woi.SelectionSystem
 {
@@ -137,8 +139,55 @@ namespace Woi.SelectionSystem
                 return;
 
             Transform skipRoot = FireVrGameplayInteractionRay.RegisteredRayOriginOrNull;
-            ISelectable selectable = selectionSystemController.SelectFromWorldRay(origin, direction, skipRoot);
-            selectable?.Select();
+            Debug.Log(
+                "[WasteVrInteract]\nevent=trigger\nrayOrigin=" + origin.ToString("F3") +
+                "\ndirection=" + direction.ToString("F3"),
+                this);
+
+            if (!selectionSystemController.RaycastFirstInteractable(
+                    origin,
+                    direction,
+                    skipRoot,
+                    out RaycastHit hit,
+                    out WasteSelectable wasteSelectable,
+                    out OfficeSelectable officeSelectable))
+            {
+                Debug.Log("[WasteVrInteract]\nevent=hit\nobject=none", this);
+                return;
+            }
+
+            Debug.Log(
+                "[WasteVrInteract]\nevent=hit\nobject=" + hit.collider.name +
+                "\ndistance=" + hit.distance.ToString("F2") +
+                "\nwasteSelectable=" + (wasteSelectable != null ? "true" : "false") +
+                "\nofficeSelectable=" + (officeSelectable != null ? "true" : "false"),
+                hit.collider);
+
+            if (wasteSelectable != null)
+            {
+                wasteSelectable.Select();
+                return;
+            }
+
+            Debug.Log(
+                "[WasteVrInteract]\nevent=office-select\nobject=" + hit.collider.name +
+                "\ntype=" + officeSelectable.GetType().Name +
+                "\nisSelectable=" + (officeSelectable.IsSelectable ? "true" : "false"),
+                hit.collider);
+
+            // A non-selectable office target still occludes what is behind it.
+            if (!officeSelectable.IsSelectable)
+                return;
+
+            var context = new Woi.OfficeFire.SelectionContext(
+                Woi.OfficeFire.SelectionSource.VRRay,
+                skipRoot,
+                new Ray(origin, direction),
+                hit);
+
+            Debug.Log("[WasteVrInteract]\nevent=door-select-call", this);
+            officeSelectable.Select(context);
+            Debug.Log("[WasteVrInteract]\nevent=door-select-complete", this);
         }
 
         private static bool TryGetVrRay(out Vector3 origin, out Vector3 direction)

@@ -36,7 +36,21 @@ namespace Systems.SceneManagement
 			StopWoiAudioForSceneTransition();
 
 			Debug.Log("[SGM] UnloadScenes BEGIN");
-			await UnloadScenes();
+			// OutDoor must load while FireModule_Office (and its XR rig) is still loaded.
+			// The assembly transition unloads that set only after OutDoor is up, and awaits it.
+			// Returning to login is the reverse: OutDoor stays until login is the active scene,
+			// because Unity will not unload the active scene.
+			bool deferOutdoorUnload = string.Equals(group.GroupName, LoginSceneGroupName, StringComparison.Ordinal)
+				&& SceneManager.GetSceneByName(OutdoorSceneName).isLoaded;
+			HashSet<string> keepLoaded = string.Equals(group.GroupName, "OutDoor", StringComparison.Ordinal)
+				? new HashSet<string>(FireOfficeScenesKeptUntilOutdoorLoaded)
+				: null;
+			if (deferOutdoorUnload)
+			{
+				keepLoaded ??= new HashSet<string>();
+				keepLoaded.Add(OutdoorSceneName);
+			}
+			await UnloadScenes(keepLoaded);
 			Debug.Log($"[SGM] UnloadScenes DONE, now loadedCount={SceneManager.sceneCount}");
 
 			int sceneCount = SceneManager.sceneCount;
@@ -112,6 +126,13 @@ namespace Systems.SceneManagement
 			{
 				SceneManager.SetActiveScene(activeScene);
 			}
+
+			if (deferOutdoorUnload)
+			{
+				Debug.Log(
+					"[OfficeFireReturn]\nstage=login-loaded\nactiveScene=" + SceneManager.GetActiveScene().name);
+				await UnloadOutDoorAfterLoginActiveAsync();
+			}
 			
 			Debug.Log("[SGM] Invoking OnSceneGroupLoaded");
 			OnSceneGroupLoaded.Invoke();
@@ -120,10 +141,105 @@ namespace Systems.SceneManagement
 			//EventBus.Publish(new OnSceneGroupLoaded());
 		}
 
-		public async UniTask UnloadScenes()
+		const string OutdoorSceneName = "OutDoor";
+		const string LoginSceneGroupName = "OfficeFireModule_Login";
+
+		static readonly string[] FireOfficeScenesKeptUntilOutdoorLoaded =
+		{
+			"FireModule_Office",
+			"FireStairsOfis",
+			"FireStairsOfis 1",
+		};
+
+		/// <summary>
+		/// Login is already loaded and active. Releases the OutDoor handle owned by this manager
+		/// and waits until the scene is gone. Used only by the result-screen return path.
+		/// </summary>
+		async UniTask UnloadOutDoorAfterLoginActiveAsync()
+		{
+			Scene login = SceneManager.GetSceneByName(LoginSceneGroupName);
+			if (login.IsValid() && login.isLoaded && SceneManager.GetActiveScene() != login)
+				SceneManager.SetActiveScene(login);
+
+			bool outdoorLoaded = SceneManager.GetSceneByName(OutdoorSceneName).isLoaded;
+			Debug.Log(
+				"[OfficeFireReturn]\nstage=outdoor-unload-begin\noutdoorLoaded=" +
+				(outdoorLoaded ? "true" : "false"));
+
+			var keptHandles = new List<AsyncOperationHandle<SceneInstance>>();
+			var pendingUnloads = new List<AsyncOperationHandle<SceneInstance>>();
+			foreach (var handle in handleGroup.Handles)
+			{
+				if (!handle.IsValid())
+					continue;
+
+				bool isOutdoor = TryGetHandleSceneName(handle, out string handleSceneName)
+					&& handleSceneName == OutdoorSceneName;
+				Debug.Log(
+					"[OfficeFireReturn]\nstage=outdoor-handle\n" +
+					"matchesOutDoor=" + (isOutdoor ? "true" : "false") +
+					"\nscene=" + (handleSceneName ?? string.Empty) +
+					"\nvalid=" + handle.IsValid() +
+					"\nstatus=" + handle.Status +
+					"\nisDone=" + handle.IsDone);
+
+				if (isOutdoor)
+					pendingUnloads.Add(handle);
+				else
+					keptHandles.Add(handle);
+			}
+
+			if (pendingUnloads.Count == 0)
+			{
+				Debug.Log("[OfficeFireReturn]\nstage=outdoor-handle\nowned=false");
+			}
+
+			handleGroup.Handles.Clear();
+			handleGroup.Handles.AddRange(keptHandles);
+
+			Scene outdoor = SceneManager.GetSceneByName(OutdoorSceneName);
+			if (outdoor.IsValid() && outdoor.isLoaded && SceneManager.GetActiveScene() == outdoor)
+			{
+				handleGroup.Handles.AddRange(pendingUnloads);
+				Debug.LogError(
+					"[OfficeFireReturn] OutDoor is still the active scene. Login must be active before it can unload.");
+			}
+			else
+			{
+				if (pendingUnloads.Count > 0)
+				{
+					var tasks = new List<UniTask>(pendingUnloads.Count);
+					for (int i = 0; i < pendingUnloads.Count; i++)
+						tasks.Add(Addressables.UnloadSceneAsync(pendingUnloads[i]).ToUniTask());
+
+					await UniTask.WhenAll(tasks);
+				}
+
+				outdoor = SceneManager.GetSceneByName(OutdoorSceneName);
+				if (outdoor.IsValid() && outdoor.isLoaded && SceneManager.GetActiveScene() != outdoor)
+				{
+					AsyncOperation operation = SceneManager.UnloadSceneAsync(outdoor);
+					if (operation != null)
+					{
+						OnSceneUnloaded.Invoke(OutdoorSceneName);
+						await operation.ToUniTask();
+					}
+				}
+			}
+
+			outdoorLoaded = SceneManager.GetSceneByName(OutdoorSceneName).isLoaded;
+			Debug.Log(
+				"[OfficeFireReturn]\nstage=outdoor-unload-complete\noutdoorLoaded=" +
+				(outdoorLoaded ? "true" : "false"));
+			if (outdoorLoaded)
+			{
+				Debug.LogError("[OfficeFireReturn] OutDoor is still loaded after the return unload.");
+			}
+		}
+
+		public async UniTask UnloadScenes(HashSet<string> scenesToKeep = null)
 		{
 			var scenes = new List<string>();
-			var activeScene = SceneManager.GetActiveScene().name;
 
 			int sceneCount = SceneManager.sceneCount;
 
@@ -134,6 +250,7 @@ namespace Systems.SceneManagement
 
 				var sceneName = sceneAt.name;
 				if (sceneName == bootstrapperSceneName) continue;
+				if (scenesToKeep != null && scenesToKeep.Contains(sceneName)) continue;
 				if (handleGroup.Handles.Any(h => h.IsValid() && h.Result.Scene.name == sceneName)) continue;
 
 				scenes.Add(sceneName);
@@ -152,14 +269,22 @@ namespace Systems.SceneManagement
 				OnSceneUnloaded.Invoke(scene);
 			}
 
+			var keptHandles = new List<AsyncOperationHandle<SceneInstance>>();
 			foreach (var handle in handleGroup.Handles)
 			{
-				if (handle.IsValid())
+				if (!handle.IsValid())
+					continue;
+
+				if (scenesToKeep != null && TryGetHandleSceneName(handle, out string handleSceneName) && scenesToKeep.Contains(handleSceneName))
 				{
-					Addressables.UnloadSceneAsync(handle);
+					keptHandles.Add(handle);
+					continue;
 				}
+
+				Addressables.UnloadSceneAsync(handle);
 			}
 			handleGroup.Handles.Clear();
+			handleGroup.Handles.AddRange(keptHandles);
 
 			// Wait until all AsyncOperations in the group are done
 			while (!operationGroup.IsDone)
@@ -171,6 +296,85 @@ namespace Systems.SceneManagement
 			await Resources.UnloadUnusedAssets();
 
 			//EventBus.Publish(new OnSceneGroupUnloaded());	
+		}
+
+		/// <summary>
+		/// Unloads named scenes and waits until each unload finishes.
+		/// Addressable handles owned by this manager are released with Addressables and awaited.
+		/// Scenes loaded outside Addressables use SceneManager and are awaited the same way.
+		/// </summary>
+		public async Task UnloadScenesByNameAsync(IReadOnlyList<string> sceneNames)
+		{
+			if (sceneNames == null || sceneNames.Count == 0)
+				return;
+
+			var unloadNames = new HashSet<string>(sceneNames);
+			Scene outdoor = SceneManager.GetSceneByName("OutDoor");
+			if (outdoor.IsValid() && outdoor.isLoaded && SceneManager.GetActiveScene() != outdoor)
+				SceneManager.SetActiveScene(outdoor);
+
+			var keptHandles = new List<AsyncOperationHandle<SceneInstance>>();
+			var pendingUnloads = new List<AsyncOperationHandle<SceneInstance>>();
+			foreach (var handle in handleGroup.Handles)
+			{
+				if (!handle.IsValid())
+					continue;
+
+				if (TryGetHandleSceneName(handle, out string handleSceneName) && unloadNames.Contains(handleSceneName))
+					pendingUnloads.Add(handle);
+				else
+					keptHandles.Add(handle);
+			}
+
+			handleGroup.Handles.Clear();
+			handleGroup.Handles.AddRange(keptHandles);
+
+			var addressableUnloaded = new HashSet<string>();
+			var tasks = new List<UniTask>(pendingUnloads.Count);
+			for (int i = 0; i < pendingUnloads.Count; i++)
+			{
+				if (TryGetHandleSceneName(pendingUnloads[i], out string sceneName))
+					addressableUnloaded.Add(sceneName);
+
+				tasks.Add(Addressables.UnloadSceneAsync(pendingUnloads[i]).ToUniTask());
+			}
+
+			if (tasks.Count > 0)
+				await UniTask.WhenAll(tasks);
+
+			for (int i = 0; i < sceneNames.Count; i++)
+			{
+				string sceneName = sceneNames[i];
+				if (string.IsNullOrEmpty(sceneName) || addressableUnloaded.Contains(sceneName))
+					continue;
+
+				Scene scene = SceneManager.GetSceneByName(sceneName);
+				if (!scene.IsValid() || !scene.isLoaded)
+					continue;
+				if (SceneManager.GetActiveScene() == scene)
+					continue;
+
+				AsyncOperation operation = SceneManager.UnloadSceneAsync(scene);
+				if (operation == null)
+					continue;
+
+				OnSceneUnloaded.Invoke(sceneName);
+				await operation.ToUniTask();
+			}
+		}
+
+		static bool TryGetHandleSceneName(AsyncOperationHandle<SceneInstance> handle, out string sceneName)
+		{
+			sceneName = null;
+			if (!handle.IsValid() || !handle.IsDone || handle.Status != AsyncOperationStatus.Succeeded)
+				return false;
+
+			Scene scene = handle.Result.Scene;
+			if (!scene.IsValid())
+				return false;
+
+			sceneName = scene.name;
+			return !string.IsNullOrEmpty(sceneName);
 		}
 
 		/// <summary>

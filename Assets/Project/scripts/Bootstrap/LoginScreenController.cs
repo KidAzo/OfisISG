@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Woi.Events;
+using Woi.Settings;
 
 namespace Woi.UI
 {
@@ -46,6 +47,66 @@ namespace Woi.UI
         VisualElement loadingBarFill;
         Label loadingStatus;
         bool starting;
+
+        // Temporary standalone VR test entry: no controller interaction on the login panel.
+        const string VrAutoStartParticipantName = "VR Tester";
+        const string VrAutoStartParticipantId = "9999";
+        static bool _autoStartInvoked;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetVrAutoStart()
+        {
+            _autoStartInvoked = false;
+        }
+
+        static bool IsStandaloneVrAutoStartLaunch()
+        {
+            if (HazardHubLaunch.IsHubLaunch || StandalonePlatform.HasHubOverride)
+                return false;
+
+            return HazardHubLaunch.UseVrPresentation;
+        }
+
+        void Start()
+        {
+            if (!_autoStartInvoked && IsStandaloneVrAutoStartLaunch())
+                StartCoroutine(VrAutoStartRoutine());
+        }
+
+        IEnumerator VrAutoStartRoutine()
+        {
+            _autoStartInvoked = true;
+            Debug.Log("[HazardVrAutoStart] begin", this);
+
+            // Let OnEnable bindings and GameInitializer's HazardHuntLogged registration settle for one frame.
+            yield return null;
+
+            if (starting || !IsStandaloneVrAutoStartLaunch() || nameField == null || userIdField == null)
+            {
+                Debug.Log("[HazardVrAutoStart] skipped (already starting, not standalone VR, or login UI unbound)", this);
+                yield break;
+            }
+
+            SetLanguage("EN");
+            Debug.Log("[HazardVrAutoStart] language=English", this);
+
+            nameField.value = VrAutoStartParticipantName;
+            userIdField.value = VrAutoStartParticipantId;
+            int effectiveId = int.TryParse(userIdField.value, out int parsedId) ? parsedId : 0;
+            Debug.Log(
+                "[HazardVrAutoStart] participantName=" + VrAutoStartParticipantName +
+                " participantId=" + VrAutoStartParticipantId +
+                " (numeric playerID=" + effectiveId + ")",
+                this);
+
+            Debug.Log("[HazardVrAutoStart] invoking-existing-start-flow", this);
+            OnStartClicked();
+
+            if (starting)
+                Debug.Log("[HazardVrAutoStart] gameplay-load-requested", this);
+            else
+                Debug.LogWarning("[HazardVrAutoStart] start flow did not begin (name empty?)", this);
+        }
 
         private void Reset()
         {

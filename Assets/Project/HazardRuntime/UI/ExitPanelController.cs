@@ -1,10 +1,15 @@
 using System.Collections.Generic;
+using System.Reflection;
 using Obvious.Soap;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
+using UnityEngine.XR.Interaction.Toolkit.UI;
 using Woi.HazardSystem;
 using Woi.InputSystem;
 using Woi.Localization;
@@ -472,7 +477,10 @@ public class ExitPanelController : MonoBehaviour
             return;
 
         if (FirePlatformRuntime.CurrentMode == AppMode.XR)
+        {
             HazardVrUiPresentation.PlaceWithHudPose(transform);
+            EnsureExitUiClickPath();
+        }
 
         SuppressPcGameplayInput();
         UnlockCursorIfPc();
@@ -489,6 +497,88 @@ public class ExitPanelController : MonoBehaviour
         ApplyPcCopy();
         PlayIntroIfPc();
         _open = true;
+    }
+
+    /// <summary>
+    /// Hub's world-canvas click path. The Office EventSystem lists the PC input module first,
+    /// so tracked-device rays are ignored until XRUIInputModule is the current module and the
+    /// XRI UI map is enabled.
+    /// </summary>
+    public static void EnsureExitUiClickPath()
+    {
+        EventSystem eventSystem = EventSystem.current;
+        if (eventSystem == null || !eventSystem.isActiveAndEnabled)
+            eventSystem = Object.FindFirstObjectByType<EventSystem>(FindObjectsInactive.Include);
+        if (eventSystem == null)
+            return;
+
+        if (!eventSystem.gameObject.activeSelf)
+            eventSystem.gameObject.SetActive(true);
+
+        XRUIInputModule xrModule = eventSystem.GetComponent<XRUIInputModule>();
+        if (xrModule == null)
+            xrModule = eventSystem.gameObject.AddComponent<XRUIInputModule>();
+        xrModule.enabled = true;
+
+        InputSystemUIInputModule pcModule = eventSystem.GetComponent<InputSystemUIInputModule>();
+        if (pcModule != null && pcModule.enabled)
+            pcModule.enabled = false;
+
+        EnableXriUiMapOnly();
+        SetUiInteractionEnabled(true);
+    }
+
+    static void EnableXriUiMapOnly()
+    {
+        InputActionAsset[] assets = Resources.FindObjectsOfTypeAll<InputActionAsset>();
+        for (int i = 0; i < assets.Length; i++)
+        {
+            InputActionAsset asset = assets[i];
+            if (asset == null)
+                continue;
+
+            InputActionMap map = asset.FindActionMap("XRI UI", false);
+            if (map != null && !map.enabled)
+                map.Enable();
+        }
+    }
+
+    static void SetUiInteractionEnabled(bool enabled)
+    {
+        NearFarInteractor[] nearFar = Object.FindObjectsByType<NearFarInteractor>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < nearFar.Length; i++)
+        {
+            if (nearFar[i] != null && nearFar[i].isActiveAndEnabled)
+                TrySetEnableUiInteraction(nearFar[i], enabled);
+        }
+
+        XRRayInteractor[] rays = Object.FindObjectsByType<XRRayInteractor>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < rays.Length; i++)
+        {
+            if (rays[i] != null && rays[i].isActiveAndEnabled)
+                TrySetEnableUiInteraction(rays[i], enabled);
+        }
+    }
+
+    static void TrySetEnableUiInteraction(object interactor, bool enabled)
+    {
+        const string propertyName = "enableUIInteraction";
+        for (System.Type type = interactor.GetType(); type != null; type = type.BaseType)
+        {
+            PropertyInfo property = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (property != null && property.CanWrite && property.PropertyType == typeof(bool))
+            {
+                property.SetValue(interactor, enabled);
+                return;
+            }
+
+            FieldInfo field = type.GetField("m_EnableUIInteraction", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (field != null && field.FieldType == typeof(bool))
+            {
+                field.SetValue(interactor, enabled);
+                return;
+            }
+        }
     }
 
     public void Hide()

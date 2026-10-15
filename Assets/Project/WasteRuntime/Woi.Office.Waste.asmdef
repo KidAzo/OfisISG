@@ -3,6 +3,7 @@
     "rootNamespace": "",
     "references": [
         "Woi.Office.Session",
+        "Woi.OfficeFire.Core",
         "Woi.OfficeFire.Integration",
         "Woi.OfficeFire.Scenario",
         "WOI.Modules.SDK",

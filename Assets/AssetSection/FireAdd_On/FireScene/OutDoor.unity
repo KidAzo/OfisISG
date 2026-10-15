@@ -326266,7 +326266,7 @@ MonoBehaviour:
   fadeInDurationSeconds: 0.45
   fadeOutDurationSeconds: 0.45
   playerRoot: {fileID: 1812491345}
-  xrOriginRoot: {fileID: 0}
+  xrOriginRoot: {fileID: 1591576399}
   assemblyPoint: {fileID: 941995544}
   voiceLinePresenters:
   - {fileID: 822417206}
@@ -356744,6 +356744,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1767192433, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1717954561962503725, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_Name
       value: XR Origin (XR Rig)
@@ -356800,6 +356804,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1591576396}
   m_SourcePrefab: {fileID: 100100000, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+--- !u!4 &1591576399 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1717954561962503726, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 1591576394}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1591576395 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1767192433, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
@@ -363902,6 +363911,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1384763835}
     m_Modifications:
+    - target: {fileID: 2212298737855525672, guid: d34f35bc2d6b5f44e8e317764ce82b50, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3731317485977338045, guid: d34f35bc2d6b5f44e8e317764ce82b50, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5.06
@@ -369130,7 +369143,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &1746354021
 AudioListener:
   m_ObjectHideFlags: 0

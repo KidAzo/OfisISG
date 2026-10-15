@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -311,8 +312,36 @@ namespace Woi.Settings
             return string.IsNullOrWhiteSpace(exception.Message) ? exception.GetType().Name : exception.Message;
         }
 
+        static string DescribeIncomingPlatform(ModuleLaunchContext context)
+        {
+            if (context == null)
+                return "<null-context>";
+
+            PropertyInfo property = context.GetType().GetProperty("PlatformId");
+            string fromProperty = property == null
+                ? "<no-PlatformId-property>"
+                : (property.GetValue(context) as string ?? "<null>");
+            string fromMetadata = "<none>";
+            if (context.Metadata != null)
+            {
+                foreach (KeyValuePair<string, object> pair in context.Metadata)
+                {
+                    if (pair.Key != null && pair.Key.IndexOf("platform", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                        fromMetadata = pair.Key + "=" + pair.Value;
+                }
+            }
+
+            return "property=" + fromProperty + " metadata=" + fromMetadata;
+        }
+
         public async Task Initialize(ModuleLaunchContext context)
         {
+            string rawPlatform = DescribeIncomingPlatform(context);
+            Debug.Log("[FireTrace] OfficeFireBootstrapper.Initialize rawPlatform=" + rawPlatform);
+            PropertyInfo platformProperty = context != null ? context.GetType().GetProperty("PlatformId") : null;
+            string platformValue = platformProperty != null ? platformProperty.GetValue(context) as string : null;
+            if (!string.IsNullOrEmpty(platformValue))
+                FirePlatformRuntime.NoteRawHubPlatform(platformValue);
             MarkHubLaunchRequested();
             if (Interlocked.CompareExchange(ref _initializeGate, 1, 0) != 0)
                 return;

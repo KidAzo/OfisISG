@@ -58,6 +58,9 @@ namespace Woi.OfficeFire
             if (uiDocument == null)
                 uiDocument = GetComponent<UIDocument>();
 
+            if (GetComponent<HubLoginXrRig>() == null)
+                gameObject.AddComponent<HubLoginXrRig>();
+
             ResolvePanelSettingsAssets();
             ResolveXrRigRoot();
         }
@@ -130,6 +133,15 @@ namespace Woi.OfficeFire
         {
             if (_configuredForVr || uiDocument == null)
                 return;
+
+#if UNITY_EDITOR
+            if (PresentationIsVr())
+                StandalonePlatform.SyncEditorXrLoader(true);
+#endif
+
+            ResolveXrRigRoot(forceRefresh: true);
+            if (xrRigRoot != null && !xrRigRoot.gameObject.activeSelf)
+                xrRigRoot.gameObject.SetActive(true);
 
             ResolvePanelSettingsAssets();
             if (worldPanelSettingsSource == null)

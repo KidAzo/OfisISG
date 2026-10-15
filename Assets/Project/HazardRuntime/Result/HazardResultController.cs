@@ -121,6 +121,8 @@ namespace Woi.HazardSystem
                     HazardVrUiPresentation.PlaceOpenedResult(_uiControllerCurrent.transform);
 
                 _uiControllerCurrent.gameObject.SetActive(true);
+                if (IsVrResultUi(_uiControllerCurrent))
+                    HazardResultRuntimeDiagnostics.Begin(_uiControllerCurrent.transform);
             }
         }
 

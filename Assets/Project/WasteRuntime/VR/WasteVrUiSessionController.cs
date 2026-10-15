@@ -4,8 +4,8 @@ using Woi.SelectionSystem;
 namespace Woi.WasteCollectionMode
 {
     /// <summary>
-    /// VR waste UI session: only the waste bin menu tracks the HMD. Locomotion/selection are off during menu
-    /// and result; they stay on during the Doğru/Yanlış explanation popup.
+    /// VR waste UI session: the world panel is placed once in front of the HMD when it opens and then stays fixed.
+    /// Locomotion/selection are off during menu and result; they stay on during the Doğru/Yanlış explanation popup.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class WasteVrUiSessionController : MonoBehaviour
@@ -138,7 +138,8 @@ namespace Woi.WasteCollectionMode
         }
 
         /// <summary>
-        /// Only the waste bin menu follows the HMD. Doğru/Yanlış, result and exit stay fixed for stable XR hits.
+        /// Waste bin menu uses the short layout settle; Doğru/Yanlış, result and exit use the longer one.
+        /// Neither follows the HMD after the panel is placed.
         /// </summary>
         private bool ShouldTrackHead()
         {

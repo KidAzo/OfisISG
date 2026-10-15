@@ -575,6 +575,7 @@ namespace Woi.Equipment
                 TrySpawnSlotReplacementLikePcDrop(item);
 
                 Debug.Log($"[VRExtinguisherPinPuller] Pim başarıyla çekildi: {item.name}");
+                FireVfxPoseDiagnostics.LogPinPulled(item);
 
                 if (_snapCoroutine != null)
                 {
@@ -664,6 +665,7 @@ namespace Woi.Equipment
                 hudManager.SetNozzle(vrSprayOrigin, ctrl);
 
             ctrl.SetVrHoseSplineVisualReady(true);
+            FireVfxPoseDiagnostics.LogAfterNozzleSnap(item);
             return true;
         }
 
@@ -765,16 +767,25 @@ namespace Woi.Equipment
             if (_newFireExAnchor == null || _newFireExOriginalParent == null)
                 return;
 
-            if (_newFireExAnchor.parent == _newFireExOriginalParent
+            bool logFirst = FireVfxPoseDiagnostics.ConsumeRestoreFirst(_newFireExAnchorItem);
+            bool logAfterSnap = !logFirst && FireVfxPoseDiagnostics.ConsumeRestoreAfterSnap(_newFireExAnchorItem);
+            string stage = logFirst ? "restore-first" : logAfterSnap ? "restore-after-snap" : null;
+            if (stage != null)
+                FireVfxPoseDiagnostics.LogRestore(stage + "-before", _newFireExAnchorItem, false);
+
+            bool unchanged = _newFireExAnchor.parent == _newFireExOriginalParent
                 && _newFireExAnchor.localPosition == _newFireExOriginalLocalPosition
-                && _newFireExAnchor.localRotation == _newFireExOriginalLocalRotation)
+                && _newFireExAnchor.localRotation == _newFireExOriginalLocalRotation;
+
+            if (!unchanged)
             {
-                return;
+                _newFireExAnchor.SetParent(_newFireExOriginalParent, false);
+                _newFireExAnchor.localPosition = _newFireExOriginalLocalPosition;
+                _newFireExAnchor.localRotation = _newFireExOriginalLocalRotation;
             }
 
-            _newFireExAnchor.SetParent(_newFireExOriginalParent, false);
-            _newFireExAnchor.localPosition = _newFireExOriginalLocalPosition;
-            _newFireExAnchor.localRotation = _newFireExOriginalLocalRotation;
+            if (stage != null)
+                FireVfxPoseDiagnostics.LogRestore(stage + "-after", _newFireExAnchorItem, !unchanged);
         }
     }
 }

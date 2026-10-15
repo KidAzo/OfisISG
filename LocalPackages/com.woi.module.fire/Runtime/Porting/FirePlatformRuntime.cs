@@ -8,6 +8,23 @@ public static class FirePlatformRuntime
 {
     static ScriptableEnumPortingVariable _porting;
     static bool _warnedMissingPorting;
+    static bool _resolvedTraced;
+
+    /// <summary>Hub platform string before pc/vr normalization. Diagnostic only.</summary>
+    public static string RawHubPlatform { get; private set; } = "<not-set>";
+
+    public static void NoteRawHubPlatform(string raw)
+    {
+        RawHubPlatform = string.IsNullOrEmpty(raw) ? "<empty>" : raw;
+        Debug.Log("[FireTrace] HubPlatform raw=" + RawHubPlatform + " beforeNormalization");
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetTrace()
+    {
+        _resolvedTraced = false;
+        RawHubPlatform = "<not-set>";
+    }
 
     /// <summary>True after a non-null porting asset was registered.</summary>
     public static bool IsSourceInitialized => _porting != null;
@@ -42,6 +59,7 @@ public static class FirePlatformRuntime
     {
         get
         {
+            TraceResolved("CurrentMode");
             if (_porting != null)
                 return _porting.CurrentValue;
 
@@ -59,9 +77,31 @@ public static class FirePlatformRuntime
     /// True on VR targets. Quest/Android uses an active XR device even when the porting asset still says PC
     /// (Hub Addressables can register a PC ScriptableObject instance before module wiring runs).
     /// </summary>
-    public static bool IsVR =>
-        IsXrDeviceActiveFallback()
-        || (_porting != null && _porting.CurrentValue == AppMode.XR);
+    public static bool IsVR
+    {
+        get
+        {
+            TraceResolved("IsVR");
+            return IsXrDeviceActiveFallback()
+                   || (_porting != null && _porting.CurrentValue == AppMode.XR);
+        }
+    }
+
+    static void TraceResolved(string source)
+    {
+        if (_resolvedTraced)
+            return;
+
+        _resolvedTraced = true;
+        bool device = IsXrDeviceActiveFallback();
+        bool vr = device || (_porting != null && _porting.CurrentValue == AppMode.XR);
+        Debug.Log(
+            "[FireTrace] FirePlatformRuntime resolved=" + (vr ? "XR" : "PC") +
+            " source=" + source +
+            " porting=" + (_porting == null ? "<null>" : _porting.CurrentValue.ToString()) +
+            " deviceFallback=" + device.ToString().ToLowerInvariant() +
+            " rawHubPlatform=" + RawHubPlatform);
+    }
 
     public static bool IsXrDeviceActiveFallback()
     {

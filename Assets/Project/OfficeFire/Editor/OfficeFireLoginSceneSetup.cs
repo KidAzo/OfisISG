@@ -35,6 +35,7 @@ namespace Woi.OfficeFire.Editor
             EnsureEventSystem();
             CreateOrUpdateLoginUi();
             EnsureLoginWorldUiPresenter();
+            EnsureHubLoginXrRig();
 
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             Debug.Log("[OfficeFireLoginSceneSetup] OfficeFireModule_Login: 3D login UI wired (SceneLoader not added — use bootstrap DDOL instance).");
@@ -172,6 +173,44 @@ namespace Woi.OfficeFire.Editor
                 presenterSo.FindProperty("xrRigRoot").objectReferenceValue = xrOrigin.transform;
 
             presenterSo.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(host);
+        }
+
+        private static void EnsureHubLoginXrRig()
+        {
+            OfficeFireLoginScreenController controller =
+                Object.FindFirstObjectByType<OfficeFireLoginScreenController>(FindObjectsInactive.Include);
+
+            if (controller == null)
+                return;
+
+            GameObject host = controller.gameObject;
+            HubLoginXrRig rig = host.GetComponent<HubLoginXrRig>();
+            if (rig == null)
+                rig = Undo.AddComponent<HubLoginXrRig>(host);
+
+            GameObject xrOrigin = FindXrOriginRoot();
+            Camera[] cameras = Object.FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            GameObject pcCamera = null;
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                Camera camera = cameras[i];
+                if (camera == null || camera.gameObject.name != "Main Camera")
+                    continue;
+
+                if (xrOrigin != null && camera.transform.IsChildOf(xrOrigin.transform))
+                    continue;
+
+                pcCamera = camera.gameObject;
+                break;
+            }
+
+            SerializedObject rigSo = new SerializedObject(rig);
+            if (xrOrigin != null)
+                rigSo.FindProperty("xrOriginRoot").objectReferenceValue = xrOrigin;
+            if (pcCamera != null)
+                rigSo.FindProperty("pcCameraRoot").objectReferenceValue = pcCamera;
+            rigSo.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(host);
         }
 

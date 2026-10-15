@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceProviders;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Woi.Settings;
 using WOI.Modules.SDK;
@@ -579,12 +583,13 @@ namespace Woi.OfficeFire
                 return;
             }
 
-            _isReturningToLogin = true;
+			_isReturningToLogin = true;
+			Debug.Log("[OfficeFireReturn]\nstage=continue-pressed");
 
-            if (_continueButton != null)
-            {
-                _continueButton.SetEnabled(false);
-            }
+			if (_continueButton != null)
+			{
+				_continueButton.SetEnabled(false);
+			}
 
             HideOverlayOnly();
             ApplyMenuCursorForLogin();
@@ -599,6 +604,14 @@ namespace Woi.OfficeFire
                 ? LoginSceneGroup
                 : loginSceneGroupName.Trim();
 
+            if (!OfficeFireBootstrapper.HubLaunchRequested
+                && string.Equals(sceneGroup, LoginSceneGroup, System.StringComparison.Ordinal))
+            {
+                OfficeFireStandaloneSceneGate.CancelWaiting();
+                LoadStandaloneLoginSingle(sceneGroup);
+                return;
+            }
+
             if (ServiceLocator.TryGet(out OfficeGameModulesBootstrapper bootstrapper) && bootstrapper != null)
             {
                 bootstrapper.LoadScene(sceneGroup);
@@ -606,6 +619,50 @@ namespace Woi.OfficeFire
             }
 
             LoginReturnRunner.StartLoad(sceneGroup);
+        }
+
+        /// <summary>
+        /// Standalone Play starts with login and gameplay loaded in Single mode. The scene-group loader
+        /// cannot unload scene index 0, so returning through it leaves the old office scene behind.
+        /// Loading login in Single mode restores the same state as the first entry.
+        /// </summary>
+        private static void LoadStandaloneLoginSingle(string sceneName)
+        {
+            Debug.Log("[OfficeFireReturn]\nstage=standalone-login-single\nkey=" + sceneName);
+
+            AsyncOperationHandle<SceneInstance> handle;
+            try
+            {
+                handle = Addressables.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+            }
+            catch (System.Exception exception)
+            {
+                LoadStandaloneLoginThroughSceneManager(sceneName, exception.Message);
+                return;
+            }
+
+            handle.Completed += completed =>
+            {
+                if (completed.Status == AsyncOperationStatus.Succeeded)
+                    return;
+
+                string error = completed.OperationException != null
+                    ? completed.OperationException.Message
+                    : "Addressables load failed";
+                if (completed.IsValid())
+                    Addressables.Release(completed);
+
+                LoadStandaloneLoginThroughSceneManager(sceneName, error);
+            };
+        }
+
+        private static void LoadStandaloneLoginThroughSceneManager(string sceneName, string addressableError)
+        {
+            if (SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single) == null)
+            {
+                Debug.LogError(
+                    $"[OfficeFireResultScreenController] Login scene load failed: {addressableError}; SceneManager could not load {sceneName}.");
+            }
         }
 
         private static void ApplyMenuCursorForLogin()

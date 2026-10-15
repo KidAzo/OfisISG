@@ -32,6 +32,8 @@ public class GameInitializer : MonoBehaviour
         if (loading)
             return;
 
+        HazardPlatformUiDriver.MarkLoginCompleted();
+
         if (string.IsNullOrWhiteSpace(starterSceneName))
             starterSceneName = "Office";
 

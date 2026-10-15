@@ -325,7 +325,7 @@ namespace Woi.OfficeFire
             OfficeFireLocalizedSignMaterials.ApplyAllInScene();
         }
 
-        private void TeleportPlayer()
+        internal void TeleportPlayer()
         {
             if (assemblyPoint == null)
             {
@@ -374,49 +374,69 @@ namespace Woi.OfficeFire
             OfficeFirePlayerTriggerRefresh.ScheduleAfterPlayerTeleport(this);
         }
 
-        private Transform ResolvePlayerRoot()
+        internal Transform ResolvePlayerRoot()
         {
-            if (xrOriginRoot != null)
+            if (FirePlatformRuntime.IsVR)
             {
-                return xrOriginRoot;
-            }
+                if (xrOriginRoot != null)
+                    return xrOriginRoot;
 
-            Transform resolvedXr = ResolveXrOriginTransform();
-            if (resolvedXr != null)
-            {
-                return resolvedXr;
+                return FindXrOriginInScene(gameObject.scene);
             }
 
             if (playerRoot != null)
-            {
                 return playerRoot;
-            }
 
             GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
             return taggedPlayer != null ? taggedPlayer.transform : null;
         }
 
-        private static Transform ResolveXrOriginTransform()
+        /// <summary>
+        /// VR only. Activates the XR Origin authored in this scene. Does not move it.
+        /// PC leaves the rig inactive.
+        /// </summary>
+        internal void ActivateOutdoorXrRigIfVr()
         {
+            if (!FirePlatformRuntime.IsVR)
+                return;
+
+            Transform rig = xrOriginRoot != null ? xrOriginRoot : FindXrOriginInScene(gameObject.scene);
+            if (rig == null)
+            {
+                Debug.LogWarning("[AssemblySceneController] OutDoor XR Origin is not assigned.", this);
+                return;
+            }
+
+            if (rig.gameObject.scene != gameObject.scene)
+            {
+                Debug.LogWarning(
+                    "[AssemblySceneController] Refusing to activate an XR Origin outside the OutDoor scene.",
+                    rig);
+                return;
+            }
+
+            if (!rig.gameObject.activeSelf)
+                rig.gameObject.SetActive(true);
+        }
+
+        static Transform FindXrOriginInScene(Scene scene)
+        {
+            if (!scene.IsValid() || !scene.isLoaded)
+                return null;
+
             System.Type originType = System.Type.GetType("Unity.XR.CoreUtils.XROrigin, Unity.XR.CoreUtils");
             if (originType == null)
-            {
                 return null;
-            }
 
             Object[] found = Resources.FindObjectsOfTypeAll(originType);
             for (int i = 0; i < found.Length; i++)
             {
                 if (found[i] is not Component origin || origin == null)
-                {
                     continue;
-                }
 
                 GameObject go = origin.gameObject;
-                if (!go.scene.IsValid())
-                {
+                if (go.scene != scene)
                     continue;
-                }
 
                 return go.transform;
             }
@@ -426,14 +446,12 @@ namespace Woi.OfficeFire
 
         private static void EnsureGameplayCamera(Transform playerRoot)
         {
-            Transform resolvedRoot = playerRoot ?? ResolveXrOriginTransform();
-            if (resolvedRoot == null)
+            Transform resolvedRoot = playerRoot;
+            if (resolvedRoot == null && !FirePlatformRuntime.IsVR)
             {
                 GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
                 if (taggedPlayer != null)
-                {
                     resolvedRoot = taggedPlayer.transform;
-                }
             }
 
             Camera playerCamera = ResolvePlayerCamera(resolvedRoot);
@@ -461,12 +479,14 @@ namespace Woi.OfficeFire
 
                     camera.enabled = true;
                     camera.tag = "MainCamera";
+                    SetAudioListenerEnabled(camera, true);
                     continue;
                 }
 
                 if (camera.CompareTag("MainCamera"))
                 {
                     camera.enabled = false;
+                    SetAudioListenerEnabled(camera, false);
                 }
             }
 
@@ -489,44 +509,35 @@ namespace Woi.OfficeFire
                 }
             }
 
-            Transform xrRoot = ResolveXrOriginTransform();
-            if (xrRoot != null)
+            if (!FirePlatformRuntime.IsVR)
             {
-                Camera fromXr = xrRoot.GetComponentInChildren<Camera>(true);
-                if (fromXr != null)
-                {
-                    return fromXr;
-                }
-            }
-
-            GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
-            if (taggedPlayer != null)
-            {
-                return taggedPlayer.GetComponentInChildren<Camera>(true);
+                GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
+                if (taggedPlayer != null)
+                    return taggedPlayer.GetComponentInChildren<Camera>(true);
             }
 
             return null;
         }
 
+        static void SetAudioListenerEnabled(Camera camera, bool enabled)
+        {
+            if (camera == null)
+                return;
+
+            AudioListener listener = camera.GetComponent<AudioListener>();
+            if (listener != null)
+                listener.enabled = enabled;
+        }
+
         static bool IsPlayerGameplayCamera(Camera camera, Camera playerCamera, Transform resolvedRoot)
         {
             if (camera == null)
-            {
                 return false;
-            }
 
             if (playerCamera != null && camera == playerCamera)
-            {
                 return true;
-            }
 
-            if (resolvedRoot != null && camera.transform.IsChildOf(resolvedRoot))
-            {
-                return true;
-            }
-
-            Transform xrRoot = ResolveXrOriginTransform();
-            return xrRoot != null && camera.transform.IsChildOf(xrRoot);
+            return resolvedRoot != null && camera.transform.IsChildOf(resolvedRoot);
         }
 
         static bool ShouldSkipCameraManagement(Camera camera)
@@ -574,6 +585,8 @@ namespace Woi.OfficeFire
 
                 yield return SceneFadeOverlay.Fade(fadeOverlay, 0f, 1f, fadeInSeconds);
 
+                LogCameraAudit("A");
+
                 Task loadTask = loader.LoadScene(sceneGroupName, SceneLoadPresentation.Silent);
                 while (!loadTask.IsCompleted)
                 {
@@ -592,13 +605,26 @@ namespace Woi.OfficeFire
                     yield break;
                 }
 
-                yield return UnloadFireOfficeGameplaySet();
+                LogCameraAudit("B");
 
-                Scene outdoorScene = SceneManager.GetSceneByName("OutDoor");
-                if (outdoorScene.IsValid() && outdoorScene.isLoaded)
-                    SceneManager.SetActiveScene(outdoorScene);
+                AssemblySceneController outdoorController = FindOutdoorController();
 
-                EnsureGameplayCamera(null);
+                yield return UnloadFireOfficeGameplaySet(loader);
+                LogCameraAudit("C");
+
+                if (outdoorController != null)
+                {
+                    outdoorController.ActivateOutdoorXrRigIfVr();
+                    outdoorController.TeleportPlayer();
+                    EnsureGameplayCamera(outdoorController.ResolvePlayerRoot());
+                }
+                else
+                {
+                    Debug.LogWarning("[AssemblySceneController] OutDoor AssemblySceneController was not found after load.");
+                    EnsureGameplayCamera(null);
+                }
+
+                LogCameraAudit("D");
                 LogOutdoorTransition();
 
                 float revealFadeSeconds = ResolveFadeFromBlackSeconds(fadeOutSeconds);
@@ -615,26 +641,28 @@ namespace Woi.OfficeFire
             const string OfficeGameplayGroupName = "FireModule_Office";
 
             /// <summary>
-            /// SceneGroupManager never unloads scene index 0. Standalone Single-load leaves
-            /// FireModule_Office there, so the OutDoor group load keeps it. Hub already drops
-            /// that scene when a shell scene occupies index 0; unloading the group by name is a no-op then.
+            /// FireModule_Office stays loaded through the additive OutDoor load.
+            /// This waits until that unload actually finishes before the OutDoor XR rig is activated.
             /// </summary>
-            static IEnumerator UnloadFireOfficeGameplaySet()
+            static IEnumerator UnloadFireOfficeGameplaySet(ISceneLoaderService loader)
             {
                 Scene outdoor = SceneManager.GetSceneByName("OutDoor");
                 if (outdoor.IsValid() && outdoor.isLoaded)
                     SceneManager.SetActiveScene(outdoor);
 
                 IReadOnlyList<string> sceneNames = ReadOfficeGameplaySceneNames();
+                Task unloadTask = loader.Manager.UnloadScenesByNameAsync(sceneNames);
+                while (!unloadTask.IsCompleted)
+                    yield return null;
+
+                if (unloadTask.IsFaulted && unloadTask.Exception != null)
+                    Debug.LogException(unloadTask.Exception.GetBaseException());
+
                 for (int i = 0; i < sceneNames.Count; i++)
                 {
                     string sceneName = sceneNames[i];
-                    if (string.IsNullOrEmpty(sceneName)
-                        || sceneName == "OutDoor"
-                        || sceneName == "DontDestroyOnLoad")
-                    {
+                    if (string.IsNullOrEmpty(sceneName) || sceneName == "OutDoor")
                         continue;
-                    }
 
                     Scene scene = SceneManager.GetSceneByName(sceneName);
                     if (!scene.IsValid() || !scene.isLoaded)
@@ -700,6 +728,87 @@ namespace Woi.OfficeFire
                     "stairs1Loaded=" + (stairs1Loaded ? "true" : "false") + "\n" +
                     "outdoorLoaded=" + (outdoorLoaded ? "true" : "false") + "\n" +
                     "loadedScenes=" + string.Join(",", names));
+            }
+
+            static AssemblySceneController FindOutdoorController()
+            {
+                AssemblySceneController[] controllers = Object.FindObjectsByType<AssemblySceneController>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None);
+
+                for (int i = 0; i < controllers.Length; i++)
+                {
+                    AssemblySceneController controller = controllers[i];
+                    if (controller == null)
+                        continue;
+                    if (controller.gameObject.scene.name == "OutDoor")
+                        return controller;
+                }
+
+                return null;
+            }
+
+            static void LogCameraAudit(string stage)
+            {
+                Camera[] cameras = Object.FindObjectsByType<Camera>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None);
+
+                int logged = 0;
+                int rendering = 0;
+                int activeListeners = 0;
+                for (int i = 0; i < cameras.Length; i++)
+                {
+                    Camera camera = cameras[i];
+                    if (camera == null || !camera.gameObject.scene.IsValid() || !camera.gameObject.scene.isLoaded)
+                        continue;
+
+                    AudioListener listener = camera.GetComponent<AudioListener>();
+                    bool listenerEnabled = listener != null && listener.enabled;
+                    bool listenerActive = listenerEnabled && listener.gameObject.activeInHierarchy;
+                    bool isRendering = camera.enabled
+                        && camera.gameObject.activeInHierarchy
+                        && camera.targetTexture == null
+                        && camera.cullingMask != 0;
+                    if (isRendering)
+                        rendering++;
+                    if (listenerActive)
+                        activeListeners++;
+
+                    Debug.Log(
+                        "[CameraAudit]\n" +
+                        "stage=" + stage + "\n" +
+                        "scene=" + camera.gameObject.scene.name + "\n" +
+                        "path=" + CameraPath(camera.transform) + "\n" +
+                        "enabled=" + camera.enabled.ToString().ToLowerInvariant() + "\n" +
+                        "activeInHierarchy=" + camera.gameObject.activeInHierarchy.ToString().ToLowerInvariant() + "\n" +
+                        "tag=" + camera.gameObject.tag + "\n" +
+                        "depth=" + camera.depth + "\n" +
+                        "stereoTargetEye=" + camera.stereoTargetEye + "\n" +
+                        "audioListener=" + (listener == null ? "none" : listener.enabled.ToString().ToLowerInvariant()) + "\n" +
+                        "rendering=" + (isRendering ? "true" : "false"));
+                    logged++;
+                }
+
+                Debug.Log(
+                    "[CameraAudit]\n" +
+                    "stage=" + stage + "\n" +
+                    "camerasLogged=" + logged + "\n" +
+                    "renderingCameras=" + rendering + "\n" +
+                    "activeAudioListeners=" + activeListeners);
+            }
+
+            static string CameraPath(Transform transform)
+            {
+                var names = new List<string>();
+                while (transform != null)
+                {
+                    names.Add(transform.name);
+                    transform = transform.parent;
+                }
+
+                names.Reverse();
+                return string.Join("/", names);
             }
 
             private static bool TryResolveLoader(out ISceneLoaderService loader)

@@ -312,6 +312,15 @@ namespace Woi.WasteCollectionMode.Editor
 
         private static void EnsureWasteCollectionBootstrap()
         {
+            if (!IsWasteGameplayScene())
+            {
+                RemoveRigControllersFromActiveScene();
+                Debug.LogWarning(
+                    "[WasteResultScreenSceneSetup] WasteCollectionPlayerRigController is only for Waste_Office. " +
+                    "Removed any copy in the active scene so it cannot toggle another module's XR Origin.");
+                return;
+            }
+
             GameObject bootstrapObject = null;
             WasteCollectionVrBootstrap existingBootstrap = Object.FindFirstObjectByType<WasteCollectionVrBootstrap>();
             if (existingBootstrap != null)
@@ -441,6 +450,14 @@ namespace Woi.WasteCollectionMode.Editor
                 }
             }
 
+            GameObject xrSeparator = FindNamedInScene(rigController.gameObject.scene, "-------------XR------------");
+            if (xrSeparator != null)
+                serializedRig.FindProperty("xrHierarchyRoot").objectReferenceValue = xrSeparator;
+
+            GameObject crosshair = FindNamedInScene(rigController.gameObject.scene, "Cross (1)");
+            if (crosshair != null)
+                serializedRig.FindProperty("pcOnlyCrosshairRoot").objectReferenceValue = crosshair;
+
             ScriptableEnumPortingVariable porting = AssetDatabase.LoadAssetAtPath<ScriptableEnumPortingVariable>(
                 "Packages/com.woi.module.fire/Runtime/Porting/PortingVariable.asset");
             if (porting != null)
@@ -448,6 +465,46 @@ namespace Woi.WasteCollectionMode.Editor
 
             serializedRig.FindProperty("logAppliedState").boolValue = true;
             serializedRig.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static GameObject FindNamedInScene(UnityEngine.SceneManagement.Scene scene, string objectName)
+        {
+            GameObject[] objects = Resources.FindObjectsOfTypeAll<GameObject>();
+            for (int i = 0; i < objects.Length; i++)
+            {
+                GameObject candidate = objects[i];
+                if (candidate == null || candidate.name != objectName)
+                    continue;
+                if (candidate.scene != scene)
+                    continue;
+                return candidate;
+            }
+
+            return null;
+        }
+
+        private static bool IsWasteGameplayScene()
+        {
+            var scene = EditorSceneManager.GetActiveScene();
+            return scene.IsValid() && scene.name == "Waste_Office";
+        }
+
+        private static void RemoveRigControllersFromActiveScene()
+        {
+            var scene = EditorSceneManager.GetActiveScene();
+            WasteCollectionPlayerRigController[] rigs =
+                Object.FindObjectsByType<WasteCollectionPlayerRigController>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None);
+
+            for (int i = 0; i < rigs.Length; i++)
+            {
+                WasteCollectionPlayerRigController rig = rigs[i];
+                if (rig == null || rig.gameObject.scene != scene)
+                    continue;
+
+                Undo.DestroyObjectImmediate(rig);
+            }
         }
 
         private static Transform FindActiveXrOriginTransform()

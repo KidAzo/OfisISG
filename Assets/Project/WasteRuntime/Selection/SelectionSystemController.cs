@@ -42,6 +42,26 @@ namespace Woi.SelectionSystem
             return RaycastFirstSelectable(origin, direction, out _, skipHierarchyRoot);
         }
 
+        public bool RaycastFirstInteractable(
+            Vector3 origin,
+            Vector3 direction,
+            Transform skipHierarchyRoot,
+            out RaycastHit hit,
+            out ISelectable wasteSelectable,
+            out Woi.OfficeFire.ISelectable officeSelectable)
+        {
+            return SelectionRaycast.RaycastFirstInteractable(
+                origin,
+                direction,
+                maxDistance,
+                layerMask,
+                triggerInteraction,
+                skipHierarchyRoot,
+                out hit,
+                out wasteSelectable,
+                out officeSelectable);
+        }
+
         public ISelectable RaycastFirstSelectable(
             Vector3 origin,
             Vector3 direction,

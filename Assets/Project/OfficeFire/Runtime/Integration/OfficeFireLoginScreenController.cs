@@ -85,10 +85,16 @@ namespace Woi.OfficeFire
                 yield return null;
 
             if (!enabled || uiDocument == null || uiDocument.rootVisualElement == null)
+            {
+                OfficeFireRuntimeDiagnostics.LogLoginAborted("ui-document-missing");
                 yield break;
+            }
 
             if (!TryBindUi())
+            {
+                OfficeFireRuntimeDiagnostics.LogLoginAborted("ui-bind-failed");
                 yield break;
+            }
 
             if (startButton != null)
             {
@@ -114,6 +120,7 @@ namespace Woi.OfficeFire
             }
 
             GetComponent<OfficeFireLoginWorldUiPresenter>()?.NotifyContentReady();
+            OfficeFireRuntimeDiagnostics.LogLogin();
             bindRoutine = null;
         }
 
